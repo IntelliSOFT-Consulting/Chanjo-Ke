@@ -16,6 +16,13 @@
         app:destination="@+id/fragment_patient_list_view" />
   </fragment>
 
+  <fragment
+      android:id="@+id/fragment_patient_list_view"
+      android:name="com.dave.zanzibar.fragments.PatientListFragment"
+      android:label="Patient List"
+      tools:layout="@layout/fragment_patient_list_view"
+      />
+
 
 
 </navigation>

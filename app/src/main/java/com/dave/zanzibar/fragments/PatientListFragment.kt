@@ -13,11 +13,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.dave.zanzibar.MainActivity
 import com.dave.zanzibar.R
-import com.dave.zanzibar.databinding.FragmentHomeBinding
+import com.dave.zanzibar.databinding.FragmentPatientListViewBinding
 
-class HomeFragment : Fragment() {
+class PatientListFragment : Fragment() {
 
-    private lateinit var _binding:FragmentHomeBinding
+    private lateinit var _binding:FragmentPatientListViewBinding
     private val binding get() = _binding
 
     override fun onCreateView(
@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentPatientListViewBinding.inflate(inflater, container, false)
 
         return _binding.root
     }
@@ -35,11 +35,6 @@ class HomeFragment : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             title = resources.getString(R.string.app_name)
             setDisplayHomeAsUpEnabled(true)
-        }
-
-        binding.btnPatients.setOnClickListener {
-            findNavController().navigate(R.id.fragment_patient_list_view)
-
         }
 
 
