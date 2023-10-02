@@ -16,9 +16,9 @@ import com.dave.zanzibar.R
 import com.dave.zanzibar.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
-    private var _binding: FragmentHomeBinding? = null
-    private val binding
-        get() = _binding!!
+
+    private lateinit var _binding:FragmentHomeBinding
+    private val binding get() = _binding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        return binding.root
+        return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
