@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/reference_nav_graph"
+    app:startDestination="@id/home_fragment">
+
+  <fragment
+      android:id="@+id/home_fragment"
+      android:name="com.dave.zanzibar.fragments.HomeFragment"
+      android:label="Home Fragment"
+      tools:layout="@layout/fragment_home">
+    <action
+        android:id="@+id/nav_patient_list"
+        app:destination="@+id/fragment_patient_list_view" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/fragment_patient_list_view"
+      android:name="com.dave.zanzibar.fragments.PatientListFragment"
+      android:label="Patient List"
+      tools:layout="@layout/fragment_patient_list_view"
+      />
+  <fragment
+      android:id="@+id/fragment_add_patient"
+      android:name="com.dave.zanzibar.add_patient.AddPatientFragment"
+      android:label="Patient List"
+      tools:layout="@layout/add_patient_fragment"
+      >
+
+  </fragment>
+
+
+
+</navigation>
