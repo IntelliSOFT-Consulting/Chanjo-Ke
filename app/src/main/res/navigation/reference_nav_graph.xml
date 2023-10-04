@@ -20,16 +20,38 @@
   </fragment>
 
   <fragment
+ 
       android:id="@+id/patient_details"
       android:label="Patient Details"
       android:name="com.dave.zanzibar.patient_details.PatientDetailsFragment"
       tools:layout="@layout/patient_detail">
+ 
+      android:id="@+id/fragment_patient_list_view"
+      android:name="com.dave.zanzibar.fragments.PatientListFragment"
+      android:label="Patient List"
+      tools:layout="@layout/fragment_patient_list_view"
+      >
+    <action
+        android:id="@+id/action_fragment_patient_list_view_to_patientDetailActivity"
+        app:destination="@id/patientDetailActivity" />
+  </fragment>
+  <fragment
+      android:id="@+id/fragment_add_patient"
+      android:name="com.dave.zanzibar.add_patient.AddPatientFragment"
+      android:label="Patient List"
+      tools:layout="@layout/add_patient_fragment"
+      >
+ 
 
     <argument android:name="patient_id" app:argType="string" />
     <action
         android:id="@+id/action_patient_details_self"
         app:destination="@id/patient_details" />
   </fragment>
-
+  <activity
+      android:id="@+id/patientDetailActivity"
+      android:name="com.dave.zanzibar.detail.PatientDetailActivity"
+      android:label="activity_patient_detail"
+      tools:layout="@layout/activity_patient_detail" />
 
 </navigation>
