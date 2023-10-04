@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.updateLastSyncTimestamp()
         viewModel.triggerOneTimeSync()
+
 
 
         val navController = findNavController(R.id.nav_host_fragment_activity_bottem_navigation)

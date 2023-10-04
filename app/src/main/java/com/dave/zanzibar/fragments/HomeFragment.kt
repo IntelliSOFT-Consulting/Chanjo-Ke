@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.dave.zanzibar.MainActivity
 import com.dave.zanzibar.R
+import com.dave.zanzibar.add_patient.AddPatientFragment.Companion.QUESTIONNAIRE_FILE_PATH_KEY
 import com.dave.zanzibar.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -37,8 +38,10 @@ class HomeFragment : Fragment() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        binding.btnPatients.setOnClickListener {
-            findNavController().navigate(R.id.fragment_patient_list_view)
+        binding.floatingActionButton.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
+            findNavController().navigate(R.id.fragment_add_patient, bundle)
 
         }
 

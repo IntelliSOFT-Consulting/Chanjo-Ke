@@ -22,6 +22,14 @@
       android:label="Patient List"
       tools:layout="@layout/fragment_patient_list_view"
       />
+  <fragment
+      android:id="@+id/fragment_add_patient"
+      android:name="com.dave.zanzibar.add_patient.AddPatientFragment"
+      android:label="Patient List"
+      tools:layout="@layout/add_patient_fragment"
+      >
+
+  </fragment>
 
 
 
