@@ -70,8 +70,7 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
 
   private fun updateArguments() {
     requireArguments()
-//      .putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
-      .putString(QUESTIONNAIRE_FILE_PATH_KEY, "immunization.json")
+      .putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
   }
 
   private fun addQuestionnaireFragment() {
