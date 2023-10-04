@@ -31,8 +31,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.updateLastSyncTimestamp()
         viewModel.triggerOneTimeSync()
 
-
-
         val navController = findNavController(R.id.nav_host_fragment_activity_bottem_navigation)
         val appBarConfiguration = AppBarConfiguration(
             setOf(

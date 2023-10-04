@@ -25,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.dave.zanzibar.R
+import com.dave.zanzibar.add_patient.AddPatientFragment
 import com.dave.zanzibar.databinding.FragmentPatientListBinding
 import com.dave.zanzibar.fhir.FhirApplication
 import com.dave.zanzibar.viewmodel.MainActivityViewModel
@@ -89,6 +90,13 @@ class PatientListFragment : Fragment() {
 
         patientListViewModel.patientCount.observe(viewLifecycleOwner) {
             binding.patientListContainer.patientCount.text = "$it Patient(s)"
+        }
+
+        binding.addPatient.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
+//            findNavController().navigate(R.id.fragment_add_patient, bundle)
+
         }
 
         searchView = binding.search
@@ -172,6 +180,8 @@ class PatientListFragment : Fragment() {
                 }
             }
         }
+
+
 
     }
     override fun onDestroyView() {
