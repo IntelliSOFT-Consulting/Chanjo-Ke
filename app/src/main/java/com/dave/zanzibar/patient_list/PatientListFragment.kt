@@ -185,8 +185,7 @@ class PatientListFragment : Fragment() {
     }
 
     private fun onPatientItemClicked(patientItem: PatientListViewModel.PatientItem) {
-        findNavController()
-            .navigate(PatientListFragmentDirections.navigateToProductDetail(patientItem.resourceId))
+
     }
 
     private fun onAddPatientClick() {

@@ -13,7 +13,7 @@ import com.google.android.fhir.ServerConfiguration
 import com.google.android.fhir.datacapture.DataCaptureConfig
 import com.google.android.fhir.datacapture.XFhirQueryResolver
 import com.google.android.fhir.search.search
-import com.google.android.fhir.sync.FhirSyncWorker
+import com.dave.zanzibar.fhir.data.FhirSyncWorker //Import the local fhir
 import com.google.android.fhir.sync.Sync
 import com.google.android.fhir.sync.remote.HttpLogger
 import timber.log.Timber
@@ -36,7 +36,7 @@ class FhirApplication : Application(), DataCaptureConfig.Provider {
                 enableEncryptionIfSupported = false,
                 DatabaseErrorStrategy.RECREATE_AT_OPEN,
                 ServerConfiguration(
-                    "https://devhmis.intellisoftkenya.com/fhir/",
+                    "http://chanjoke.intellisoftkenya.com:8900/fhir/",
                     httpLogger =
                     HttpLogger(
                         HttpLogger.Configuration(
