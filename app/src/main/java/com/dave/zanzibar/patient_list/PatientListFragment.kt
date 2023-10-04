@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -25,7 +26,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.dave.zanzibar.R
-import com.dave.zanzibar.add_patient.AddPatientFragment
+import com.dave.zanzibar.add_patient.AddPatientFragment.Companion.QUESTIONNAIRE_FILE_PATH_KEY
 import com.dave.zanzibar.databinding.FragmentPatientListBinding
 import com.dave.zanzibar.fhir.FhirApplication
 import com.dave.zanzibar.viewmodel.MainActivityViewModel
@@ -92,12 +93,6 @@ class PatientListFragment : Fragment() {
             binding.patientListContainer.patientCount.text = "$it Patient(s)"
         }
 
-        binding.addPatient.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
-//            findNavController().navigate(R.id.fragment_add_patient, bundle)
-
-        }
 
         searchView = binding.search
         topBanner = binding.syncStatusContainer.linearLayoutSyncStatus
@@ -190,13 +185,15 @@ class PatientListFragment : Fragment() {
     }
 
     private fun onPatientItemClicked(patientItem: PatientListViewModel.PatientItem) {
-        findNavController()
-            .navigate(PatientListFragmentDirections.navigateToProductDetail(patientItem.resourceId))
+
     }
 
     private fun onAddPatientClick() {
-//        findNavController()
-//            .navigate(PatientListFragmentDirections.actionPatientListToAddPatientFragment())
+
+        val bundle = Bundle()
+        bundle.putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
+        findNavController().navigate(R.id.addPatientFragment, bundle)
+
     }
 
     private fun fadeInTopBanner(state: SyncJobStatus) {
