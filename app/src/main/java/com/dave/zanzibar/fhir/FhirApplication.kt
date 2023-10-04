@@ -36,7 +36,7 @@ class FhirApplication : Application(), DataCaptureConfig.Provider {
                 enableEncryptionIfSupported = false,
                 DatabaseErrorStrategy.RECREATE_AT_OPEN,
                 ServerConfiguration(
-                    "https://devhmis.intellisoftkenya.com/fhir/",
+                    "http://chanjoke.intellisoftkenya.com:8900/fhir/",
                     httpLogger =
                     HttpLogger(
                         HttpLogger.Configuration(
