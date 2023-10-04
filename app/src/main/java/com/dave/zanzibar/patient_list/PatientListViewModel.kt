@@ -144,6 +144,9 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
   }
 
   /** The Observation's details for display purposes. */
+
+
+  /** The Observation's details for display purposes. */
   data class ObservationItem(
     val id: String,
     val code: String,
