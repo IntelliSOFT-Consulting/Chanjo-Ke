@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
         binding.floatingActionButton.setOnClickListener {
             val bundle = Bundle()
             bundle.putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
-            findNavController().navigate(R.id.fragment_add_patient, bundle)
+//            findNavController().navigate(R.id.fragment_add_patient, bundle)
 
         }
 

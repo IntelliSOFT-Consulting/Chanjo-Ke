@@ -4,33 +4,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reference_nav_graph"
-    app:startDestination="@id/home_fragment">
+    app:startDestination="@id/patient_list">
 
   <fragment
-      android:id="@+id/home_fragment"
-      android:name="com.dave.zanzibar.fragments.HomeFragment"
-      android:label="Home Fragment"
-      tools:layout="@layout/fragment_home">
+      android:id="@+id/patient_list"
+      android:label="Patient List"
+      android:name="com.dave.zanzibar.patient_list.PatientListFragment"
+      tools:layout="@layout/patient_list_view">
     <action
-        android:id="@+id/nav_patient_list"
-        app:destination="@+id/fragment_patient_list_view" />
+        android:id="@+id/navigate_to_product_detail"
+        app:destination="@id/patient_details" />
+<!--    <action-->
+<!--        android:id="@+id/action_patient_list_to_addPatientFragment"-->
+<!--        app:destination="@id/addPatientFragment" />-->
   </fragment>
 
   <fragment
-      android:id="@+id/fragment_patient_list_view"
-      android:name="com.dave.zanzibar.fragments.PatientListFragment"
-      android:label="Patient List"
-      tools:layout="@layout/fragment_patient_list_view"
-      />
-  <fragment
-      android:id="@+id/fragment_add_patient"
-      android:name="com.dave.zanzibar.add_patient.AddPatientFragment"
-      android:label="Patient List"
-      tools:layout="@layout/add_patient_fragment"
-      >
+      android:id="@+id/patient_details"
+      android:label="Patient Details"
+      android:name="com.dave.zanzibar.patient_details.PatientDetailsFragment"
+      tools:layout="@layout/patient_detail">
 
+    <argument android:name="patient_id" app:argType="string" />
+    <action
+        android:id="@+id/action_patient_details_self"
+        app:destination="@id/patient_details" />
   </fragment>
-
 
 
 </navigation>
