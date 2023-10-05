@@ -16,6 +16,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="none">Unknown</string>
     <string name="message_no_datetime">None</string>
+    <string name="cancel_questionnaire_message">Are you sure you want to cancel?</string>
+    <string name="inputs_missing">Input missing</string>
+    <string name="resources_saved">Details Updated</string>
 
 
 </resources>

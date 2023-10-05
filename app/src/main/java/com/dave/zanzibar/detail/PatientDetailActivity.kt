@@ -1,5 +1,6 @@
 package com.dave.zanzibar.detail
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navArgs
+import com.dave.zanzibar.MainActivity
 import com.dave.zanzibar.R
 import com.dave.zanzibar.add_patient.AddPatientFragment.Companion.QUESTIONNAIRE_FILE_PATH_KEY
 import com.dave.zanzibar.detail.ui.main.SectionsPagerAdapter
@@ -34,11 +36,11 @@ class PatientDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val bundle =
-            bundleOf(QUESTIONNAIRE_FILE_PATH_KEY to "immunization.json")
-
+            bundleOf("patient_id" to args.patientId)
         binding = ActivityPatientDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
+        val toolbar =
+            findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
         setSupportActionBar(toolbar)
 
         fhirEngine = FhirApplication.fhirEngine(this)
@@ -72,10 +74,6 @@ class PatientDetailActivity : AppCompatActivity() {
         }
         patientDetailsViewModel.getPatientDetailData()
 
-
-
-
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -88,6 +86,13 @@ class PatientDetailActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun updateFunction() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("functionToCall", "updateFunction")
+        intent.putExtra("patientId", args.patientId)
+        startActivity(intent)
     }
 
 }
