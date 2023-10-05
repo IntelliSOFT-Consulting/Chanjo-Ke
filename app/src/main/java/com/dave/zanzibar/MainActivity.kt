@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.dave.zanzibar.databinding.ActivityMainBinding
+import com.dave.zanzibar.detail.ui.main.UpdateFragment
+import com.dave.zanzibar.fhir.data.FormatterClass
 import com.dave.zanzibar.viewmodel.MainActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -30,12 +33,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
+        val toolbar =
+            findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
         setSupportActionBar(toolbar)
 
         viewModel.updateLastSyncTimestamp()
         viewModel.triggerOneTimeSync()
-
+        val functionToCall = intent.getStringExtra("functionToCall")
+        if (functionToCall == "updateFunction") {
+            val patientId = intent.getStringExtra("patientId")
+            if (patientId != null) {
+                updateFunction(patientId)
+            }
+        }
         val navController = findNavController(R.id.nav_host_fragment_activity_bottem_navigation)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -72,6 +82,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateFunction(patientId: String) {
+        val bundle = Bundle()
+        bundle.putString(UpdateFragment.QUESTIONNAIRE_FRAGMENT_TAG, "update.json")
+        bundle.putString("patientId", patientId)
+        val formatter = FormatterClass()
+        formatter.saveSharedPref("patientId", patientId, this)
+
+        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
+            R.id.updateFragment,
+            bundle
+        )
     }
 
 }

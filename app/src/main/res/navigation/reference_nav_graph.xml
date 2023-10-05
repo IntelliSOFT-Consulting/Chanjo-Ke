@@ -44,5 +44,12 @@
             android:name="patient_id"
             app:argType="string" />
     </activity>
+    <fragment
+        android:id="@+id/updateFragment"
+        android:name="com.dave.zanzibar.detail.ui.main.UpdateFragment"
+        android:label="Update Details"
+        tools:layout="@layout/fragment_update">
+
+    </fragment>
 
 </navigation>
