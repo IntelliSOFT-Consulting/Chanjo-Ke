@@ -46,6 +46,14 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/administerVaccine"
+        android:name="com.dave.zanzibar.vaccine.AdministerVaccineFragment"
+        android:label="Administer Vaccine"
+        tools:layout="@layout/administer_vaccine">
+
+    </fragment>
+
 
 
 </navigation>
