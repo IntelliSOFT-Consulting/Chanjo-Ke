@@ -12,6 +12,8 @@ import com.dave.zanzibar.R
 import com.dave.zanzibar.add_patient.AddPatientFragment
 import com.dave.zanzibar.databinding.ActivityAdministerVaccineBinding
 import com.dave.zanzibar.databinding.ActivityMainBinding
+import com.dave.zanzibar.detail.ui.main.AppointmentsFragment
+import com.dave.zanzibar.detail.ui.main.VaccinesFragment
 import com.dave.zanzibar.fhir.data.FormatterClass
 
 class AdministerVaccine : AppCompatActivity() {
@@ -30,8 +32,16 @@ class AdministerVaccine : AppCompatActivity() {
         patientId = formatterClass.getSharedPref("patientId",this)
 
         val bundle = Bundle()
-        bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
-        findNavController(R.id.nav_administer_vaccine).navigate(R.id.addPatientFragment, bundle)
+        bundle.putString(
+            AdministerVaccineFragment.QUESTIONNAIRE_FILE_PATH_KEY,
+            "vaccine-administration.json")
+
+        val vaccine = AdministerVaccineFragment()
+        vaccine.arguments = bundle
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_administer_vaccine, vaccine)
+            .commit()
 
         println(patientId)
 

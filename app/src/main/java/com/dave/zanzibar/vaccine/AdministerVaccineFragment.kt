@@ -17,6 +17,7 @@
 package com.dave.zanzibar.vaccine
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -26,13 +27,16 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.dave.zanzibar.R
+import com.dave.zanzibar.fhir.data.FormatterClass
 import com.google.android.fhir.datacapture.QuestionnaireFragment
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 
 /** A fragment class to show patient registration screen. */
-class AdministerVaccineFragment : Fragment(R.layout.add_patient_fragment) {
+class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
 
   private val viewModel: AdministerVaccineViewModel by viewModels()
+  private val formatterClass = FormatterClass()
+  private var patientId : String? = null
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -42,12 +46,28 @@ class AdministerVaccineFragment : Fragment(R.layout.add_patient_fragment) {
     if (savedInstanceState == null) {
       addQuestionnaireFragment()
     }
-    observePatientSaveAction()
+
+    patientId = formatterClass.getSharedPref("patientId", requireContext())
+    observeResourcesSaveAction()
+
     childFragmentManager.setFragmentResultListener(
       QuestionnaireFragment.SUBMIT_REQUEST_KEY,
       viewLifecycleOwner,
     ) { _, _ ->
       onSubmitAction()
+    }
+  }
+
+  private fun observeResourcesSaveAction() {
+    viewModel.isResourcesSaved.observe(viewLifecycleOwner) {
+      if (!it) {
+        Toast.makeText(requireContext(), getString(R.string.inputs_missing), Toast.LENGTH_SHORT)
+          .show()
+        return@observe
+      }
+      Toast.makeText(requireContext(), getString(R.string.resources_saved), Toast.LENGTH_SHORT)
+        .show()
+      NavHostFragment.findNavController(this).navigateUp()
     }
   }
 
@@ -70,14 +90,14 @@ class AdministerVaccineFragment : Fragment(R.layout.add_patient_fragment) {
 
   private fun updateArguments() {
     requireArguments()
-      .putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
+      .putString(QUESTIONNAIRE_FILE_PATH_KEY, "vaccine-administration.json")
   }
 
   private fun addQuestionnaireFragment() {
     childFragmentManager.commit {
       replace(
         R.id.administerVaccine,
-        QuestionnaireFragment.builder().setQuestionnaire(viewModel.questionnaireJson).build(),
+        QuestionnaireFragment.builder().setQuestionnaire(viewModel.questionnaire).build(),
         QUESTIONNAIRE_FRAGMENT_TAG,
       )
     }
@@ -86,23 +106,14 @@ class AdministerVaccineFragment : Fragment(R.layout.add_patient_fragment) {
   private fun onSubmitAction() {
     val questionnaireFragment =
       childFragmentManager.findFragmentByTag(QUESTIONNAIRE_FRAGMENT_TAG) as QuestionnaireFragment
-    savePatient(questionnaireFragment.getQuestionnaireResponse())
+    viewModel.saveScreenerEncounter(
+      questionnaireFragment.getQuestionnaireResponse(),
+      patientId.toString(),
+    )
   }
 
-  private fun savePatient(questionnaireResponse: QuestionnaireResponse) {
-    viewModel.savePatient(questionnaireResponse)
-  }
 
-  private fun observePatientSaveAction() {
-    viewModel.isPatientSaved.observe(viewLifecycleOwner) {
-      if (!it) {
-        Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
-        return@observe
-      }
-      Toast.makeText(requireContext(), "Vaccine has been administered.", Toast.LENGTH_SHORT).show()
-      NavHostFragment.findNavController(this).navigateUp()
-    }
-  }
+
 
   companion object {
     const val QUESTIONNAIRE_FILE_PATH_KEY = "questionnaire-file-path-key"

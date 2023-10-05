@@ -17,6 +17,7 @@
 package com.dave.zanzibar.vaccine
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -30,70 +31,112 @@ import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
 import java.util.UUID
 import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.Condition
+import org.hl7.fhir.r4.model.Encounter
+import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
+import org.hl7.fhir.r4.model.Reference
+import org.hl7.fhir.r4.model.Resource
 
 /** ViewModel for patient registration screen {@link AddPatientFragment}. */
 class AdministerVaccineViewModel(application: Application, private val state: SavedStateHandle) :
   AndroidViewModel(application) {
 
-  private var _questionnaireJson: String? = null
-  val questionnaireJson: String
-    get() = fetchQuestionnaireJson()
+  val questionnaire: String
+    get() = getQuestionnaireJson()
 
-  val isPatientSaved = MutableLiveData<Boolean>()
+  val isResourcesSaved = MutableLiveData<Boolean>()
 
-  private val questionnaire: Questionnaire
+  private val questionnaireResource: Questionnaire
     get() =
-      FhirContext.forCached(FhirVersionEnum.R4).newJsonParser().parseResource(questionnaireJson)
-        as Questionnaire
+      FhirContext.forCached(FhirVersionEnum.R4).newJsonParser().parseResource(questionnaire)
+              as Questionnaire
 
+  private var questionnaireJson: String? = null
   private var fhirEngine: FhirEngine = FhirApplication.fhirEngine(application.applicationContext)
 
-  /**
-   * Saves patient registration questionnaire response into the application database.
-   *
-   * @param questionnaireResponse patient registration questionnaire response
-   */
-  fun savePatient(questionnaireResponse: QuestionnaireResponse) {
+  fun saveScreenerEncounter(questionnaireResponse: QuestionnaireResponse, patientId: String) {
     viewModelScope.launch {
-      if (
-        QuestionnaireResponseValidator.validateQuestionnaireResponse(
-            questionnaire,
-            questionnaireResponse,
-            getApplication(),
-          )
-          .values
-          .flatten()
-          .any { it is Invalid }
-      ) {
-        isPatientSaved.value = false
-        return@launch
-      }
+      val bundle = ResourceMapper.extract(questionnaireResource, questionnaireResponse)
+      val subjectReference = Reference("Patient/$patientId")
+      val encounterId = generateUuid()
+//      if (isRequiredFieldMissing(bundle)) {
+//        isResourcesSaved.value = false
+//        return@launch
+//      }
 
-      val entry =
-        ResourceMapper.extract(
-            questionnaire,
-            questionnaireResponse,
-          )
-          .entryFirstRep
-      if (entry.resource !is Patient) {
-        return@launch
-      }
-      val patient = entry.resource as Patient
-      patient.id = generateUuid()
-      fhirEngine.create(patient)
-      isPatientSaved.value = true
+
+      saveResources(bundle, subjectReference, encounterId)
+
+      isResourcesSaved.value = true
     }
   }
 
-  private fun fetchQuestionnaireJson(): String {
-    _questionnaireJson?.let {
-      return it
+  private suspend fun saveResources(
+    bundle: Bundle,
+    subjectReference: Reference,
+    encounterId: String,
+  ) {
+    val uuid = generateUuid()
+    val encounterReference = Reference("Encounter/$encounterId")
+    bundle.entry.forEach {
+      when (val resource = it.resource) {
+        is Observation -> {
+          if (resource.hasCode()) {
+            resource.id = uuid
+            resource.subject = subjectReference
+            resource.encounter = encounterReference
+            saveResourceToDatabase(resource, "Obs "+uuid)
+          }
+        }
+        is Condition -> {
+          if (resource.hasCode()) {
+            resource.id = uuid
+            resource.subject = subjectReference
+            resource.encounter = encounterReference
+            saveResourceToDatabase(resource, "cond "+uuid)
+          }
+        }
+        is Encounter -> {
+          resource.subject = subjectReference
+          resource.id = encounterId
+          saveResourceToDatabase(resource, "enc "+encounterId)
+        }
+      }
     }
-    _questionnaireJson = readFileFromAssets(state[AdministerVaccineFragment.QUESTIONNAIRE_FILE_PATH_KEY]!!)
-    return _questionnaireJson!!
+  }
+
+  private suspend fun saveResourceToDatabase(resource: Resource, type:String) {
+    Log.e("-----","------")
+    println(type)
+    println(resource)
+    fhirEngine.create(resource)
+  }
+
+
+//  private fun isRequiredFieldMissing(bundle: Bundle): Boolean {
+//    bundle.entry.forEach {
+//      val resource = it.resource
+//      when (resource) {
+//        is Observation -> {
+//          if (resource.hasValueQuantity() && !resource.valueQuantity.hasValueElement()) {
+//            return true
+//          }
+//        }
+//        // TODO check other resources inputs
+//      }
+//    }
+//    return false
+//  }
+  private fun getQuestionnaireJson(): String {
+    questionnaireJson?.let {
+      return it!!
+    }
+    questionnaireJson = readFileFromAssets(state[AdministerVaccineFragment.QUESTIONNAIRE_FILE_PATH_KEY]!!)
+    return questionnaireJson!!
   }
 
   private fun readFileFromAssets(filename: String): String {
