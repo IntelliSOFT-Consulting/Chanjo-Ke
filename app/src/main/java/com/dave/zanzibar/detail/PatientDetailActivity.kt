@@ -35,6 +35,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
         val bundle =
             bundleOf(QUESTIONNAIRE_FILE_PATH_KEY to "immunization.json")
+
         binding = ActivityPatientDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val toolbar = findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
@@ -70,6 +71,10 @@ class PatientDetailActivity : AppCompatActivity() {
             }
         }
         patientDetailsViewModel.getPatientDetailData()
+
+
+
+
 
     }
 

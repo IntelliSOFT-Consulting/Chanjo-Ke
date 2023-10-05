@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
         <activity
+            android:name=".vaccine.AdministerVaccine"
+            android:exported="false" />
+        <activity
             android:name=".detail.PatientDetailActivity"
             android:exported="false"
             android:label="@string/title_activity_patient_detail"

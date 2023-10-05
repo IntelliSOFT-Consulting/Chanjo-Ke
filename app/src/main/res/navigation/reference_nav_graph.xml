@@ -20,13 +20,6 @@
     </fragment>
 
 
-    <fragment
-        android:id="@+id/fragment_add_patient"
-        android:name="com.dave.zanzibar.add_patient.AddPatientFragment"
-        android:label="Patient List"
-        tools:layout="@layout/add_patient_fragment">
-
-    </fragment>
 
     <fragment
         android:id="@+id/addPatientFragment"
@@ -43,6 +36,9 @@
         <argument
             android:name="patient_id"
             app:argType="string" />
+
     </activity>
+
+
 
 </navigation>
