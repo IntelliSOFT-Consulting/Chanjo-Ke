@@ -2,8 +2,8 @@ package com.dave.zanzibar.fhir
 
 import android.app.Application
 import android.content.Context
+import com.dave.zanzibar.BuildConfig
 import com.dave.zanzibar.fhir.external.ValueSetResolver
-import com.google.android.fhir.BuildConfig
 import com.google.android.fhir.DatabaseErrorStrategy
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.FhirEngineConfiguration

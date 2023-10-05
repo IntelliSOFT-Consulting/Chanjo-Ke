@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -150,25 +149,35 @@ class PatientListFragment : Fragment() {
                         Timber.i("Sync: ${it::class.java.simpleName}")
                         fadeInTopBanner(it)
                     }
+
                     is SyncJobStatus.InProgress -> {
                         Timber.i("Sync: ${it::class.java.simpleName} with data $it")
                         fadeInTopBanner(it)
                     }
+
                     is SyncJobStatus.Finished -> {
                         Timber.i("Sync: ${it::class.java.simpleName} at ${it.timestamp}")
-                        patientListViewModel.searchPatientsByName(searchView.query.toString().trim())
+                        patientListViewModel.searchPatientsByName(
+                            searchView.query.toString().trim()
+                        )
                         mainActivityViewModel.updateLastSyncTimestamp()
                         fadeOutTopBanner(it)
                     }
+
                     is SyncJobStatus.Failed -> {
                         Timber.i("Sync: ${it::class.java.simpleName} at ${it.timestamp}")
-                        patientListViewModel.searchPatientsByName(searchView.query.toString().trim())
+                        patientListViewModel.searchPatientsByName(
+                            searchView.query.toString().trim()
+                        )
                         mainActivityViewModel.updateLastSyncTimestamp()
                         fadeOutTopBanner(it)
                     }
+
                     else -> {
                         Timber.i("Sync: Unknown state.")
-                        patientListViewModel.searchPatientsByName(searchView.query.toString().trim())
+                        patientListViewModel.searchPatientsByName(
+                            searchView.query.toString().trim()
+                        )
                         mainActivityViewModel.updateLastSyncTimestamp()
                         fadeOutTopBanner(it)
                     }
@@ -177,8 +186,8 @@ class PatientListFragment : Fragment() {
         }
 
 
-
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -186,6 +195,9 @@ class PatientListFragment : Fragment() {
 
     private fun onPatientItemClicked(patientItem: PatientListViewModel.PatientItem) {
 
+        val action = PatientListFragmentDirections.actionPatientListToPatientDetailActivity(patientItem.resourceId)
+
+        findNavController().navigate(action)
     }
 
     private fun onAddPatientClick() {
@@ -222,7 +234,9 @@ class PatientListFragment : Fragment() {
         syncProgress.visibility = View.GONE
 
         if (topBanner.visibility == View.VISIBLE) {
-            "${resources.getString(R.string.sync).uppercase()} ${state::class.java.simpleName.uppercase()}"
+            "${
+                resources.getString(R.string.sync).uppercase()
+            } ${state::class.java.simpleName.uppercase()}"
                 .also { syncStatus.text = it }
 
             val animation = AnimationUtils.loadAnimation(topBanner.context, R.anim.fade_out)
