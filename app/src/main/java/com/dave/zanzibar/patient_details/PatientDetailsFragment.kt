@@ -33,6 +33,8 @@ import com.dave.zanzibar.R
 import com.dave.zanzibar.databinding.PatientDetailBinding
 import com.dave.zanzibar.fhir.FhirApplication
 import com.google.android.fhir.FhirEngine
+import org.hl7.fhir.r4.model.Address
+import org.hl7.fhir.r4.model.Practitioner
 
 /**
  * A fragment representing a single Patient detail screen. This fragment is contained in a
@@ -58,6 +60,8 @@ class PatientDetailsFragment : Fragment() {
     savedInstanceState: Bundle?,
   ): View {
     _binding = PatientDetailBinding.inflate(inflater, container, false)
+
+
     return binding.root
   }
 
