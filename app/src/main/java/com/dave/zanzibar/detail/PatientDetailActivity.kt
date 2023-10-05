@@ -76,11 +76,24 @@ class PatientDetailActivity : AppCompatActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.patient_caregivers_menu, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 // Handle the up button click here
                 onBackPressed() // or navigateUp()
+                true
+            }
+
+            R.id.menu_item_care_giver -> {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("functionToCall", "careFunction")
+                intent.putExtra("patientId", args.patientId)
+                startActivity(intent)
                 true
             }
 

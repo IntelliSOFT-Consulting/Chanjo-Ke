@@ -19,6 +19,7 @@
     <string name="cancel_questionnaire_message">Are you sure you want to cancel?</string>
     <string name="inputs_missing">Input missing</string>
     <string name="resources_saved">Details Updated</string>
+    <string name="add_care_giver">Add Care Giver</string>
 
 
 </resources>
