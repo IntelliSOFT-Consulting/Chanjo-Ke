@@ -62,7 +62,6 @@ class PatientDetailActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
-        val fab: FloatingActionButton = binding.fab
         patientDetailsViewModel.livePatientData.observe(this) {
             binding.apply {
                 tvName.text = it.name
@@ -71,9 +70,7 @@ class PatientDetailActivity : AppCompatActivity() {
             }
         }
         patientDetailsViewModel.getPatientDetailData()
-        fab.setOnClickListener { view ->
 
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
