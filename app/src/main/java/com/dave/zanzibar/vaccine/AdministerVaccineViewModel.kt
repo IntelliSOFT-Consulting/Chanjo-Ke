@@ -68,6 +68,13 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
 //        return@launch
 //      }
 
+      Log.e("-----","hhhhhhhh")
+
+      val context = FhirContext.forR4()
+      val questionnaire =
+        context.newJsonParser().encodeResourceToString(questionnaireResponse)
+
+      println(questionnaire)
 
       saveResources(bundle, subjectReference, encounterId)
 
@@ -83,6 +90,9 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
     val uuid = generateUuid()
     val encounterReference = Reference("Encounter/$encounterId")
     bundle.entry.forEach {
+
+
+
       when (val resource = it.resource) {
         is Observation -> {
           if (resource.hasCode()) {
