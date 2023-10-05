@@ -21,7 +21,7 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     DownloadWorkManager {
     private val resourceTypeList = ResourceType.values().map { it.name }
     private val urls = LinkedList(
-        listOf("Patient?address-city=NAIROBI&_sort=_lastUpdated")
+        listOf("Patient?address-city=NAIROBI&_sort=_lastUpdated","Practitioner")
     )
 
     override suspend fun getNextRequest(): Request? {
@@ -36,11 +36,18 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     }
 
     override suspend fun getSummaryRequestUrls(): Map<ResourceType, String> {
-        return urls.associate {
-            ResourceType.fromCode(it.substringBefore("?")) to
-                    it.plus("&${SyncDataParams.SUMMARY_KEY}=${SyncDataParams.SUMMARY_COUNT_VALUE}")
+        return urls.associate { url ->
+            val resourceType = ResourceType.fromCode(url.substringBefore("?"))
+            val summaryParam = if (resourceType != ResourceType.Practitioner) {
+                "&${SyncDataParams.SUMMARY_KEY}=${SyncDataParams.SUMMARY_COUNT_VALUE}"
+            } else {
+                ""
+            }
+
+            resourceType to url.plus(summaryParam)
         }
     }
+
 
     override suspend fun processResponse(response: Resource): Collection<Resource> {
         // As per FHIR documentation :
