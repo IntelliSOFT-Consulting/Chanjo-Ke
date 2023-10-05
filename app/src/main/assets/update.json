@@ -54,11 +54,11 @@
                 "coding": [
                   {
                     "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "check-box",
-                    "display": "Checkbox"
+                    "code": "drop-down",
+                    "display": "Drop down"
                   }
                 ],
-                "text": "Checkbox"
+                "text": "Drop down"
               }
             }
           ],
@@ -76,6 +76,60 @@
                 "display": "Negative",
                 "system": "http://snomed.info/sct"
               }
+            },
+            {
+              "valueCoding": {
+                "code": "13645006",
+                "display": "Unknown",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "1.4.0",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "fever"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "1.1.0",
+              "operator": "=",
+              "answerCoding": {
+                "code": "13645006",
+                "display": "Unknown",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ],
+          "item": [
+            {
+              "type": "choice",
+              "linkId": "1.2.1",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "13645006",
+                    "display": "Unknown",
+                    "system": "http://snomed.info/sct"
+                  }
+                }
+              ]
             }
           ]
         },
@@ -101,8 +155,55 @@
               "question": "1.1.0",
               "operator": "=",
               "answerCoding": {
+                "code": "13645005",
+                "display": "Negative",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ],
+          "item": [
+            {
+              "type": "choice",
+              "linkId": "1.2.1",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "13645005",
+                    "display": "Negative",
+                    "system": "http://snomed.info/sct"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "1.3.0",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "fever"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "1.1.0",
+              "operator": "=",
+              "answerCoding": {
                 "code": "386661006",
-                "display": "Fever",
+                "display": "Positive",
                 "system": "http://snomed.info/sct"
               }
             }
@@ -118,7 +219,185 @@
                 {
                   "valueCoding": {
                     "code": "386661006",
-                    "display": "Fever",
+                    "display": "Positive",
+                    "system": "http://snomed.info/sct"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Client is currently receiving HAART",
+          "type": "choice",
+          "linkId": "haart",
+          "repeats": true,
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "noCode",
+                "display": "No",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "yesCode",
+                "display": "Yes",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "nexthaart",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "fever"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "haart",
+              "operator": "=",
+              "answerCoding": {
+                "code": "noCode",
+                "display": "No",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ],
+          "item": [
+            {
+              "type": "choice",
+              "linkId": "1.2.1",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "noCode",
+                    "display": "No",
+                    "system": "http://snomed.info/sct"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "nextother",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "fever"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "haart",
+              "operator": "=",
+              "answerCoding": {
+                "code": "yesCode",
+                "display": "Yes",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ],
+          "item": [
+            {
+              "type": "choice",
+              "linkId": "1.2.1",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "yesCode",
+                    "display": "Yes",
+                    "system": "http://snomed.info/sct"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "1.3.0",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "fever"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "1.1.0",
+              "operator": "=",
+              "answerCoding": {
+                "code": "386661006",
+                "display": "Positive",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ],
+          "item": [
+            {
+              "type": "choice",
+              "linkId": "1.2.1",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "386661006",
+                    "display": "Positive",
                     "system": "http://snomed.info/sct"
                   }
                 }

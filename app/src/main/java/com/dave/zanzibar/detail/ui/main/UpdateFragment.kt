@@ -98,7 +98,7 @@ class UpdateFragment : Fragment() {
 
     private fun onSubmitAction() {
         val formatter = FormatterClass()
-     val  patientId=  formatter.getSharedPref("patientId", requireContext())
+        val patientId = formatter.getSharedPref("patientId", requireContext())
 
         val questionnaireFragment =
             childFragmentManager.findFragmentByTag(QUESTIONNAIRE_FRAGMENT_TAG) as QuestionnaireFragment
