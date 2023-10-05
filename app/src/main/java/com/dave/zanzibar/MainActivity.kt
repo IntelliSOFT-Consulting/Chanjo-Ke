@@ -26,6 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+    private val formatter = FormatterClass()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,21 +40,40 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.updateLastSyncTimestamp()
         viewModel.triggerOneTimeSync()
-        val functionToCall = intent.getStringExtra("functionToCall")
-        if (functionToCall == "updateFunction") {
-            val patientId = intent.getStringExtra("patientId")
-            if (patientId != null) {
-                updateFunction(patientId)
+        when (intent.getStringExtra("functionToCall")) {
+            "updateFunction" -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    updateFunction(patientId)
+                }
+            }
+
+            "careFunction" -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    careFunction(patientId)
+                }
             }
         }
+
         val navController = findNavController(R.id.nav_host_fragment_activity_bottem_navigation)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.patient_list,
+                R.id.patient_list, R.id.updateFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+    }
+
+    private fun careFunction(patientId: String) {
+        formatter.saveSharedPref("patientId", patientId, this)
+        val bundle = Bundle()
+        bundle.putString(UpdateFragment.QUESTIONNAIRE_FRAGMENT_TAG, "update.json")
+        bundle.putString("patientId", patientId)
+        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
+            R.id.careGiverFragment,bundle
+        )
     }
 
 
@@ -88,7 +108,6 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putString(UpdateFragment.QUESTIONNAIRE_FRAGMENT_TAG, "update.json")
         bundle.putString("patientId", patientId)
-        val formatter = FormatterClass()
         formatter.saveSharedPref("patientId", patientId, this)
 
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(

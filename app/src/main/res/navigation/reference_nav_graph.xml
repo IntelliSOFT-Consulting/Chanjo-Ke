@@ -51,5 +51,9 @@
         tools:layout="@layout/fragment_update">
 
     </fragment>
+    <fragment
+        android:id="@+id/careGiverFragment"
+        android:name="com.dave.zanzibar.add_patient.CareGiverFragment"
+        android:label="Add Care Giver" />
 
 </navigation>
