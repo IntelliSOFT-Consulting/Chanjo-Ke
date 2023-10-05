@@ -1,17 +1,22 @@
 package com.dave.zanzibar.detail.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.dave.zanzibar.MainActivity
 import com.dave.zanzibar.R
 import com.dave.zanzibar.databinding.FragmentHomeBinding
 import com.dave.zanzibar.databinding.FragmentPatientDetailBinding
 import com.dave.zanzibar.databinding.FragmentVaccinesBinding
+import com.dave.zanzibar.detail.PatientDetailActivity
+import timber.log.Timber
 
 /**
  * A placeholder fragment containing a simple view.
@@ -41,6 +46,17 @@ class VaccinesFragment : Fragment() {
 
         binding = FragmentVaccinesBinding.inflate(inflater, container, false)
 
+        binding.btnUpdate.apply {
+            setOnClickListener {
+
+                val activity = requireActivity()
+                if (activity is PatientDetailActivity) {
+                    activity.updateFunction()
+                } else {
+                    Timber.tag("YourFragment").e("Activity is not of type YourActivity")
+                }
+            }
+        }
         return binding.root
     }
 
