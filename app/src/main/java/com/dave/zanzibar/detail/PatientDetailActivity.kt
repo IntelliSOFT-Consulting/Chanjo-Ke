@@ -71,6 +71,9 @@ class PatientDetailActivity : AppCompatActivity() {
                 tvName.text = it.name
                 tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
                 tvDob.text = it.dob
+                tvContact.text = it.contact_name
+                tvPhone.text = it.contact_phone
+                tvContactGender.text = it.contact_gender
             }
         }
         patientDetailsViewModel.getPatientDetailData()
@@ -89,15 +92,16 @@ class PatientDetailActivity : AppCompatActivity() {
                 onBackPressed() // or navigateUp()
                 true
             }
-             R.id.menu_item_option2 -> {
-                 proceedToNavigate("editFunction")
+
+            R.id.menu_item_option2 -> {
+                proceedToNavigate("editFunction")
 
                 true
             }
 
             R.id.menu_item_care_giver -> {
                 proceedToNavigate("careFunction")
-                
+
                 true
             }
 
