@@ -30,6 +30,7 @@ import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils
 import org.hl7.fhir.r4.model.Condition
 import org.hl7.fhir.r4.model.Encounter
+import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
@@ -120,79 +121,34 @@ class PatientDetailsViewModel(
     private suspend fun getEncounterDetails():ArrayList<DbVaccineData>{
 
         val encounterList = ArrayList<DbVaccineData>()
-        val encounter = mutableListOf<EncounterItem>()
 
         fhirEngine
-            .search<Encounter> {
-                filter(Encounter.SUBJECT, { value = "Patient/$patientId" })
+            .search<Immunization> {
+                filter(Immunization.PATIENT, { value = "Patient/$patientId" })
                 sort(Encounter.DATE, Order.DESCENDING)
             }
-            .map { createEncounterItem(it, getApplication<Application>().resources) }
-            .let { encounter.addAll(it) }
+            .map { createEncounterItem(it) }
+            .let { encounterList.addAll(it) }
 
-        encounter.forEach {
-
-            val name = it.code
-            val value = it.value
-
-            val dbVaccineData = DbVaccineData(name, value)
-            encounterList.add(dbVaccineData)
-
-        }
 
         return encounterList
     }
 
-    fun createEncounterItem(encounter: Encounter, resources: Resources): EncounterItem{
+    fun createEncounterItem(immunization: Immunization): DbVaccineData{
 
-        val encounterDate =
-            if (encounter.hasPeriod()) {
-                if (encounter.period.hasStart()) {
-                    encounter.period.start
-                } else {
-                    ""
-                }
-            } else {
-                ""
-            }
+        val vaccineCodeableConcept = immunization.vaccineCode
+        val doseQuantity = immunization.doseQuantity
 
-        var lastUpdatedValue = ""
+        val value = doseQuantity.value
+        val text = vaccineCodeableConcept.text
 
-        if (encounter.hasMeta()){
-            if (encounter.meta.hasLastUpdated()){
-                lastUpdatedValue = encounter.meta.lastUpdated.toString()
-            }
-        }
+        var valueStr = ""
+        if (value != null) valueStr = value.toString()
 
-        val reasonCode = encounter.reasonCode.firstOrNull()?.text ?: ""
 
-        var textValue = ""
-
-        if(encounter.reasonCode.size > 0){
-
-            val text = encounter.reasonCode[0].text
-            val textString = encounter.reasonCode[0].text?.toString() ?: ""
-            val textStringValue = encounter.reasonCode[0].coding[0].code ?: ""
-
-            textValue = if (textString != "") {
-                textString
-            }else if (textStringValue != ""){
-                textStringValue
-            }else text ?: ""
-
-        }
-
-        val encounterDateStr = if (encounterDate != "") {
-            encounterDate.toString()
-        } else {
-            lastUpdatedValue
-        }
-
-        return EncounterItem(
-            encounter.logicalId,
-            textValue,
-            encounterDateStr,
-            reasonCode
+        return DbVaccineData(
+            valueStr,
+            ""
         )
     }
 

@@ -12,3 +12,7 @@ data class EncounterItem(
 ) {
     override fun toString(): String = code
 }
+data class DbCodeValue(
+    val code: String,
+    val value: String
+)

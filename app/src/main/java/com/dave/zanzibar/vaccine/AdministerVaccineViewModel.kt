@@ -26,6 +26,8 @@ import androidx.lifecycle.viewModelScope
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
 import com.dave.zanzibar.fhir.FhirApplication
+import com.dave.zanzibar.fhir.data.DbCodeValue
+import com.dave.zanzibar.fhir.data.DbVaccineData
 import com.dave.zanzibar.patient_list.PatientListViewModel
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
@@ -36,6 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Condition
 import org.hl7.fhir.r4.model.Encounter
@@ -94,7 +97,7 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
     encounterId: String,
     patientId: String,
   ) {
-    val uuid = generateUuid()
+
     val encounterReference = Reference("Encounter/$encounterId")
     bundle.entry.forEach {
 
@@ -103,6 +106,7 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
       when (val resource = it.resource) {
         is Observation -> {
           if (resource.hasCode()) {
+            val uuid = generateUuid()
             resource.id = uuid
             resource.subject = subjectReference
             resource.encounter = encounterReference
@@ -111,6 +115,7 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
         }
         is Condition -> {
           if (resource.hasCode()) {
+            val uuid = generateUuid()
             resource.id = uuid
             resource.subject = subjectReference
             resource.encounter = encounterReference
@@ -135,8 +140,7 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
       val encounterReference = Reference("Encounter/$encounterId")
       val patientReference = Reference("Patient/$patientId")
 
-      val observationList = observationFromCode("", patientId)
-      //Check and get other observation details
+      //Have a list of the observation codes
 
       val immunization = Immunization()
 
@@ -145,17 +149,35 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
       immunization.id = uuid
 
       val protocolList = Immunization().protocolApplied
-      val immunizationProtocolAppliedComponent = Immunization.
-        ImmunizationProtocolAppliedComponent()
+      val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
 
-      val stringType = StringType()
-      stringType.value = ""
-      stringType.id = ""
+      //Disease target
+      val diseaseTarget = observationFromCode(
+        "TARGET_DISEASE",
+        patientId,
+        encounterId)
+      val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
+      val diseaseTargetCodeableConcept = CodeableConcept()
+      diseaseTargetCodeableConcept.text = diseaseTarget.value
+      diseaseTargetCodeableConceptList.add(diseaseTargetCodeableConcept)
+      immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
 
-      immunizationProtocolAppliedComponent.doseNumber = stringType
+      //Dose number
+      val doseNumber = observationFromCode(
+        "DOSE_NUMBER",
+        patientId,
+        encounterId)
+      val stringTypeDoseNumber = StringType()
+      stringTypeDoseNumber.value = doseNumber.value
+      immunizationProtocolAppliedComponent.doseNumber = stringTypeDoseNumber
+
+      //Combine Protocol list
       protocolList.add(immunizationProtocolAppliedComponent)
-
       immunization.protocolApplied = protocolList
+
+
+
+
 
       fhirEngine.create(immunization)
 
@@ -165,7 +187,8 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
 
   }
 
-  private suspend fun observationFromCode(codeValue: String, patientId: String): List<PatientListViewModel.ObservationItem>{
+  private suspend fun observationFromCode(codeValue: String, patientId: String, encounterId: String):
+          DbCodeValue{
 
     val observations = mutableListOf<PatientListViewModel.ObservationItem>()
     fhirEngine
@@ -174,16 +197,30 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
           code = codeValue
         })})
         filter(Observation.SUBJECT, {value = "Patient/$patientId"})
+        filter(Observation.ENCOUNTER, {value = "Encounter/$encounterId"})
       }
       .take(1)
       .map { createObservationItem(it, getApplication<Application>().resources) }
       .let { observations.addAll(it) }
 
-    return observations
+    //Return limited results
+    var code = ""
+    var value = ""
+    observations.forEach {
+      code = it.code
+      value = it.value
+    }
+
+
+    return DbCodeValue(code, value)
 
   }
 
   fun createObservationItem(observation: Observation, resources: Resources): PatientListViewModel.ObservationItem {
+
+    Log.e("*****","*****")
+    println(observation)
+    println(observation.value)
 
 
     // Show nothing if no values available for datetime and value quantity.
@@ -253,12 +290,8 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
 
 
   private suspend fun saveResourceToDatabase(resource: Resource, type:String) {
-    Log.e("-----","------")
-    println(type)
-    println(resource)
-    fhirEngine.create(resource)
 
-    //
+    fhirEngine.create(resource)
 
   }
 
