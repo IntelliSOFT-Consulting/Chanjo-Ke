@@ -89,7 +89,7 @@ class CareGiverFragment : Fragment(R.layout.add_patient_fragment) {
                 Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
                 return@observe
             }
-            Toast.makeText(requireContext(), "Related Person is saved.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Care Giver details saved successfully.", Toast.LENGTH_SHORT).show()
             NavHostFragment.findNavController(this).navigateUp()
         }
     }

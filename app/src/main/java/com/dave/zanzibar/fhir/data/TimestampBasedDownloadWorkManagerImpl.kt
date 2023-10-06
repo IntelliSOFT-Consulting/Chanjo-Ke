@@ -21,7 +21,7 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     DownloadWorkManager {
     private val resourceTypeList = ResourceType.values().map { it.name }
     private val urls = LinkedList(
-        listOf("Patient?address-city=NAIROBI&_sort=_lastUpdated","Practitioner")
+        listOf("Patient?address-city=NAIROBI&_sort=_lastUpdated", "Practitioner")
     )
 
     override suspend fun getNextRequest(): Request? {
@@ -73,7 +73,8 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
         // If the resource returned is a Bundle, check to see if there is a "next" relation referenced
         // in the Bundle.link component, if so, append the URL referenced to list of URLs to download.
         if (response is Bundle) {
-            val nextUrl = response.link.firstOrNull { component -> component.relation == "next" }?.url
+            val nextUrl =
+                response.link.firstOrNull { component -> component.relation == "next" }?.url
             if (nextUrl != null) {
                 urls.add(nextUrl)
             }
@@ -123,7 +124,7 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
 
     // Affix lastUpdate to non-$everything queries as per:
     // https://hl7.org/fhir/operation-patient-everything.html
-    if (!downloadUrl.contains("\$everything")) {
+    if (!downloadUrl.contains("\$everything") || !downloadUrl.contains("Practitioner")) {
         downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
     }
 

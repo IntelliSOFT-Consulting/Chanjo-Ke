@@ -19,6 +19,7 @@ import com.dave.zanzibar.add_patient.AddPatientFragment.Companion.QUESTIONNAIRE_
 import com.dave.zanzibar.detail.ui.main.SectionsPagerAdapter
 import com.dave.zanzibar.databinding.ActivityPatientDetailBinding
 import com.dave.zanzibar.detail.ui.main.AppointmentsFragment
+import com.dave.zanzibar.detail.ui.main.ClientDetailsFragment
 import com.dave.zanzibar.detail.ui.main.VaccinesFragment
 import com.dave.zanzibar.fhir.FhirApplication
 import com.dave.zanzibar.utils.AppUtils
@@ -58,9 +59,12 @@ class PatientDetailActivity : AppCompatActivity() {
         vaccine.arguments = bundle
         val apn = AppointmentsFragment()
         apn.arguments = bundle
+        val cd = ClientDetailsFragment()
+        cd.arguments = bundle
 
         adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(apn, getString(R.string.tab_text_2))
+        adapter.addFragment(cd, getString(R.string.tab_text_3))
 
         val viewPager: ViewPager = binding.viewPager
         viewPager.adapter = adapter
@@ -71,6 +75,9 @@ class PatientDetailActivity : AppCompatActivity() {
                 tvName.text = it.name
                 tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
                 tvDob.text = it.dob
+                tvContact.text = it.contact_name
+                tvPhone.text = it.contact_phone
+                tvContactGender.text = it.contact_gender
             }
         }
         patientDetailsViewModel.getPatientDetailData()
@@ -90,16 +97,27 @@ class PatientDetailActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.menu_item_option2 -> {
+                proceedToNavigate("editFunction")
+
+                true
+            }
+
             R.id.menu_item_care_giver -> {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("functionToCall", "careFunction")
-                intent.putExtra("patientId", args.patientId)
-                startActivity(intent)
+                proceedToNavigate("careFunction")
+
                 true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun proceedToNavigate(s: String) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("functionToCall", s)
+        intent.putExtra("patientId", args.patientId)
+        startActivity(intent)
     }
 
     fun updateFunction() {
