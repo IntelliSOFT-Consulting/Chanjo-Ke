@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.dave.zanzibar.MainActivity
 import com.dave.zanzibar.R
 import com.dave.zanzibar.databinding.FragmentPatientListViewBinding
+import org.hl7.fhir.r4.model.Patient
 
 class PatientListFragment : Fragment() {
 
@@ -26,6 +27,8 @@ class PatientListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPatientListViewBinding.inflate(inflater, container, false)
+
+
 
         return _binding.root
     }

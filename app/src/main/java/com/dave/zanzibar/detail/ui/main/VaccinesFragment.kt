@@ -1,5 +1,6 @@
 package com.dave.zanzibar.detail.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.dave.zanzibar.databinding.FragmentHomeBinding
 import com.dave.zanzibar.databinding.FragmentPatientDetailBinding
 import com.dave.zanzibar.databinding.FragmentVaccinesBinding
 import com.dave.zanzibar.detail.PatientDetailActivity
+import com.dave.zanzibar.vaccine.AdministerVaccine
 import timber.log.Timber
 
 /**
@@ -56,6 +58,10 @@ class VaccinesFragment : Fragment() {
                     Timber.tag("YourFragment").e("Activity is not of type YourActivity")
                 }
             }
+        }
+        binding.btnAdminister.setOnClickListener {
+            val intent = Intent(requireContext(), AdministerVaccine::class.java)
+            startActivity(intent)
         }
         return binding.root
     }

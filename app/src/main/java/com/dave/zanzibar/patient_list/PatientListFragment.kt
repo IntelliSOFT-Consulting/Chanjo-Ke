@@ -28,15 +28,18 @@ import com.dave.zanzibar.R
 import com.dave.zanzibar.add_patient.AddPatientFragment.Companion.QUESTIONNAIRE_FILE_PATH_KEY
 import com.dave.zanzibar.databinding.FragmentPatientListBinding
 import com.dave.zanzibar.fhir.FhirApplication
+import com.dave.zanzibar.fhir.data.FormatterClass
 import com.dave.zanzibar.viewmodel.MainActivityViewModel
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.sync.SyncJobStatus
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.Normalizer.Form
 import kotlin.math.roundToInt
 
 class PatientListFragment : Fragment() {
 
+    private var formatterClass = FormatterClass()
     private lateinit var fhirEngine: FhirEngine
     private lateinit var patientListViewModel: PatientListViewModel
     private lateinit var searchView: SearchView
@@ -195,6 +198,7 @@ class PatientListFragment : Fragment() {
 
     private fun onPatientItemClicked(patientItem: PatientListViewModel.PatientItem) {
 
+        formatterClass.saveSharedPref("patientId",patientItem.resourceId, requireContext())
         val action = PatientListFragmentDirections.actionPatientListToPatientDetailActivity(patientItem.resourceId)
 
         findNavController().navigate(action)
