@@ -113,6 +113,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
     return patients
   }
 
+
 //  private suspend fun getRiskAssessments(): Map<String, RiskAssessment?> {
 //    return fhirEngine
 //      .search<RiskAssessment> {}

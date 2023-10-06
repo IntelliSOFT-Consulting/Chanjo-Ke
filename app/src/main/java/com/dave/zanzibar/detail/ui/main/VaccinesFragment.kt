@@ -1,5 +1,6 @@
 package com.dave.zanzibar.detail.ui.main
 
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,13 +12,20 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dave.zanzibar.MainActivity
 import com.dave.zanzibar.R
 import com.dave.zanzibar.databinding.FragmentHomeBinding
 import com.dave.zanzibar.databinding.FragmentPatientDetailBinding
 import com.dave.zanzibar.databinding.FragmentVaccinesBinding
 import com.dave.zanzibar.detail.PatientDetailActivity
+import com.dave.zanzibar.fhir.FhirApplication
+import com.dave.zanzibar.fhir.data.FormatterClass
 import com.dave.zanzibar.vaccine.AdministerVaccine
+import com.dave.zanzibar.viewmodel.PatientDetailsViewModel
+import com.dave.zanzibar.viewmodel.PatientDetailsViewModelFactory
+import com.google.android.fhir.FhirEngine
 import timber.log.Timber
 
 /**
@@ -32,6 +40,11 @@ class VaccinesFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentVaccinesBinding
+    private lateinit var patientDetailsViewModel: PatientDetailsViewModel
+    private lateinit var patientId: String
+    private lateinit var fhirEngine: FhirEngine
+    private val formatterClass = FormatterClass()
+    private lateinit var layoutManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +61,22 @@ class VaccinesFragment : Fragment() {
 
         binding = FragmentVaccinesBinding.inflate(inflater, container, false)
 
+        fhirEngine = FhirApplication.fhirEngine(requireContext())
+
+        patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
+
+        layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.setHasFixedSize(true)
+
+        patientDetailsViewModel = ViewModelProvider(this,
+           PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
+        )[PatientDetailsViewModel::class.java]
+
         binding.btnUpdate.apply {
             setOnClickListener {
 
@@ -63,7 +92,20 @@ class VaccinesFragment : Fragment() {
             val intent = Intent(requireContext(), AdministerVaccine::class.java)
             startActivity(intent)
         }
+
+        getVaccinations()
         return binding.root
+    }
+
+    private fun getVaccinations() {
+
+        val encounterList = patientDetailsViewModel.getEncounterList()
+
+        println(encounterList)
+
+
+        val vaccineAdapter = VaccineAdapter(encounterList,requireContext())
+        binding.recyclerView.adapter = vaccineAdapter
     }
 
     companion object {
