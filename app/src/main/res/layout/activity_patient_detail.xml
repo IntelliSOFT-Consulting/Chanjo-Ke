@@ -48,20 +48,25 @@
                     android:padding="15dp">
 
                     <TextView
+                        style="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name" />
+                    <TextView
                         android:id="@+id/tv_name"
                         style="@style/TextAppearance.Material3.TitleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Mary Odhiambo" />
+                     />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/status"
-                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            style="@style/TextAppearance.Material3.TitleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Gender:" />
@@ -78,11 +83,11 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/last_contact"
-                            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                            style="@style/TextAppearance.Material3.TitleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Date of Birth:" />
@@ -107,7 +112,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
                             style="@style/TextAppearance.Material3.TitleMedium"
@@ -127,10 +132,10 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
-                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            style="@style/TextAppearance.Material3.TitleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Telephone:" />
@@ -147,10 +152,10 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
-                            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                            style="@style/TextAppearance.Material3.TitleMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Gender:" />

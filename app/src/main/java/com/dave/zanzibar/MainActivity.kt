@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.menu_item_option2 -> {
-                showToast("Option 2 selected")
+                 viewModel.triggerOneTimeSync()
                 true
             }
             // Add more cases for additional menu items if needed
