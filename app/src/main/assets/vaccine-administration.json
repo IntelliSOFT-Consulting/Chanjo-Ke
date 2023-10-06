@@ -607,6 +607,21 @@
           ]
         }
       ]
+    },
+    {
+      "text": "Date of next dose?",
+      "type": "date",
+      "linkId": "4.1.2",
+      "enableWhen": [
+        {
+          "question": "4.1.0",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://snomed.info/sct",
+            "code": "390840006"
+          }
+        }
+      ]
     }
 
   ]

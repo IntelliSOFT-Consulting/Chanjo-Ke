@@ -43,6 +43,7 @@ import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Condition
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Immunization
+import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
@@ -174,12 +175,42 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
       //Combine Protocol list
       protocolList.add(immunizationProtocolAppliedComponent)
       immunization.protocolApplied = protocolList
+      val immunizationId = generateUuid()
+      immunization.id = immunizationId
 
       fhirEngine.create(immunization)
+
+      //create ImmunisationRecommendation
+//      createImmunisationRecommendation(immunizationId, patientId, encounterId)
+
 
     }
 
 
+
+  }
+
+  private suspend fun createImmunisationRecommendation(immunizationId: String, patientId: String, encounterId: String) {
+    val encounterReference = Reference("Encounter/$encounterId")
+    val patientReference = Reference("Patient/$patientId")
+
+    //date of next visit
+    val nextVisit = observationFromCode(
+      "390840006",
+      patientId,
+      encounterId)
+    val immunizationRecommendation = ImmunizationRecommendation()
+    immunizationRecommendation.patient = patientReference
+//      immunizationRecommendation.date = ""
+
+
+    val immunizationRecommendationRecommendationComponent =
+      ImmunizationRecommendation.
+      ImmunizationRecommendationRecommendationComponent()
+
+//    immunizationRecommendationRecommendationComponent.
+
+//    immunizationRecommendation.setRecommendation()
 
   }
 
