@@ -16,6 +16,7 @@
 
 package com.dave.zanzibar.vaccine
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -26,6 +27,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
+import com.dave.zanzibar.MainActivity
 import com.dave.zanzibar.R
 import com.dave.zanzibar.fhir.data.FormatterClass
 import com.google.android.fhir.datacapture.QuestionnaireFragment
@@ -67,6 +69,10 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
       }
       Toast.makeText(requireContext(), getString(R.string.resources_saved), Toast.LENGTH_SHORT)
         .show()
+
+      val intent = Intent(requireContext(), MainActivity::class.java)
+      startActivity(intent)
+
       NavHostFragment.findNavController(this).navigateUp()
     }
   }
@@ -110,6 +116,9 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
       questionnaireFragment.getQuestionnaireResponse(),
       patientId.toString(),
     )
+
+
+
   }
 
 

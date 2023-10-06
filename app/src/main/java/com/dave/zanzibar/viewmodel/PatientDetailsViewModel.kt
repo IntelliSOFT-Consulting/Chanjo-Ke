@@ -11,11 +11,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dave.zanzibar.R
+import com.dave.zanzibar.fhir.data.DbVaccineData
+import com.dave.zanzibar.fhir.data.EncounterItem
 import com.dave.zanzibar.patient_list.PatientListViewModel
 import com.dave.zanzibar.patient_list.toPatientItem
 import com.dave.zanzibar.utils.AppUtils
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.logicalId
+import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -24,8 +28,11 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils
 import org.hl7.fhir.r4.model.Condition
+import org.hl7.fhir.r4.model.Encounter
+import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
@@ -126,6 +133,53 @@ class PatientDetailsViewModel(
         }
         return getString(R.string.none)
     }
+
+
+    fun getEncounterList()= runBlocking{
+        getEncounterDetails()
+    }
+    private suspend fun getEncounterDetails():ArrayList<DbVaccineData>{
+
+        val encounterList = ArrayList<DbVaccineData>()
+
+        fhirEngine
+            .search<Immunization> {
+                filter(Immunization.PATIENT, { value = "Patient/$patientId" })
+                sort(Encounter.DATE, Order.DESCENDING)
+            }
+            .map { createEncounterItem(it) }
+            .let { encounterList.addAll(it) }
+
+
+        return encounterList
+    }
+
+    fun createEncounterItem(immunization: Immunization): DbVaccineData{
+
+        var targetDisease = ""
+        var doseNumberValue = ""
+
+        val protocolList = immunization.protocolApplied
+        protocolList.forEach {
+
+            //Target Disease
+            val targetDiseaseList = it.targetDisease
+            if (targetDiseaseList.isNotEmpty()) targetDisease = targetDiseaseList[0].text
+
+            //Dose number
+            val doseNumber = it.doseNumber
+            if (doseNumber != null) doseNumberValue = doseNumber.asStringValue()
+
+
+        }
+
+
+        return DbVaccineData(
+            targetDisease,
+            doseNumberValue
+        )
+    }
+
 
 }
 

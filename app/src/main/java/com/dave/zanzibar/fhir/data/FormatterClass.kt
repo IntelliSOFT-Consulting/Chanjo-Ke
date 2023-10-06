@@ -13,14 +13,12 @@ class FormatterClass {
         editor.putString(key, value);
         editor.apply();
     }
-
     fun getSharedPref(key: String, context: Context): String? {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)
         return sharedPreferences.getString(key, null)
 
     }
-
     fun deleteSharedPref(key: String, context: Context) {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)
