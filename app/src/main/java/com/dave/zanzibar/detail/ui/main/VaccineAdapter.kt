@@ -52,8 +52,8 @@ class VaccineAdapter(private var entryList: ArrayList<DbVaccineData>,
         val vaccineName = entryList[position].vaccineName
         val vaccineDosage = entryList[position].vaccineDosage
 
-        holder.tvVaccineName.text = vaccineName
-        holder.tvDosage.text = vaccineDosage
+        holder.tvVaccineName.text = "Vaccine: $vaccineName"
+        holder.tvDosage.text = "Dosage: $vaccineDosage"
 
 
     }
