@@ -95,7 +95,7 @@
               "valueExpression": {
                 "language": "application/x-fhir-query",
                 "expression": "Observation",
-                "name": "fever"
+                "name": "Unknown"
               }
             },
             {
@@ -351,6 +351,240 @@
                   "valueCoding": {
                     "code": "yesCode",
                     "display": "Yes",
+                    "system": "http://snomed.info/sct"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "1.3.0",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "fever"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "1.1.0",
+              "operator": "=",
+              "answerCoding": {
+                "code": "386661006",
+                "display": "Positive",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ],
+          "item": [
+            {
+              "type": "choice",
+              "linkId": "1.2.1",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "386661006",
+                    "display": "Positive",
+                    "system": "http://snomed.info/sct"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Client's previous vaccinations",
+          "type": "choice",
+          "linkId": "1.1.0",
+          "repeats": true,
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "BCG Vaccines",
+                "display": "BCG Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "HPV Vaccines",
+                "display": "HPV Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Measles - Rubella Vaccines",
+                "display": "Measles - Rubella Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Pneumococcal Vaccines",
+                "display": "Pneumococcal Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Polio Vaccines",
+                "display": "Polio Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Rotavirus Vaccines",
+                "display": "Rotavirus Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Rubella Vaccines",
+                "display": "Rubella Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Yellow Fever Vaccines",
+                "display": "Yellow Fever Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Inactivated Polio Vaccines",
+                "display": "Inactivated Polio Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Oral Polio Vaccines",
+                "display": "Oral Polio Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "1.4.0",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "Unknown"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "1.1.0",
+              "operator": "=",
+              "answerCoding": {
+                "code": "13645006",
+                "display": "Unknown",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ],
+          "item": [
+            {
+              "type": "choice",
+              "linkId": "1.2.1",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "13645006",
+                    "display": "Unknown",
+                    "system": "http://snomed.info/sct"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "1.2.0",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "fever"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "1.1.0",
+              "operator": "=",
+              "answerCoding": {
+                "code": "13645005",
+                "display": "Negative",
+                "system": "http://snomed.info/sct"
+              }
+            }
+          ],
+          "item": [
+            {
+              "type": "choice",
+              "linkId": "1.2.1",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "13645005",
+                    "display": "Negative",
                     "system": "http://snomed.info/sct"
                   }
                 }
