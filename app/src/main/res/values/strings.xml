@@ -20,6 +20,8 @@
     <string name="inputs_missing">Input missing</string>
     <string name="resources_saved">Details Updated</string>
     <string name="add_care_giver">Add Care Giver</string>
+    <string name="message_patient_updated">Patient details updated</string>
+    <string name="edit_patient">Edit Patient</string>
 
 
 </resources>

@@ -54,16 +54,37 @@ class MainActivity : AppCompatActivity() {
                     careFunction(patientId)
                 }
             }
+
+            "editFunction" -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    editFunction(patientId)
+                }
+            }
         }
 
         val navController = findNavController(R.id.nav_host_fragment_activity_bottem_navigation)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.patient_list, R.id.updateFragment
+                R.id.patient_list, R.id.updateFragment, R.id.editPatientFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+    }
+
+    private fun editFunction(patientId: String) {
+
+        /*      findNavController(R.id.nav_host_fragment_activity_bottem_navigation)
+                  .navigate(MainActivityDirections.actionToEditPatientFragment(patientId))
+         */
+        formatter.saveSharedPref("patientId", patientId, this)
+        val bundle = Bundle()
+        bundle.putString(UpdateFragment.QUESTIONNAIRE_FRAGMENT_TAG, "update.json")
+        bundle.putString("patientId", patientId)
+        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
+            R.id.editPatientFragment, bundle
+        )
     }
 
     private fun careFunction(patientId: String) {
@@ -72,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         bundle.putString(UpdateFragment.QUESTIONNAIRE_FRAGMENT_TAG, "update.json")
         bundle.putString("patientId", patientId)
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
-            R.id.careGiverFragment,bundle
+            R.id.careGiverFragment, bundle
         )
     }
 

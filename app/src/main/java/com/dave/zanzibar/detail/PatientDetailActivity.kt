@@ -89,17 +89,27 @@ class PatientDetailActivity : AppCompatActivity() {
                 onBackPressed() // or navigateUp()
                 true
             }
+             R.id.menu_item_option2 -> {
+                 proceedToNavigate("editFunction")
+
+                true
+            }
 
             R.id.menu_item_care_giver -> {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("functionToCall", "careFunction")
-                intent.putExtra("patientId", args.patientId)
-                startActivity(intent)
+                proceedToNavigate("careFunction")
+                
                 true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun proceedToNavigate(s: String) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("functionToCall", s)
+        intent.putExtra("patientId", args.patientId)
+        startActivity(intent)
     }
 
     fun updateFunction() {

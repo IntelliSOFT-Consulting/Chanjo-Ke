@@ -47,6 +47,7 @@
           "type": "choice",
           "linkId": "1.1.0",
           "repeats": true,
+          "required": true,
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -232,6 +233,7 @@
           "type": "choice",
           "linkId": "haart",
           "repeats": true,
+          "required": true,
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -410,6 +412,7 @@
           "type": "choice",
           "linkId": "1.1.0",
           "repeats": true,
+          "required": true,
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
