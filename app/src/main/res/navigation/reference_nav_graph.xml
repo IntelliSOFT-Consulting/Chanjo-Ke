@@ -20,13 +20,6 @@
     </fragment>
 
 
-    <fragment
-        android:id="@+id/fragment_add_patient"
-        android:name="com.dave.zanzibar.add_patient.AddPatientFragment"
-        android:label="Patient List"
-        tools:layout="@layout/add_patient_fragment">
-
-    </fragment>
 
     <fragment
         android:id="@+id/addPatientFragment"
@@ -43,6 +36,7 @@
         <argument
             android:name="patient_id"
             app:argType="string" />
+
     </activity>
     <fragment
         android:id="@+id/updateFragment"
@@ -55,5 +49,15 @@
         android:id="@+id/careGiverFragment"
         android:name="com.dave.zanzibar.add_patient.CareGiverFragment"
         android:label="Add Care Giver" />
+
+    <fragment
+        android:id="@+id/administerVaccine"
+        android:name="com.dave.zanzibar.vaccine.AdministerVaccineFragment"
+        android:label="Administer Vaccine"
+        tools:layout="@layout/administer_vaccine">
+
+    </fragment>
+
+
 
 </navigation>
