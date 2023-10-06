@@ -153,7 +153,7 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
 
       //Disease target
       val diseaseTarget = observationFromCode(
-        "TARGET_DISEASE",
+        "8867-4",
         patientId,
         encounterId)
       val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
@@ -174,10 +174,6 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
       //Combine Protocol list
       protocolList.add(immunizationProtocolAppliedComponent)
       immunization.protocolApplied = protocolList
-
-
-
-
 
       fhirEngine.create(immunization)
 

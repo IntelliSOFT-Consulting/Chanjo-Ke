@@ -16,6 +16,7 @@ import com.dave.zanzibar.fhir.data.EncounterItem
 import com.dave.zanzibar.patient_list.PatientListViewModel
 import com.dave.zanzibar.patient_list.toPatientItem
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
@@ -136,19 +137,27 @@ class PatientDetailsViewModel(
 
     fun createEncounterItem(immunization: Immunization): DbVaccineData{
 
-        val vaccineCodeableConcept = immunization.vaccineCode
-        val doseQuantity = immunization.doseQuantity
+        var targetDisease = ""
+        var doseNumberValue = ""
 
-        val value = doseQuantity.value
-        val text = vaccineCodeableConcept.text
+        val protocolList = immunization.protocolApplied
+        protocolList.forEach {
 
-        var valueStr = ""
-        if (value != null) valueStr = value.toString()
+            //Target Disease
+            val targetDiseaseList = it.targetDisease
+            if (targetDiseaseList.isNotEmpty()) targetDisease = targetDiseaseList[0].text
+
+            //Dose number
+            val doseNumber = it.doseNumber
+            if (doseNumber != null) doseNumberValue = doseNumber.asStringValue()
+
+
+        }
 
 
         return DbVaccineData(
-            valueStr,
-            ""
+            targetDisease,
+            doseNumberValue
         )
     }
 
