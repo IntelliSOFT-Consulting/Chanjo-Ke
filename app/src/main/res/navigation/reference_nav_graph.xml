@@ -20,7 +20,6 @@
     </fragment>
 
 
-
     <fragment
         android:id="@+id/addPatientFragment"
         android:name="com.dave.zanzibar.add_patient.AddPatientFragment"
@@ -28,6 +27,15 @@
         tools:layout="@layout/add_patient_fragment" />
 
 
+  <!--  <activity
+        android:id="@+id/mainActivity"
+        android:name="com.dave.zanzibar.MainActivity"
+        android:label="activity_patient_detail"
+        tools:layout="@layout/activity_main">
+        <action
+            android:id="@+id/action_to_editPatientFragment"
+            app:destination="@id/editPatientFragment" />
+    </activity>-->
     <activity
         android:id="@+id/patientDetailActivity"
         android:name="com.dave.zanzibar.detail.PatientDetailActivity"
@@ -57,7 +65,15 @@
         tools:layout="@layout/administer_vaccine">
 
     </fragment>
+    <fragment
+        android:id="@+id/editPatientFragment"
+        android:name="com.dave.zanzibar.add_patient.EditPatientFragment"
+        android:label="EditPatientFragment">
+        <argument
+            android:name="patient_id"
+            app:argType="string" />
 
+    </fragment>
 
 
 </navigation>

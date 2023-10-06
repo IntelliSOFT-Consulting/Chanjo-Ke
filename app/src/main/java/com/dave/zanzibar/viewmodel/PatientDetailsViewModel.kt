@@ -15,6 +15,7 @@ import com.dave.zanzibar.fhir.data.DbVaccineData
 import com.dave.zanzibar.fhir.data.EncounterItem
 import com.dave.zanzibar.patient_list.PatientListViewModel
 import com.dave.zanzibar.patient_list.toPatientItem
+import com.dave.zanzibar.utils.AppUtils
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.logicalId
@@ -64,15 +65,30 @@ class PatientDetailsViewModel(
         var phone = ""
         var dob = ""
         var gender = ""
+        var contact_name = ""
+        var contact_phone = ""
+        var contact_gender = ""
         searchResult.first().let {
             name = it.name[0].nameAsSingleString
             phone = it.telecom.first().value
             dob = LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
                 .toString()
             gender = it.genderElement.valueAsString
+            contact_name = if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
+            contact_phone = if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
+            contact_gender =
+                if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
         }
 
-        return PatientData(name, phone, dob, gender)
+        return PatientData(
+            name,
+            phone,
+            dob,
+            gender,
+            contact_name = contact_name,
+            contact_phone = contact_phone,
+            contact_gender = contact_gender
+        )
     }
 
 
@@ -81,6 +97,9 @@ class PatientDetailsViewModel(
         val phone: String,
         val dob: String,
         val gender: String,
+        val contact_name: String?,
+        val contact_phone: String?,
+        val contact_gender: String?
     ) {
         override fun toString(): String = name
     }

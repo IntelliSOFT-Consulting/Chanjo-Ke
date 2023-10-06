@@ -47,6 +47,7 @@
           "type": "choice",
           "linkId": "1.1.0",
           "repeats": true,
+          "required": true,
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -95,7 +96,7 @@
               "valueExpression": {
                 "language": "application/x-fhir-query",
                 "expression": "Observation",
-                "name": "fever"
+                "name": "Unknown"
               }
             },
             {
@@ -232,6 +233,7 @@
           "type": "choice",
           "linkId": "haart",
           "repeats": true,
+          "required": true,
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -402,6 +404,58 @@
                   }
                 }
               ]
+            }
+          ]
+        },
+        {
+          "text": "Client's previous vaccinations",
+          "type": "choice",
+          "linkId": "vaccinations",
+          "repeats": true,
+          "required": true,
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "Polio Vaccines",
+                "display": "Polio Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Inactivated Polio Vaccines",
+                "display": "Inactivated Polio Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Oral Polio Vaccines",
+                "display": "Oral Polio Vaccines",
+                "system": "http://snomed.info/sct"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "Yellow Fever Vaccines",
+                "display": "Yellow Fever Vaccines",
+                "system": "http://snomed.info/sct"
+              }
             }
           ]
         }
