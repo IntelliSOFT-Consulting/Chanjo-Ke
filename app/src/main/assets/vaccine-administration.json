@@ -298,6 +298,211 @@
           ]
         }
       ]
+    },
+    {
+      "linkId": "10",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+          "valueExpression": {
+            "expression": "Observation"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "10.1",
+          "type": "string",
+          "required": true,
+          "text": "Enter the vaccine Manufacturer",
+          "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+        },
+        {
+          "linkId": "10.0.1",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "1234",
+                "display": "lonic.com",
+                "system": "lonic.com"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "11",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+          "valueExpression": {
+            "expression": "Observation"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "11.1",
+          "type": "string",
+          "required": true,
+          "text": "Enter the vaccine Batch number",
+          "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+        },
+        {
+          "linkId": "11.0.1",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "12345",
+                "display": "lonic.com",
+                "system": "lonic.com"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "12",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+          "valueExpression": {
+            "expression": "Observation"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "12.1",
+          "type": "string",
+          "required": true,
+          "text": "Enter the site where the vaccine was administered",
+          "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+        },
+        {
+          "linkId": "12.0.1",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "12346",
+                "display": "lonic.com",
+                "system": "lonic.com"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "13",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+          "valueExpression": {
+            "expression": "Observation"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "13.1",
+          "type": "string",
+          "required": true,
+          "text": "Enter the vaccine Brand",
+          "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+        },
+        {
+          "linkId": "13.0.1",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "12347",
+                "display": "lonic.com",
+                "system": "lonic.com"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "13",
+      "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+          "valueExpression": {
+            "expression": "Observation"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "13.1",
+          "type": "string",
+          "required": true,
+          "text": "Enter the vaccine type",
+          "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+        },
+        {
+          "linkId": "13.0.1",
+          "type": "string",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+              "valueBoolean": true
+            }
+          ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "12348",
+                "display": "lonic.com",
+                "system": "lonic.com"
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }
