@@ -21,6 +21,7 @@ import com.dave.zanzibar.databinding.ActivityPatientDetailBinding
 import com.dave.zanzibar.detail.ui.main.AppointmentsFragment
 import com.dave.zanzibar.detail.ui.main.VaccinesFragment
 import com.dave.zanzibar.fhir.FhirApplication
+import com.dave.zanzibar.utils.AppUtils
 import com.dave.zanzibar.viewmodel.PatientDetailsViewModel
 import com.dave.zanzibar.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
@@ -68,7 +69,7 @@ class PatientDetailActivity : AppCompatActivity() {
         patientDetailsViewModel.livePatientData.observe(this) {
             binding.apply {
                 tvName.text = it.name
-                tvGender.text = it.gender
+                tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
                 tvDob.text = it.dob
             }
         }
