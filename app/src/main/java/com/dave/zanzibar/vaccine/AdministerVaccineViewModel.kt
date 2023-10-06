@@ -164,7 +164,7 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
 
       //Dose number
       val doseNumber = observationFromCode(
-        "DOSE_NUMBER",
+        "408102007",
         patientId,
         encounterId)
       val stringTypeDoseNumber = StringType()
