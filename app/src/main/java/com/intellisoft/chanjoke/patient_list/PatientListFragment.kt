@@ -95,7 +95,7 @@ class PatientListFragment : Fragment() {
         }
 
 
-        searchView = binding.search
+        searchView = binding.patientListContainer.search
         topBanner = binding.syncStatusContainer.linearLayoutSyncStatus
         syncStatus = binding.syncStatusContainer.tvSyncingStatus
         syncPercent = binding.syncStatusContainer.tvSyncingPercent

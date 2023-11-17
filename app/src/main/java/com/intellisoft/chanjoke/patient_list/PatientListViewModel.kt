@@ -87,15 +87,15 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
     val patients: MutableList<PatientItem> = mutableListOf()
     fhirEngine
       .search<Patient> {
+
         if (nameQuery.isNotEmpty()) {
-          filter(
-            Patient.NAME,
-            {
+          filter(Patient.NAME, {
               modifier = StringFilterModifier.CONTAINS
               value = nameQuery
             },
           )
         }
+
         sort(Patient.GIVEN, Order.ASCENDING)
         count = 100
         from = 0
@@ -103,12 +103,6 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
       .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
       .let { patients.addAll(it) }
 
-//    val risks = getRiskAssessments()
-//    patients.forEach { patient ->
-//      risks["Patient/${patient.resourceId}"]?.let {
-//        patient.risk = it.prediction?.first()?.qualitativeRisk?.coding?.first()?.code
-//      }
-//    }
     return patients
   }
 

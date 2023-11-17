@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.add_patient.AddPatientFragment
 import com.intellisoft.chanjoke.databinding.FragmentLandingPageBinding
 
 class LandingPage : Fragment() {
@@ -33,6 +34,11 @@ class LandingPage : Fragment() {
 
         binding.cardViewSearchClient.setOnClickListener {
             findNavController().navigate(R.id.patient_list)
+        }
+        binding.cardViewRegisterClient.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
+            findNavController().navigate(R.id.addPatientFragment, bundle)
         }
 
 

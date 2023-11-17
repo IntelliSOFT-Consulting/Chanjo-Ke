@@ -9,7 +9,11 @@
         android:id="@+id/landing_page"
         android:name="com.intellisoft.chanjoke.shared.LandingPage"
         android:label="Home"
-        tools:layout="@layout/fragment_landing_page" />
+        tools:layout="@layout/fragment_landing_page" >
+        <action
+            android:id="@+id/action_patient_list_to_addPatientFragment"
+            app:destination="@id/addPatientFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/patient_list"

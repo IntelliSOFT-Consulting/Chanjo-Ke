@@ -30,13 +30,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/etSearch"
-                android:drawableStart="@drawable/ic_action_search"
-                android:hint="Client Name / ID"
+            <androidx.appcompat.widget.SearchView
                 android:background="@drawable/edittext_border"
+                android:id="@+id/search"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/query_hint_patient_search"
+                />
+
 
         </androidx.cardview.widget.CardView>
 
@@ -49,17 +51,18 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="10dp"
             android:id="@+id/patient_list"
-            android:layout_below="@+id/patient_count"
             android:name="com.google.fhirengine.example.PatientListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/patient_count"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingBottom="80dp"
             android:scrollbars="vertical"
             app:layoutManager="LinearLayoutManager"
             tools:context=".PatientListActivity"
             tools:listitem="@layout/patient_card_view" />
-
 
 
     </LinearLayout>
