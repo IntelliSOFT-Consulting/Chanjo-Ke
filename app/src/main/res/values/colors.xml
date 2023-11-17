@@ -2,10 +2,10 @@
 <resources>
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimary">#175adf</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimaryDark">#163c94</color>
     <color name="colorAccent">#175adf</color>
     <color name="colorStatusBar">#175adf</color>
-    <color name="bac_trans">#16777272</color>
+    <color name="bac_trans">#F7F7F7</color>
     <color name="black">#000000</color>
 
 </resources>
