@@ -55,12 +55,12 @@ class PatientDetailActivity : AppCompatActivity() {
         vaccine.arguments = bundle
         val apn = AppointmentsFragment()
         apn.arguments = bundle
-        val cd = ClientDetailsFragment()
-        cd.arguments = bundle
+//        val cd = ClientDetailsFragment()
+//        cd.arguments = bundle
 
         adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(apn, getString(R.string.tab_text_2))
-        adapter.addFragment(cd, getString(R.string.tab_text_3))
+//        adapter.addFragment(cd, getString(R.string.tab_text_3))
 
         val viewPager: ViewPager = binding.viewPager
         viewPager.adapter = adapter
@@ -71,43 +71,43 @@ class PatientDetailActivity : AppCompatActivity() {
                 tvName.text = it.name
                 tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
                 tvDob.text = it.dob
-                tvContact.text = it.contact_name
-                tvPhone.text = it.contact_phone
-                tvContactGender.text = it.contact_gender
+//                tvContact.text = it.contact_name
+//                tvPhone.text = it.contact_phone
+//                tvContactGender.text = it.contact_gender
             }
         }
         patientDetailsViewModel.getPatientDetailData()
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.patient_caregivers_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                // Handle the up button click here
-                onBackPressed() // or navigateUp()
-                true
-            }
-
-            R.id.menu_item_option2 -> {
-                proceedToNavigate("editFunction")
-
-                true
-            }
-
-            R.id.menu_item_care_giver -> {
-                proceedToNavigate("careFunction")
-
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//        menuInflater.inflate(R.menu.patient_caregivers_menu, menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            android.R.id.home -> {
+//                // Handle the up button click here
+//                onBackPressed() // or navigateUp()
+//                true
+//            }
+//
+//            R.id.menu_item_option2 -> {
+//                proceedToNavigate("editFunction")
+//
+//                true
+//            }
+//
+//            R.id.menu_item_care_giver -> {
+//                proceedToNavigate("careFunction")
+//
+//                true
+//            }
+//
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
     private fun proceedToNavigate(s: String) {
         val intent = Intent(this, MainActivity::class.java)

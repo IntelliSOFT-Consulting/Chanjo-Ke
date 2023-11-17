@@ -17,7 +17,6 @@ class VaccineAdapter(private var entryList: ArrayList<DbVaccineData>,
         View.OnClickListener {
 
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
-        val tvDosage: TextView = itemView.findViewById(R.id.tvDosage)
 
         init {
 
@@ -53,7 +52,6 @@ class VaccineAdapter(private var entryList: ArrayList<DbVaccineData>,
         val vaccineDosage = entryList[position].vaccineDosage
 
         holder.tvVaccineName.text = "Vaccine: $vaccineName"
-        holder.tvDosage.text = "Dosage: $vaccineDosage"
 
 
     }

@@ -69,21 +69,7 @@ class VaccinesFragment : Fragment() {
            PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
 
-        binding.btnUpdate.apply {
-            setOnClickListener {
 
-                val activity = requireActivity()
-                if (activity is PatientDetailActivity) {
-                    activity.updateFunction()
-                } else {
-                    Timber.tag("YourFragment").e("Activity is not of type YourActivity")
-                }
-            }
-        }
-        binding.btnAdminister.setOnClickListener {
-            val intent = Intent(requireContext(), AdministerVaccine::class.java)
-            startActivity(intent)
-        }
 
         getVaccinations()
         return binding.root

@@ -1,30 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_margin="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    android:layout_margin="10dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:padding="5dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
+            android:textColor="@color/black"
+            android:padding="10dp"
             android:id="@+id/tvVaccineName"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:text="Vaccine Name"
-            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/tvDosage"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:text="dosage"
+        <LinearLayout
+            android:background="@color/bac_trans"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:layout_marginStart="20dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/ic_action_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <LinearLayout
+                            android:layout_marginStart="10dp"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:text="Date Scheduled:"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:id="@+id/tvDateScheduled"
+                                android:text="Jan 1 2020"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_marginStart="10dp"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:text="Date Administered:"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:id="@+id/tvDateAdministered"
+                                android:text="N/A"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="20dp">
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:layout_marginStart="20dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/ic_action_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <LinearLayout
+                            android:layout_marginStart="10dp"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:text="Location:"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:id="@+id/tvLocation"
+                                android:text="Clinic ABC"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_marginStart="10dp"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:text="Administered By:"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:id="@+id/tvAdministeredBy"
+                                android:text="N/A"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:id="@+id/btnAddAefi"
+                android:text="Add AEFI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
