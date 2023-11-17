@@ -27,10 +27,10 @@ import java.time.Period
 
 class PatientItemViewHolder(binding: PatientListItemViewBinding) :
   RecyclerView.ViewHolder(binding.root) {
-  private val statusView: ImageView = binding.status
+//  private val statusView: ImageView = binding.status
   private val nameView: TextView = binding.name
   private val ageView: TextView = binding.fieldName
-  private val idView: TextView = binding.id
+//  private val idView: TextView = binding.id
 
   fun bindTo(
     patientItem: PatientListViewModel.PatientItem,
@@ -38,7 +38,7 @@ class PatientItemViewHolder(binding: PatientListItemViewBinding) :
   ) {
     this.nameView.text = patientItem.name
     this.ageView.text = getFormattedAge(patientItem, ageView.context.resources)
-    this.idView.text = "Id: #---${getTruncatedId(patientItem)}"
+//    this.idView.text = "Id: #---${getTruncatedId(patientItem)}"
     this.itemView.setOnClickListener { onItemClicked(patientItem) }
 
 //    statusView.imageTintList =
