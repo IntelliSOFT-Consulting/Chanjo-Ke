@@ -34,12 +34,11 @@
 
                     <TableRow>
 
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:id="@+id/cardViewSearchClient"
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            app:cardElevation="10dp"
-                            app:cardCornerRadius="10dp"
+                            
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
@@ -65,13 +64,13 @@
 
                             </LinearLayout>
 
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            app:cardElevation="10dp"
-                            app:cardCornerRadius="10dp"
+                            
+                            
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
@@ -97,17 +96,17 @@
 
                             </LinearLayout>
 
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
                     </TableRow>
 
                     <TableRow>
 
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            app:cardElevation="10dp"
-                            app:cardCornerRadius="10dp"
+                            
+                            
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
@@ -133,13 +132,13 @@
 
                             </LinearLayout>
 
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            app:cardElevation="10dp"
-                            app:cardCornerRadius="10dp"
+                            
+                            
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
@@ -165,7 +164,7 @@
 
                             </LinearLayout>
 
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
 
 
@@ -173,11 +172,11 @@
 
                     <TableRow>
 
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            app:cardElevation="10dp"
-                            app:cardCornerRadius="10dp"
+                            
+                            
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
@@ -203,19 +202,19 @@
 
                             </LinearLayout>
 
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            app:cardElevation="10dp"
-                            app:cardCornerRadius="10dp"
+                            
+                            
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
 
 
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
 
 
