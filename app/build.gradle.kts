@@ -5,10 +5,10 @@ plugins {
 }
 
 android {
-  namespace = "com.dave.zanzibar"
+  namespace = "com.intellisoft.chanjoke"
   compileSdk = 33
   defaultConfig {
-    applicationId = "com.dave.zanzibar"
+    applicationId = "com.intellisoft.chanjoke"
     minSdk = 24
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     manifestPlaceholders["appAuthRedirectScheme"] = applicationId!!
