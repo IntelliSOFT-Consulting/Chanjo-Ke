@@ -16,6 +16,12 @@
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
         <activity
+            android:name=".shared.ForgotPassword"
+            android:exported="false" />
+        <activity
+            android:name=".shared.Login"
+            android:exported="false" />
+        <activity
             android:name=".vaccine.AdministerVaccine"
             android:exported="false" />
         <activity
@@ -27,8 +33,9 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Splash"
-            android:exported="true">
+            android:name=".shared.Splash"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

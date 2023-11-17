@@ -1,11 +1,11 @@
-package com.dave.zanzibar
+package com.dave.zanzibar.shared
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
-import com.dave.zanzibar.databinding.ActivityMainBinding
+import com.dave.zanzibar.MainActivity
 import com.dave.zanzibar.databinding.ActivitySplashBinding
 
 class Splash : AppCompatActivity() {
@@ -21,7 +21,7 @@ class Splash : AppCompatActivity() {
 
         Handler().postDelayed({
 
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, Login::class.java)
             startActivity(intent)
             finish()
 
