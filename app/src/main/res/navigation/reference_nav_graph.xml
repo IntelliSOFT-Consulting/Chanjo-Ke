@@ -73,6 +73,9 @@
         android:name="com.intellisoft.chanjoke.vaccine.AdministerVaccineFragment"
         android:label="Administer Vaccine"
         tools:layout="@layout/administer_vaccine">
+        <argument
+            android:name="patient_id"
+            app:argType="string" />
 
     </fragment>
     <fragment

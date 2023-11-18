@@ -104,8 +104,7 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            
-                            
+                            android:id="@+id/cardViewUpdateClient"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
@@ -136,8 +135,7 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            
-                            
+                            android:id="@+id/cardViewAdministerVaccine"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
@@ -206,8 +204,7 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_weight="1"
                             android:layout_margin="10dp"
-                            
-                            
+                            android:id="@+id/cardViewAefi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 

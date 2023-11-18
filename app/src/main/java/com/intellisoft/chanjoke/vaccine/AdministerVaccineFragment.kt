@@ -16,11 +16,13 @@
 
 package com.intellisoft.chanjoke.vaccine
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -30,6 +32,7 @@ import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.google.android.fhir.datacapture.QuestionnaireFragment
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
 /** A fragment class to show patient registration screen. */
 class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
@@ -68,10 +71,17 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
       Toast.makeText(requireContext(), getString(R.string.resources_saved), Toast.LENGTH_SHORT)
         .show()
 
-      val intent = Intent(requireContext(), MainActivity::class.java)
-      startActivity(intent)
+      val questionnaireJson = formatterClass.getSharedPref("questionnaireJson", requireContext())
+      if (questionnaireJson == "update_history.json"){
+        createDialog()
+      }else{
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        startActivity(intent)
 
-      NavHostFragment.findNavController(this).navigateUp()
+        NavHostFragment.findNavController(this).navigateUp()
+      }
+
+
     }
   }
 
@@ -93,8 +103,11 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
   }
 
   private fun updateArguments() {
+
+    val questionnaireJson = formatterClass.getSharedPref("questionnaireJson", requireContext())
+
     requireArguments()
-      .putString(QUESTIONNAIRE_FILE_PATH_KEY, "vaccine-administration.json")
+      .putString(QUESTIONNAIRE_FILE_PATH_KEY, questionnaireJson)
   }
 
   private fun addQuestionnaireFragment() {
@@ -108,6 +121,7 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
   }
 
   private fun onSubmitAction() {
+
     val questionnaireFragment =
       childFragmentManager.findFragmentByTag(QUESTIONNAIRE_FRAGMENT_TAG) as QuestionnaireFragment
     viewModel.saveScreenerEncounter(
@@ -115,11 +129,33 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
       patientId.toString(),
     )
 
-
-
   }
 
 
+
+  private fun createDialog() {
+
+    val builder = AlertDialog.Builder(requireContext())
+    builder.setTitle("Record updated successfully")
+    builder.setMessage("Do you want to update Vaccination Details")
+    builder.setPositiveButton("Update") { _: DialogInterface, i: Int ->
+
+      formatterClass.saveSharedPref("questionnaireJson","update_history_specifics.json", requireContext())
+
+      val intent = Intent(context, MainActivity::class.java)
+      intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+      intent.putExtra("patientId", patientId)
+      startActivity(intent)
+
+    }
+    builder.setNegativeButton("Close") { dialogInterface: DialogInterface, i: Int ->
+      dialogInterface.dismiss()
+    }
+
+    val dialog: AlertDialog = builder.create()
+    dialog.show()
+
+  }
 
 
   companion object {

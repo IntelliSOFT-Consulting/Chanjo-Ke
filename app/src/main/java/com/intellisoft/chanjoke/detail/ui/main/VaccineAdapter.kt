@@ -1,13 +1,18 @@
 package com.intellisoft.chanjoke.detail.ui.main
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
 class VaccineAdapter(private var entryList: ArrayList<DbVaccineData>,
                      private val context: Context
@@ -17,10 +22,24 @@ class VaccineAdapter(private var entryList: ArrayList<DbVaccineData>,
         View.OnClickListener {
 
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
+        val btnAddAefi: Button = itemView.findViewById(R.id.btnAddAefi)
 
         init {
-
             itemView.setOnClickListener(this)
+            btnAddAefi.setOnClickListener {
+
+                val patientId = FormatterClass().getSharedPref("patientId", context)
+
+                FormatterClass().saveSharedPref(
+                    "questionnaireJson",
+                    "adverse_effects.json",context)
+
+                val intent = Intent(context, MainActivity::class.java)
+                intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+                intent.putExtra("patientId", patientId)
+                context.startActivity(intent)
+
+            }
         }
 
         override fun onClick(p0: View) {

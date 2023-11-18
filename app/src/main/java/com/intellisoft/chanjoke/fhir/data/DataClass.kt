@@ -16,3 +16,7 @@ data class DbCodeValue(
     val code: String,
     val value: String
 )
+
+enum class NavigationDetails{
+    ADMINISTER_VACCINE
+}

@@ -54,6 +54,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:id="@+id/etUsername"
                     android:textColor="@color/black"
                     android:drawablePadding="15dp"
                     android:drawableStart="@drawable/ic_action_email"
@@ -71,6 +72,8 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:inputType="textPassword"
+                    android:id="@+id/etPassword"
                     android:textColor="@color/black"
                     android:drawablePadding="15dp"
                     android:drawableStart="@drawable/ic_action_password"

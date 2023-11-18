@@ -1,0 +1,312 @@
+{
+  "resourceType": "Questionnaire",
+  "title": "Update vaccine history",
+  "status": "active",
+  "description": "Update vaccine history",
+  "purpose": "Update vaccine history",
+  "item": [
+    {
+      "item": [
+        {
+          "type": "choice",
+          "extension": [
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ]
+              }
+            }
+          ],
+          "linkId": "/30956-7",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "30956-7",
+              "display": "Type Vaccine"
+            }
+          ],
+          "text": "Type Vaccine",
+          "required": false,
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "30956-71",
+                "display": "Polio"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "30956-72",
+                "display": "Yellow Fever"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "30956-73",
+                "display": "Covid"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "30956-74",
+                "display": "Measles "
+              }
+            }
+          ]
+        },
+        {
+          "item": [
+            {
+              "type": "choice",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "drop-down",
+                        "display": "Drop down"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "valueBoolean": true,
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+                }
+              ],
+              "linkId": "/22446-9",
+              "code": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "22446-9",
+                  "display": "PV1 Ab Titr Ser"
+                }
+              ],
+              "text": "Type of last dose",
+              "required": false,
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "system": "http://loinc.org",
+                    "code": "22446-9-1",
+                    "display": "bOPV"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "system": "http://loinc.org",
+                    "code": "22446-9-2",
+                    "display": "OPV I"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "system": "http://loinc.org",
+                    "code": "22446-9-3",
+                    "display": "OPV II"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "system": "http://loinc.org",
+                    "code": "22446-9-4",
+                    "display": "OPV III"
+                  }
+                }
+              ]
+            }
+          ],
+          "type": "group",
+          "extension": [
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "5302178150698",
+          "code": [
+            {
+              "code": "68320-1",
+              "display": "Polio virus Ab panel [Titer] - Serum"
+            }
+          ],
+          "text": "Polio - Type of last vaccine",
+          "enableWhen": [
+            {
+              "question": "/30956-7",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "30956-71",
+                "display": "Polio"
+              }
+            }
+          ],
+          "required": false
+        },
+        {
+          "item": [
+            {
+              "type": "choice",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "drop-down",
+                        "display": "Drop down"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "valueBoolean": true,
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+                }
+              ],
+              "linkId": "/22500-3",
+              "code": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "22500-3",
+                  "display": "MeV IgG CSF-aCnc"
+                }
+              ],
+              "text": "Type of last dose",
+              "required": false,
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "system": "http://loinc.org",
+                    "code": "22500-3-1",
+                    "display": "Measles-Rubella 1"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "system": "http://loinc.org",
+                    "code": "22500-3-2",
+                    "display": "Measles-Rubella 2"
+                  }
+                }
+              ]
+            }
+          ],
+          "type": "group",
+          "linkId": "1558489186140",
+          "code": [
+            {
+              "code": "34949-8",
+              "display": "Measles virus IgG and IgM panel - Cerebral spinal fluid"
+            }
+          ],
+          "text": "Measles - Type of last Vaccine",
+          "enableWhen": [
+            {
+              "question": "/30956-7",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "30956-74",
+                "display": "Measles "
+              }
+            }
+          ],
+          "required": false
+        },
+        {
+          "type": "choice",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ]
+              }
+            },
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "1104975957236",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "52829-9",
+              "display": "Place of service"
+            }
+          ],
+          "text": "Place of vaccination",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "52829-9-1",
+                "display": "Facility"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "52829-9-2",
+                "display": "Outreach"
+              }
+            }
+          ]
+        },
+        {
+          "type": "date",
+          "extension": [
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "1063828103819",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "29742-4",
+              "display": "Date Last Dose"
+            }
+          ],
+          "text": "Date Last Dose"
+        }
+      ],
+      "type": "group",
+      "linkId": "9713588269744",
+      "code": [
+        {
+          "code": "60484-3",
+          "display": "CDC Immunization panel"
+        }
+      ],
+      "text": "CDC Immunization panel",
+      "required": false
+    }
+  ]
+}
