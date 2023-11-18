@@ -117,9 +117,6 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
       questionnaireFragment.getQuestionnaireResponse(),
       patientId.toString(),
     )
-
-
-
   }
 
 

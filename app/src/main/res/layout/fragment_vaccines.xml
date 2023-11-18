@@ -29,7 +29,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginBottom="80dp"
         android:gravity="end"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"

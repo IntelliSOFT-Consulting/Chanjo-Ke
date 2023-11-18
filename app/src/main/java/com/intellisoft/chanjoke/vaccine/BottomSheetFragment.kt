@@ -21,13 +21,15 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         val expandableListView: ExpandableListView = view.findViewById(R.id.expandableListView)
 
-        val groupList = listOf("Group 1", "Group 2")
+        val groupList = listOf("POLIO", "YELLOW FEVER", "COVID", "MEASLES")
         val childList = mapOf(
-            "Group 1" to listOf("Child 1.1", "Child 1.2"),
-            "Group 2" to listOf("Child 2.1", "Child 2.2")
+            "POLIO" to listOf("bOPV", "OPV I", "OPV II", "OPV III"),
+            "YELLOW FEVER" to listOf("YELLOW FEVER"),
+            "COVID" to listOf("COVID"),
+            "MEASLES" to listOf("MEASLES")
         )
 
-        val adapter = BottomSheetAdapter(groupList, childList)
+        val adapter = BottomSheetAdapter(groupList, childList, requireContext())
         expandableListView.setAdapter(adapter)
 
         return view

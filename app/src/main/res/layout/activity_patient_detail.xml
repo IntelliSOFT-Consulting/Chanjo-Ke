@@ -31,10 +31,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="15dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
+                android:padding="15dp"
                 android:layout_margin="15dp"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -135,14 +135,17 @@
 
 
             <com.google.android.material.tabs.TabLayout
+                android:background="@color/colorPrimary"
                 android:layout_marginTop="20dp"
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:tabTextColor="@color/white"
                 app:tabGravity="center"
                 app:tabMode="scrollable" />
 
             <androidx.viewpager.widget.ViewPager
+                android:layout_marginBottom="70dp"
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

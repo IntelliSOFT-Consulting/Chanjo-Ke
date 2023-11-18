@@ -1,16 +1,25 @@
 package com.intellisoft.chanjoke.vaccine
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import java.util.Locale
 
 class BottomSheetAdapter(
     private val groupList: List<String>,
-    private val childList: Map<String, List<String>>) : BaseExpandableListAdapter() {
+    private val childList: Map<String, List<String>>,
+    private val context: Context
+    ) : BaseExpandableListAdapter() {
 
     override fun getGroupCount(): Int {
         return groupList.size
@@ -49,7 +58,8 @@ class BottomSheetAdapter(
         val textView: TextView = view.findViewById(R.id.headerTextView)
 
         // Implement your group view here
-        textView.text = getGroup(groupPosition).toString()
+        val value = getGroup(groupPosition).toString()
+        textView.text = value.lowercase().capitalize(Locale.ROOT)
         return textView
     }
 
@@ -58,7 +68,19 @@ class BottomSheetAdapter(
         val textView: TextView = view.findViewById(R.id.childTextView)
 
         // Implement your child view here
-        textView.text = getChild(groupPosition, childPosition).toString()
+        val value = getChild(groupPosition, childPosition).toString()
+        textView.text = value.lowercase().capitalize(Locale.ROOT)
+
+        textView.setOnClickListener {
+
+            val patientId = FormatterClass().getSharedPref("patientId", context)
+
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("patientId", patientId)
+            context.startActivity(intent)
+        }
+
         return textView
     }
 }

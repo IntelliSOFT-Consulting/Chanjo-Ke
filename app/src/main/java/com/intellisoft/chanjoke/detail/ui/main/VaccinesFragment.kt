@@ -75,12 +75,7 @@ class VaccinesFragment : Fragment() {
 
         binding.administerVaccine.setOnClickListener {
 
-//            formatterClass.saveSharedPref("questionnaireJson","vaccine-administration.json", requireContext())
-//
-//            val intent = Intent(requireContext(), MainActivity::class.java)
-//            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
-//            intent.putExtra("patientId", patientId)
-//            startActivity(intent)
+            formatterClass.saveSharedPref("questionnaireJson","contraindications.json", requireContext())
 
             val bottomSheetFragment = BottomSheetFragment()
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
