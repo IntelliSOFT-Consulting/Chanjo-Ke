@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +24,7 @@ import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class PatientDetailActivity : AppCompatActivity() {
     private lateinit var fhirEngine: FhirEngine
@@ -77,6 +79,35 @@ class PatientDetailActivity : AppCompatActivity() {
             }
         }
         patientDetailsViewModel.getPatientDetailData()
+
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    // Handle home item click
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_patient -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_vaccine -> {
+                    // Handle notifications item click
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_profile -> {
+                    // Handle notifications item click
+                    Toast.makeText(this, "Under development", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
 
     }
 

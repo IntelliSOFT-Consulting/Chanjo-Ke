@@ -37,8 +37,18 @@ class LandingPage : Fragment() {
         }
         binding.cardViewRegisterClient.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
+            bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
+                "new-patient-registration-paginated.json")
             findNavController().navigate(R.id.addPatientFragment, bundle)
+        }
+        binding.cardViewUpdateClient.setOnClickListener {
+            findNavController().navigate(R.id.patient_list)
+        }
+        binding.cardViewAdministerVaccine.setOnClickListener {
+            findNavController().navigate(R.id.patient_list)
+        }
+        binding.cardViewAefi.setOnClickListener {
+            findNavController().navigate(R.id.patient_list)
         }
 
 
