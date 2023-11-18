@@ -3,11 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reference_nav_graph"
-    app:startDestination="@id/patient_list">
+    app:startDestination="@id/landing_page">
+
+    <fragment
+        android:id="@+id/landing_page"
+        android:name="com.intellisoft.chanjoke.shared.LandingPage"
+        android:label="Home"
+        tools:layout="@layout/fragment_landing_page" >
+        <action
+            android:id="@+id/action_patient_list_to_addPatientFragment"
+            app:destination="@id/addPatientFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/patient_list"
-        android:name="com.dave.zanzibar.patient_list.PatientListFragment"
+        android:name="com.intellisoft.chanjoke.patient_list.PatientListFragment"
         android:label="Patient List"
         tools:layout="@layout/patient_list_view">
 
@@ -22,14 +32,14 @@
 
     <fragment
         android:id="@+id/addPatientFragment"
-        android:name="com.dave.zanzibar.add_patient.AddPatientFragment"
+        android:name="com.intellisoft.chanjoke.add_patient.AddPatientFragment"
         android:label="@string/add_patient"
         tools:layout="@layout/add_patient_fragment" />
 
 
   <!--  <activity
         android:id="@+id/mainActivity"
-        android:name="com.dave.zanzibar.MainActivity"
+        android:name="com.intellisoft.chanjoke.MainActivity"
         android:label="activity_patient_detail"
         tools:layout="@layout/activity_main">
         <action
@@ -38,7 +48,7 @@
     </activity>-->
     <activity
         android:id="@+id/patientDetailActivity"
-        android:name="com.dave.zanzibar.detail.PatientDetailActivity"
+        android:name="com.intellisoft.chanjoke.detail.PatientDetailActivity"
         android:label="activity_patient_detail"
         tools:layout="@layout/activity_patient_detail">
         <argument
@@ -48,26 +58,26 @@
     </activity>
     <fragment
         android:id="@+id/updateFragment"
-        android:name="com.dave.zanzibar.detail.ui.main.UpdateFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.UpdateFragment"
         android:label="Update Details"
         tools:layout="@layout/fragment_update">
 
     </fragment>
     <fragment
         android:id="@+id/careGiverFragment"
-        android:name="com.dave.zanzibar.add_patient.CareGiverFragment"
+        android:name="com.intellisoft.chanjoke.add_patient.CareGiverFragment"
         android:label="Add Care Giver" />
 
     <fragment
         android:id="@+id/administerVaccine"
-        android:name="com.dave.zanzibar.vaccine.AdministerVaccineFragment"
+        android:name="com.intellisoft.chanjoke.vaccine.AdministerVaccineFragment"
         android:label="Administer Vaccine"
         tools:layout="@layout/administer_vaccine">
 
     </fragment>
     <fragment
         android:id="@+id/editPatientFragment"
-        android:name="com.dave.zanzibar.add_patient.EditPatientFragment"
+        android:name="com.intellisoft.chanjoke.add_patient.EditPatientFragment"
         android:label="EditPatientFragment">
         <argument
             android:name="patient_id"

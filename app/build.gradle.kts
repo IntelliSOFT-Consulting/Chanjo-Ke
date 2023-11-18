@@ -5,10 +5,10 @@ plugins {
 }
 
 android {
-  namespace = "com.dave.zanzibar"
+  namespace = "com.intellisoft.chanjoke"
   compileSdk = 33
   defaultConfig {
-    applicationId = "com.dave.zanzibar"
+    applicationId = "com.intellisoft.chanjoke"
     minSdk = 24
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     manifestPlaceholders["appAuthRedirectScheme"] = applicationId!!
@@ -115,6 +115,7 @@ object HapiFhir {
 }
 
 dependencies {
+  implementation("androidx.legacy:legacy-support-v4:1.0.0")
   coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
   implementation("androidx.activity:activity-ktx:1.7.2")
   implementation("androidx.appcompat:appcompat:1.6.1")

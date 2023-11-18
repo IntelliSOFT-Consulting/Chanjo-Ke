@@ -7,9 +7,17 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_marginBottom="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <Button
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:id="@+id/btnUpdateHistory"
+            android:drawableTint="@color/white"
+            android:text="Update Client History"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -19,30 +27,5 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_update"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Update" />
-
-        <View
-            android:layout_width="10dp"
-            android:layout_height="10dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_administer"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Administer" />
-    </LinearLayout>
 </RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:title="Home"
+        android:icon="@drawable/ic_action_home" />
+
+    <item
+        android:id="@+id/navigation_patient"
+        android:title="Patients"
+        android:icon="@drawable/ic_action_profile" />
+
+    <item
+        android:id="@+id/navigation_vaccine"
+        android:title="Vaccines"
+        android:icon="@drawable/ic_action_administer_vaccine" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_action_register_clients" />
+</menu>
