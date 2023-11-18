@@ -93,8 +93,11 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
   }
 
   private fun updateArguments() {
+
+    val questionnaireJson = formatterClass.getSharedPref("questionnaireJson", requireContext())
+
     requireArguments()
-      .putString(QUESTIONNAIRE_FILE_PATH_KEY, "vaccine-administration.json")
+      .putString(QUESTIONNAIRE_FILE_PATH_KEY, questionnaireJson)
   }
 
   private fun addQuestionnaireFragment() {

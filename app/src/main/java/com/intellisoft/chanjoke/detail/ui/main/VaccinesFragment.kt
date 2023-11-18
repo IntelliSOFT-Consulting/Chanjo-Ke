@@ -8,17 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.fhir.FhirEngine
+import com.intellisoft.chanjoke.MainActivity
+import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentVaccinesBinding
-import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.vaccine.AdministerVaccine
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
-import com.google.android.fhir.FhirEngine
-import timber.log.Timber
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -69,6 +73,19 @@ class VaccinesFragment : Fragment() {
            PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
 
+        binding.administerVaccine.setOnClickListener {
+
+//            formatterClass.saveSharedPref("questionnaireJson","vaccine-administration.json", requireContext())
+//
+//            val intent = Intent(requireContext(), MainActivity::class.java)
+//            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+//            intent.putExtra("patientId", patientId)
+//            startActivity(intent)
+
+            val bottomSheetFragment = BottomSheetFragment()
+            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+
+        }
 
 
         getVaccinations()

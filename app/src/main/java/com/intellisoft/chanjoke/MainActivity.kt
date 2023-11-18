@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.intellisoft.chanjoke.databinding.ActivityMainBinding
 import com.intellisoft.chanjoke.detail.ui.main.UpdateFragment
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -54,6 +55,13 @@ class MainActivity : AppCompatActivity() {
                     editFunction(patientId)
                 }
             }
+
+            NavigationDetails.ADMINISTER_VACCINE.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    administerVaccine(patientId)
+                }
+            }
         }
 
         val navController = findNavController(R.id.nav_host_fragment_activity_bottem_navigation)
@@ -63,6 +71,19 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+    }
+
+    private fun administerVaccine(patientId: String) {
+        val questionnaireJson = formatter.getSharedPref("questionnaireJson", this)
+        formatter.saveSharedPref("patientId", patientId, this)
+
+        val bundle = Bundle()
+        bundle.putString(UpdateFragment.QUESTIONNAIRE_FRAGMENT_TAG, questionnaireJson)
+        bundle.putString("patientId", patientId)
+        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
+            R.id.administerVaccine, bundle
+        )
 
     }
 
