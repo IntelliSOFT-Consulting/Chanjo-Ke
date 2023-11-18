@@ -82,6 +82,14 @@ class VaccinesFragment : Fragment() {
 
         }
 
+        binding.btnUpdateHistory.setOnClickListener {
+            formatterClass.saveSharedPref("questionnaireJson","update_history.json", requireContext())
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("patientId", patientId)
+            startActivity(intent)
+
+        }
 
         getVaccinations()
         return binding.root

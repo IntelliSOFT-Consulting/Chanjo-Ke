@@ -1,0 +1,266 @@
+{
+  "resourceType": "Questionnaire",
+  "title": "History Update",
+  "status": "active",
+  "description": "History Update",
+  "purpose": "History Update",
+  "item": [
+    {
+      "item": [
+        {
+          "type": "decimal",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+              "valueCoding": {
+                "system": "http://unitsofmeasure.org",
+                "code": "kg",
+                "display": "kilogram"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+              "valueCoding": {
+                "system": "http://unitsofmeasure.org",
+                "code": {
+                  "unit": "kg"
+                },
+                "display": {
+                  "unit": "kg"
+                }
+              }
+            },
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "3937229761246",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Weight"
+            }
+          ],
+          "text": "Birth Weight"
+        },
+        {
+          "type": "choice",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ]
+              }
+            },
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "7123982685748",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "88080-7",
+              "display": "Multiple birth set ID"
+            }
+          ],
+          "text": "Multiple birth",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "88080-78",
+                "display": "Yes"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "88080-79",
+                "display": "No"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ]
+              }
+            },
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "7418177552388",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "55277-8",
+              "display": "HIV status"
+            }
+          ],
+          "text": "HIV status",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "55277-81",
+                "display": "Positive"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "55277-82",
+                "display": "Negative"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "55277-83",
+                "display": "Unknown"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ]
+              }
+            },
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "8907936212737",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "5120-1",
+              "display": "T sol lar Ab Ser HA-aCnc"
+            }
+          ],
+          "text": "Client is currently receiving HAART",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "4929",
+                "display": "Yes"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "49288",
+                "display": "No"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ]
+              }
+            },
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "9696180347388",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "75179-2",
+              "display": "Maternal HIV status"
+            }
+          ],
+          "text": "Maternal HIV status",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "LA6576-8",
+                "display": "Positive"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "LA6577-6",
+                "display": "Negative"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "LA21205-2",
+                "display": "patient not tested"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "LA14945-2",
+                "display": "Unk"
+              }
+            }
+          ]
+        }
+      ],
+      "type": "group",
+      "linkId": "3910680186535",
+      "code": [
+        {
+          "code": "62890-9",
+          "display": "PhenX - medical history protocol 161301"
+        }
+      ],
+      "text": "Update History",
+      "required": false
+    }
+  ]
+}
