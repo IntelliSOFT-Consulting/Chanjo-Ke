@@ -84,6 +84,35 @@
           ]
         },
         {
+          "type": "date",
+          "extension": [
+            {
+              "valueBoolean": true,
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            }
+          ],
+          "linkId": "604565416358",
+          "code": [
+            {
+              "system": "http://loinc.org",
+              "code": "45354-8",
+              "display": "Date Next Dose"
+            }
+          ],
+          "text": "Date Next Dose",
+          "enableWhen": [
+            {
+              "question": "3632072730175",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "64100-12",
+                "display": "Yes"
+              }
+            }
+          ]
+        },
+        {
           "type": "choice",
           "extension": [
             {
@@ -141,93 +170,6 @@
           ]
         },
         {
-          "type": "string",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "7344742286158",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "74060-5",
-              "display": "Brand name "
-            }
-          ],
-          "text": "Vaccine brand ",
-          "enableWhen": [
-            {
-              "question": "340969792066",
-              "operator": "=",
-              "answerCoding": {
-                "system": "http://loinc.org",
-                "code": "93122-01",
-                "display": "Yes"
-              }
-            }
-          ]
-        },
-        {
-          "type": "string",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "246822321379",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "74058-9",
-              "display": "Manufacturer (if known)"
-            }
-          ],
-          "text": "Vaccine manufacturer ",
-          "enableWhen": [
-            {
-              "question": "340969792066",
-              "operator": "=",
-              "answerCoding": {
-                "system": "http://loinc.org",
-                "code": "93122-01",
-                "display": "Yes"
-              }
-            }
-          ]
-        },
-        {
-          "type": "string",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "2622789798836",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "96060-9",
-              "display": "Disease"
-            }
-          ],
-          "text": "Disease targeted",
-          "enableWhen": [
-            {
-              "question": "340969792066",
-              "operator": "=",
-              "answerCoding": {
-                "system": "http://loinc.org",
-                "code": "93122-01",
-                "display": "Yes"
-              }
-            }
-          ]
-        },
-        {
           "type": "choice",
           "extension": [
             {
@@ -247,15 +189,15 @@
               "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
             }
           ],
-          "linkId": "332164622022",
+          "linkId": "9299181687384",
           "code": [
             {
               "system": "http://loinc.org",
-              "code": "72029-2",
-              "display": "Vaccination exclusion - medical reason"
+              "code": "85714-4",
+              "display": "Reason vacc not recvd"
             }
           ],
-          "text": "Reason vaccine was not administered",
+          "text": "Reasone vaccine was not administered",
           "enableWhen": [
             {
               "question": "340969792066",
@@ -271,64 +213,71 @@
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18902-9",
+                "code": "LA20564-3",
                 "display": "Product out of stock"
               }
             },
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18903-7",
+                "code": "LA27161-1",
                 "display": "Contraindication "
               }
             },
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18904-5",
+                "code": "LA27162-9",
                 "display": "Cold chain break"
               }
             },
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18904-6",
+                "code": "LA27163-7",
                 "display": "Client objection"
               }
             },
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18904-7",
+                "code": "LA27164-5",
                 "display": "Caregiver refusal"
               }
             },
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18904-8",
+                "code": "LA27165-2",
                 "display": "Expired product        "
               }
             },
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18904-9",
+                "code": "LA27166-0",
                 "display": "Unspecified reason"
               }
             },
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18904-10",
+                "code": "LA27167-8",
                 "display": "Client acquired the disease"
               }
             },
             {
               "valueCoding": {
                 "system": "http://loinc.org",
-                "code": "LA18904-11",
+                "code": "LA27168-6",
                 "display": "Immunization not carried out for other reasons"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "LA4489-6",
+                "display": "Unknown"
               }
             }
           ]
@@ -352,171 +301,6 @@
       ],
       "linkId": "1.0.0",
       "text": "Contraindictions"
-    },
-    {
-      "item": [
-        {
-          "type": "string",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "1876570260944",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "74714-7",
-              "display": "What is the lot or batch number?"
-            }
-          ],
-          "text": "What is the batch number?"
-        },
-        {
-          "type": "date",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "/30980-7",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "30980-7",
-              "display": "Date vaccine due"
-            }
-          ],
-          "text": "Expiration date",
-          "required": false
-        },
-        {
-          "type": "string",
-          "linkId": "/30973-2",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "30973-2",
-              "display": "Dose #"
-            }
-          ],
-          "text": "Dose Quantity",
-          "required": false
-        },
-        {
-          "type": "choice",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [
-                  {
-                    "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "drop-down",
-                    "display": "Drop down"
-                  }
-                ]
-              }
-            }
-          ],
-          "linkId": "6695303855675",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "18583-5",
-              "display": "Destination site"
-            }
-          ],
-          "text": "Site Administered",
-          "answerOption": [
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "18583-51",
-                "display": "Outreach"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "18583-52",
-                "display": "Health Facility"
-              }
-            }
-          ]
-        }
-      ],
-      "type": "group",
-      "extension": [
-        {
-          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-          "valueCodeableConcept": {
-            "coding": [
-              {
-                "system": "http://hl7.org/fhir/questionnaire-item-control",
-                "code": "page",
-                "display": "Page"
-              }
-            ],
-            "text": "Page"
-          }
-        }
-      ],
-      "linkId": "4918306142711",
-      "code": [
-        {
-          "code": "60484-3",
-          "display": "Immunization panel"
-        }
-      ],
-      "text": "Administer Vaccine",
-      "enableWhen": [
-        {
-          "question": "340969792066",
-          "operator": "=",
-          "answerCoding": {
-            "system": "http://loinc.org",
-            "code": "93122-01",
-            "display": "Yes"
-          }
-        }
-      ],
-      "required": false
-    },
-    {
-      "type": "date",
-      "extension": [
-        {
-          "valueBoolean": true,
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-        }
-      ],
-      "linkId": "604565416358",
-      "code": [
-        {
-          "system": "http://loinc.org",
-          "code": "45354-8",
-          "display": "Date Next Dose"
-        }
-      ],
-      "text": "Date Next Dose",
-      "enableWhen": [
-        {
-          "question": "3632072730175",
-          "operator": "=",
-          "answerCoding": {
-            "system": "http://loinc.org",
-            "code": "64100-12",
-            "display": "Yes"
-          }
-        }
-      ]
     }
   ]
 }
