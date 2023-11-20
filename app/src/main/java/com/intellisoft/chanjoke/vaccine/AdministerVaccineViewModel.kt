@@ -32,16 +32,20 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.CodeSystem
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Condition
+import org.hl7.fhir.r4.model.DateTimeType
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Immunization
+import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Questionnaire
@@ -49,9 +53,12 @@ import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.StringType
+import java.util.Calendar
 
 /** ViewModel for patient registration screen {@link AddPatientFragment}. */
-class AdministerVaccineViewModel(application: Application, private val state: SavedStateHandle) :
+class AdministerVaccineViewModel(
+  application: Application,
+  private val state: SavedStateHandle) :
   AndroidViewModel(application) {
 
   val questionnaire: String
@@ -101,8 +108,6 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
     val encounterReference = Reference("Encounter/$encounterId")
     bundle.entry.forEach {
 
-
-
       when (val resource = it.resource) {
         is Observation -> {
           if (resource.hasCode()) {
@@ -126,13 +131,19 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
           resource.subject = subjectReference
           resource.id = encounterId
           saveResourceToDatabase(resource, "enc "+encounterId)
-          createImmunisationRecord(encounterId, patientId)
+        }
+        is Immunization -> {
+          createImmunisationRecord(encounterId, patientId, resource)
         }
       }
     }
   }
 
-  private fun createImmunisationRecord(encounterId: String, patientId: String) {
+  private fun createImmunisationRecord(
+    encounterId: String,
+    patientId: String,
+    resource: Immunization
+  ) {
 
     CoroutineScope(Dispatchers.IO).launch {
 
@@ -148,25 +159,102 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
       immunization.patient = patientReference
       immunization.id = uuid
 
+
+      /**
+       * Create immunisation resource
+       * diseaseTargeted = sharedPref.
+       * status & status reason = vaccineAdministered & reason(if no)
+       * location  = site_administered
+       * dateAdministered = system date
+       * administeredBy = performer.actor
+       * vaccineBatchNo = Iot number
+       * expirationDate = expirationDate
+       * doseQty = Dose Qty
+       * nextVaccinationDate = **Create ImmunisationRequest
+       */
+      //Disease target
       val protocolList = Immunization().protocolApplied
       val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
 
-      //Disease target
-      val diseaseTarget = observationFromCode(
-        "8867-4",
-        patientId,
-        encounterId)
+      val diseaseTargeted = FormatterClass().getSharedPref("targetDisease",
+        getApplication<Application>().applicationContext)
       val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
       val diseaseTargetCodeableConcept = CodeableConcept()
-      diseaseTargetCodeableConcept.text = diseaseTarget.value
+      diseaseTargetCodeableConcept.text = diseaseTargeted
       diseaseTargetCodeableConceptList.add(diseaseTargetCodeableConcept)
       immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
+
+      //Status and status reason
+      val status = observationFromCode(
+        "408102007",
+        patientId,
+        encounterId)
+      val statusReason = observationFromCode(
+        "72029-2",
+        patientId,
+        encounterId)
+
+      val immunisationStatus: ImmunizationStatus
+      if (status.value.contains("YES")){
+        immunisationStatus = ImmunizationStatus.COMPLETED
+      }else{
+        immunisationStatus = ImmunizationStatus.NOTDONE
+
+        //add CodeableConcept
+        val codeableConcept = CodeableConcept()
+        //Add coding
+        val codingList = ArrayList<Coding>()
+        val coding = Coding()
+        coding.code = statusReason.code
+        codingList.add(coding)
+
+        codeableConcept.coding = codingList
+        codeableConcept.text = statusReason.value
+
+        immunization.statusReason = codeableConcept
+
+      }
+      immunization.status = immunisationStatus
+
+      //Location and site administered
+      /**
+       * TODO: Location has to be mapped in the fhir server,
+       * TODO: Site administered is tied to a particular body part. Update this later
+       */
+
+      //Date administered
+      val dateAdministered = immunization.occurrenceDateTimeType
+      dateAdministered.value = Calendar.getInstance().time
+      dateAdministered.id = generateUuid()
+
+      /**
+       * TODO: Administered By = Performer.actor. There needs to be a Practitioner
+       */
+
+      //Batch number
+      val batchNumber = observationFromCode(
+        "74714-7",
+        patientId,
+        encounterId)
+      immunization.lotNumber = batchNumber.value
+
+      //Expiration number
+      val expirationNumber = observationFromCode(
+        "30980-7",
+        patientId,
+        encounterId)
+      val dateExp = FormatterClass().convertStringToDate(
+        expirationNumber.value, "")
+      immunization.expirationDate = dateExp
+
+
 
       //Dose number
       val doseNumber = observationFromCode(
         "408102007",
         patientId,
         encounterId)
+
       val stringTypeDoseNumber = StringType()
       stringTypeDoseNumber.value = doseNumber.value
       immunizationProtocolAppliedComponent.doseNumber = stringTypeDoseNumber
@@ -179,15 +267,13 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
 
       fhirEngine.create(immunization)
 
-      //create ImmunisationRecommendation
-//      createImmunisationRecommendation(immunizationId, patientId, encounterId)
-
 
     }
 
 
 
   }
+
 
   private suspend fun createImmunisationRecommendation(immunizationId: String, patientId: String, encounterId: String) {
     val encounterReference = Reference("Encounter/$encounterId")

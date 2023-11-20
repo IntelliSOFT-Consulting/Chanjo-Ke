@@ -13,6 +13,7 @@ import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import java.util.Locale
 
 class BottomSheetAdapter(
@@ -73,9 +74,11 @@ class BottomSheetAdapter(
 
         textView.setOnClickListener {
 
+            FormatterClass().saveSharedPref("targetDisease", value, context)
+
             val patientId = FormatterClass().getSharedPref("patientId", context)
 
-            val intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, VaccineStockManagement::class.java)
             intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
             intent.putExtra("patientId", patientId)
             context.startActivity(intent)
