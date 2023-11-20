@@ -3,14 +3,18 @@ package com.intellisoft.chanjoke.vaccine.stock_management
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.DbVaccineStockDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
+import java.time.LocalDate
 import java.util.Arrays
 
 class VaccineStockManagement : AppCompatActivity() {
@@ -50,30 +54,45 @@ class VaccineStockManagement : AppCompatActivity() {
 
     private fun getStockManagement() {
 
-        /**
-         * TODO: Get the dosage and the route
-         */
+        val vaccinationManager = VaccinationManager()
 
-        val stockList = ArrayList<String>()
-        stockList.addAll(
-            listOf(
-                "Vaccine batch number",
-                "Expiration date",
-                "Dose quantity",
-                "Body site to administer",
-                "Vaccine brand",
-                "Vaccine manufacturer",
-                "Disease targeted"
+        val vaccineDetails = vaccinationManager.getVaccineDetails(targetDisease)
+
+        if (vaccineDetails != null) {
+
+            /**
+             * TODO: Get the dosage and the route
+             */
+
+            val stockList = ArrayList<String>()
+            stockList.addAll(
+                listOf(
+                    "Vaccine batch number",
+                    "Expiration date",
+                    vaccineDetails.dosage,
+                    vaccineDetails.administrationMethod,
+                    "Vaccine brand",
+                    "Vaccine manufacturer",
+                    targetDisease
+                )
             )
-        )
 
-        val dbVaccineStockDetailsList= ArrayList<DbVaccineStockDetails>()
-        for(i in stockList){
-            val dbVaccineStockDetails = DbVaccineStockDetails(i, i)
-            dbVaccineStockDetailsList.add(dbVaccineStockDetails)
+            val dbVaccineStockDetailsList= ArrayList<DbVaccineStockDetails>()
+            for(i in stockList){
+                val dbVaccineStockDetails = DbVaccineStockDetails(i, i)
+                dbVaccineStockDetailsList.add(dbVaccineStockDetails)
+            }
+            val vaccineStockAdapter = VaccineStockAdapter(dbVaccineStockDetailsList, this)
+            recyclerView.adapter = vaccineStockAdapter
+
+            println("\nDetails for $targetDisease:")
+            println("- Dosage: ${vaccineDetails.dosage}")
+            println("- Administration Method: ${vaccineDetails.administrationMethod}")
+            println("- Time to Administer: ${vaccineDetails.timeToAdminister}")
+        } else {
+            val intent = Intent(this, PatientDetailActivity::class.java)
+            startActivity(intent)
         }
-        val vaccineStockAdapter = VaccineStockAdapter(dbVaccineStockDetailsList, this)
-        recyclerView.adapter = vaccineStockAdapter
 
     }
 
