@@ -75,7 +75,10 @@ class VaccinesFragment : Fragment() {
 
         binding.administerVaccine.setOnClickListener {
 
-            formatterClass.saveSharedPref("questionnaireJson","contraindications.json", requireContext())
+            formatterClass.saveSharedPref(
+                "questionnaireJson",
+                "contraindications.json",
+                requireContext())
 
             val bottomSheetFragment = BottomSheetFragment()
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
@@ -100,7 +103,6 @@ class VaccinesFragment : Fragment() {
         val encounterList = patientDetailsViewModel.getEncounterList()
 
         println(encounterList)
-
 
         val vaccineAdapter = VaccineAdapter(encounterList,requireContext())
         binding.recyclerView.adapter = vaccineAdapter

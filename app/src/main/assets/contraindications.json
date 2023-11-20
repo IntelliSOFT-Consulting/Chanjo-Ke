@@ -6,24 +6,6 @@
   "purpose": "Vaccine Contradictions",
   "item": [
     {
-      "text": "Contraindictions",
-      "linkId": "1.0.0",
-      "type": "group",
-      "extension": [
-        {
-          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-          "valueCodeableConcept": {
-            "coding": [
-              {
-                "system": "http://hl7.org/fhir/questionnaire-item-control",
-                "code": "page",
-                "display": "Page"
-              }
-            ],
-            "text": "Page"
-          }
-        }
-      ],
       "item": [
         {
           "type": "choice",
@@ -100,24 +82,6 @@
               }
             }
           ]
-        },
-        {
-          "type": "date",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "2337722838795",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "30979-9",
-              "display": "Vaccines due next"
-            }
-          ],
-          "text": "Vaccines due next"
         },
         {
           "type": "choice",
@@ -291,7 +255,7 @@
               "display": "Vaccination exclusion - medical reason"
             }
           ],
-          "text": "Vaccination exclusion - medical reason",
+          "text": "Reason vaccine was not administered",
           "enableWhen": [
             {
               "question": "340969792066",
@@ -369,9 +333,8 @@
             }
           ]
         }
-      ]
-    },
-    {
+      ],
+      "type": "group",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -387,6 +350,10 @@
           }
         }
       ],
+      "linkId": "1.0.0",
+      "text": "Contraindictions"
+    },
+    {
       "item": [
         {
           "type": "string",
@@ -439,11 +406,23 @@
           "required": false
         },
         {
-          "type": "string",
+          "type": "choice",
           "extension": [
             {
               "valueBoolean": true,
               "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ]
+              }
             }
           ],
           "linkId": "6695303855675",
@@ -454,28 +433,41 @@
               "display": "Destination site"
             }
           ],
-          "text": "Site Administered"
-        },
-        {
-          "type": "date",
-          "extension": [
+          "text": "Site Administered",
+          "answerOption": [
             {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "604565416358",
-          "code": [
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "18583-51",
+                "display": "Outreach"
+              }
+            },
             {
-              "system": "http://loinc.org",
-              "code": "45354-8",
-              "display": "Date Next Dose"
+              "valueCoding": {
+                "system": "http://loinc.org",
+                "code": "18583-52",
+                "display": "Health Facility"
+              }
             }
-          ],
-          "text": "Date Next Dose"
+          ]
         }
       ],
       "type": "group",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "page",
+                "display": "Page"
+              }
+            ],
+            "text": "Page"
+          }
+        }
+      ],
       "linkId": "4918306142711",
       "code": [
         {
@@ -484,7 +476,47 @@
         }
       ],
       "text": "Administer Vaccine",
+      "enableWhen": [
+        {
+          "question": "340969792066",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://loinc.org",
+            "code": "93122-01",
+            "display": "Yes"
+          }
+        }
+      ],
       "required": false
+    },
+    {
+      "type": "date",
+      "extension": [
+        {
+          "valueBoolean": true,
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+        }
+      ],
+      "linkId": "604565416358",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "45354-8",
+          "display": "Date Next Dose"
+        }
+      ],
+      "text": "Date Next Dose",
+      "enableWhen": [
+        {
+          "question": "3632072730175",
+          "operator": "=",
+          "answerCoding": {
+            "system": "http://loinc.org",
+            "code": "64100-12",
+            "display": "Yes"
+          }
+        }
+      ]
     }
   ]
 }
