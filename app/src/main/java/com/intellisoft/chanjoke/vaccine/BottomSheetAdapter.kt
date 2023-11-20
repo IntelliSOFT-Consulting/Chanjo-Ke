@@ -73,6 +73,8 @@ class BottomSheetAdapter(
 
         textView.setOnClickListener {
 
+            FormatterClass().saveSharedPref("targetDisease", value, context)
+
             val patientId = FormatterClass().getSharedPref("patientId", context)
 
             val intent = Intent(context, MainActivity::class.java)

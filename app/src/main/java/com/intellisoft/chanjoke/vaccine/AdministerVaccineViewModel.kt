@@ -101,8 +101,6 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
     val encounterReference = Reference("Encounter/$encounterId")
     bundle.entry.forEach {
 
-
-
       when (val resource = it.resource) {
         is Observation -> {
           if (resource.hasCode()) {
@@ -126,13 +124,19 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
           resource.subject = subjectReference
           resource.id = encounterId
           saveResourceToDatabase(resource, "enc "+encounterId)
-          createImmunisationRecord(encounterId, patientId)
+        }
+        is Immunization -> {
+          createImmunisationRecord(encounterId, patientId, resource)
         }
       }
     }
   }
 
-  private fun createImmunisationRecord(encounterId: String, patientId: String) {
+  private fun createImmunisationRecord(
+    encounterId: String,
+    patientId: String,
+    resource: Immunization
+  ) {
 
     CoroutineScope(Dispatchers.IO).launch {
 
@@ -151,11 +155,19 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
       val protocolList = Immunization().protocolApplied
       val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
 
+      /**
+       * Create immunisation resource
+       * diseaseTargeted = sharedPref.
+       *
+       */
       //Disease target
+
+
       val diseaseTarget = observationFromCode(
         "8867-4",
         patientId,
         encounterId)
+
       val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
       val diseaseTargetCodeableConcept = CodeableConcept()
       diseaseTargetCodeableConcept.text = diseaseTarget.value
@@ -167,6 +179,7 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
         "408102007",
         patientId,
         encounterId)
+
       val stringTypeDoseNumber = StringType()
       stringTypeDoseNumber.value = doseNumber.value
       immunizationProtocolAppliedComponent.doseNumber = stringTypeDoseNumber
@@ -178,9 +191,6 @@ class AdministerVaccineViewModel(application: Application, private val state: Sa
       immunization.id = immunizationId
 
       fhirEngine.create(immunization)
-
-      //create ImmunisationRecommendation
-//      createImmunisationRecommendation(immunizationId, patientId, encounterId)
 
 
     }
