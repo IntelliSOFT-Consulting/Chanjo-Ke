@@ -140,7 +140,7 @@
               "display": "Contraindicated vaccine"
             }
           ],
-          "text": "Vaccine Administered",
+          "text": "Do you want to administer the vaccine?",
           "enableWhen": [
             {
               "question": "3632072730175",
