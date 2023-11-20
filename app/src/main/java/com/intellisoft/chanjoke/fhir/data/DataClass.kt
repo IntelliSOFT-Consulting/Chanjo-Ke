@@ -22,6 +22,6 @@ enum class NavigationDetails{
 }
 
 data class DbVaccineStockDetails(
-    val id:String,
-    val name:String
+    val name:String,
+    val value:String
 )

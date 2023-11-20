@@ -36,10 +36,10 @@ abstract class BaseVaccine(
 }
 
 // Polio vaccines
-class bOPV : BaseVaccine(0, "2", "Oral")
-class OPV1 : BaseVaccine(6, "2", "Oral")
-class OPV2 : BaseVaccine(10, "2", "Oral")
-class OPV3 : BaseVaccine(14, "2", "Oral")
+class bOPV : BaseVaccine(0, "2 dosages", "Oral")
+class OPV1 : BaseVaccine(6, "2 dosages", "Oral")
+class OPV2 : BaseVaccine(10, "2 dosages", "Oral")
+class OPV3 : BaseVaccine(14, "2 dosages", "Oral")
 
 // Measles vaccines
 class Measles1 : BaseVaccine(24, "0.5ml", "Subcutaneous right upper arm")

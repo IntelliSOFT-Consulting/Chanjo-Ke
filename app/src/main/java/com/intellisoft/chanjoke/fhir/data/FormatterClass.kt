@@ -30,9 +30,14 @@ class FormatterClass {
         editor.apply();
 
     }
-    fun convertStringToDate(dateString: String, format: String): Date {
-        val dateFormat = SimpleDateFormat(format, Locale.getDefault())
-        return dateFormat.parse(dateString) ?: Date()
+    fun convertStringToDate(dateString: String, format: String): Date? {
+        return try {
+            val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+            dateFormat.parse(dateString) ?: Date()
+        }catch (e:Exception){
+            null
+        }
+
     }
 
 

@@ -38,11 +38,9 @@ import kotlinx.coroutines.Dispatchers
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.CodeSystem
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Condition
-import org.hl7.fhir.r4.model.DateTimeType
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus
@@ -52,8 +50,9 @@ import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
-import org.hl7.fhir.r4.model.StringType
-import java.util.Calendar
+import org.hl7.fhir.r4.model.SimpleQuantity
+import java.math.BigDecimal
+import java.util.Date
 
 /** ViewModel for patient registration screen {@link AddPatientFragment}. */
 class AdministerVaccineViewModel(
@@ -153,36 +152,11 @@ class AdministerVaccineViewModel(
 
       //Have a list of the observation codes
 
-      val immunization = Immunization()
+      var immunization = Immunization()
 
       immunization.encounter = encounterReference
       immunization.patient = patientReference
       immunization.id = uuid
-
-
-      /**
-       * Create immunisation resource
-       * diseaseTargeted = sharedPref.
-       * status & status reason = vaccineAdministered & reason(if no)
-       * location  = site_administered
-       * dateAdministered = system date
-       * administeredBy = performer.actor
-       * vaccineBatchNo = Iot number
-       * expirationDate = expirationDate
-       * doseQty = Dose Qty
-       * nextVaccinationDate = **Create ImmunisationRequest
-       */
-      //Disease target
-      val protocolList = Immunization().protocolApplied
-      val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
-
-      val diseaseTargeted = FormatterClass().getSharedPref("targetDisease",
-        getApplication<Application>().applicationContext)
-      val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
-      val diseaseTargetCodeableConcept = CodeableConcept()
-      diseaseTargetCodeableConcept.text = diseaseTargeted
-      diseaseTargetCodeableConceptList.add(diseaseTargetCodeableConcept)
-      immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
 
       //Status and status reason
       val status = observationFromCode(
@@ -197,6 +171,9 @@ class AdministerVaccineViewModel(
       val immunisationStatus: ImmunizationStatus
       if (status.value.contains("YES")){
         immunisationStatus = ImmunizationStatus.COMPLETED
+
+        immunization = generateImmunisation(immunization)
+
       }else{
         immunisationStatus = ImmunizationStatus.NOTDONE
 
@@ -216,61 +193,108 @@ class AdministerVaccineViewModel(
       }
       immunization.status = immunisationStatus
 
-      //Location and site administered
-      /**
-       * TODO: Location has to be mapped in the fhir server,
-       * TODO: Site administered is tied to a particular body part. Update this later
-       */
-
-      //Date administered
-      val dateAdministered = immunization.occurrenceDateTimeType
-      dateAdministered.value = Calendar.getInstance().time
-      dateAdministered.id = generateUuid()
-
-      /**
-       * TODO: Administered By = Performer.actor. There needs to be a Practitioner
-       */
-
-      //Batch number
-      val batchNumber = observationFromCode(
-        "74714-7",
-        patientId,
-        encounterId)
-      immunization.lotNumber = batchNumber.value
-
-      //Expiration number
-      val expirationNumber = observationFromCode(
-        "30980-7",
-        patientId,
-        encounterId)
-      val dateExp = FormatterClass().convertStringToDate(
-        expirationNumber.value, "")
-      immunization.expirationDate = dateExp
-
-
-
-      //Dose number
-      val doseNumber = observationFromCode(
-        "408102007",
-        patientId,
-        encounterId)
-
-      val stringTypeDoseNumber = StringType()
-      stringTypeDoseNumber.value = doseNumber.value
-      immunizationProtocolAppliedComponent.doseNumber = stringTypeDoseNumber
-
-      //Combine Protocol list
-      protocolList.add(immunizationProtocolAppliedComponent)
-      immunization.protocolApplied = protocolList
       val immunizationId = generateUuid()
       immunization.id = immunizationId
 
       fhirEngine.create(immunization)
 
-
     }
 
 
+
+  }
+
+  private fun generateImmunisation(immunization: Immunization):Immunization {
+
+    /**
+     * TODO: Administered By = Performer.actor. There needs to be a Practitioner
+     */
+
+    /**
+     * Create immunisation resource
+     * diseaseTargeted = sharedPref.
+     * status & status reason = vaccineAdministered & reason(if no)
+     * location  = site_administered
+     * dateAdministered = system date
+     * administeredBy = performer.actor
+     * vaccineBatchNo = Iot number
+     * expirationDate = expirationDate
+     * doseQty = Dose Qty
+     * nextVaccinationDate = **Create ImmunisationRequest
+     */
+    val stockList = ArrayList<String>()
+    stockList.addAll(
+      listOf(
+        "vaccinationTargetDisease",
+        "vaccinationDosage",
+        "vaccinationAdministrationMethod",
+        "vaccinationBatchNumber",
+        "vaccinationExpirationDate",
+        "vaccinationBrand",
+        "vaccinationManufacturer"
+      )
+    )
+    //Date administered
+    immunization.occurrenceDateTimeType.value = Date()
+
+
+    //Target Disease
+    val targetDisease = FormatterClass().getSharedPref("vaccinationTargetDisease",
+      getApplication<Application>().applicationContext)
+
+    val protocolList = Immunization().protocolApplied
+    val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
+    val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
+    val diseaseTargetCodeableConcept = CodeableConcept()
+    diseaseTargetCodeableConcept.text = targetDisease
+    diseaseTargetCodeableConceptList.add(diseaseTargetCodeableConcept)
+    immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
+    protocolList.add(immunizationProtocolAppliedComponent)
+
+    immunization.protocolApplied = protocolList
+
+    //Dosage
+    val dosage = FormatterClass().getSharedPref("vaccinationDosage",
+      getApplication<Application>().applicationContext)
+    if (dosage != null){
+      val bigDecimalValue = BigDecimal(dosage)
+      val simpleQuantity = SimpleQuantity()
+      simpleQuantity.value = bigDecimalValue
+
+      immunization.doseQuantity = simpleQuantity
+    }
+
+    //Administration Method
+    val vaccinationAdministrationMethod = FormatterClass().getSharedPref("vaccinationAdministrationMethod",
+      getApplication<Application>().applicationContext)
+    if (vaccinationAdministrationMethod != null){
+      val codeableConcept = CodeableConcept()
+      codeableConcept.text = vaccinationAdministrationMethod
+      codeableConcept.id = generateUuid()
+
+      immunization.site = codeableConcept
+    }
+
+    //Batch number
+    val vaccinationBatchNumber = FormatterClass().getSharedPref("vaccinationBatchNumber",
+      getApplication<Application>().applicationContext)
+    if(vaccinationBatchNumber != null){
+      immunization.lotNumber = vaccinationBatchNumber
+    }
+
+    //Expiration date
+    val vaccinationExpirationDate = FormatterClass().getSharedPref("vaccinationExpirationDate",
+      getApplication<Application>().applicationContext)
+    if (vaccinationExpirationDate != null){
+      val dateExp = FormatterClass().convertStringToDate(
+        vaccinationExpirationDate, "YYYY-MM-DD")
+      if (dateExp != null){
+        immunization.expirationDate = dateExp
+      }
+
+    }
+
+    return immunization
 
   }
 

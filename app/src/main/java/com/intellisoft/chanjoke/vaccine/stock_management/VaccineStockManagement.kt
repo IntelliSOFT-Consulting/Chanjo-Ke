@@ -16,6 +16,7 @@ import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import java.time.LocalDate
 import java.util.Arrays
+import java.util.Locale
 
 class VaccineStockManagement : AppCompatActivity() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
@@ -61,34 +62,30 @@ class VaccineStockManagement : AppCompatActivity() {
         if (vaccineDetails != null) {
 
             /**
-             * TODO: Get the dosage and the route
+             * TODO: Add all these tto shared Preference
              */
 
-            val stockList = ArrayList<String>()
+            val stockList = ArrayList<DbVaccineStockDetails>()
             stockList.addAll(
                 listOf(
-                    "Vaccine batch number",
-                    "Expiration date",
-                    vaccineDetails.dosage,
-                    vaccineDetails.administrationMethod,
-                    "Vaccine brand",
-                    "Vaccine manufacturer",
-                    targetDisease
+                    DbVaccineStockDetails("vaccinationTargetDisease",targetDisease.lowercase().capitalize(Locale.ROOT)),
+                    DbVaccineStockDetails("vaccinationDosage",vaccineDetails.dosage),
+                    DbVaccineStockDetails("vaccinationAdministrationMethod",vaccineDetails.administrationMethod),
+                    DbVaccineStockDetails("vaccinationBatchNumber",""),
+                    DbVaccineStockDetails("vaccinationExpirationDate",""),
+                    DbVaccineStockDetails("vaccinationBrand",""),
+                    DbVaccineStockDetails("vaccinationManufacturer","")
                 )
             )
 
             val dbVaccineStockDetailsList= ArrayList<DbVaccineStockDetails>()
             for(i in stockList){
-                val dbVaccineStockDetails = DbVaccineStockDetails(i, i)
+                val dbVaccineStockDetails = DbVaccineStockDetails(i.value, i.name)
                 dbVaccineStockDetailsList.add(dbVaccineStockDetails)
             }
             val vaccineStockAdapter = VaccineStockAdapter(dbVaccineStockDetailsList, this)
             recyclerView.adapter = vaccineStockAdapter
 
-            println("\nDetails for $targetDisease:")
-            println("- Dosage: ${vaccineDetails.dosage}")
-            println("- Administration Method: ${vaccineDetails.administrationMethod}")
-            println("- Time to Administer: ${vaccineDetails.timeToAdminister}")
         } else {
             val intent = Intent(this, PatientDetailActivity::class.java)
             startActivity(intent)
