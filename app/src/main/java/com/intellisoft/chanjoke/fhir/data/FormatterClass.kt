@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.intellisoft.chanjoke.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class FormatterClass {
     fun saveSharedPref(key: String, value: String, context: Context) {
@@ -26,6 +29,10 @@ class FormatterClass {
         editor.remove(key);
         editor.apply();
 
+    }
+    fun convertStringToDate(dateString: String, format: String): Date {
+        val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+        return dateFormat.parse(dateString) ?: Date()
     }
 
 }

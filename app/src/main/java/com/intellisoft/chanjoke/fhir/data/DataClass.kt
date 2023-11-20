@@ -20,3 +20,8 @@ data class DbCodeValue(
 enum class NavigationDetails{
     ADMINISTER_VACCINE
 }
+
+data class DbVaccineStockDetails(
+    val id:String,
+    val name:String
+)
