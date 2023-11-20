@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Zanzibar</string>
+    <string name="app_name">Chanjo-Ke</string>
     <string name="add_patient">Add Patient</string>
     <string name="fab_content_desc">Add Patient</string>
 
@@ -23,6 +23,7 @@
     <string name="message_patient_updated">Patient details updated</string>
     <string name="edit_patient">Edit Patient</string>
     <string name="tab_text_3">Client Details</string>
+    <string name="register_client">Register Client</string>
 
 
 </resources>

@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
         <activity
+            android:name=".add_patient.AddPatientActivity"
+            android:exported="false" />
+        <activity
             android:name=".shared.ForgotPassword"
             android:exported="false" />
         <activity

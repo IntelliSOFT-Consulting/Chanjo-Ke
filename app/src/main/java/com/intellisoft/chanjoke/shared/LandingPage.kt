@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.intellisoft.chanjoke.R
@@ -14,7 +13,7 @@ import com.intellisoft.chanjoke.databinding.FragmentLandingPageBinding
 class LandingPage : Fragment() {
 
     private lateinit var viewModel: LandingPageViewModel
-    private lateinit var _binding:FragmentLandingPageBinding
+    private lateinit var _binding: FragmentLandingPageBinding
     private val binding get() = _binding
 
     override fun onCreateView(
@@ -40,6 +39,8 @@ class LandingPage : Fragment() {
             bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
                 "new-patient-registration-paginated.json")
             findNavController().navigate(R.id.addPatientFragment, bundle)
+//            val intent = Intent(requireContext(), AddPatientActivity::class.java)
+//            startActivity(intent)
         }
         binding.cardViewUpdateClient.setOnClickListener {
             findNavController().navigate(R.id.patient_list)
@@ -50,7 +51,6 @@ class LandingPage : Fragment() {
         binding.cardViewAefi.setOnClickListener {
             findNavController().navigate(R.id.patient_list)
         }
-
 
 
     }

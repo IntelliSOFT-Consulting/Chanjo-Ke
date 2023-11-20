@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_profile -> {
                     // Handle notifications item click
                     Toast.makeText(this, "Under development", Toast.LENGTH_SHORT).show()
+                    viewModel.triggerOneTimeSync()
                     true
                 }
                 else -> false
