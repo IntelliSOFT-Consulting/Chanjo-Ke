@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.databinding.ActivitySplashBinding
 
 class Splash : AppCompatActivity() {
@@ -19,11 +20,16 @@ class Splash : AppCompatActivity() {
         )
 
         Handler().postDelayed({
+            if (FormatterClass().getSharedPref("isLoggedIn", this@Splash) == "true") {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                val intent = Intent(this, Login::class.java)
+                startActivity(intent)
+                finish()
+            }
 
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
-            finish()
-
-        }, 5000)
+        }, 3000)
     }
 }

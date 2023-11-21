@@ -52,7 +52,6 @@ class FhirApplication : Application(), DataCaptureConfig.Provider {
                 urlResolver = ReferenceUrlResolver(this@FhirApplication as Context)
                 valueSetResolverExternal = object : ValueSetResolver() {}
                 xFhirQueryResolver = XFhirQueryResolver { fhirEngine.search(it) }
-
             }
     }
 

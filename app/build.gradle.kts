@@ -6,7 +6,7 @@ plugins {
 
 android {
   namespace = "com.intellisoft.chanjoke"
-  compileSdk = 33
+  compileSdk = 34
   defaultConfig {
     applicationId = "com.intellisoft.chanjoke"
     minSdk = 24

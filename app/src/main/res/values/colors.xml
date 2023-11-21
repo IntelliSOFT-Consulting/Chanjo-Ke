@@ -2,7 +2,7 @@
 <resources>
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimary">#163C94</color>
-    <color name="colorPrimaryDark">#02236E</color>
+    <color name="colorPrimaryDark">#163C94</color>
     <color name="colorAccent">#163C94</color>
     <color name="colorStatusBar">#163C94</color>
     <color name="bac_trans">#F8F8F8</color>

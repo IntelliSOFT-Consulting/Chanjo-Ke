@@ -58,7 +58,6 @@
                         <TextView
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
                             android:text="DOB"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
@@ -77,7 +76,6 @@
                             android:layout_weight="1"
                             android:id="@+id/tvDob"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:text="DOB"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
@@ -93,12 +91,11 @@
                     <TableRow>
 
                         <TextView
-                            android:textColor="@color/black"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textStyle="bold"
-                            android:text="Gender"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:text="Gender"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textStyle="bold" />
 
 
                         <TextView
@@ -114,7 +111,6 @@
                             android:layout_weight="1"
                             android:id="@+id/tvGender"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:text="DOB"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
@@ -163,7 +159,5 @@
             app:menu="@menu/bottom_nav_menu" />
 
     </RelativeLayout>
-
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
