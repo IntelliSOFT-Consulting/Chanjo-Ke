@@ -1,13 +1,16 @@
 package com.intellisoft.chanjoke.detail.ui.main
 
 import android.app.Application
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
@@ -77,17 +80,19 @@ class VaccinesFragment : Fragment() {
                 "contraindications.json",
                 requireContext())
 
+            formatterClass.saveSharedPref(
+                "vaccinationFlow",
+                "createVaccineDetails",
+                requireContext()
+            )
+
             val bottomSheetFragment = BottomSheetFragment()
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
 
         }
 
         binding.btnUpdateHistory.setOnClickListener {
-            formatterClass.saveSharedPref("questionnaireJson","update_history.json", requireContext())
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
-            intent.putExtra("patientId", patientId)
-            startActivity(intent)
+            createDialog()
 
         }
 
@@ -124,4 +129,50 @@ class VaccinesFragment : Fragment() {
                 }
             }
     }
+
+    private fun createDialog() {
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Select Record to Update")
+//        builder.setMessage("Select Record to Update")
+        builder.setPositiveButton("Vaccine Details") { _: DialogInterface, i: Int ->
+
+            formatterClass.saveSharedPref(
+                "questionnaireJson",
+                "update_history_specifics.json",
+                requireContext()
+            )
+            formatterClass.saveSharedPref(
+                "vaccinationFlow",
+                "updateVaccineDetails",
+                requireContext()
+            )
+
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("patientId", patientId)
+            startActivity(intent)
+
+        }
+        builder.setNegativeButton("Client Record") { dialogInterface: DialogInterface, i: Int ->
+
+            formatterClass.saveSharedPref(
+                "questionnaireJson",
+                "update_history.json",
+                requireContext()
+            )
+
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("patientId", patientId)
+            startActivity(intent)
+
+
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+    }
+
 }

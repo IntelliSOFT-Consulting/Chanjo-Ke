@@ -175,10 +175,18 @@ class AdministerVaccineViewModel(
         /**
          *  This means the immunisation was successful and there were not contraindications
          * The only recommendation to be done here is for the next dose according to DAK
+         * Check if the request is comming from an update of the immunisation details or creation a new immunisation
          */
         immunisationStatus = ImmunizationStatus.COMPLETED
 
-        immunization = generateImmunisation(immunization)
+
+        val vaccinationFlow = FormatterClass().getSharedPref(
+          "vaccinationFlow",
+          getApplication<Application>().applicationContext)
+        if (vaccinationFlow != null && vaccinationFlow == "createVaccineDetails"){
+          //Get more details about the immunisation and also create a recommendation of the next one
+          immunization = generateImmunisation(immunization)
+        }
 
       }else{
         /**

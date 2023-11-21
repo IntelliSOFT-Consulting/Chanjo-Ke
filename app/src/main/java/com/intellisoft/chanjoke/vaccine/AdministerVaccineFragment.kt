@@ -79,16 +79,10 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
             )
                 .show()
 
-            val questionnaireJson =
-                formatterClass.getSharedPref("questionnaireJson", requireContext())
-            if (questionnaireJson == "update_history.json") {
-                createDialog()
-            } else {
-                val intent = Intent(requireContext(), MainActivity::class.java)
-                startActivity(intent)
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
 
-                NavHostFragment.findNavController(this).navigateUp()
-            }
+            NavHostFragment.findNavController(this).navigateUp()
 
 
         }
@@ -142,34 +136,6 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
     }
 
 
-    private fun createDialog() {
-
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Record updated successfully")
-        builder.setMessage("Do you want to update Vaccination Details")
-        builder.setPositiveButton("Update") { _: DialogInterface, i: Int ->
-
-            formatterClass.saveSharedPref(
-                "questionnaireJson",
-                "update_history_specifics.json",
-                requireContext()
-            )
-
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
-            intent.putExtra("patientId", patientId)
-            startActivity(intent)
-
-        }
-        builder.setNegativeButton("Close") { dialogInterface: DialogInterface, i: Int ->
-            dialogInterface.dismiss()
-            NavHostFragment.findNavController(this).navigateUp()
-        }
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-
-    }
 
 
     companion object {
