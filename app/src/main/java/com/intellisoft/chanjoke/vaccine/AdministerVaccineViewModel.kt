@@ -132,19 +132,20 @@ class AdministerVaccineViewModel(
           resource.subject = subjectReference
           resource.id = encounterId
           saveResourceToDatabase(resource, "enc "+encounterId)
+
+          val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
+          if (vaccinationFlow == "createVaccineDetails"){
+            createImmunisationRecord(encounterId, patientId)
+          }
         }
-        is Immunization -> {
-          createImmunisationRecord(encounterId, patientId, resource)
-        }
+
       }
     }
   }
 
   private fun createImmunisationRecord(
     encounterId: String,
-    patientId: String,
-    resource: Immunization
-  ) {
+    patientId: String) {
 
     CoroutineScope(Dispatchers.IO).launch {
 
@@ -162,13 +163,16 @@ class AdministerVaccineViewModel(
 
       //Status and status reason
       val status = observationFromCode(
-        "408102007",
+        "11-1122",
         patientId,
         encounterId)
       val statusReason = observationFromCode(
         "72029-2",
         patientId,
         encounterId)
+
+      Log.e("-----","----")
+      println(status.value)
 
       val immunisationStatus: ImmunizationStatus
       if (status.value.contains("YES")){
@@ -227,6 +231,7 @@ class AdministerVaccineViewModel(
       immunization.id = immunizationId
 
 
+      saveResourceToDatabase(immunization, "Imm "+immunizationId)
     }
 
 
@@ -367,8 +372,8 @@ class AdministerVaccineViewModel(
     immunizationRequest.targetDisease = codeableConceptTargetDisease
 
     //Dose number
-    val doseNumber = immunization.doseQuantity
-    immunizationRequest.doseNumber = doseNumber
+//    val doseNumber = immunization.doseQuantity
+//    immunizationRequest.doseNumber = doseNumber
 
     //Supporting immunisation
     val immunizationReferenceList = ArrayList<Reference>()
@@ -494,6 +499,7 @@ class AdministerVaccineViewModel(
 
   private suspend fun saveResourceToDatabase(resource: Resource, type:String) {
 
+    Log.e("----","----$type")
     fhirEngine.create(resource)
 
   }
