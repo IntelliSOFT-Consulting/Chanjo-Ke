@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
     private val formatter = FormatterClass()
-
 
 
     @SuppressLint("MissingInflatedId")
@@ -47,21 +45,25 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
+
                 R.id.navigation_patient -> {
                     navController.navigate(R.id.patient_list)
                     true
                 }
+
                 R.id.navigation_vaccine -> {
                     // Handle notifications item click
                     navController.navigate(R.id.patient_list)
                     true
                 }
+
                 R.id.navigation_profile -> {
                     // Handle notifications item click
                     Toast.makeText(this, "Under development", Toast.LENGTH_SHORT).show()
                     viewModel.triggerOneTimeSync()
                     true
                 }
+
                 else -> false
             }
         }
@@ -94,7 +96,14 @@ class MainActivity : AppCompatActivity() {
             NavigationDetails.ADMINISTER_VACCINE.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
-                    administerVaccine(patientId)
+                    administerVaccine(patientId, R.id.administerVaccine)
+                }
+            }
+
+            NavigationDetails.LIST_VACCINE_DETAILS.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    administerVaccine(patientId, R.id.vaccineDetailsFragment)
                 }
             }
         }
@@ -106,11 +115,9 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-
-
     }
 
-    private fun administerVaccine(patientId: String) {
+    private fun administerVaccine(patientId: String, administerVaccine: Int) {
         val questionnaireJson = formatter.getSharedPref("questionnaireJson", this)
         formatter.saveSharedPref("patientId", patientId, this)
 
@@ -118,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         bundle.putString(UpdateFragment.QUESTIONNAIRE_FRAGMENT_TAG, questionnaireJson)
         bundle.putString("patientId", patientId)
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
-            R.id.administerVaccine, bundle
+            administerVaccine, bundle
         )
 
     }
@@ -162,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.menu_item_option2 -> {
-                 viewModel.triggerOneTimeSync()
+                viewModel.triggerOneTimeSync()
                 true
             }
             // Add more cases for additional menu items if needed

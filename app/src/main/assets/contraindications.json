@@ -10,283 +10,6 @@
   ],
   "item": [
     {
-      "item": [
-        {
-          "type": "choice",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [
-                  {
-                    "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "radio-button",
-                    "display": "Radio Button"
-                  }
-                ]
-              }
-            },
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "3632072730175",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "64100-1",
-              "display": "Contraindication"
-            }
-          ],
-          "text": "Contraindication to vaccine",
-          "required": true,
-          "answerOption": [
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "64100-12",
-                "display": "Yes"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "64100-13",
-                "display": "No"
-              }
-            }
-          ]
-        },
-        {
-          "type": "string",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "6334982332208",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "34070-3",
-              "display": "FDA insert Contraindications"
-            }
-          ],
-          "text": "Enter contraindications",
-          "enableWhen": [
-            {
-              "question": "3632072730175",
-              "operator": "=",
-              "answerCoding": {
-                "system": "http://loinc.org",
-                "code": "64100-12",
-                "display": "Yes"
-              }
-            }
-          ]
-        },
-        {
-          "type": "date",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "604565416358",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "45354-8",
-              "display": "Date Next Dose"
-            }
-          ],
-          "text": "Date Next Dose",
-          "enableWhen": [
-            {
-              "question": "3632072730175",
-              "operator": "=",
-              "answerCoding": {
-                "system": "http://loinc.org",
-                "code": "64100-12",
-                "display": "Yes"
-              }
-            }
-          ]
-        },
-        {
-          "type": "choice",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [
-                  {
-                    "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "radio-button",
-                    "display": "Radio Button"
-                  }
-                ]
-              }
-            },
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "340969792066",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "93122-0",
-              "display": "Contraindicated vaccine"
-            }
-          ],
-          "text": "Do you want to administer the vaccine?",
-          "enableWhen": [
-            {
-              "question": "3632072730175",
-              "operator": "=",
-              "answerCoding": {
-                "system": "http://loinc.org",
-                "code": "64100-13",
-                "display": "No"
-              }
-            }
-          ],
-          "answerOption": [
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "93122-01",
-                "display": "Yes"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "93122-02",
-                "display": "No"
-              }
-            }
-          ]
-        },
-        {
-          "type": "choice",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [
-                  {
-                    "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "drop-down",
-                    "display": "Drop down"
-                  }
-                ]
-              }
-            },
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "9299181687384",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "85714-4",
-              "display": "Reason vacc not recvd"
-            }
-          ],
-          "text": "Reasone vaccine was not administered",
-          "enableWhen": [
-            {
-              "question": "340969792066",
-              "operator": "=",
-              "answerCoding": {
-                "system": "http://loinc.org",
-                "code": "93122-02",
-                "display": "No"
-              }
-            }
-          ],
-          "answerOption": [
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA20564-3",
-                "display": "Product out of stock"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA27161-1",
-                "display": "Contraindication "
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA27162-9",
-                "display": "Cold chain break"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA27163-7",
-                "display": "Client objection"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA27164-5",
-                "display": "Caregiver refusal"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA27165-2",
-                "display": "Expired product        "
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA27166-0",
-                "display": "Unspecified reason"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA27167-8",
-                "display": "Client acquired the disease"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA27168-6",
-                "display": "Immunization not carried out for other reasons"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA4489-6",
-                "display": "Unknown"
-              }
-            }
-          ]
-        }
-      ],
       "type": "group",
       "extension": [
         {
@@ -304,7 +27,542 @@
         }
       ],
       "linkId": "1.0.0",
-      "text": "Contraindictions"
+      "text": "Contraindictions",
+      "item": [
+        {
+          "linkId": "contraindication-group",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "vaccineContraindication"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "contraindication",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "item": [
+                {
+                  "text": "Contraindication to vaccine",
+                  "linkId": "contraindication-choice",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "radio-button",
+                            "display": "Radio Button"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "valueBoolean": true,
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "64100-12",
+                        "display": "Yes"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "64100-13",
+                        "display": "No"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "contraindication-code",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "112-11",
+                    "display": "Contraindication to vaccine",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "contraindications-group",
+          "type": "group",
+          "enableWhen": [
+            {
+              "question": "contraindication-choice",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "64100-12",
+                "display": "Yes"
+              }
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "contraindications-value",
+              "type": "string",
+              "required": true,
+              "text": "Enter contraindications",
+              "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+            },
+            {
+              "linkId": "contraindications-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "321-12",
+                    "display": "Enter contraindications",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "date-next-dose-group",
+          "type": "group",
+          "enableWhen": [
+            {
+              "question": "contraindication-choice",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "64100-12",
+                "display": "Yes"
+              }
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "date-next-dose-value",
+              "type": "date",
+              "required": true,
+              "text": "Date of Next Dose"
+            },
+            {
+              "linkId": "date-next-dose-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "12-2121",
+                    "display": "Date Next Dose",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "administer-vaccine-group",
+          "type": "group",
+          "enableWhen": [
+            {
+              "question": "contraindication-choice",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "64100-13",
+                "display": "No"
+              }
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "administerVaccine"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "administer-vaccine",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "item": [
+                {
+                  "text": "Do you want to administer the vaccine?",
+                  "linkId": "administer-vaccine-choice",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "radio-button",
+                            "display": "Radio Button"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "valueBoolean": true,
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "93122-01",
+                        "display": "Yes"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "93122-02",
+                        "display": "No"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "administer-vaccine-code",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "11-1122",
+                    "display": "Do you want to administer the vaccine?",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "current-body-weight-group",
+          "type": "group",
+          "enableWhen": [
+            {
+              "question": "administer-vaccine-choice",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "93122-01",
+                "display": "Yes"
+              }
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "bodyWeight"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "current-body-weight",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity",
+              "item": [
+                {
+                  "text": "Current Body Weight",
+                  "type": "decimal",
+                  "required": true,
+                  "linkId": "current-body-weight-decimal",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.value",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+                      "valueDecimal": 10
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+                      "valueDecimal": 500
+                    }
+                  ]
+                },
+                {
+                  "linkId": "current-body-weight-quantity-code",
+                  "type": "string",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.code",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "initial": [
+                    {
+                      "valueString": "kg"
+                    }
+                  ]
+                },
+                {
+                  "linkId": "current-body-weight-system",
+                  "type": "string",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.system",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "initial": [
+                    {
+                      "valueString": "http://unitsofmeasure.org"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "current-body-weight-code",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "4321-5",
+                    "display": "Current Body Weight",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "vaccine-not-administered-group",
+          "type": "group",
+          "enableWhen": [
+            {
+              "question": "administer-vaccine-choice",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "93122-02",
+                "display": "No"
+              }
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "vaccineContraindication"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "vaccine-not-administered",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "item": [
+                {
+                  "text": "Reasons vaccine was not administered",
+                  "linkId": "vaccine-not-administered-choice",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "drop-down",
+                            "display": "Drop down"
+                          }
+                        ],
+                        "text": "Drop down"
+                      }
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA20564-3",
+                        "display": "Product out of stock"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA27161-1",
+                        "display": "Contraindication "
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA27162-9",
+                        "display": "Cold chain break"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA27163-7",
+                        "display": "Client objection"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA27164-5",
+                        "display": "Caregiver refusal"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA27165-2",
+                        "display": "Expired product"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA27166-0",
+                        "display": "Unspecified reason"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA27167-8",
+                        "display": "Client acquired the disease"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA27168-6",
+                        "display": "Immunization not carried out for other reasons"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA4489-6",
+                        "display": "Unknown"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "vaccine-not-administered-code",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "102-11",
+                    "display": "Reasons vaccine was not administered",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
