@@ -314,7 +314,7 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.city",
               "type": "string",
               "required": true,
-              "text": "City",
+              "text": "County",
               "_text": {
                 "extension": [
                   {
@@ -348,7 +348,7 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.country",
               "type": "string",
               "required": true,
-              "text": "Country",
+              "text": "Sub county",
               "_text": {
                 "extension": [
                   {

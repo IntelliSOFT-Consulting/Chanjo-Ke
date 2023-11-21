@@ -133,8 +133,8 @@ class VaccinesFragment : Fragment() {
     private fun createDialog() {
 
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Select Record to Update")
-//        builder.setMessage("Select Record to Update")
+        builder.setTitle("Info")
+        builder.setMessage("Select Record to Update")
         builder.setPositiveButton("Vaccine Details") { _: DialogInterface, i: Int ->
 
             formatterClass.saveSharedPref(
