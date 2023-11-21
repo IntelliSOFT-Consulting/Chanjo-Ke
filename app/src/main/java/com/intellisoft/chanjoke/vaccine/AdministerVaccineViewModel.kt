@@ -29,6 +29,7 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbCodeValue
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
@@ -51,6 +52,7 @@ import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.SimpleQuantity
+import org.hl7.fhir.r4.model.Type
 import java.math.BigDecimal
 import java.util.Date
 
@@ -170,14 +172,30 @@ class AdministerVaccineViewModel(
 
       val immunisationStatus: ImmunizationStatus
       if (status.value.contains("YES")){
+        /**
+         *  This means the immunisation was successful and there were not contraindications
+         * The only recommendation to be done here is for the next dose according to DAK
+         * Check if the request is comming from an update of the immunisation details or creation a new immunisation
+         */
         immunisationStatus = ImmunizationStatus.COMPLETED
 
-        immunization = generateImmunisation(immunization)
+
+        val vaccinationFlow = FormatterClass().getSharedPref(
+          "vaccinationFlow",
+          getApplication<Application>().applicationContext)
+        if (vaccinationFlow != null && vaccinationFlow == "createVaccineDetails"){
+          //Get more details about the immunisation and also create a recommendation of the next one
+          immunization = generateImmunisation(immunization)
+        }
 
       }else{
+        /**
+         * This means there was a contraindication and Vaccination was not done.
+         * Create an ImmunisationRecommendation for this, according to the nextDate provided
+         */
         immunisationStatus = ImmunizationStatus.NOTDONE
 
-        //add CodeableConcept
+        //add CodeableConcept for status
         val codeableConcept = CodeableConcept()
         //Add coding
         val codingList = ArrayList<Coding>()
@@ -190,13 +208,24 @@ class AdministerVaccineViewModel(
 
         immunization.statusReason = codeableConcept
 
+        // Get the provided date after having a contraindication
+        val nextVisit = observationFromCode(
+          "45354-8",
+          patientId,
+          encounterId)
+        val dateNext = nextVisit.value
+
+        val nextDate = FormatterClass().convertStringToDate(dateNext, "YYYY-MM-DD")
+        createImmunisationRecommendation(nextDate, immunization, patientId, encounterId)
+
       }
+
+      //Immunisation status
       immunization.status = immunisationStatus
 
       val immunizationId = generateUuid()
       immunization.id = immunizationId
 
-      fhirEngine.create(immunization)
 
     }
 
@@ -299,27 +328,65 @@ class AdministerVaccineViewModel(
   }
 
 
-  private suspend fun createImmunisationRecommendation(immunizationId: String, patientId: String, encounterId: String) {
+  private suspend fun createImmunisationRecommendation(
+    recommendedDate: Date?,
+    immunization: Immunization,
+    patientId: String,
+    encounterId: String) {
+
+    val immunizationRecommendation = ImmunizationRecommendation()
+
     val encounterReference = Reference("Encounter/$encounterId")
     val patientReference = Reference("Patient/$patientId")
 
-    //date of next visit
-    val nextVisit = observationFromCode(
-      "390840006",
-      patientId,
-      encounterId)
-    val immunizationRecommendation = ImmunizationRecommendation()
+    val id = generateUuid()
+
     immunizationRecommendation.patient = patientReference
-//      immunizationRecommendation.date = ""
+    immunizationRecommendation.id = id
+
+    if (recommendedDate != null) immunizationRecommendation.date = recommendedDate
 
 
-    val immunizationRecommendationRecommendationComponent =
-      ImmunizationRecommendation.
-      ImmunizationRecommendationRecommendationComponent()
+    //Recommendation
+    val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
+    val immunizationRequest = ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
 
-//    immunizationRecommendationRecommendationComponent.
+    //Target Disease
+    val codeableConceptTargetDisease = CodeableConcept()
+    val protocolApplied = immunization.protocolApplied
+    protocolApplied.forEach { appliedComponent ->
+      val appliedTargetDisease = appliedComponent.targetDisease
+      appliedTargetDisease.forEach {
 
-//    immunizationRecommendation.setRecommendation()
+        if (it.hasText()) codeableConceptTargetDisease.text = it.text
+        if (it.hasCoding()) codeableConceptTargetDisease.coding = it.coding
+      }
+    }
+    codeableConceptTargetDisease.id = generateUuid()
+
+    immunizationRequest.targetDisease = codeableConceptTargetDisease
+
+    //Dose number
+    val doseNumber = immunization.doseQuantity
+    immunizationRequest.doseNumber = doseNumber
+
+    //Supporting immunisation
+    val immunizationReferenceList = ArrayList<Reference>()
+    val immunizationReference = Reference()
+    immunizationReference.reference = "Immunization/${immunization.id}"
+    immunizationReference.display = "Immunization"
+    immunizationReferenceList.add(immunizationReference)
+
+    //Supporting Patient Info and encounter reference
+    immunizationReferenceList.add(patientReference)
+    immunizationReferenceList.add(encounterReference)
+
+    immunizationRequest.supportingImmunization = immunizationReferenceList
+
+    recommendationList.add(immunizationRequest)
+    immunizationRecommendation.recommendation = recommendationList
+
+    saveResourceToDatabase(immunizationRecommendation, "ImmReccomend "+id)
 
   }
 

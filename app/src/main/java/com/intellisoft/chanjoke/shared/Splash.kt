@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.WindowManager
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.databinding.ActivitySplashBinding
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 class Splash : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
