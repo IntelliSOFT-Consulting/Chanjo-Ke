@@ -19,7 +19,7 @@
         <TextView
             android:padding="20dp"
             android:gravity="center"
-            android:id="@+id/name"
+            android:id="@+id/tvAppointment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/small_text_margin"
@@ -35,6 +35,7 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:padding="10dp"
                 android:layout_margin="5dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -42,47 +43,90 @@
 
                 <LinearLayout
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <ImageButton
-                        android:background="@drawable/ic_action_location"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_action_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:id="@+id/tvCLinicAbc"
-                        android:textColor="@color/black"
-                        android:text="Clinic ABC"
+                    <LinearLayout
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="Date Scheduled"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+
+                        <TextView
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:id="@+id/tvDateScheduled"
+                            android:textColor="@color/black"
+                            android:text="Jan 01, 2001"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <ImageButton
-                        android:background="@drawable/ic_action_date"
+                    <LinearLayout
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/field_name"
-                        android:textColor="@color/black"
-                        android:text="Jan 01, 2001"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        <TextView
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="Dose Number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+
+                        <TextView
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:id="@+id/tvDoseNumber"
+                            android:textColor="@color/black"
+                            android:text="Jan 01, 2001"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
+
             </LinearLayout>
+
+            <Button
+                android:padding="10dp"
+                android:id="@+id/btnAdministerVaccine"
+                android:layout_gravity="center"
+                android:text="Administer Vaccine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

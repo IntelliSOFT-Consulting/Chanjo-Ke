@@ -78,6 +78,11 @@ class VaccineStockManagement : AppCompatActivity() {
                 )
             )
 
+            //Save to shared pref
+            stockList.forEach{
+                formatterClass.saveSharedPref(it.name,it.value,this)
+            }
+
             val dbVaccineStockDetailsList= ArrayList<DbVaccineStockDetails>()
             for(i in stockList){
                 val dbVaccineStockDetails = DbVaccineStockDetails(i.value, i.name)

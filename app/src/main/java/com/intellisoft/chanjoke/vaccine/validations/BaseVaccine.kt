@@ -78,7 +78,7 @@ class VaccinationManager {
     }
 
     fun getVaccineDetails(vaccineName: String): VaccineDetails? {
-        val newVaccine = convertToVaccineCode(vaccineName)
+        val newVaccine = convertToVaccineCode(vaccineName.capitalize())
         return vaccines[newVaccine]?.details()
     }
 }

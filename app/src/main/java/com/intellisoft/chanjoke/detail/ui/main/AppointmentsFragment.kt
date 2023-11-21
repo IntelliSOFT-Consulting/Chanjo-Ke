@@ -1,11 +1,21 @@
 package com.intellisoft.chanjoke.detail.ui.main
 
+import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
+import com.intellisoft.chanjoke.databinding.FragmentVaccinesBinding
+import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +32,11 @@ class AppointmentsFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentAppointmentsBinding
+    private lateinit var patientDetailsViewModel: PatientDetailsViewModel
+    private lateinit var patientId: String
+    private lateinit var fhirEngine: FhirEngine
+    private val formatterClass = FormatterClass()
+    private lateinit var layoutManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +54,37 @@ class AppointmentsFragment : Fragment() {
 
         binding = FragmentAppointmentsBinding.inflate(inflater, container, false)
 
+
+        binding = FragmentAppointmentsBinding.inflate(inflater, container, false)
+
+        fhirEngine = FhirApplication.fhirEngine(requireContext())
+
+        patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
+
+        layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.setHasFixedSize(true)
+
+        patientDetailsViewModel = ViewModelProvider(this,
+            PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
+        )[PatientDetailsViewModel::class.java]
+
+        getImmunisationRecommendations()
+
         return binding.root
     }
+
+    private fun getImmunisationRecommendations() {
+        val recommendationList = patientDetailsViewModel.recommendationList()
+
+        println(recommendationList)
+
+        val vaccineAdapter = AppointmentAdapter(recommendationList,requireContext())
+        binding.recyclerView.adapter = vaccineAdapter    }
 
     companion object {
         /**

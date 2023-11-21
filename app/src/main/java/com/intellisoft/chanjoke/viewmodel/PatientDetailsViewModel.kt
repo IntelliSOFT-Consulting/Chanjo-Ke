@@ -15,6 +15,8 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
+import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -25,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Immunization
+import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.RiskAssessment
@@ -123,6 +126,48 @@ class PatientDetailsViewModel(
         return getString(R.string.none)
     }
 
+    fun recommendationList() = runBlocking {
+        getRecommendationList()
+    }
+
+    private suspend fun getRecommendationList():ArrayList<DbAppointmentDetails> {
+        val recommendationList = ArrayList<DbAppointmentDetails>()
+
+        fhirEngine
+            .search<ImmunizationRecommendation> {
+                filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
+                sort(Encounter.DATE, Order.DESCENDING)
+            }
+            .map { createRecommendation(it) }
+            .let { recommendationList.addAll(it) }
+
+
+        return recommendationList
+    }
+
+    private fun createRecommendation(it: ImmunizationRecommendation):DbAppointmentDetails {
+
+        val vaccinationManager = VaccinationManager()
+        val date = if (it.date != null) it.date.toString() else ""
+        var targetDisease = ""
+        var doseNumber:String? = ""
+
+        if (it.hasRecommendation()){
+            val recommendation = it.recommendation
+            if (recommendation.isNotEmpty()){
+                val codeableConceptTargetDisease = recommendation[0].targetDisease
+                if (codeableConceptTargetDisease.hasText()){
+                    targetDisease = codeableConceptTargetDisease.text
+                }
+            }
+        }
+        if (targetDisease != ""){
+            doseNumber = vaccinationManager.getVaccineDetails(targetDisease)?.dosage
+        }
+
+        return DbAppointmentDetails(date,doseNumber, targetDisease)
+
+    }
 
     fun getEncounterList()= runBlocking{
         getEncounterDetails()

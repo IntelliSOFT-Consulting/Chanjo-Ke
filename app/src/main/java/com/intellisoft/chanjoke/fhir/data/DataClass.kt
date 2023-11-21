@@ -28,3 +28,8 @@ data class DbVaccineStockDetails(
     val name: String,
     val value: String
 )
+data class DbAppointmentDetails(
+    val dateScheduled: String,
+    val doseNumber: String?,
+    val targetDisease: String
+)

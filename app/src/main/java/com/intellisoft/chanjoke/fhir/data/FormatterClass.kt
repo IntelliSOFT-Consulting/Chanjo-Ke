@@ -39,6 +39,16 @@ class FormatterClass {
         }
 
     }
+    fun removeNonNumeric(input: String): String {
+        // Regex pattern to match numeric values (with optional decimal part)
+        val numericPattern = Regex("[0-9]+(\\.[0-9]+)?")
+
+        // Find the numeric part in the input string
+        val matchResult = numericPattern.find(input)
+
+        // Extract the numeric value or return an empty string if not found
+        return matchResult?.value ?: ""
+    }
 
 
 
