@@ -14,8 +14,9 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
-class VaccineAdapter(private var entryList: ArrayList<DbVaccineData>,
-                     private val context: Context
+class VaccineAdapter(
+    private var entryList: ArrayList<DbVaccineData>,
+    private val context: Context
 ) : RecyclerView.Adapter<VaccineAdapter.Pager2ViewHolder>() {
 
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -32,13 +33,27 @@ class VaccineAdapter(private var entryList: ArrayList<DbVaccineData>,
 
                 FormatterClass().saveSharedPref(
                     "questionnaireJson",
-                    "adverse_effects.json",context)
+                    "adverse_effects.json", context
+                )
+
 
                 val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
                 intent.putExtra("patientId", patientId)
                 context.startActivity(intent)
 
+            }
+            tvVaccineName.apply {
+                setOnClickListener {
+                    val patientId = FormatterClass().getSharedPref("patientId", context)
+                    FormatterClass().saveSharedPref(
+                        "vaccine_name", tvVaccineName.text.toString(), context
+                    )
+                    val intent = Intent(context, MainActivity::class.java)
+                    intent.putExtra("functionToCall", NavigationDetails.LIST_VACCINE_DETAILS.name)
+                    intent.putExtra("patientId", patientId)
+                    context.startActivity(intent)
+                }
             }
         }
 
