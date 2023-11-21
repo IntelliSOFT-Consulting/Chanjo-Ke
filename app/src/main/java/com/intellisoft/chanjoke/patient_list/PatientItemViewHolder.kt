@@ -29,30 +29,30 @@ class PatientItemViewHolder(binding: PatientListItemViewBinding) :
   RecyclerView.ViewHolder(binding.root) {
 //  private val statusView: ImageView = binding.status
   private val nameView: TextView = binding.name
-  private val ageView: TextView = binding.fieldName
-//  private val idView: TextView = binding.id
+  private val idNumber: TextView = binding.idNumber
+  private val tvPhoneNumber: TextView = binding.tvPhoneNumber
+  private val btnView: TextView = binding.btnView
+
+  private val viewName: TextView = binding.viewName
+  private val viewId: TextView = binding.viewId
+  private val viewPhoneNumber: TextView = binding.viewPhoneNumber
 
   fun bindTo(
     patientItem: PatientListViewModel.PatientItem,
     onItemClicked: (PatientListViewModel.PatientItem) -> Unit,
   ) {
     this.nameView.text = patientItem.name
-    this.ageView.text = getFormattedAge(patientItem, ageView.context.resources)
+    this.idNumber.text = patientItem.id
+    this.tvPhoneNumber.text = patientItem.phone
+
+    this.viewName.text = "Name:"
+    this.viewId.text = "Id number"
+    this.viewPhoneNumber.text = "Phone number"
+
 //    this.idView.text = "Id: #---${getTruncatedId(patientItem)}"
     this.itemView.setOnClickListener { onItemClicked(patientItem) }
+//    this.btnView.setOnClickListener { onItemClicked(patientItem) }
 
-//    statusView.imageTintList =
-//      ColorStateList.valueOf(
-//        ContextCompat.getColor(
-//          statusView.context,
-//          when (patientItem.risk) {
-//            RiskProbability.HIGH.toCode() -> R.color.high_risk
-//            RiskProbability.MODERATE.toCode() -> R.color.moderate_risk
-//            RiskProbability.LOW.toCode() -> R.color.low_risk
-//            else -> R.color.unknown_risk
-//          },
-//        ),
-//      )
   }
 
   private fun getFormattedAge(
