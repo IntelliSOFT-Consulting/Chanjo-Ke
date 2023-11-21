@@ -4,6 +4,10 @@
   "status": "active",
   "description": "Vaccine Contradictions",
   "purpose": "Vaccine Contradictions",
+  "subjectType": [
+    "Immunization",
+    "Encounter"
+  ],
   "item": [
     {
       "item": [

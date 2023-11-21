@@ -55,7 +55,7 @@ class VaccineStockAdapter(private var dbVaccineStockDetailsList: ArrayList<DbVac
 
 
         val name = dbVaccineStockDetailsList[position].name
-        val id = dbVaccineStockDetailsList[position].id
+        val value = dbVaccineStockDetailsList[position].value
 
         holder.tvDetail.text = name
 
