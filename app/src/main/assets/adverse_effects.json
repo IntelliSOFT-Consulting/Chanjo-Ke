@@ -1,5 +1,8 @@
 {
   "resourceType": "Questionnaire",
+  "subjectType": [
+    "Encounter"
+  ],
   "title": "Adverse Effects",
   "status": "active",
   "description": "Adverse Effects",
@@ -8,157 +11,264 @@
     {
       "item": [
         {
-          "type": "choice",
+          "linkId": "aefi-type-group",
+          "type": "group",
           "extension": [
             {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [
-                  {
-                    "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "drop-down",
-                    "display": "Drop down"
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "multipleBirth"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "aefi-type",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "item": [
+                {
+                  "text": "Type of AEFI",
+                  "linkId": "aefi-type-choice",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "drop-down",
+                            "display": "Drop down"
+                          }
+                        ],
+                        "text": "Drop down"
+                      }
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA10030-7",
+                        "display": "High fever"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-6",
+                        "display": "Convulsion"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-61",
+                        "display": "Anaphylaxis"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-62",
+                        "display": "Paralysis"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-63",
+                        "display": "Toxic shock"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-64",
+                        "display": "Injection site abcess"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-65",
+                        "display": "Severe local reaction"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-66",
+                        "display": "Generalised urticaria(hives)"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-67",
+                        "display": "BCG Lymphadenitis"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LA33-68",
+                        "display": "Encaphalopathy, Encephalitis/menengitis"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "2.1.2",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "882-22",
+                    "display": "Type of AEFI",
+                    "system": "http://loinc.org"
                   }
-                ],
-                "text": "Drop down"
-              }
-            },
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "/52472-8/52571-7",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "52571-7",
-              "display": "Does patient have allergies or any known adverse drug reactions?"
-            }
-          ],
-          "text": "Type of AEFI",
-          "required": false,
-          "answerOption": [
-            {
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
-                  "valueString": "0"
                 }
-              ],
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA10030-7",
-                "display": "High fever"
-              }
-            },
-            {
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
-                  "valueString": "1"
-                }
-              ],
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-6",
-                "display": "Convulsion"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-61",
-                "display": "Anaphylaxis"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-62",
-                "display": "Paralysis"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-63",
-                "display": "Toxic shock"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-64",
-                "display": "Injection site abcess"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-65",
-                "display": "Severe local reaction"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-66",
-                "display": "Generalised urticaria(hives)"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-67",
-                "display": "BCG Lymphadenitis"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA33-68",
-                "display": "Encaphalopathy, Encephalitis/menengitis"
-              }
+              ]
             }
           ]
         },
         {
-          "type": "string",
+          "linkId": "event-description",
+          "type": "group",
           "extension": [
             {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
             }
           ],
-          "linkId": "/52472-8/52473-6",
-          "code": [
+          "item": [
             {
-              "system": "http://loinc.org",
-              "code": "52473-6",
-              "display": "Allergies/Causes of Reaction"
+              "linkId": "brief-description",
+              "type": "string",
+              "required": true,
+              "text": "Brief Description on the AEFI",
+              "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+            },
+            {
+              "linkId": "brief-description-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "833-22",
+                    "display": "Brief Description",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
             }
-          ],
-          "text": "Brief details on the AEFI",
-          "required": false
+          ]
         },
         {
-          "type": "date",
+          "linkId": "event-date",
+          "type": "group",
           "extension": [
             {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
             }
           ],
-          "linkId": "2781399024955",
-          "code": [
+          "item": [
             {
-              "system": "http://loinc.org",
-              "code": "30953-4",
-              "display": "Onset of event (Date)"
+              "linkId": "event-date-time",
+              "type": "dateTime",
+              "required": true,
+              "text": "Onset of event",
+              "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueDateTime"
+            },
+            {
+              "linkId": "event-date-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "833-23",
+                    "display": "Onset of event",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "past-medical-history",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
             }
           ],
-          "text": "Onset of event (Date)"
+          "item": [
+            {
+              "linkId": "medical-history",
+              "type": "string",
+              "required": true,
+              "text": "Past medical history",
+              "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+            },
+            {
+              "linkId": "medical-history-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "833-21",
+                    "display": "Past medical history",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "extension": [
@@ -190,181 +300,293 @@
     {
       "item": [
         {
-          "type": "string",
-          "extension": [
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "/11339-9",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "11339-9",
-              "display": "Hx of Major illnesses and injuries"
-            }
-          ],
-          "text": "Reaction Severity",
-          "required": false
+          "text": "Action Taken",
+          "type": "display",
+          "linkId": "action-taken"
         },
         {
-          "type": "string",
+          "linkId": "treatment-given-group",
+          "type": "group",
           "extension": [
             {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
             }
           ],
-          "linkId": "/8658-7",
-          "code": [
+          "item": [
             {
-              "system": "http://loinc.org",
-              "code": "8658-7",
-              "display": "Hx of Allergies"
-            }
-          ],
-          "text": "Action taken",
-          "required": false
-        },
-        {
-          "type": "choice",
-          "extension": [
+              "linkId": "treatment-given",
+              "type": "string",
+              "required": true,
+              "text": "Treatment Given",
+              "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+            },
             {
-              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-              "valueCodeableConcept": {
-                "coding": [
-                  {
-                    "system": "http://hl7.org/fhir/questionnaire-item-control",
-                    "code": "drop-down",
-                    "display": "Drop down"
+              "linkId": "treatment-given-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "888-1",
+                    "display": "Treatment Given",
+                    "system": "dummy"
                   }
-                ],
-                "text": "Drop down"
-              }
-            },
-            {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
-            }
-          ],
-          "linkId": "/82757-6",
-          "code": [
-            {
-              "system": "http://loinc.org",
-              "code": "82757-6",
-              "display": "Immunodef"
-            }
-          ],
-          "text": "AEFI Outcome",
-          "required": false,
-          "answerOption": [
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA26660-3",
-                "display": "Recovered"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA26658-7",
-                "display": "Recovering"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA26659-5",
-                "display": "Not Recovered"
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA26661-1",
-                "display": "Unknown "
-              }
-            },
-            {
-              "valueCoding": {
-                "system": "http://loinc.org",
-                "code": "LA26661-12",
-                "display": "Died"
-              }
+                }
+              ]
             }
           ]
         },
         {
-          "type": "string",
+          "linkId": "specimen-collected-group",
+          "type": "group",
           "extension": [
             {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
             }
           ],
-          "linkId": "/97070-7",
-          "code": [
+          "item": [
             {
-              "system": "http://loinc.org",
-              "code": "97070-7",
-              "display": "Did you experience any allergic symptoms, high fever, fainting spells or other uncommon reactions following a previous different vaccination?"
+              "linkId": "specimen-collected-investigation",
+              "type": "string",
+              "required": true,
+              "text": "Specimen collected for investigation",
+              "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+            },
+            {
+              "linkId": "specimen-collected-investigation-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "886-1",
+                    "display": "Specimen collected for investigation",
+                    "system": "dummy"
+                  }
+                }
+              ]
             }
-          ],
-          "text": "Name of person reporting",
-          "required": false
+          ]
         },
         {
-          "type": "string",
+          "linkId": "reaction-severity-group",
+          "type": "group",
           "extension": [
             {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation"
+              }
             }
           ],
-          "linkId": "/97071-5",
-          "code": [
+          "item": [
             {
-              "system": "http://loinc.org",
-              "code": "97071-5",
-              "display": "For women of a childbearing age: Are you currently pregnant or nursing?"
+              "linkId": "reaction-severity",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "item": [
+                {
+                  "text": "Reaction Severity",
+                  "linkId": "reaction-severity-choice",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "drop-down",
+                            "display": "Drop down"
+                          }
+                        ],
+                        "text": "Drop down"
+                      }
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "LifeThreatening",
+                        "display": "Life Threatening"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "Mild",
+                        "display": "Mild"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "Moderate",
+                        "display": "Moderate"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "Severe",
+                        "display": "Severe"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "Fatal",
+                        "display": "Fatal"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "reaction-severity-code",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "880-11",
+                    "display": "Reaction Severity",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
             }
-          ],
-          "text": "Phone number",
-          "required": false
+          ]
         },
         {
-          "type": "string",
+          "linkId": "AEFI-outcome-group",
+          "type": "group",
           "extension": [
             {
-              "valueBoolean": true,
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract"
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation"
+              }
             }
           ],
-          "linkId": "/97072-3",
-          "code": [
+          "item": [
             {
-              "system": "http://loinc.org",
-              "code": "97072-3",
-              "display": "Have you been vaccinated within the last 14 days?"
-            }
-          ],
-          "text": "Healthcare worker name",
-          "required": false
-        },
-        {
-          "type": "string",
-          "linkId": "/97073-1",
-          "code": [
+              "linkId": "AEFI-outcome",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "item": [
+                {
+                  "text": "AEFI Outcome",
+                  "linkId": "AEFI-outcome-choice",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "drop-down",
+                            "display": "Drop down"
+                          }
+                        ],
+                        "text": "Drop down"
+                      }
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "Recovered",
+                        "display": "Recovered"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "Recovering",
+                        "display": "Recovering"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "NotRecovered",
+                        "display": "Not Recovered"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "Unknown",
+                        "display": "Unknown"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "Died",
+                        "display": "Died"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
             {
-              "system": "http://loinc.org",
-              "code": "97073-1",
-              "display": "Have you already received a vaccination against COVID-19?"
+              "linkId": "AEFI-outcome-code",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "808-11",
+                    "display": "AEFI Outcome",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
             }
-          ],
-          "text": "Designation",
-          "required": false
+          ]
         }
       ],
       "type": "group",
