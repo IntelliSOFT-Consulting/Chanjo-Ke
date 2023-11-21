@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 class Login : AppCompatActivity() {
 
