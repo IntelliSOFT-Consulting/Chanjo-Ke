@@ -3,6 +3,7 @@ package com.intellisoft.chanjoke.viewmodel
 
 import android.app.Application
 import android.icu.text.DateFormat
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -124,10 +125,11 @@ class PatientDetailsViewModel(
     }
 
 
-    fun getEncounterList()= runBlocking{
+    fun getEncounterList() = runBlocking {
         getEncounterDetails()
     }
-    private suspend fun getEncounterDetails():ArrayList<DbVaccineData>{
+
+    private suspend fun getEncounterDetails(): ArrayList<DbVaccineData> {
 
         val encounterList = ArrayList<DbVaccineData>()
 
@@ -143,14 +145,15 @@ class PatientDetailsViewModel(
         return encounterList
     }
 
-    fun createEncounterItem(immunization: Immunization): DbVaccineData{
+    fun createEncounterItem(immunization: Immunization): DbVaccineData {
 
         var targetDisease = ""
         var doseNumberValue = ""
+        val encounterId = ""
 
         val protocolList = immunization.protocolApplied
         protocolList.forEach {
-
+//Log.e("TAG","Immunization Encounter ***** ${it.seriesElemen}")
             //Target Disease
             val targetDiseaseList = it.targetDisease
             if (targetDiseaseList.isNotEmpty()) targetDisease = targetDiseaseList[0].text
@@ -164,6 +167,7 @@ class PatientDetailsViewModel(
 
 
         return DbVaccineData(
+            encounterId,
             targetDisease,
             doseNumberValue
         )

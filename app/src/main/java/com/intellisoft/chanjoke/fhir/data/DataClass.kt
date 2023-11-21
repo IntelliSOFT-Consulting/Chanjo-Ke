@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.fhir.data
 
 data class DbVaccineData(
+    val encounterId: String,
     val vaccineName: String,
     val vaccineDosage: String
 )

@@ -7,6 +7,20 @@
   "status": "active",
   "description": "Adverse Effects",
   "purpose": "Adverse Effects",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+      "valueExpression": {
+        "language": "application/x-fhir-query",
+        "expression": "Encounter",
+        "name": "encounter"
+      }
+    },
+    {
+      "url" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
+      "valueCode" : "prior-edit"
+    }
+  ],
   "item": [
     {
       "item": [
