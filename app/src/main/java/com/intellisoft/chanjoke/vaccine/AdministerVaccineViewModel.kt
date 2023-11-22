@@ -136,7 +136,7 @@ class AdministerVaccineViewModel(
           saveResourceToDatabase(resource, "enc "+encounterId)
 
           val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
-          if (vaccinationFlow == "createVaccineDetails"){
+          if (vaccinationFlow == "createVaccineDetails" || vaccinationFlow == "updateVaccineDetails"){
             createImmunisationRecord(encounterId, patientId)
           }
         }
@@ -162,33 +162,33 @@ class AdministerVaccineViewModel(
       immunization.encounter = encounterReference
       immunization.patient = patientReference
       immunization.id = immunizationId
-
-      //Get more details about the immunisation
-      val job = Job()
-      CoroutineScope(Dispatchers.IO + job).launch {
-        immunization = generateImmunisation(immunization)
-      }.join()
-
-      //Status and status reason
-      val status = observationFromCode(
-        "11-1122",
-        patientId,
-        encounterId)
-      val statusReason = observationFromCode(
-        "72029-2",
-        patientId,
-        encounterId)
-
-
-
       val immunisationStatus: ImmunizationStatus
-      if (status.value.replace(" ","") == "Yes"){
-        /**
-         *  This means the immunisation was successful and there were not contraindications
-         * The only recommendation to be done here is for the next dose according to DAK
-         */
-        immunisationStatus = ImmunizationStatus.COMPLETED
-        //Immunisation flow
+
+      val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
+      if (vaccinationFlow == "createVaccineDetails"){
+        //Get more details about the immunisation
+        val job = Job()
+        CoroutineScope(Dispatchers.IO + job).launch {
+          immunization = generateImmunisation(immunization)
+        }.join()
+
+        //Status and status reason
+        val status = observationFromCode(
+          "11-1122",
+          patientId,
+          encounterId)
+        val statusReason = observationFromCode(
+          "72029-2",
+          patientId,
+          encounterId)
+
+        if (status.value.replace(" ","") == "Yes"){
+          /**
+           *  This means the immunisation was successful and there were not contraindications
+           * The only recommendation to be done here is for the next dose according to DAK
+           */
+          immunisationStatus = ImmunizationStatus.COMPLETED
+          //Immunisation flow
 //        val vaccinationFlow = FormatterClass().getSharedPref(
 //          "vaccinationFlow",
 //          getApplication<Application>().applicationContext)
@@ -201,40 +201,79 @@ class AdministerVaccineViewModel(
 //
 //        }
 
+        }else{
+          /**
+           * This means there was a contraindication and Vaccination was not done.
+           * Create an ImmunisationRecommendation for this, according to the nextDate provided
+           */
+          immunisationStatus = ImmunizationStatus.NOTDONE
+
+          //add CodeableConcept for status
+          val codeableConcept = CodeableConcept()
+          //Add coding
+          val codingList = ArrayList<Coding>()
+          val coding = Coding()
+          coding.code = statusReason.code
+          codingList.add(coding)
+
+          codeableConcept.coding = codingList
+          codeableConcept.text = statusReason.value
+
+          immunization.statusReason = codeableConcept
+
+          // Get the provided date after having a contraindication
+          val nextVisit = observationFromCode(
+            "4.1.2",
+            patientId,
+            encounterId)
+          val dateNext = nextVisit.value
+
+          val nextDate = FormatterClass().convertStringToDate(dateNext, "YYYY-MM-DD")
+          createImmunisationRecommendation(nextDate, immunization, patientId, encounterId)
+
+        }
       }else{
-        /**
-         * This means there was a contraindication and Vaccination was not done.
-         * Create an ImmunisationRecommendation for this, according to the nextDate provided
-         */
-        immunisationStatus = ImmunizationStatus.NOTDONE
+        //This is an update
+        immunisationStatus = ImmunizationStatus.COMPLETED
 
-        //add CodeableConcept for status
-        val codeableConcept = CodeableConcept()
-        //Add coding
-        val codingList = ArrayList<Coding>()
-        val coding = Coding()
-        coding.code = statusReason.code
-        codingList.add(coding)
-
-        codeableConcept.coding = codingList
-        codeableConcept.text = statusReason.value
-
-        immunization.statusReason = codeableConcept
-
-        // Get the provided date after having a contraindication
-        val nextVisit = observationFromCode(
-          "4.1.2",
+        // Get the type of vaccine
+        val vaccineTypeObs = observationFromCode(
+          "type-of-vaccine-group",
           patientId,
           encounterId)
-        val dateNext = nextVisit.value
+        val vaccineType = vaccineTypeObs.value
 
-        val nextDate = FormatterClass().convertStringToDate(dateNext, "YYYY-MM-DD")
-        createImmunisationRecommendation(nextDate, immunization, patientId, encounterId)
+        //Date of last dose
+        val lastDoseDateObs = observationFromCode(
+          "date-of-last-dose-group",
+          patientId,
+          encounterId)
+        val lastDoseDate = lastDoseDateObs.value
+        val date = FormatterClass().convertStringToDate(lastDoseDate, "")
+        if (date != null) immunization.occurrenceDateTimeType.value = date
+
+        //Target Disease
+
+        val protocolList = Immunization().protocolApplied
+        val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
+        val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
+        val diseaseTargetCodeableConcept = CodeableConcept()
+        diseaseTargetCodeableConcept.text = vaccineType
+        diseaseTargetCodeableConceptList.add(diseaseTargetCodeableConcept)
+        immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
+        protocolList.add(immunizationProtocolAppliedComponent)
+
+        immunization.protocolApplied = protocolList
 
       }
 
+
+
       //Immunisation status
       immunization.status = immunisationStatus
+
+      FormatterClass().deleteSharedPref("vaccinationFlow",
+        getApplication<Application>().applicationContext)
 
       saveResourceToDatabase(immunization, "Imm "+immunizationId)
     }
