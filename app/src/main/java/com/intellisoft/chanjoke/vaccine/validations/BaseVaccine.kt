@@ -35,6 +35,10 @@ abstract class BaseVaccine(
     }
 }
 
+/**
+ * TODO: Combine multiple vaccines
+ */
+
 // Polio vaccines
 class bOPV : BaseVaccine(0, "2 dosages", "Oral")
 class OPV1 : BaseVaccine(6, "2 dosages", "Oral")
@@ -50,7 +54,6 @@ class Measles3 : BaseVaccine(78, "0.5ml", "Subcutaneous right upper arm")
 class YellowFever : BaseVaccine(36, "0.5ml", "Subcutaneous left upper arm")
 
 //Covid 19
-// Covid vaccines
 class Astrazeneca : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
 class Moderna : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
 class JohnsonAndJohnson : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
