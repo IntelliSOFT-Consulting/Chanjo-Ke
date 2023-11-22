@@ -475,6 +475,9 @@ class AdministerVaccineViewModel(
 //    codeableConceptTargetDisease.id = generateUuid()
 
 
+    val encRef = Reference("Encounter/$encounterId")
+    val patientReference = Reference("Patient/$patientId")
+    
         immunizationRequest.targetDisease = codeableConceptTargetDisease
 
 
