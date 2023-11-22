@@ -25,7 +25,8 @@ data class EncounterItem(
 
 data class DbCodeValue(
     val code: String,
-    val value: String
+    val value: String,
+    val dateTime:String? = null
 )
 
 enum class NavigationDetails {

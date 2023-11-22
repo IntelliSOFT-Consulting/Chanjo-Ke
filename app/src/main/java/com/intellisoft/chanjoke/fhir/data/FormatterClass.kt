@@ -63,8 +63,13 @@ class FormatterClass {
             "yyyyMMddHHmmss",
             "yyyy-MM-dd HH:mm:ss",
             "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
+            "yyyy-MM-dd'T'HH:mm:ssXXX",     // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
+            "EEE MMM dd HH:mm:ss zzz yyyy", // Example: "Sun Jan 01 00:00:00 GMT+03:00 2023"
+
             // Add more formats as needed
         )
+
+
 
         // Try parsing the input date with each format
         for (format in inputDateFormats) {
