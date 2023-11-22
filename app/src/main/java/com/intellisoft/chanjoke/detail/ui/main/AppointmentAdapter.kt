@@ -16,6 +16,7 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
+import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 
 class AppointmentAdapter(
     private var entryList: ArrayList<DbAppointmentDetails>,
@@ -33,10 +34,10 @@ class AppointmentAdapter(
         init {
             itemView.setOnClickListener(this)
             btnAdministerVaccine.setOnClickListener {
-
+                val pos = adapterPosition
                 val formatterClass = FormatterClass()
                 val patientId = FormatterClass().getSharedPref("patientId", context)
-
+                val targetDisease = entryList[pos].targetDisease
 
                 formatterClass.saveSharedPref(
                     "questionnaireJson",
@@ -49,8 +50,17 @@ class AppointmentAdapter(
                     context
                 )
 
-//                val bottomSheetFragment = BottomSheetFragment()
-//                bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+
+                formatterClass.saveSharedPref(
+                    "targetDisease",
+                    targetDisease,
+                    context
+                )
+
+                val intent = Intent(context, VaccineStockManagement::class.java)
+                intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+                intent.putExtra("patientId", patientId)
+                context.startActivity(intent)
 
             }
 
@@ -85,10 +95,6 @@ class AppointmentAdapter(
         val doseNumber = entryList[position].doseNumber
 
         val dateScheduledFormat = FormatterClass().convertDateFormat(dateScheduled)
-
-        Log.e("&&&&&&","&&&&&")
-        println(dateScheduled)
-        println(dateScheduledFormat)
 
         holder.tvAppointment.text = targetDisease
         holder.tvDateScheduled.text = dateScheduledFormat

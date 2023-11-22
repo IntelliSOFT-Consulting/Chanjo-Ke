@@ -25,7 +25,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val childList = mapOf(
             "POLIO" to listOf("bOPV", "OPV I", "OPV II", "OPV III"),
             "YELLOW FEVER" to listOf("YELLOW FEVER"),
-            "COVID" to listOf("COVID"),
+            "COVID" to listOf("Astrazeneca","Moderna","JohnsonAndJohnson","PhizerBioNTech","Sinopharm"),
             "MEASLES" to listOf("MEASLES")
         )
 

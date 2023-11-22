@@ -49,6 +49,14 @@ class Measles3 : BaseVaccine(78, "0.5ml", "Subcutaneous right upper arm")
 // Yellow Fever vaccine
 class YellowFever : BaseVaccine(36, "0.5ml", "Subcutaneous left upper arm")
 
+//Covid 19
+// Covid vaccines
+class Astrazeneca : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
+class Moderna : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
+class JohnsonAndJohnson : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
+class PhizerBioNTech : BaseVaccine(11 * 52, "0.3ml", "Intramuscular Injection")
+class Sinopharm : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
+
 // Vaccination Manager
 class VaccinationManager {
     private val vaccines = mapOf(
@@ -59,7 +67,12 @@ class VaccinationManager {
         "Measles1" to Measles1(),
         "Measles2" to Measles2(),
         "Measles3" to Measles3(),
-        "YellowFever" to YellowFever()
+        "YellowFever" to YellowFever(),
+        "Astrazeneca" to Astrazeneca(),
+        "Moderna" to Moderna(),
+        "JohnsonAndJohnson" to JohnsonAndJohnson(),
+        "PhizerBioNTech" to PhizerBioNTech(),
+        "Sinopharm" to Sinopharm()
     )
 
     fun getEligibleVaccines(dob: LocalDate): List<VaccineDetails> {
@@ -68,11 +81,17 @@ class VaccinationManager {
 
     private fun convertToVaccineCode(input: String): String {
         return when (input.trim().toUpperCase()) {
+            "Bopv" -> "bOPV"
             "OPV I" -> "OPV1"
             "OPV II" -> "OPV2"
             "OPV III" -> "OPV3"
             "YELLOW FEVER" -> "YellowFever"
             "MEASLES" -> "Measles1"
+            "Astrazeneca" -> "Astrazeneca"
+            "Moderna" -> "Moderna"
+            "JohnsonAndJohnson" -> "JohnsonAndJohnson"
+            "PhizerBioNTech" -> "PhizerBioNTech"
+            "Sinopharm" -> "Sinopharm"
             else -> input.trim()
         }
     }
