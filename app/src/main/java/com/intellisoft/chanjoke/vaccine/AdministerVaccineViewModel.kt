@@ -223,10 +223,13 @@ class AdministerVaccineViewModel(
 
           // Get the provided date after having a contraindication
           val nextVisit = observationFromCode(
-            "4.1.2",
+            "date-next-dose-value",
             patientId,
             encounterId)
           val dateNext = nextVisit.value
+
+          Log.e("-----****","------$dateNext")
+
 
           val nextDate = FormatterClass().convertStringToDate(dateNext, "YYYY-MM-DD")
           createImmunisationRecommendation(nextDate, immunization, patientId, encounterId)
@@ -245,10 +248,11 @@ class AdministerVaccineViewModel(
 
         //Date of last dose
         val lastDoseDateObs = observationFromCode(
-          "date-of-last-dose-group",
+          "date-next-dose-value",
           patientId,
           encounterId)
         val lastDoseDate = lastDoseDateObs.value
+
         val date = FormatterClass().convertStringToDate(lastDoseDate, "")
         if (date != null) immunization.occurrenceDateTimeType.value = date
 
