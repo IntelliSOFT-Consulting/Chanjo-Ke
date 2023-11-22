@@ -230,10 +230,6 @@ class PatientDetailsViewModel(
             val targetDiseaseList = it.targetDisease
             if (targetDiseaseList.isNotEmpty()) targetDisease = targetDiseaseList[0].text
 
-            //Dose number
-            val doseNumber = it.doseNumber
-            if (doseNumber != null) doseNumberValue = doseNumber.asStringValue()
-
         }
         if (immunization.hasOccurrenceDateTimeType()) {
             val fhirDate = immunization.occurrenceDateTimeType.valueAsString
@@ -245,7 +241,6 @@ class PatientDetailsViewModel(
         if (immunization.hasDoseQuantity()) {
             doseNumberValue = immunization.doseQuantity.value.toString()
         }
-        Timber.e("Dose **** $doseNumberValue")
 
         return DbVaccineData(
             ref,
