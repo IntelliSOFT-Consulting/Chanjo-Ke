@@ -150,7 +150,9 @@ class AdministerVaccineViewModel(
 
                     saveResourceToDatabase(resource, "enc " + encounterId)
                     val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
-                    if (vaccinationFlow == "createVaccineDetails" || vaccinationFlow == "updateVaccineDetails"){
+                    if (
+                        vaccinationFlow == "createVaccineDetails" ||
+                        vaccinationFlow == "updateVaccineDetails"){
                         createImmunisationRecord(encounterId, patientId)
                     }
                 }
@@ -162,17 +164,13 @@ class AdministerVaccineViewModel(
         encounterId: String,
         patientId: String) {
 
-
         CoroutineScope(Dispatchers.IO).launch {
-
 
             val immunizationId = generateUuid()
             val encounterReference = Reference("Encounter/$encounterId")
             val patientReference = Reference("Patient/$patientId")
 
-
             //Have a list of the observation codes
-
             var immunization = Immunization()
 
             immunization.encounter = encounterReference
@@ -398,7 +396,9 @@ class AdministerVaccineViewModel(
 
     }
 
-    private suspend fun createImmunisationRecommendation(
+    //
+
+    suspend fun createImmunisationRecommendation(
         recommendedDate: Date?,
         immunization: Immunization,
         patientId: String,
@@ -406,16 +406,11 @@ class AdministerVaccineViewModel(
 
 
         val immunizationRecommendation = ImmunizationRecommendation()
-
-        val encounterReference = Reference("Encounter/$encounterId")
         val patientReference = Reference("Patient/$patientId")
-
         val id = generateUuid()
-
 
         immunizationRecommendation.patient = patientReference
         immunizationRecommendation.id = id
-
 
         if (recommendedDate != null) immunizationRecommendation.date = recommendedDate
 
@@ -458,13 +453,10 @@ class AdministerVaccineViewModel(
         immunizationReference.display = "Immunization"
         immunizationReferenceList.add(immunizationReference)
 
-
         immunizationRequest.supportingImmunization = immunizationReferenceList
-
 
         recommendationList.add(immunizationRequest)
         immunizationRecommendation.recommendation = recommendationList
-
 
         saveResourceToDatabase(immunizationRecommendation, "ImmReccomend "+id)
 

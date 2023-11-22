@@ -87,6 +87,9 @@ class PatientDetailsViewModel(
                 if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
         }
 
+        FormatterClass().saveSharedPref("patientDob",dob, getApplication<Application>().applicationContext)
+        FormatterClass().saveSharedPref("patientId",patientId, getApplication<Application>().applicationContext)
+
         return PatientData(
             name,
             phone,

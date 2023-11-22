@@ -3,9 +3,16 @@ package com.intellisoft.chanjoke.fhir.data
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.util.Log
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
 
@@ -89,6 +96,34 @@ class FormatterClass {
         return null
     }
 
+    fun getEligibleVaccines(
+        context: Context,
+        patientDetailsViewModel: PatientDetailsViewModel):List<String>{
+
+        val dob = getSharedPref("patientDob", context)
+        val patientId = getSharedPref("patientId", context)
+        if (patientId != null && dob != null){
+            //Convert dob to LocalDate
+            val birthDate = LocalDate.parse(dob)
+
+            /**
+             * Get the vaccines from BaseVaccine
+             */
+            val vaccinationManager = VaccinationManager()
+            val vaccineList = vaccinationManager.getEligibleVaccines(birthDate)
+
+            /**
+             * Get the Vaccines for this person
+             */
+            val vaccinationList =  patientDetailsViewModel.getEncounterList()
+
+            val missingVaccineList = vaccineList.filter { vaccine ->
+                vaccinationList.none { adverseEvent -> adverseEvent.vaccineName == vaccine.name }
+            }.map { it.name }
+            return missingVaccineList
+        }
+        return emptyList()
+    }
 
 
 }

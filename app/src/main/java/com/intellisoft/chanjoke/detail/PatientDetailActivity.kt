@@ -26,6 +26,9 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PatientDetailActivity : AppCompatActivity() {
     private lateinit var fhirEngine: FhirEngine
@@ -34,6 +37,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
     //    private val args: PatientDetailActivityArgs by navArgs()
     private lateinit var binding: ActivityPatientDetailBinding
+    private var formatterClass = FormatterClass()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +88,10 @@ class PatientDetailActivity : AppCompatActivity() {
             }
         }
         patientDetailsViewModel.getPatientDetailData()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            formatterClass.getEligibleVaccines(this@PatientDetailActivity, patientDetailsViewModel)
+        }
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
