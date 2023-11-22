@@ -38,6 +38,7 @@ import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.RiskAssessment
 import timber.log.Timber
+import java.sql.Time
 
 /**
  * The ViewModel helper class for PatientItemRecyclerViewAdapter, that is responsible for preparing
@@ -157,7 +158,10 @@ class PatientDetailsViewModel(
 
         var targetDisease = ""
         var doseNumberValue = ""
-        val logicalId = immunization.logicalId
+        var logicalId = immunization.encounter.reference
+
+        val ref = logicalId.toString().replace("Encounter/", "")
+        Timber.e("Encounter *** $ref")
 
         val protocolList = immunization.protocolApplied
         protocolList.forEach {
@@ -175,7 +179,7 @@ class PatientDetailsViewModel(
 
 
         return DbVaccineData(
-            logicalId,
+            ref,
             targetDisease,
             doseNumberValue
         )
@@ -185,7 +189,7 @@ class PatientDetailsViewModel(
         encounter: Encounter,
         resources: Resources
     ): AdverseEventData {
-
+Timber.e("Current Encounter ID *** ${encounter.logicalId}")
         val encounterCode = encounter.reasonCodeFirstRep.text ?: ""
         return AdverseEventData(
             encounter.logicalId,
@@ -195,10 +199,10 @@ class PatientDetailsViewModel(
     }
 
     fun loadImmunizationAefis(logicalId: String) = runBlocking {
-        loadImmunizationAefis()
+        loadInternalImmunizationAefis(logicalId)
     }
 
-    private suspend fun loadImmunizationAefis(): List<AdverseEventData> {
+    private suspend fun loadInternalImmunizationAefis(logicalId: String): List<AdverseEventData> {
 
         val encounterList = ArrayList<AdverseEventData>()
         fhirEngine
@@ -206,6 +210,9 @@ class PatientDetailsViewModel(
                 filter(
                     Encounter.SUBJECT,
                     { value = "Patient/$patientId" })
+                filter(
+                    Encounter.PART_OF,
+                    { value = "Encounter/$logicalId" })
                 sort(Encounter.DATE, Order.DESCENDING)
             }
             .map {
@@ -289,7 +296,6 @@ class PatientDetailsViewModel(
             } else {
                 ""
             }
-
         val valueString = "$value $valueUnit"
 
         return PatientListViewModel.ObservationItem(

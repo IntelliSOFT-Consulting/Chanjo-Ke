@@ -38,6 +38,9 @@ class VaccineAdapter(
                 )
 
                 FormatterClass().saveSharedPref("vaccinationFlow", "addAefi", context)
+                FormatterClass().saveSharedPref(
+                    "encounter_logical_id", logicalId.text.toString(), context
+                )
                val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
                 intent.putExtra("patientId", patientId)

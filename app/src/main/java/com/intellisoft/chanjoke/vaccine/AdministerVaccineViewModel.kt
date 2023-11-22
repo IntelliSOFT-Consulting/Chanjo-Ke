@@ -134,6 +134,18 @@ class AdministerVaccineViewModel(
                 is Encounter -> {
                     resource.subject = subjectReference
                     resource.id = encounterId
+                    /**
+                     * Check for AEFIs should be partOf
+                     * */
+                    if (FormatterClass().getSharedPref("vaccinationFlow",getApplication<Application>().applicationContext)=="addAefi"){
+                        val ref=FormatterClass().getSharedPref(
+                            "encounter_logical_id",
+                            getApplication<Application>().applicationContext
+                        )
+                        val parentReference = Reference("Encounter/$ref")
+                        resource.partOf=parentReference
+                    }
+
                     saveResourceToDatabase(resource, "enc " + encounterId)
                     when (FormatterClass().getSharedPref(
                         "vaccinationFlow",
