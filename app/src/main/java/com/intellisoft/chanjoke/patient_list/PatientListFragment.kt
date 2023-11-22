@@ -197,8 +197,9 @@ class PatientListFragment : Fragment() {
 
     private fun onPatientItemClicked(patientItem: PatientListViewModel.PatientItem) {
 
-        formatterClass.saveSharedPref("patientId",patientItem.resourceId, requireContext())
-        val action = PatientListFragmentDirections.actionPatientListToPatientDetailActivity(patientItem.resourceId)
+        formatterClass.saveSharedPref("patientId", patientItem.resourceId, requireContext())
+        val action =
+            PatientListFragmentDirections.actionPatientListToPatientDetailActivity(patientItem.resourceId)
 
         findNavController().navigate(action)
     }

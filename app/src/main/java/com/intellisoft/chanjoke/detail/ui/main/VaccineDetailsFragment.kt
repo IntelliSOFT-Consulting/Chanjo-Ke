@@ -22,6 +22,9 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import timber.log.Timber
+import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
 
 
 class VaccineDetailsFragment : Fragment() {
@@ -53,6 +56,7 @@ class VaccineDetailsFragment : Fragment() {
                     patientId.toString()
                 ),
             ).get(PatientDetailsViewModel::class.java)
+
         return binding.root
     }
 
@@ -64,9 +68,46 @@ class VaccineDetailsFragment : Fragment() {
         }
         binding.apply {
             val vaccineName = FormatterClass().getSharedPref("vaccine_name", requireContext())
+            val vaccineDose = FormatterClass().getSharedPref("vaccine_dose", requireContext())
+            val vaccineDate = FormatterClass().getSharedPref("vaccine_date", requireContext())
             tvVaccineName.text = vaccineName
+            tvVaccineDate.text = vaccineDate
+            tvVaccineDose.text = vaccineDose
+            tvDaysSince.text = generateDaysSince(vaccineDate.toString(), days = true, month = false)
+            tvMonthSince.text =
+                generateDaysSince(vaccineDate.toString(), days = false, month = true)
+            tvYearsSince.text =
+                generateDaysSince(vaccineDate.toString(), days = false, month = false)
         }
         loadVaccineAdverseEvents()
+    }
+
+    private fun generateDaysSince(
+        dateString: String,
+        days: Boolean,
+        month: Boolean,
+    ): String {
+
+        // Define the date format
+        try {
+            val formatter = DateTimeFormatter.ofPattern("MMM dd yyyy")
+
+            // Parse the string into a LocalDate
+            val date1 = LocalDate.parse(dateString, formatter)
+            val date2 = LocalDate.now()
+            // Calculate the period between the two dates
+            val period = Period.between(date1, date2)
+            if (days) {
+                return "${period.days} day(s)"
+            }
+            return if (month) {
+                "${period.months} month(s)"
+            } else {
+                "${period.years} year(s)"
+            }
+        } catch (e: Exception) {
+            return "0 day(s)"
+        }
     }
 
     private fun loadVaccineAdverseEvents() {

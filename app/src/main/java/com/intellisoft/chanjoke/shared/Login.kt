@@ -33,7 +33,7 @@ class Login : AppCompatActivity() {
             val password = etPassword.text.toString()
 
             if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-                if (username == "a" && password == "a") {
+                if (username == "admin" && password == "password") {
 
                     FormatterClass().saveSharedPref("isLoggedIn", "true", this@Login)
                     val intent = Intent(this, MainActivity::class.java)

@@ -143,12 +143,13 @@ class PatientDetailsViewModel(
         }
         return getString(R.string.none)
     }
+
     fun recommendationList() = runBlocking {
         getRecommendationList()
     }
 
 
-    private suspend fun getRecommendationList():ArrayList<DbAppointmentDetails> {
+    private suspend fun getRecommendationList(): ArrayList<DbAppointmentDetails> {
         val recommendationList = ArrayList<DbAppointmentDetails>()
 
 
@@ -167,30 +168,30 @@ class PatientDetailsViewModel(
     }
 
 
-    private fun createRecommendation(it: ImmunizationRecommendation):DbAppointmentDetails {
+    private fun createRecommendation(it: ImmunizationRecommendation): DbAppointmentDetails {
 
 
         val vaccinationManager = VaccinationManager()
         val date = if (it.date != null) it.date.toString() else ""
         var targetDisease = ""
-        var doseNumber:String? = ""
+        var doseNumber: String? = ""
 
 
-        if (it.hasRecommendation()){
+        if (it.hasRecommendation()) {
             val recommendation = it.recommendation
-            if (recommendation.isNotEmpty()){
+            if (recommendation.isNotEmpty()) {
                 val codeableConceptTargetDisease = recommendation[0].targetDisease
-                if (codeableConceptTargetDisease.hasText()){
+                if (codeableConceptTargetDisease.hasText()) {
                     targetDisease = codeableConceptTargetDisease.text
                 }
             }
         }
-        if (targetDisease != ""){
+        if (targetDisease != "") {
             doseNumber = vaccinationManager.getVaccineDetails(targetDisease)?.dosage
         }
 
 
-        return DbAppointmentDetails(date,doseNumber, targetDisease)
+        return DbAppointmentDetails(date, doseNumber, targetDisease)
 
 
     }
@@ -219,7 +220,7 @@ class PatientDetailsViewModel(
 
         var targetDisease = ""
         var doseNumberValue = ""
-        var logicalId = immunization.encounter.reference
+        var logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
         var dateScheduled = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
@@ -232,19 +233,17 @@ class PatientDetailsViewModel(
             val targetDiseaseList = it.targetDisease
             if (targetDiseaseList.isNotEmpty()) targetDisease = targetDiseaseList[0].text
 
-            //Dose number
-            val doseNumber = it.doseNumber
-            if (doseNumber != null) doseNumberValue = doseNumber.asStringValue()
-
         }
         if (immunization.hasOccurrenceDateTimeType()) {
             val fhirDate = immunization.occurrenceDateTimeType.valueAsString
             val convertedDate = FormatterClass().convertDateFormat(fhirDate)
-            if (convertedDate != null){
+            if (convertedDate != null) {
                 dateScheduled = convertedDate
             }
         }
-
+        if (immunization.hasDoseQuantity()) {
+            doseNumberValue = immunization.doseQuantity.value.toString()
+        }
 
         return DbVaccineData(
             ref,
@@ -383,6 +382,10 @@ class PatientDetailsViewModel(
 
                 }
 
+                observation.hasValueStringType() -> {
+                    observation.valueStringType.value.toString()
+                }
+
                 else -> {
                     observation.code.text ?: observation.code.codingFirstRep.display
                 }
@@ -404,12 +407,8 @@ class PatientDetailsViewModel(
     }
 
     private fun formatDateToHumanReadable(date: String): String? {
-        // Create a Calendar instance and set the time zone
-     /*   val sourceFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH)
-        val destFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-        val convertedDate = sourceFormat.parse(date)
-        val data = destFormat.parse(convertedDate?.let { destFormat.format(it) }.toString())*/
-        return "$date"
+        return FormatterClass().convertDateFormat(date)
+
     }
 }
 
