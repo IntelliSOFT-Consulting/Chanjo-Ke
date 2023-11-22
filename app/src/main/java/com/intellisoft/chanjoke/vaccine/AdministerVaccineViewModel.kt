@@ -389,7 +389,7 @@ class AdministerVaccineViewModel(
 
     val immunizationRecommendation = ImmunizationRecommendation()
 
-    val encounterReference = Reference("Encounter/$encounterId")
+    val encRef = Reference("Encounter/$encounterId")
     val patientReference = Reference("Patient/$patientId")
 
     val id = generateUuid()
