@@ -146,6 +146,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
     val code: String,
     val effective: String,
     val value: String,
+    val dateTime: String? = null,
   ) {
     override fun toString(): String = code
   }

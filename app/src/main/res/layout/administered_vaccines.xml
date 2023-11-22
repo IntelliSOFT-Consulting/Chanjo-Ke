@@ -72,7 +72,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:text="Jan 1 2020" />
+                                android:text="N/A" />
 
 
                         </LinearLayout>
@@ -150,7 +150,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:text="Clinic ABC" />
+                                android:text="N/A" />
 
 
                         </LinearLayout>

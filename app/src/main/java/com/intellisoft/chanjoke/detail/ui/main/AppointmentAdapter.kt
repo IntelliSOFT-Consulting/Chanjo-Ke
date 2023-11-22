@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,13 +80,18 @@ class AppointmentAdapter(
 
     override fun onBindViewHolder(holder: Pager2ViewHolder, position: Int) {
 
-
         val targetDisease = entryList[position].targetDisease
         val dateScheduled = entryList[position].dateScheduled
         val doseNumber = entryList[position].doseNumber
 
+        val dateScheduledFormat = FormatterClass().convertDateFormat(dateScheduled)
+
+        Log.e("&&&&&&","&&&&&")
+        println(dateScheduled)
+        println(dateScheduledFormat)
+
         holder.tvAppointment.text = targetDisease
-        holder.tvDateScheduled.text = dateScheduled
+        holder.tvDateScheduled.text = dateScheduledFormat
         holder.tvDoseNumber.text = doseNumber
 
 

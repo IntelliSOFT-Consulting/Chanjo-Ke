@@ -237,28 +237,20 @@ class AdministerVaccineViewModel(
                     coding.code = statusReason.code
                     codingList.add(coding)
 
-
                     codeableConcept.coding = codingList
                     codeableConcept.text = statusReason.value
 
-
                     immunization.statusReason = codeableConcept
-
 
                     // Get the provided date after having a contraindication
                     val nextVisit = observationFromCode(
-                        "date-next-dose-value",
+                        "833-23",
                         patientId,
                         encounterId)
-                    val dateNext = nextVisit.value
+                    val dateNext = nextVisit.dateTime.toString()
 
-
-                    Log.e("-----****","------$dateNext")
-
-
-
-
-                    val nextDate = FormatterClass().convertStringToDate(dateNext, "YYYY-MM-DD")
+                    val nextDate = FormatterClass().convertStringToDate(dateNext,
+                        "yyyy-MM-dd'T'HH:mm:ssXXX")
                     createImmunisationRecommendation(nextDate, immunization, patientId, encounterId)
 
 
@@ -267,7 +259,6 @@ class AdministerVaccineViewModel(
                 //This is an update
                 immunisationStatus = ImmunizationStatus.COMPLETED
 
-
                 // Get the type of vaccine
                 val vaccineTypeObs = observationFromCode(
                     "type-of-vaccine-group",
@@ -275,22 +266,7 @@ class AdministerVaccineViewModel(
                     encounterId)
                 val vaccineType = vaccineTypeObs.value
 
-
-                //Date of last dose
-                val lastDoseDateObs = observationFromCode(
-                    "date-next-dose-value",
-                    patientId,
-                    encounterId)
-                val lastDoseDate = lastDoseDateObs.value
-
-
-                val date = FormatterClass().convertStringToDate(lastDoseDate, "")
-                if (date != null) immunization.occurrenceDateTimeType.value = date
-
-
                 //Target Disease
-
-
                 val protocolList = Immunization().protocolApplied
                 val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
                 val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
@@ -300,15 +276,12 @@ class AdministerVaccineViewModel(
                 immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
                 protocolList.add(immunizationProtocolAppliedComponent)
 
-
                 immunization.protocolApplied = protocolList
-
 
             }
 
             //Immunisation status
             immunization.status = immunisationStatus
-
 
             FormatterClass().deleteSharedPref("vaccinationFlow",
                 getApplication<Application>().applicationContext)
@@ -351,8 +324,8 @@ class AdministerVaccineViewModel(
             )
         )
         //Date administered
-        immunization.occurrenceDateTimeType.value = Date()
-
+        val currentDate = Date()
+        immunization.occurrenceDateTimeType.value = currentDate
 
         //Target Disease
         val targetDisease = FormatterClass().getSharedPref(
@@ -503,8 +476,7 @@ class AdministerVaccineViewModel(
         codeValue: String,
         patientId: String,
         encounterId: String
-    ):
-            DbCodeValue {
+    ): DbCodeValue {
 
         val observations = mutableListOf<PatientListViewModel.ObservationItem>()
         fhirEngine
@@ -524,13 +496,17 @@ class AdministerVaccineViewModel(
         //Return limited results
         var code = ""
         var value = ""
+        var dateTime = ""
         observations.forEach {
             code = it.code
             value = it.value
+            if (it.dateTime != null){
+                dateTime = it.dateTime
+            }
         }
 
 
-        return DbCodeValue(code, value)
+        return DbCodeValue(code, value, dateTime)
 
     }
 
@@ -539,27 +515,11 @@ class AdministerVaccineViewModel(
         resources: Resources
     ): PatientListViewModel.ObservationItem {
 
-        Log.e("*****", "*****")
-        println(observation)
-        println(observation.value)
-
 
         // Show nothing if no values available for datetime and value quantity.
         var issuedDate = ""
-        if (observation.hasIssued()) {
-            issuedDate = observation.issued.toString()
-        } else {
-
-            if (observation.hasMeta()) {
-                if (observation.meta.hasLastUpdated()) {
-                    issuedDate = observation.meta.lastUpdated.toString()
-                } else {
-                    ""
-                }
-            } else {
-                ""
-            }
-
+        if (observation.hasValueDateTimeType()) {
+            issuedDate = observation.valueDateTimeType.valueAsString
         }
 
 
@@ -584,14 +544,6 @@ class AdministerVaccineViewModel(
             }
         val valueString = "$value $valueUnit"
 
-        //Get Date
-//    var newDate = ""
-//    if (issuedDate != ""){
-//      val convertedDate = FormatterClass().convertFhirDate(issuedDate)
-//      if (convertedDate != null){
-//        newDate = convertedDate
-//      }
-//    }
 
         //Get Time
 //    var newTime = ""
@@ -606,7 +558,8 @@ class AdministerVaccineViewModel(
             id,
             code,
             text,
-            valueString
+            valueString,
+            issuedDate
         )
     }
 
