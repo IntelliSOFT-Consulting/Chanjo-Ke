@@ -79,6 +79,7 @@ class AppointmentsFragment : Fragment() {
     }
 
     private fun getImmunisationRecommendations() {
+
 //        val recommendationList = patientDetailsViewModel.recommendationList()
 //
 //        println(recommendationList)
