@@ -14,10 +14,14 @@ import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
 import com.intellisoft.chanjoke.databinding.FragmentVaccineDetailsBinding
+import com.intellisoft.chanjoke.detail.ui.main.adapters.EventsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import timber.log.Timber
 
 
 class VaccineDetailsFragment : Fragment() {
@@ -66,6 +70,15 @@ class VaccineDetailsFragment : Fragment() {
     }
 
     private fun loadVaccineAdverseEvents() {
+        val logicalId = FormatterClass().getSharedPref("current_immunization", requireContext())
+
+        if (logicalId != null) {
+
+            val adverseEvents = patientDetailsViewModel.loadImmunizationAefis(logicalId)
+
+            val vaccineAdapter = EventsAdapter(adverseEvents,requireContext())
+            binding.recyclerView.adapter = vaccineAdapter
+        }
 
     }
 

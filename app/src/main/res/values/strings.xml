@@ -25,6 +25,15 @@
     <string name="tab_text_3">Client Details</string>
     <string name="register_client">Register Client</string>
     <string name="doses_administered">Doses Administered</string>
+    <string name="type_of_aefi">Type of AEFI</string>
+    <string name="brief_details_on_aefi">Brief details on AEFI</string>
+    <string name="onset_of_event">Onset of Event</string>
+    <string name="past_medical_history">Past Medical History</string>
+    <string name="reaction_severity">Reaction Severity</string>
+    <string name="action_taken">Action Taken</string>
+    <string name="aefi_outcome">AEFI Outcome</string>
+    <string name="adverse_event">Adverse Event Following Immunization</string>
+    <string name="action_aefi">AEFI</string>
 
 
 </resources>
