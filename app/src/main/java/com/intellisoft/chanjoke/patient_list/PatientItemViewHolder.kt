@@ -42,11 +42,11 @@ class PatientItemViewHolder(binding: PatientListItemViewBinding) :
     onItemClicked: (PatientListViewModel.PatientItem) -> Unit,
   ) {
     this.nameView.text = patientItem.name
-    this.idNumber.text = patientItem.id
+    this.idNumber.text = getFormattedAge(patientItem, idNumber.context.resources)
     this.tvPhoneNumber.text = patientItem.phone
 
     this.viewName.text = "Name:"
-    this.viewId.text = "Id number"
+    this.viewId.text = "Age"
     this.viewPhoneNumber.text = "Phone number"
 
 //    this.idView.text = "Id: #---${getTruncatedId(patientItem)}"
@@ -54,6 +54,8 @@ class PatientItemViewHolder(binding: PatientListItemViewBinding) :
 //    this.btnView.setOnClickListener { onItemClicked(patientItem) }
 
   }
+
+
 
   private fun getFormattedAge(
     patientItem: PatientListViewModel.PatientItem,
