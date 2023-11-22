@@ -40,9 +40,10 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     override suspend fun getSummaryRequestUrls(): Map<ResourceType, String> {
         return urls.associate { url ->
             val resourceType = ResourceType.fromCode(url.substringBefore("?"))
-            val summaryParam = if (resourceType != ResourceType.Practitioner) {
+            val summaryParam = if (resourceType == ResourceType.Patient) {
                 "&${SyncDataParams.SUMMARY_KEY}=${SyncDataParams.SUMMARY_COUNT_VALUE}"
-            } else {
+            }
+            else {
                 ""
             }
 
@@ -129,7 +130,7 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
     if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("Practitioner")) {
         downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
     }
-  if (!downloadUrl.contains("\$everything") && downloadUrl.contains("Immunization")) {
+  if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("Immunization")) {
         downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
     }
   if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("ImmunizationRecommendation")) {

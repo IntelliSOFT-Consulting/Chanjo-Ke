@@ -26,6 +26,7 @@ class VaccineAdapter(
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
         val btnAddAefi: Button = itemView.findViewById(R.id.btnAddAefi)
         val tvDateAdministered: TextView = itemView.findViewById(R.id.tvDateAdministered)
+        val vaccineDosage: TextView = itemView.findViewById(R.id.vaccineDosage)
 
         init {
             itemView.setOnClickListener(this)
@@ -58,6 +59,12 @@ class VaccineAdapter(
                     )
                     FormatterClass().saveSharedPref(
                         "vaccine_name", tvVaccineName.text.toString(), context
+                    )
+                    FormatterClass().saveSharedPref(
+                        "vaccine_date", tvDateAdministered.text.toString(), context
+                    )
+                    FormatterClass().saveSharedPref(
+                        "vaccine_dose", vaccineDosage.text.toString(), context
                     )
                     val intent = Intent(context, MainActivity::class.java)
                     intent.putExtra("functionToCall", NavigationDetails.LIST_VACCINE_DETAILS.name)
@@ -99,6 +106,7 @@ class VaccineAdapter(
 
         holder.tvVaccineName.text = "Vaccine: $vaccineName"
         holder.logicalId.text = logicalId
+        holder.vaccineDosage.text = vaccineDosage
         holder.tvDateAdministered.text = dateAdministered
 
 
