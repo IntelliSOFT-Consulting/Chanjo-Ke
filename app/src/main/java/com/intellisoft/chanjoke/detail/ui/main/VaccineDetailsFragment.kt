@@ -73,10 +73,9 @@ class VaccineDetailsFragment : Fragment() {
         val logicalId = FormatterClass().getSharedPref("current_immunization", requireContext())
 
         if (logicalId != null) {
-Timber.e("Current Encounter ID *** $logicalId")
             val adverseEvents = patientDetailsViewModel.loadImmunizationAefis(logicalId)
 
-            val vaccineAdapter = EventsAdapter(adverseEvents,requireContext())
+            val vaccineAdapter = EventsAdapter(adverseEvents, requireContext())
             binding.recyclerView.adapter = vaccineAdapter
         }
 

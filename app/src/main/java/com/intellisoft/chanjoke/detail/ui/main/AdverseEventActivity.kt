@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.logicalId
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAdverseEventBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
@@ -46,54 +47,57 @@ class AdverseEventActivity : AppCompatActivity() {
             typeOfAEFITextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-                ""
+                "882-22"
             )
             // Brief details on AEFI
             briefDetailsTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-                getString(R.string.brief_details_on_aefi)
+               "833-22"
             )
             // Onset of Event
             onsetOfEventTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-                getString(R.string.onset_of_event)
+               "833-23"
             )
             // Past Medical History
             pastMedicalHistoryTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-                getString(R.string.past_medical_history)
+            "833-21"
             )
             // Reaction Severity
             reactionSeverityTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-                getString(R.string.reaction_severity)
+            "880-11"
             )
             // Action Taken
             actionTakenTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-                getString(R.string.action_taken)
+              "888-1"
             )
             // AEFI Outcome
             aefiOutcomeTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-                getString(R.string.aefi_outcome)
+             "808-11"
             )
         }
 
     }
 
     private fun extractAefiData(patientId: String, encounterId: String, code: String): String {
-        val text = "\tresponse"
+        var text = "\t"
         /***
          * TODO: extract Observation by code
          */
-        patientDetailsViewModel.getObservationByCode(patientId, encounterId, code)
+       val  data=patientDetailsViewModel.getObservationByCode(patientId, encounterId, code)
+        if (data!=null){
+            text="\t $data"
+        }
 
         return text
     }

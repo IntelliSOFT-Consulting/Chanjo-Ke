@@ -39,6 +39,9 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.RiskAssessment
 import timber.log.Timber
 import java.sql.Time
+import java.time.ZonedDateTime
+import java.util.Calendar
+import java.util.TimeZone
 
 /**
  * The ViewModel helper class for PatientItemRecyclerViewAdapter, that is responsible for preparing
@@ -185,17 +188,42 @@ class PatientDetailsViewModel(
         )
     }
 
-    private fun createEncounterAefiItem(
+    private suspend fun createEncounterAefiItem(
         encounter: Encounter,
         resources: Resources
     ): AdverseEventData {
-Timber.e("Current Encounter ID *** ${encounter.logicalId}")
-        val encounterCode = encounter.reasonCodeFirstRep.text ?: ""
+        Timber.e("Current Encounter ID *** ${encounter.logicalId}")
+
+        val type = generateObservationByCode(encounter.logicalId, "882-22") ?: ""
+        val date = generateObservationByCode(encounter.logicalId, "833-23") ?: ""
         return AdverseEventData(
             encounter.logicalId,
-            encounter.logicalId,
-            encounterCode,
+            type,
+            date,
         )
+    }
+
+    private suspend fun generateObservationByCode(encounterId: String, codeValue: String): String? {
+        var data = ""
+        fhirEngine
+            .search<Observation> {
+                filter(Observation.SUBJECT, { value = "Patient/$patientId" })
+                filter(Observation.ENCOUNTER, { value = "Encounter/$encounterId" })
+                filter(
+                    Observation.CODE,
+                    {
+                        value = of(Coding().apply {
+                            system = "http://loinc.org"
+                            code = codeValue
+                        })
+                    })
+                sort(Observation.DATE, Order.ASCENDING)
+            }
+            .map { createObservationItem(it, getApplication<Application>().resources) }
+            .firstOrNull()?.let {
+                data = it.value
+            }
+        return data
     }
 
     fun loadImmunizationAefis(logicalId: String) = runBlocking {
@@ -222,7 +250,7 @@ Timber.e("Current Encounter ID *** ${encounter.logicalId}")
                 )
             }
             .let { encounterList.addAll(it) }
-        return encounterList
+        return encounterList.reversed()
     }
 
     fun getObservationByCode(
@@ -248,7 +276,7 @@ Timber.e("Current Encounter ID *** ${encounter.logicalId}")
                     Observation.CODE,
                     {
                         value = of(Coding().apply {
-                            system = "http://snomed.info/sct"
+                            system = "http://loinc.org"
                             code = codeValue
                         })
                     })
@@ -256,7 +284,6 @@ Timber.e("Current Encounter ID *** ${encounter.logicalId}")
             }
             .map { createObservationItem(it, getApplication<Application>().resources) }
             .firstOrNull()?.let {
-//                observations.add(it)
                 data = it.value
             }
 
@@ -286,6 +313,11 @@ Timber.e("Current Encounter ID *** ${encounter.logicalId}")
                     observation.note.firstOrNull()?.author
                 }
 
+                observation.hasValueDateTimeType() -> {
+                    formatDateToHumanReadable(observation.valueDateTimeType.value.toString())
+
+                }
+
                 else -> {
                     observation.code.text ?: observation.code.codingFirstRep.display
                 }
@@ -304,6 +336,15 @@ Timber.e("Current Encounter ID *** ${encounter.logicalId}")
             "$value",
             "$valueString",
         )
+    }
+
+    private fun formatDateToHumanReadable(date: String): String? {
+        // Create a Calendar instance and set the time zone
+     /*   val sourceFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH)
+        val destFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        val convertedDate = sourceFormat.parse(date)
+        val data = destFormat.parse(convertedDate?.let { destFormat.format(it) }.toString())*/
+        return "$date"
     }
 }
 

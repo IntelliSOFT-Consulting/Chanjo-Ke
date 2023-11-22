@@ -352,7 +352,7 @@
                   "valueCoding": {
                     "code": "888-1",
                     "display": "Treatment Given",
-                    "system": "dummy"
+                    "system": "http://loinc.org"
                   }
                 }
               ]
@@ -393,7 +393,7 @@
                   "valueCoding": {
                     "code": "886-1",
                     "display": "Specimen collected for investigation",
-                    "system": "dummy"
+                    "system": "http://loinc.org"
                   }
                 }
               ]
