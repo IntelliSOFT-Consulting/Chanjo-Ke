@@ -2,9 +2,7 @@ package com.intellisoft.chanjoke.viewmodel
 
 
 import android.app.Application
-import android.content.res.Resources
 import android.icu.text.DateFormat
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,12 +13,10 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.common.datatype.asStringValue
-import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
-import com.intellisoft.chanjoke.fhir.data.AdverseEventData
-import com.intellisoft.chanjoke.fhir.data.EncounterItem
-import com.intellisoft.chanjoke.patient_list.PatientListViewModel
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
+import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -29,19 +25,12 @@ import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.hl7.fhir.r4.model.AdverseEvent
-import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Immunization
-import org.hl7.fhir.r4.model.Observation
+import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.RiskAssessment
-import timber.log.Timber
-import java.sql.Time
-import java.time.ZonedDateTime
-import java.util.Calendar
-import java.util.TimeZone
 
 /**
  * The ViewModel helper class for PatientItemRecyclerViewAdapter, that is responsible for preparing
@@ -137,40 +126,77 @@ class PatientDetailsViewModel(
         return getString(R.string.none)
     }
 
-
-    fun getEncounterList() = runBlocking {
-        getEncounterDetails()
+    fun recommendationList() = runBlocking {
+        getRecommendationList()
     }
 
-    private suspend fun getEncounterDetails(): ArrayList<DbVaccineData> {
+    private suspend fun getRecommendationList():ArrayList<DbAppointmentDetails> {
+        val recommendationList = ArrayList<DbAppointmentDetails>()
+
+        fhirEngine
+            .search<ImmunizationRecommendation> {
+                filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
+                sort(Encounter.DATE, Order.DESCENDING)
+            }
+            .map { createRecommendation(it) }
+            .let { recommendationList.addAll(it) }
+
+
+        return recommendationList
+    }
+
+    private fun createRecommendation(it: ImmunizationRecommendation):DbAppointmentDetails {
+
+        val vaccinationManager = VaccinationManager()
+        val date = if (it.date != null) it.date.toString() else ""
+        var targetDisease = ""
+        var doseNumber:String? = ""
+
+        if (it.hasRecommendation()){
+            val recommendation = it.recommendation
+            if (recommendation.isNotEmpty()){
+                val codeableConceptTargetDisease = recommendation[0].targetDisease
+                if (codeableConceptTargetDisease.hasText()){
+                    targetDisease = codeableConceptTargetDisease.text
+                }
+            }
+        }
+        if (targetDisease != ""){
+            doseNumber = vaccinationManager.getVaccineDetails(targetDisease)?.dosage
+        }
+
+        return DbAppointmentDetails(date,doseNumber, targetDisease)
+
+    }
+
+    fun getEncounterList()= runBlocking{
+        getEncounterDetails()
+    }
+    private suspend fun getEncounterDetails():ArrayList<DbVaccineData>{
 
         val encounterList = ArrayList<DbVaccineData>()
 
         fhirEngine
             .search<Immunization> {
                 filter(Immunization.PATIENT, { value = "Patient/$patientId" })
-                sort(Immunization.DATE, Order.DESCENDING)
+                sort(Encounter.DATE, Order.DESCENDING)
             }
             .map { createEncounterItem(it) }
             .let { encounterList.addAll(it) }
 
+
         return encounterList
     }
 
-    private fun createEncounterItem(immunization: Immunization): DbVaccineData {
+    fun createEncounterItem(immunization: Immunization): DbVaccineData{
 
         var targetDisease = ""
         var doseNumberValue = ""
-        var logicalId = immunization.encounter.reference
-
-        val ref = logicalId.toString().replace("Encounter/", "")
-        Timber.e("Encounter *** $ref")
 
         val protocolList = immunization.protocolApplied
         protocolList.forEach {
 
             //Target Disease
-
             val targetDiseaseList = it.targetDisease
             if (targetDiseaseList.isNotEmpty()) targetDisease = targetDiseaseList[0].text
 
@@ -178,174 +204,17 @@ class PatientDetailsViewModel(
             val doseNumber = it.doseNumber
             if (doseNumber != null) doseNumberValue = doseNumber.asStringValue()
 
+
         }
 
 
         return DbVaccineData(
-            ref,
             targetDisease,
             doseNumberValue
         )
     }
 
-    private suspend fun createEncounterAefiItem(
-        encounter: Encounter,
-        resources: Resources
-    ): AdverseEventData {
-        Timber.e("Current Encounter ID *** ${encounter.logicalId}")
 
-        val type = generateObservationByCode(encounter.logicalId, "882-22") ?: ""
-        val date = generateObservationByCode(encounter.logicalId, "833-23") ?: ""
-        return AdverseEventData(
-            encounter.logicalId,
-            type,
-            date,
-        )
-    }
-
-    private suspend fun generateObservationByCode(encounterId: String, codeValue: String): String? {
-        var data = ""
-        fhirEngine
-            .search<Observation> {
-                filter(Observation.SUBJECT, { value = "Patient/$patientId" })
-                filter(Observation.ENCOUNTER, { value = "Encounter/$encounterId" })
-                filter(
-                    Observation.CODE,
-                    {
-                        value = of(Coding().apply {
-                            system = "http://loinc.org"
-                            code = codeValue
-                        })
-                    })
-                sort(Observation.DATE, Order.ASCENDING)
-            }
-            .map { createObservationItem(it, getApplication<Application>().resources) }
-            .firstOrNull()?.let {
-                data = it.value
-            }
-        return data
-    }
-
-    fun loadImmunizationAefis(logicalId: String) = runBlocking {
-        loadInternalImmunizationAefis(logicalId)
-    }
-
-    private suspend fun loadInternalImmunizationAefis(logicalId: String): List<AdverseEventData> {
-
-        val encounterList = ArrayList<AdverseEventData>()
-        fhirEngine
-            .search<Encounter> {
-                filter(
-                    Encounter.SUBJECT,
-                    { value = "Patient/$patientId" })
-                filter(
-                    Encounter.PART_OF,
-                    { value = "Encounter/$logicalId" })
-                sort(Encounter.DATE, Order.DESCENDING)
-            }
-            .map {
-                createEncounterAefiItem(
-                    it,
-                    getApplication<Application>().resources
-                )
-            }
-            .let { encounterList.addAll(it) }
-        return encounterList.reversed()
-    }
-
-    fun getObservationByCode(
-        patientId: String,
-        encounterId: String,
-        code: String
-    ) = runBlocking {
-        getObservationDataByCode(patientId, encounterId, code)
-    }
-
-
-    private suspend fun getObservationDataByCode(
-        patientId: String,
-        encounterId: String,
-        codeValue: String
-    ): String {
-        var data = ""
-        fhirEngine
-            .search<Observation> {
-                filter(Observation.SUBJECT, { value = "Patient/$patientId" })
-                filter(Observation.ENCOUNTER, { value = "Encounter/$encounterId" })
-                filter(
-                    Observation.CODE,
-                    {
-                        value = of(Coding().apply {
-                            system = "http://loinc.org"
-                            code = codeValue
-                        })
-                    })
-                sort(Observation.DATE, Order.ASCENDING)
-            }
-            .map { createObservationItem(it, getApplication<Application>().resources) }
-            .firstOrNull()?.let {
-                data = it.value
-            }
-
-        return data
-
-    }
-
-    private fun createObservationItem(
-        observation: Observation,
-        resources: Resources
-    ): PatientListViewModel.ObservationItem {
-        val observationCode = observation.code.codingFirstRep.code ?: ""
-
-
-        // Show nothing if no values available for datetime and value quantity.
-        val value =
-            when {
-                observation.hasValueQuantity() -> {
-                    observation.valueQuantity.value.toString()
-                }
-
-                observation.hasValueCodeableConcept() -> {
-                    observation.valueCodeableConcept.coding.firstOrNull()?.display ?: ""
-                }
-
-                observation.hasNote() -> {
-                    observation.note.firstOrNull()?.author
-                }
-
-                observation.hasValueDateTimeType() -> {
-                    formatDateToHumanReadable(observation.valueDateTimeType.value.toString())
-
-                }
-
-                else -> {
-                    observation.code.text ?: observation.code.codingFirstRep.display
-                }
-            }
-        val valueUnit =
-            if (observation.hasValueQuantity()) {
-                observation.valueQuantity.unit ?: observation.valueQuantity.code
-            } else {
-                ""
-            }
-        val valueString = "$value $valueUnit"
-
-        return PatientListViewModel.ObservationItem(
-            observation.logicalId,
-            observationCode,
-            "$value",
-            "$valueString",
-        )
-    }
-
-    private fun formatDateToHumanReadable(date: String): String? {
-        // Create a Calendar instance and set the time zone
-     /*   val sourceFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH)
-        val destFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-        val convertedDate = sourceFormat.parse(date)
-        val data = destFormat.parse(convertedDate?.let { destFormat.format(it) }.toString())*/
-        return "$date"
-    }
 }
 
 class PatientDetailsViewModelFactory(

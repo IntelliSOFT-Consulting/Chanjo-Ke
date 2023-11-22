@@ -1,17 +1,9 @@
 package com.intellisoft.chanjoke.fhir.data
 
 data class DbVaccineData(
-    val logicalId: String,
     val vaccineName: String,
     val vaccineDosage: String
 )
-
-data class AdverseEventData(
-    val logicalId: String,
-    val type: String,
-    val date: String,
-
-    )
 
 data class EncounterItem(
     val id: String,

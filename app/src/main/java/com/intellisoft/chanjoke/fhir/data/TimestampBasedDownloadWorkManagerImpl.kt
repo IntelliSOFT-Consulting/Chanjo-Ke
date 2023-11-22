@@ -126,13 +126,7 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
 
     // Affix lastUpdate to non-$everything queries as per:
     // https://hl7.org/fhir/operation-patient-everything.html
-    if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("Practitioner")) {
-        downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
-    }
-  if (!downloadUrl.contains("\$everything") && downloadUrl.contains("Immunization")) {
-        downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
-    }
-  if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("ImmunizationRecommendation")) {
+    if (!downloadUrl.contains("\$everything") || !downloadUrl.contains("Practitioner")) {
         downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
     }
 
