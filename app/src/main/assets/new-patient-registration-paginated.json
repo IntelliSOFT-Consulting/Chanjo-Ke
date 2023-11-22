@@ -428,6 +428,120 @@
       ]
     },
     {
+      "text": "Caregivers",
+      "linkId": "PR-caregivers",
+      "type": "group",
+      "item": [
+        {
+          "linkId": "patient-rshp",
+          "type": "choice",
+          "text": "Caregiver type",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop Down"
+                  }
+                ]
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode": "horizontal"
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "fatherId",
+                "display": "Father"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "motherId",
+                "display": "Mother"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "PR-caregiver-name",
+          "type": "string",
+          "text": "Caregiver's name"
+        },
+        {
+          "linkId": "PR-caregiver-phone",
+          "type": "string",
+          "text": "Caregiver's phone"
+        },
+        {
+          "text": "Caregivers",
+          "linkId": "PR-caregivers1",
+          "type": "group",
+          "repeats": true,
+          "item": [
+            {
+              "linkId": "patient-rshp1",
+              "type": "choice",
+              "text": "Caregiver type",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "drop-down",
+                        "display": "Drop Down"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                  "valueCode": "horizontal"
+                }
+              ],
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "system": "http://hl7.org/fhir/administrative-gender",
+                    "code": "fatherId1",
+                    "display": "Father"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "system": "http://hl7.org/fhir/administrative-gender",
+                    "code": "motherId1",
+                    "display": "Mother"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "PR-caregiver-name1",
+              "type": "string",
+              "text": "Caregiver's name"
+            },
+            {
+              "linkId": "PR-caregiver-phone1",
+              "type": "string",
+              "text": "Caregiver's phone"
+            }
+
+          ]
+        }
+      ]
+    },
+    {
       "text": "Administrative area",
       "linkId": "PR-address",
       "type": "group",
@@ -524,6 +638,5 @@
         }
       ]
     }
-
   ]
 }
