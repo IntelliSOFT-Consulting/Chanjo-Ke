@@ -22,6 +22,7 @@ class VaccineAdapter(
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
+        val logicalId: TextView = itemView.findViewById(R.id.logicalId)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
         val btnAddAefi: Button = itemView.findViewById(R.id.btnAddAefi)
 
@@ -36,8 +37,11 @@ class VaccineAdapter(
                     "adverse_effects.json", context
                 )
 
-
-                val intent = Intent(context, MainActivity::class.java)
+                FormatterClass().saveSharedPref("vaccinationFlow", "addAefi", context)
+                FormatterClass().saveSharedPref(
+                    "encounter_logical_id", logicalId.text.toString(), context
+                )
+               val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
                 intent.putExtra("patientId", patientId)
                 context.startActivity(intent)
@@ -45,7 +49,12 @@ class VaccineAdapter(
             }
             tvVaccineName.apply {
                 setOnClickListener {
+                    FormatterClass().saveSharedPref("current_immunization", logicalId.text.toString(), context)
+
                     val patientId = FormatterClass().getSharedPref("patientId", context)
+                    FormatterClass().saveSharedPref(
+                        "encounter_type", "aefi", context
+                    )
                     FormatterClass().saveSharedPref(
                         "vaccine_name", tvVaccineName.text.toString(), context
                     )
@@ -84,8 +93,10 @@ class VaccineAdapter(
 
         val vaccineName = entryList[position].vaccineName
         val vaccineDosage = entryList[position].vaccineDosage
+        val logicalId = entryList[position].logicalId
 
         holder.tvVaccineName.text = "Vaccine: $vaccineName"
+        holder.logicalId.text = logicalId
 
 
     }
