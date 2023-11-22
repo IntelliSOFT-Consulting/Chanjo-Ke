@@ -351,8 +351,8 @@ class AdministerVaccineViewModel(
             )
         )
         //Date administered
-        immunization.occurrenceDateTimeType.value = Date()
-
+        val currentDate = Date()
+        immunization.occurrenceDateTimeType.value = currentDate
 
         //Target Disease
         val targetDisease = FormatterClass().getSharedPref(

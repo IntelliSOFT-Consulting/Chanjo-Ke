@@ -25,6 +25,7 @@ class VaccineAdapter(
         val logicalId: TextView = itemView.findViewById(R.id.logicalId)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
         val btnAddAefi: Button = itemView.findViewById(R.id.btnAddAefi)
+        val tvDateAdministered: TextView = itemView.findViewById(R.id.tvDateAdministered)
 
         init {
             itemView.setOnClickListener(this)
@@ -94,9 +95,11 @@ class VaccineAdapter(
         val vaccineName = entryList[position].vaccineName
         val vaccineDosage = entryList[position].vaccineDosage
         val logicalId = entryList[position].logicalId
+        val dateAdministered = entryList[position].dateAdministered
 
         holder.tvVaccineName.text = "Vaccine: $vaccineName"
         holder.logicalId.text = logicalId
+        holder.tvDateAdministered.text = dateAdministered
 
 
     }
