@@ -79,12 +79,14 @@ class AppointmentsFragment : Fragment() {
     }
 
     private fun getImmunisationRecommendations() {
-        val recommendationList = patientDetailsViewModel.recommendationList()
 
-        println(recommendationList)
-
-        val vaccineAdapter = AppointmentAdapter(recommendationList,requireContext())
-        binding.recyclerView.adapter = vaccineAdapter    }
+//        val recommendationList = patientDetailsViewModel.recommendationList()
+//
+//        println(recommendationList)
+//
+//        val vaccineAdapter = AppointmentAdapter(recommendationList,requireContext())
+//        binding.recyclerView.adapter = vaccineAdapter
+    }
 
     companion object {
         /**
