@@ -434,10 +434,8 @@ class AdministerVaccineViewModel(
 
         val immunizationRecommendation = ImmunizationRecommendation()
 
-
         val encounterReference = Reference("Encounter/$encounterId")
         val patientReference = Reference("Patient/$patientId")
-
 
         val id = generateUuid()
 
@@ -447,9 +445,6 @@ class AdministerVaccineViewModel(
 
 
         if (recommendedDate != null) immunizationRecommendation.date = recommendedDate
-
-
-
 
         //Recommendation
         val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
@@ -466,17 +461,12 @@ class AdministerVaccineViewModel(
             appliedTargetDisease.forEach {
 
 
-
-
                 if (it.hasText()) codeableConceptTargetDisease.text = it.text
                 if (it.hasCoding()) codeableConceptTargetDisease.coding = it.coding
             }
         }
 //    codeableConceptTargetDisease.id = generateUuid()
 
-
-    val encRef = Reference("Encounter/$encounterId")
-    val patientReference = Reference("Patient/$patientId")
     
         immunizationRequest.targetDisease = codeableConceptTargetDisease
 
