@@ -36,6 +36,7 @@ import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Bundle
@@ -47,6 +48,7 @@ import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
+import org.hl7.fhir.r4.model.PositiveIntType
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
@@ -147,20 +149,10 @@ class AdministerVaccineViewModel(
                     }
 
                     saveResourceToDatabase(resource, "enc " + encounterId)
-                    when (FormatterClass().getSharedPref(
-                        "vaccinationFlow",
-                        getApplication<Application>().applicationContext
-                    )) {
-                        "createVaccineDetails" -> {
-                            createImmunisationRecord(encounterId, patientId)
-                        }
-
-                        "addAefi" -> {
-
-                        }
+                    val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
+                    if (vaccinationFlow == "createVaccineDetails" || vaccinationFlow == "updateVaccineDetails"){
+                        createImmunisationRecord(encounterId, patientId)
                     }
-
-
                 }
             }
         }
@@ -168,14 +160,16 @@ class AdministerVaccineViewModel(
 
     private fun createImmunisationRecord(
         encounterId: String,
-        patientId: String
-    ) {
+        patientId: String) {
+
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val uuid = generateUuid()
+
+            val immunizationId = generateUuid()
             val encounterReference = Reference("Encounter/$encounterId")
             val patientReference = Reference("Patient/$patientId")
+
 
             //Have a list of the observation codes
 
@@ -183,87 +177,148 @@ class AdministerVaccineViewModel(
 
             immunization.encounter = encounterReference
             immunization.patient = patientReference
-            immunization.id = uuid
-
-            //Status and status reason
-            val status = observationFromCode(
-                "11-1122",
-                patientId,
-                encounterId
-            )
-            val statusReason = observationFromCode(
-                "72029-2",
-                patientId,
-                encounterId
-            )
-
-            Log.e("-----", "----")
-            println(status.value)
-
+            immunization.id = immunizationId
             val immunisationStatus: ImmunizationStatus
-            if (status.value.contains("YES")) {
-                /**
-                 *  This means the immunisation was successful and there were not contraindications
-                 * The only recommendation to be done here is for the next dose according to DAK
-                 * Check if the request is comming from an update of the immunisation details or creation a new immunisation
-                 */
+
+
+            val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
+            if (vaccinationFlow == "createVaccineDetails"){
+                //Get more details about the immunisation
+                val job = Job()
+                CoroutineScope(Dispatchers.IO + job).launch {
+                    immunization = generateImmunisation(immunization)
+                }.join()
+
+
+                //Status and status reason
+                val status = observationFromCode(
+                    "11-1122",
+                    patientId,
+                    encounterId)
+                val statusReason = observationFromCode(
+                    "72029-2",
+                    patientId,
+                    encounterId)
+
+
+                if (status.value.replace(" ","") == "Yes"){
+                    /**
+                     *  This means the immunisation was successful and there were not contraindications
+                     * The only recommendation to be done here is for the next dose according to DAK
+                     */
+                    immunisationStatus = ImmunizationStatus.COMPLETED
+                    //Immunisation flow
+//        val vaccinationFlow = FormatterClass().getSharedPref(
+//          "vaccinationFlow",
+//          getApplication<Application>().applicationContext)
+//        if (vaccinationFlow != null && vaccinationFlow == "createVaccineDetails"){
+//          /**
+//           * This is used to distinguish between update vaccine history and create vaccine history
+//           * For update, we should not create a recommendation, otherwise create according to DAK
+//           * TODO: Create recommendation
+//           */
+//
+//        }
+
+
+                }else{
+                    /**
+                     * This means there was a contraindication and Vaccination was not done.
+                     * Create an ImmunisationRecommendation for this, according to the nextDate provided
+                     */
+                    immunisationStatus = ImmunizationStatus.NOTDONE
+
+
+                    //add CodeableConcept for status
+                    val codeableConcept = CodeableConcept()
+                    //Add coding
+                    val codingList = ArrayList<Coding>()
+                    val coding = Coding()
+                    coding.code = statusReason.code
+                    codingList.add(coding)
+
+
+                    codeableConcept.coding = codingList
+                    codeableConcept.text = statusReason.value
+
+
+                    immunization.statusReason = codeableConcept
+
+
+                    // Get the provided date after having a contraindication
+                    val nextVisit = observationFromCode(
+                        "date-next-dose-value",
+                        patientId,
+                        encounterId)
+                    val dateNext = nextVisit.value
+
+
+                    Log.e("-----****","------$dateNext")
+
+
+
+
+                    val nextDate = FormatterClass().convertStringToDate(dateNext, "YYYY-MM-DD")
+                    createImmunisationRecommendation(nextDate, immunization, patientId, encounterId)
+
+
+                }
+            }else{
+                //This is an update
                 immunisationStatus = ImmunizationStatus.COMPLETED
 
 
-                val vaccinationFlow = FormatterClass().getSharedPref(
-                    "vaccinationFlow",
-                    getApplication<Application>().applicationContext
-                )
-                if (vaccinationFlow != null && vaccinationFlow == "createVaccineDetails") {
-                    //Get more details about the immunisation and also create a recommendation of the next one
-                    immunization = generateImmunisation(immunization)
-                }
-
-            } else {
-                /**
-                 * This means there was a contraindication and Vaccination was not done.
-                 * Create an ImmunisationRecommendation for this, according to the nextDate provided
-                 */
-                immunisationStatus = ImmunizationStatus.NOTDONE
-
-                //add CodeableConcept for status
-                val codeableConcept = CodeableConcept()
-                //Add coding
-                val codingList = ArrayList<Coding>()
-                val coding = Coding()
-                coding.code = statusReason.code
-                codingList.add(coding)
-
-                codeableConcept.coding = codingList
-                codeableConcept.text = statusReason.value
-
-                immunization.statusReason = codeableConcept
-
-                // Get the provided date after having a contraindication
-                val nextVisit = observationFromCode(
-                    "45354-8",
+                // Get the type of vaccine
+                val vaccineTypeObs = observationFromCode(
+                    "type-of-vaccine-group",
                     patientId,
-                    encounterId
-                )
-                val dateNext = nextVisit.value
+                    encounterId)
+                val vaccineType = vaccineTypeObs.value
 
-                val nextDate = FormatterClass().convertStringToDate(dateNext, "YYYY-MM-DD")
-                createImmunisationRecommendation(nextDate, immunization, patientId, encounterId)
+
+                //Date of last dose
+                val lastDoseDateObs = observationFromCode(
+                    "date-next-dose-value",
+                    patientId,
+                    encounterId)
+                val lastDoseDate = lastDoseDateObs.value
+
+
+                val date = FormatterClass().convertStringToDate(lastDoseDate, "")
+                if (date != null) immunization.occurrenceDateTimeType.value = date
+
+
+                //Target Disease
+
+
+                val protocolList = Immunization().protocolApplied
+                val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
+                val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
+                val diseaseTargetCodeableConcept = CodeableConcept()
+                diseaseTargetCodeableConcept.text = vaccineType
+                diseaseTargetCodeableConceptList.add(diseaseTargetCodeableConcept)
+                immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
+                protocolList.add(immunizationProtocolAppliedComponent)
+
+
+                immunization.protocolApplied = protocolList
+
 
             }
 
             //Immunisation status
             immunization.status = immunisationStatus
 
-            val immunizationId = generateUuid()
-            immunization.id = immunizationId
+
+            FormatterClass().deleteSharedPref("vaccinationFlow",
+                getApplication<Application>().applicationContext)
 
 
-            saveResourceToDatabase(immunization, "Imm " + immunizationId)
+            saveResourceToDatabase(immunization, "Imm "+immunizationId)
         }
 
-
     }
+
 
     private fun generateImmunisation(immunization: Immunization): Immunization {
 
@@ -318,17 +373,16 @@ class AdministerVaccineViewModel(
         immunization.protocolApplied = protocolList
 
         //Dosage
-        val dosage = FormatterClass().getSharedPref(
-            "vaccinationDosage",
-            getApplication<Application>().applicationContext
-        )
-        if (dosage != null) {
-            val bigDecimalValue = BigDecimal(dosage)
+        val dosage = FormatterClass().getSharedPref("vaccinationDosage",
+            getApplication<Application>().applicationContext)
+        if (dosage != null){
+            val nonDosage = FormatterClass().removeNonNumeric(dosage)
+            val bigDecimalValue = BigDecimal(nonDosage)
             val simpleQuantity = SimpleQuantity()
             simpleQuantity.value = bigDecimalValue
-
             immunization.doseQuantity = simpleQuantity
         }
+
 
         //Administration Method
         val vaccinationAdministrationMethod = FormatterClass().getSharedPref(
@@ -371,54 +425,68 @@ class AdministerVaccineViewModel(
 
     }
 
-
     private suspend fun createImmunisationRecommendation(
         recommendedDate: Date?,
         immunization: Immunization,
         patientId: String,
-        encounterId: String
-    ) {
+        encounterId: String) {
+
 
         val immunizationRecommendation = ImmunizationRecommendation()
+
 
         val encounterReference = Reference("Encounter/$encounterId")
         val patientReference = Reference("Patient/$patientId")
 
+
         val id = generateUuid()
+
 
         immunizationRecommendation.patient = patientReference
         immunizationRecommendation.id = id
 
+
         if (recommendedDate != null) immunizationRecommendation.date = recommendedDate
 
 
+
+
         //Recommendation
-        val recommendationList =
-            ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
-        val immunizationRequest =
-            ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
+        val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
+        val immunizationRequest = ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
+
 
         //Target Disease
         val codeableConceptTargetDisease = CodeableConcept()
         val protocolApplied = immunization.protocolApplied
+
+
         protocolApplied.forEach { appliedComponent ->
             val appliedTargetDisease = appliedComponent.targetDisease
             appliedTargetDisease.forEach {
+
+
+
 
                 if (it.hasText()) codeableConceptTargetDisease.text = it.text
                 if (it.hasCoding()) codeableConceptTargetDisease.coding = it.coding
             }
         }
-        codeableConceptTargetDisease.id = generateUuid()
+//    codeableConceptTargetDisease.id = generateUuid()
+
 
     val encRef = Reference("Encounter/$encounterId")
     val patientReference = Reference("Patient/$patientId")
     
         immunizationRequest.targetDisease = codeableConceptTargetDisease
 
+
         //Dose number
-//    val doseNumber = immunization.doseQuantity
-//    immunizationRequest.doseNumber = doseNumber
+        val doseNumber = immunization.doseQuantity.value
+        val intValue = doseNumber.toInt()
+        val positiveIntType = PositiveIntType(intValue)
+        immunizationRequest.doseNumber = positiveIntType
+
 
         //Supporting immunisation
         val immunizationReferenceList = ArrayList<Reference>()
@@ -427,18 +495,19 @@ class AdministerVaccineViewModel(
         immunizationReference.display = "Immunization"
         immunizationReferenceList.add(immunizationReference)
 
-        //Supporting Patient Info and encounter reference
-        immunizationReferenceList.add(patientReference)
-        immunizationReferenceList.add(encounterReference)
 
         immunizationRequest.supportingImmunization = immunizationReferenceList
+
 
         recommendationList.add(immunizationRequest)
         immunizationRecommendation.recommendation = recommendationList
 
-        saveResourceToDatabase(immunizationRecommendation, "ImmReccomend " + id)
+
+        saveResourceToDatabase(immunizationRecommendation, "ImmReccomend "+id)
+
 
     }
+
 
     private suspend fun observationFromCode(
         codeValue: String,
