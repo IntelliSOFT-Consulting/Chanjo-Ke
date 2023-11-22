@@ -63,8 +63,7 @@
                             android:gravity="center"
                             android:layout_gravity="center"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
-                            android:text="Date Scheduled"
+                             android:text="Date Scheduled"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
@@ -73,7 +72,6 @@
                             android:gravity="center"
                             android:layout_gravity="center"
                             android:id="@+id/tvDateScheduled"
-                            android:textColor="@color/black"
                             android:text="Jan 01, 2001"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -98,7 +96,6 @@
                             android:gravity="center"
                             android:layout_gravity="center"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
                             android:text="Dose Number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -108,7 +105,6 @@
                             android:gravity="center"
                             android:layout_gravity="center"
                             android:id="@+id/tvDoseNumber"
-                            android:textColor="@color/black"
                             android:text="Jan 01, 2001"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
