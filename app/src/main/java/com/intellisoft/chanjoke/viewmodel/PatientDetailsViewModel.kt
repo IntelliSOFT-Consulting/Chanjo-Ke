@@ -217,7 +217,7 @@ class PatientDetailsViewModel(
 
         var targetDisease = ""
         var doseNumberValue = ""
-        var logicalId = immunization.encounter.reference
+        var logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
         var dateScheduled = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
@@ -238,11 +238,14 @@ class PatientDetailsViewModel(
         if (immunization.hasOccurrenceDateTimeType()) {
             val fhirDate = immunization.occurrenceDateTimeType.valueAsString
             val convertedDate = FormatterClass().convertDateFormat(fhirDate)
-            if (convertedDate != null){
+            if (convertedDate != null) {
                 dateScheduled = convertedDate
             }
         }
-
+        if (immunization.hasDoseQuantity()) {
+            doseNumberValue = immunization.doseQuantity.value.toString()
+        }
+        Timber.e("Dose **** $doseNumberValue")
 
         return DbVaccineData(
             ref,
@@ -406,12 +409,8 @@ class PatientDetailsViewModel(
     }
 
     private fun formatDateToHumanReadable(date: String): String? {
-        // Create a Calendar instance and set the time zone
-        /*   val sourceFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH)
-           val destFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-           val convertedDate = sourceFormat.parse(date)
-           val data = destFormat.parse(convertedDate?.let { destFormat.format(it) }.toString())*/
-        return "$date"
+        return FormatterClass().convertDateFormat(date)
+
     }
 }
 

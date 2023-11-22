@@ -19,24 +19,11 @@
             android:layout_height="wrap_content"
             android:text="Polio" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/bac_trans2"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="Polio" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal"
             android:padding="5dp"
             android:weightSum="4">
@@ -48,7 +35,7 @@
                 android:text="@string/doses_administered" />
 
             <TextView
-
+                android:id="@+id/tv_vaccine_dose"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5" />
@@ -74,7 +61,7 @@
                 android:text="Date of Last Dose" />
 
             <TextView
-
+                android:id="@+id/tv_vaccine_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5" />
@@ -100,7 +87,7 @@
                 android:text="Days since last dose" />
 
             <TextView
-
+                android:id="@+id/tv_days_since"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5" />
@@ -126,7 +113,7 @@
                 android:text="Months since last dose" />
 
             <TextView
-
+                android:id="@+id/tv_month_since"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5" />
@@ -152,7 +139,7 @@
                 android:text="Years since last dose" />
 
             <TextView
-
+                android:id="@+id/tv_years_since"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5" />
@@ -195,6 +182,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="5dp"
+            android:visibility="gone"
             android:weightSum="4">
 
             <TextView
