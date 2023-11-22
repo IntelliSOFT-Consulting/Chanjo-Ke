@@ -21,6 +21,7 @@ import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.EncounterItem
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import java.text.SimpleDateFormat
@@ -216,6 +217,7 @@ class PatientDetailsViewModel(
         var targetDisease = ""
         var doseNumberValue = ""
         var logicalId = immunization.encounter.reference
+        var dateScheduled = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
 
@@ -232,12 +234,20 @@ class PatientDetailsViewModel(
             if (doseNumber != null) doseNumberValue = doseNumber.asStringValue()
 
         }
+        if (immunization.hasOccurrenceDateTimeType()) {
+            val fhirDate = immunization.occurrenceDateTimeType.valueAsString
+            val convertedDate = FormatterClass().convertDateFormat(fhirDate)
+            if (convertedDate != null){
+                dateScheduled = convertedDate
+            }
+        }
 
 
         return DbVaccineData(
             ref,
             targetDisease,
-            doseNumberValue
+            doseNumberValue,
+            dateScheduled
         )
     }
 
