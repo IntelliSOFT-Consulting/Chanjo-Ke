@@ -112,6 +112,7 @@ class FormatterClass {
 
         val dob = getSharedPref("patientDob", context)
         val patientId = getSharedPref("patientId", context)
+
         if (patientId != null && dob != null){
             //Convert dob to LocalDate
             val birthDate = LocalDate.parse(dob)
@@ -130,7 +131,20 @@ class FormatterClass {
             val missingVaccineList = vaccineList.filter { vaccine ->
                 vaccinationList.none { adverseEvent -> adverseEvent.vaccineName == vaccine.name }
             }.map { it.name }
-            return missingVaccineList
+            /**
+             * Get recommendations and check if the vaccine has already been created as a recommendation
+             */
+            val recommendationList = patientDetailsViewModel.recommendationList()
+
+            val listToRecommend = missingVaccineList.filter { vaccine ->
+                recommendationList.none() {recommend ->
+                    val targetDisease = recommend.targetDisease.replace(" ", "").uppercase()
+                    val missingVaccine = vaccine.replace(" ", "").uppercase()
+                    targetDisease == missingVaccine
+                }
+            }
+
+            return listToRecommend
         }
         return emptyList()
     }
