@@ -115,9 +115,16 @@ class VaccinationManager {
     }
 
     fun getVaccineDetails(vaccineName: String): VaccineDetails? {
-        val newVaccine = convertToVaccineCode(vaccineName.capitalize())
+        var newVaccineName = ""
+        newVaccineName = if (vaccineName == "Bopv") {
+            "bOPV"
+        }else{
+            vaccineName
+        }
+        val newVaccine = convertToVaccineCode(newVaccineName)
         return vaccines[newVaccine]?.details()
     }
+
 }
 
 //fun main() {

@@ -425,6 +425,8 @@ class AdministerVaccineViewModel(
                     patientId,
                     encounterId)
                 val nextDateStr = dateTime.dateTime
+
+
                 val nextDate = FormatterClass().convertStringToDate("nextDateStr", "")
 
                 //Contraindication reasons
@@ -446,12 +448,12 @@ class AdministerVaccineViewModel(
 
         }else if (vaccinationFlow == "updateVaccineDetails"){
             /**
-             * The request is from the update screens,
+             * The request is from the update history -> vaccine details screens,
              * Get the type of vaccine from observation , save to shared pref and create immunisation
              */
             //Type of vaccine
             val vaccineType = observationFromCode(
-                "321-12",
+                "222-11",
                 patientId,
                 encounterId)
             val targetDisease = vaccineType.value
@@ -473,9 +475,12 @@ class AdministerVaccineViewModel(
 
             val patientDetailsViewModel = PatientDetailsViewModel(getApplication(),fhirEngine, patientId)
             val missingVaccineList = FormatterClass().getEligibleVaccines(getApplication<Application>().applicationContext, patientDetailsViewModel)
+            Log.e("***","*** missingVaccine 1 $missingVaccineList")
+
             missingVaccineList.forEach {
                 FormatterClass().saveSharedPref("targetDisease", it, getApplication<Application>().applicationContext)
                 val vaccineDetails = VaccinationManager().getVaccineDetails(it)
+
                 if (vaccineDetails != null){
                     FormatterClass().generateStockValue(vaccineDetails, getApplication<Application>().applicationContext)
 
@@ -483,15 +488,18 @@ class AdministerVaccineViewModel(
                     val dob = FormatterClass().getSharedPref("patientDob", getApplication<Application>().applicationContext)
                     val weeksAfterDob = vaccineDetails.timeToAdminister
                     val dobDate = FormatterClass().convertStringToDate(dob.toString(), "yyyy-MM-dd")
+
                     val dobLocalDate = dobDate?.let { it1 ->
                         FormatterClass().convertDateToLocalDate(
                             it1
                         )
                     }
+
                     val nextDateStr = dobLocalDate?.let { it1 ->
                         FormatterClass().calculateDateAfterWeeksAsString(
                             it1, weeksAfterDob)
                     }
+
                     val nextDate = FormatterClass().convertStringToDate(nextDateStr.toString(), "yyyy-MM-dd")
 
 
@@ -624,7 +632,6 @@ class AdministerVaccineViewModel(
             issuedDate = observation.valueDateTimeType.valueAsString
         }
 
-
         val id = observation.logicalId
         val text = observation.code.text ?: observation.code.codingFirstRep.display
         val code = observation.code.coding[0].code
@@ -646,15 +653,6 @@ class AdministerVaccineViewModel(
             }
         val valueString = "$value $valueUnit"
 
-
-        //Get Time
-//    var newTime = ""
-//    if (issuedDate != ""){
-//      val convertedDate = FormatterClass().convertFhirTime(issuedDate)
-//      if (convertedDate != null){
-//        newTime = convertedDate
-//      }
-//    }
 
         return PatientListViewModel.ObservationItem(
             id,

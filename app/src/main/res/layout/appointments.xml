@@ -16,17 +16,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:padding="20dp"
-            android:gravity="center"
-            android:id="@+id/tvAppointment"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/small_text_margin"
-            android:layout_marginBottom="@dimen/small_text_margin"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textStyle="bold"
-            tools:text="Appointment 1" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_weight="1"
+                android:padding="20dp"
+                android:gravity="center"
+                android:id="@+id/tvAppointment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/small_text_margin"
+                android:layout_marginBottom="@dimen/small_text_margin"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textStyle="bold"
+                tools:text="Appointment 1" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@android:color/holo_red_light"
+                android:id="@+id/chipAppointment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Due" />
+
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:background="@color/bac_trans"

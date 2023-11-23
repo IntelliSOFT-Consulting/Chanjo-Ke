@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
@@ -17,6 +19,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
+import org.hl7.fhir.r4.model.codesystems.ImmunizationRecommendationStatus
 
 class AppointmentAdapter(
     private var entryList: ArrayList<DbAppointmentDetails>,
@@ -30,6 +33,7 @@ class AppointmentAdapter(
         val tvDateScheduled: TextView = itemView.findViewById(R.id.tvDateScheduled)
         val tvDoseNumber: TextView = itemView.findViewById(R.id.tvDoseNumber)
         val btnAdministerVaccine: TextView = itemView.findViewById(R.id.btnAdministerVaccine)
+        val chipAppointment: Chip = itemView.findViewById(R.id.chipAppointment)
 
         init {
             itemView.setOnClickListener(this)
@@ -93,12 +97,25 @@ class AppointmentAdapter(
         val targetDisease = entryList[position].targetDisease
         val dateScheduled = entryList[position].dateScheduled
         val doseNumber = entryList[position].doseNumber
+        val appointmentStatus = entryList[position].appointmentStatus
 
         val dateScheduledFormat = FormatterClass().convertDateFormat(dateScheduled)
 
         holder.tvAppointment.text = targetDisease
         holder.tvDateScheduled.text = dateScheduledFormat
         holder.tvDoseNumber.text = doseNumber
+        holder.chipAppointment.text = appointmentStatus
+
+        if (appointmentStatus.equals(ImmunizationRecommendationStatus.DUE.name, ignoreCase = true)){
+            holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_red_light)
+        }else if (appointmentStatus.equals(ImmunizationRecommendationStatus.CONTRAINDICATED.name, ignoreCase = true)){
+            holder.chipAppointment.setChipBackgroundColorResource(android.R.color.darker_gray)
+        }else if (appointmentStatus.equals(ImmunizationRecommendationStatus.COMPLETE.name, ignoreCase = true)){
+            holder.btnAdministerVaccine.isVisible = false
+            holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_green_dark)
+        }else{
+            holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_red_light)
+        }
 
 
     }
