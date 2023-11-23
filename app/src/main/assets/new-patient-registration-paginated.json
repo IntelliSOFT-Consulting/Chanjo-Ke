@@ -126,7 +126,6 @@
                   "linkId": "PR-name-middle",
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.given",
                   "type": "string",
-                  "required": true,
                   "text": "Middle Name",
                   "_text": {
                     "extension": [
@@ -467,6 +466,13 @@
                 "system": "http://hl7.org/fhir/administrative-gender",
                 "code": "motherId",
                 "display": "Mother"
+              }
+            },
+            {
+              "valueCoding": {
+                "system": "http://hl7.org/fhir/administrative-gender",
+                "code": "guardianId",
+                "display": "Guardian"
               }
             }
           ]
