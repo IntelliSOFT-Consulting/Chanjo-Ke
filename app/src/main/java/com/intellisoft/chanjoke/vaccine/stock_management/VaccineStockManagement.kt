@@ -65,23 +65,7 @@ class VaccineStockManagement : AppCompatActivity() {
              * TODO: Add all these tto shared Preference
              */
 
-            val stockList = ArrayList<DbVaccineStockDetails>()
-            stockList.addAll(
-                listOf(
-                    DbVaccineStockDetails("vaccinationTargetDisease",targetDisease.lowercase().capitalize(Locale.ROOT)),
-                    DbVaccineStockDetails("vaccinationDosage",vaccineDetails.dosage),
-                    DbVaccineStockDetails("vaccinationAdministrationMethod",vaccineDetails.administrationMethod),
-                    DbVaccineStockDetails("vaccinationBatchNumber",""),
-                    DbVaccineStockDetails("vaccinationExpirationDate",""),
-                    DbVaccineStockDetails("vaccinationBrand",""),
-                    DbVaccineStockDetails("vaccinationManufacturer","")
-                )
-            )
-
-            //Save to shared pref
-            stockList.forEach{
-                formatterClass.saveSharedPref(it.name,it.value,this)
-            }
+            val stockList = formatterClass.generateStockValue(vaccineDetails, this)
 
             val dbVaccineStockDetailsList= ArrayList<DbVaccineStockDetails>()
             for(i in stockList){

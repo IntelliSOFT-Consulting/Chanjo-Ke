@@ -29,6 +29,9 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.HumanName
@@ -89,9 +92,12 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             if (entry.resource !is Patient) {
                 return@launch
             }
+            val patientId = generateUuid()
             val patient = entry.resource as Patient
-            patient.id = generateUuid()
+            patient.id = patientId
             fhirEngine.create(patient)
+
+
             isPatientSaved.value = true
         }
     }
