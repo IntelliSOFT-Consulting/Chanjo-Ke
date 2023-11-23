@@ -14,19 +14,34 @@ data class VaccineDetails(
     val name: String,
     val dosage: String,
     val administrationMethod: String,
-    val timeToAdminister: String)
+    val timeToAdminister: Long,
+
+    val doseNumber: String,
+    val seriesDoses: String
+
+    )
 
 // Base class for vaccines with common properties and methods
 abstract class BaseVaccine(
     private val weeksAfterDob: Long,
     private val dosage: String,
-    private val administrationMethod: String) : Vaccine {
+    private val administrationMethod: String,
+    private val doseNumber:String, // Dose number within seriesDoses
+    private val seriesDoses:String, // Recommended number of doses for immunity
+    ) : Vaccine {
     override fun isEligible(dob: LocalDate): Boolean {
         return LocalDate.now() >= dob.plusWeeks(weeksAfterDob)
     }
 
     override fun details(): VaccineDetails {
-        return VaccineDetails(javaClass.simpleName, dosage, administrationMethod, "Given at ${weeksAfterDob} weeks after birth")
+        return VaccineDetails(
+            javaClass.simpleName,
+            dosage,
+            administrationMethod,
+            weeksAfterDob,
+            doseNumber,
+            seriesDoses
+            )
     }
 
     override fun administer() {
@@ -40,25 +55,25 @@ abstract class BaseVaccine(
  */
 
 // Polio vaccines
-class bOPV : BaseVaccine(0, "2 dosages", "Oral")
-class OPV1 : BaseVaccine(6, "2 dosages", "Oral")
-class OPV2 : BaseVaccine(10, "2 dosages", "Oral")
-class OPV3 : BaseVaccine(14, "2 dosages", "Oral")
+class bOPV : BaseVaccine(0, "2 drops", "Oral", "1", "1")
+class OPV1 : BaseVaccine(6, "2 drops", "Oral", "1", "1")
+class OPV2 : BaseVaccine(10, "2 drops", "Oral", "1", "1")
+class OPV3 : BaseVaccine(14, "2 drops", "Oral", "1", "1")
 
 // Measles vaccines
-class Measles1 : BaseVaccine(24, "0.5ml", "Subcutaneous right upper arm")
-class Measles2 : BaseVaccine(36, "0.5ml", "Subcutaneous right upper arm")
-class Measles3 : BaseVaccine(78, "0.5ml", "Subcutaneous right upper arm")
+class Measles1 : BaseVaccine(24, "0.5ml", "Subcutaneous right upper arm", "1", "1")
+class Measles2 : BaseVaccine(36, "0.5ml", "Subcutaneous right upper arm", "1", "1")
+class Measles3 : BaseVaccine(78, "0.5ml", "Subcutaneous right upper arm", "1", "1")
 
 // Yellow Fever vaccine
-class YellowFever : BaseVaccine(36, "0.5ml", "Subcutaneous left upper arm")
+class YellowFever : BaseVaccine(36, "0.5ml", "Subcutaneous left upper arm", "1", "1")
 
 //Covid 19
-class Astrazeneca : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
-class Moderna : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
-class JohnsonAndJohnson : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
-class PhizerBioNTech : BaseVaccine(11 * 52, "0.3ml", "Intramuscular Injection")
-class Sinopharm : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection")
+class Astrazeneca : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
+class Moderna : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
+class JohnsonAndJohnson : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","1")
+class PhizerBioNTech : BaseVaccine(11 * 52, "0.3ml", "Intramuscular Injection","2","2")
+class Sinopharm : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
 
 // Vaccination Manager
 class VaccinationManager {
