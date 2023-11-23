@@ -23,6 +23,8 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.EncounterItem
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
+import com.intellisoft.chanjoke.utils.Constants.AEFI_DATE
+import com.intellisoft.chanjoke.utils.Constants.AEFI_TYPE
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -258,8 +260,8 @@ class PatientDetailsViewModel(
         resources: Resources
     ): AdverseEventData {
 
-        val type = generateObservationByCode(encounter.logicalId, "882-22") ?: ""
-        val date = generateObservationByCode(encounter.logicalId, "833-23") ?: ""
+        val type = generateObservationByCode(encounter.logicalId, AEFI_TYPE) ?: ""
+        val date = generateObservationByCode(encounter.logicalId, AEFI_DATE) ?: ""
         return AdverseEventData(
             encounter.logicalId,
             type,

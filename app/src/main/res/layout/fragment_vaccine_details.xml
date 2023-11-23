@@ -165,7 +165,7 @@
                 android:text="Age at last dose" />
 
             <TextView
-
+                android:id="@+id/tv_age_then"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5" />
