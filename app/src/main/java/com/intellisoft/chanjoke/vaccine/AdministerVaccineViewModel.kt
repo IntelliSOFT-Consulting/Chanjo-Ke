@@ -458,10 +458,6 @@ class AdministerVaccineViewModel(
                 encounterId)
             val targetDisease = vaccineType.value
 
-            /**
-             * TODO: Add validation for Polio(IPV 1), Measles, Covid 19. The form should give the specific vaccine
-             */
-
             FormatterClass().saveSharedPref("targetDisease", targetDisease, getApplication<Application>().applicationContext)
             val vaccineDetails = VaccinationManager().getVaccineDetails(targetDisease)
             if (vaccineDetails != null){
