@@ -425,6 +425,8 @@ class AdministerVaccineViewModel(
                     patientId,
                     encounterId)
                 val nextDateStr = dateTime.dateTime
+
+
                 val nextDate = FormatterClass().convertStringToDate("nextDateStr", "")
 
                 //Contraindication reasons
@@ -446,12 +448,12 @@ class AdministerVaccineViewModel(
 
         }else if (vaccinationFlow == "updateVaccineDetails"){
             /**
-             * The request is from the update screens,
+             * The request is from the update history -> vaccine details screens,
              * Get the type of vaccine from observation , save to shared pref and create immunisation
              */
             //Type of vaccine
             val vaccineType = observationFromCode(
-                "321-12",
+                "222-11",
                 patientId,
                 encounterId)
             val targetDisease = vaccineType.value
@@ -630,7 +632,6 @@ class AdministerVaccineViewModel(
             issuedDate = observation.valueDateTimeType.valueAsString
         }
 
-
         val id = observation.logicalId
         val text = observation.code.text ?: observation.code.codingFirstRep.display
         val code = observation.code.coding[0].code
@@ -652,15 +653,6 @@ class AdministerVaccineViewModel(
             }
         val valueString = "$value $valueUnit"
 
-
-        //Get Time
-//    var newTime = ""
-//    if (issuedDate != ""){
-//      val convertedDate = FormatterClass().convertFhirTime(issuedDate)
-//      if (convertedDate != null){
-//        newTime = convertedDate
-//      }
-//    }
 
         return PatientListViewModel.ObservationItem(
             id,
