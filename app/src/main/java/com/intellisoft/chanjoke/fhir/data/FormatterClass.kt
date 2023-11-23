@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
+import com.intellisoft.chanjoke.vaccine.validations.VaccineDetails
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +47,10 @@ class FormatterClass {
             null
         }
 
+    }
+    fun convertDateToLocalDate(date: Date): LocalDate {
+        val instant = date.toInstant()
+        return instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
     }
     fun removeNonNumeric(input: String): String {
         // Regex pattern to match numeric values (with optional decimal part)
@@ -96,6 +101,11 @@ class FormatterClass {
         return null
     }
 
+    fun calculateDateAfterWeeksAsString(dob: LocalDate, weeksAfterDob: Long): String {
+        val calculatedDate = dob.plusWeeks(weeksAfterDob)
+        return calculatedDate.toString()
+    }
+
     fun getEligibleVaccines(
         context: Context,
         patientDetailsViewModel: PatientDetailsViewModel):List<String>{
@@ -123,6 +133,30 @@ class FormatterClass {
             return missingVaccineList
         }
         return emptyList()
+    }
+
+    fun generateStockValue(vaccineDetails: VaccineDetails,context: Context):ArrayList<DbVaccineStockDetails>{
+        val targetDisease = getSharedPref("targetDisease", context).toString()
+        val stockList = ArrayList<DbVaccineStockDetails>()
+        stockList.addAll(
+            listOf(
+                DbVaccineStockDetails("vaccinationTargetDisease",targetDisease.lowercase().capitalize(Locale.ROOT)),
+                DbVaccineStockDetails("vaccinationDosage",vaccineDetails.dosage),
+                DbVaccineStockDetails("vaccinationAdministrationMethod",vaccineDetails.administrationMethod),
+                DbVaccineStockDetails("vaccinationDoseNumber",vaccineDetails.doseNumber),
+                DbVaccineStockDetails("vaccinationSeriesDoses",vaccineDetails.seriesDoses),
+                DbVaccineStockDetails("vaccinationBatchNumber",""),
+                DbVaccineStockDetails("vaccinationExpirationDate",""),
+                DbVaccineStockDetails("vaccinationBrand",""),
+                DbVaccineStockDetails("vaccinationManufacturer","")
+            )
+        )
+
+        //Save to shared pref
+        stockList.forEach{
+            saveSharedPref(it.name,it.value,context)
+        }
+        return stockList
     }
 
 

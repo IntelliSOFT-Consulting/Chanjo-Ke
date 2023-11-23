@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navArgs
 import com.intellisoft.chanjoke.MainActivity
@@ -26,6 +28,7 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,6 +41,9 @@ class PatientDetailActivity : AppCompatActivity() {
     //    private val args: PatientDetailActivityArgs by navArgs()
     private lateinit var binding: ActivityPatientDetailBinding
     private var formatterClass = FormatterClass()
+
+    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +87,7 @@ class PatientDetailActivity : AppCompatActivity() {
             binding.apply {
                 tvName.text = it.name
                 tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
-                tvDob.text = it.dob
+                tvDob.text = formatterClass.convertDateFormat(it.dob)
 //                tvContact.text = it.contact_name
 //                tvPhone.text = it.contact_phone
 //                tvContactGender.text = it.contact_gender
@@ -90,7 +96,8 @@ class PatientDetailActivity : AppCompatActivity() {
         patientDetailsViewModel.getPatientDetailData()
 
         CoroutineScope(Dispatchers.IO).launch {
-            formatterClass.getEligibleVaccines(this@PatientDetailActivity, patientDetailsViewModel)
+            formatterClass.saveSharedPref("vaccinationFlow","recommendVaccineDetails", this@PatientDetailActivity)
+            administerVaccineViewModel.generateImmunizationRecord("", patientId)
         }
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
