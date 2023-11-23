@@ -14,6 +14,9 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineStockDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Arrays
 import java.util.Locale
@@ -55,30 +58,34 @@ class VaccineStockManagement : AppCompatActivity() {
 
     private fun getStockManagement() {
 
-        val vaccinationManager = VaccinationManager()
+        CoroutineScope(Dispatchers.IO).launch {
+            val vaccinationManager = VaccinationManager()
 
-        val vaccineDetails = vaccinationManager.getVaccineDetails(targetDisease)
+            val vaccineDetails = vaccinationManager.getVaccineDetails(targetDisease)
+            Log.e("******", "****** $vaccineDetails")
 
-        if (vaccineDetails != null) {
+            if (vaccineDetails != null) {
 
-            /**
-             * TODO: Add all these tto shared Preference
-             */
+                /**
+                 * TODO: Add all these tto shared Preference
+                 */
 
-            val stockList = formatterClass.generateStockValue(vaccineDetails, this)
+                val stockList = formatterClass.generateStockValue(vaccineDetails, this@VaccineStockManagement)
+                val dbVaccineStockDetailsList= ArrayList<DbVaccineStockDetails>()
+                for(i in stockList){
+                    val dbVaccineStockDetails = DbVaccineStockDetails(i.value, i.name)
+                    dbVaccineStockDetailsList.add(dbVaccineStockDetails)
+                }
+                val vaccineStockAdapter = VaccineStockAdapter(dbVaccineStockDetailsList, this@VaccineStockManagement)
+                CoroutineScope(Dispatchers.Main).launch { recyclerView.adapter = vaccineStockAdapter }
 
-            val dbVaccineStockDetailsList= ArrayList<DbVaccineStockDetails>()
-            for(i in stockList){
-                val dbVaccineStockDetails = DbVaccineStockDetails(i.value, i.name)
-                dbVaccineStockDetailsList.add(dbVaccineStockDetails)
+            } else {
+                val intent = Intent(this@VaccineStockManagement, PatientDetailActivity::class.java)
+                startActivity(intent)
             }
-            val vaccineStockAdapter = VaccineStockAdapter(dbVaccineStockDetailsList, this)
-            recyclerView.adapter = vaccineStockAdapter
-
-        } else {
-            val intent = Intent(this, PatientDetailActivity::class.java)
-            startActivity(intent)
         }
+
+
 
     }
 
