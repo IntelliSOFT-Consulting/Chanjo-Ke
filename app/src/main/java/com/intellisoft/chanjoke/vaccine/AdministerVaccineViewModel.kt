@@ -473,9 +473,12 @@ class AdministerVaccineViewModel(
 
             val patientDetailsViewModel = PatientDetailsViewModel(getApplication(),fhirEngine, patientId)
             val missingVaccineList = FormatterClass().getEligibleVaccines(getApplication<Application>().applicationContext, patientDetailsViewModel)
+            Log.e("***","*** missingVaccine 1 $missingVaccineList")
+
             missingVaccineList.forEach {
                 FormatterClass().saveSharedPref("targetDisease", it, getApplication<Application>().applicationContext)
                 val vaccineDetails = VaccinationManager().getVaccineDetails(it)
+
                 if (vaccineDetails != null){
                     FormatterClass().generateStockValue(vaccineDetails, getApplication<Application>().applicationContext)
 
@@ -483,15 +486,18 @@ class AdministerVaccineViewModel(
                     val dob = FormatterClass().getSharedPref("patientDob", getApplication<Application>().applicationContext)
                     val weeksAfterDob = vaccineDetails.timeToAdminister
                     val dobDate = FormatterClass().convertStringToDate(dob.toString(), "yyyy-MM-dd")
+
                     val dobLocalDate = dobDate?.let { it1 ->
                         FormatterClass().convertDateToLocalDate(
                             it1
                         )
                     }
+
                     val nextDateStr = dobLocalDate?.let { it1 ->
                         FormatterClass().calculateDateAfterWeeksAsString(
                             it1, weeksAfterDob)
                     }
+
                     val nextDate = FormatterClass().convertStringToDate(nextDateStr.toString(), "yyyy-MM-dd")
 
 
