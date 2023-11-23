@@ -78,8 +78,40 @@ class VaccineDetailsFragment : Fragment() {
                 generateDaysSince(vaccineDate.toString(), days = false, month = true)
             tvYearsSince.text =
                 generateDaysSince(vaccineDate.toString(), days = false, month = false)
+
+
+            val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
+            Timber.e("patientDob *** $patientDob")
+            val age = generateAgeSince(patientDob,vaccineDate)
+            Timber.e("patientDob *** $age")
+            Timber.e("patientDob *** $vaccineDate")
+            tvAgeThen.text = age
         }
         loadVaccineAdverseEvents()
+    }
+
+    private fun generateAgeSince(dateString: String?,vaccineDate: String?): String {
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val formatter2 = DateTimeFormatter.ofPattern("MMM dd yyyy")
+
+            // Parse the string into a LocalDate
+            val date1 = LocalDate.parse(dateString, formatter)
+            val date2 = LocalDate.parse(vaccineDate, formatter2)
+            // Calculate the period between the two dates
+            val period = Period.between(date1, date2)
+           when {
+                period.years > 1 -> "${period.years} years ${period.months} months ${period.days} days"
+                period.years == 1 -> "${period.years} year ${period.months} months ${period.days} days"
+                period.months > 1 -> "${period.months} months ${period.days} days"
+                else -> "${period.days} days"
+            }
+
+//            "${period.years} year(s) ${period.months} month(s) ${period.days} day(s)"
+
+        } catch (e: Exception) {
+            "0 day(s)"
+        }
     }
 
     private fun generateDaysSince(

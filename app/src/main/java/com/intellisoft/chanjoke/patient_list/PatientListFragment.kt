@@ -198,6 +198,7 @@ class PatientListFragment : Fragment() {
     private fun onPatientItemClicked(patientItem: PatientListViewModel.PatientItem) {
 
         formatterClass.saveSharedPref("patientId", patientItem.resourceId, requireContext())
+        formatterClass.saveSharedPref("patientDob", patientItem.dob.toString(), requireContext())
         val action =
             PatientListFragmentDirections.actionPatientListToPatientDetailActivity(patientItem.resourceId)
 
