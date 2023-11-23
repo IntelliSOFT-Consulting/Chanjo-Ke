@@ -175,6 +175,7 @@ class PatientDetailsViewModel(
         val date = if (it.date != null) it.date.toString() else ""
         var targetDisease = ""
         var doseNumber: String? = ""
+        var appointmentStatus = ""
 
 
         if (it.hasRecommendation()) {
@@ -184,14 +185,24 @@ class PatientDetailsViewModel(
                 if (codeableConceptTargetDisease.hasText()) {
                     targetDisease = codeableConceptTargetDisease.text
                 }
+
+                val codeableConceptTargetStatus = recommendation[0].forecastStatus
+                if (codeableConceptTargetStatus.hasText()){
+                    appointmentStatus = codeableConceptTargetStatus.text
+                }
+
+
             }
         }
         if (targetDisease != "") {
-            doseNumber = vaccinationManager.getVaccineDetails(targetDisease)?.dosage
+            doseNumber = vaccinationManager.getVaccineDetails(targetDisease.replace(" ",""))?.dosage
+
         }
 
 
-        return DbAppointmentDetails(date, doseNumber, targetDisease)
+
+
+        return DbAppointmentDetails(date, doseNumber, targetDisease,appointmentStatus)
 
 
     }

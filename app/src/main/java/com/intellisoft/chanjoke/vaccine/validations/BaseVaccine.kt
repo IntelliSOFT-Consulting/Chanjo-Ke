@@ -1,6 +1,5 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
-import android.util.Log
 import java.time.LocalDate
 
 // Interface for the Vaccine
@@ -116,9 +115,12 @@ class VaccinationManager {
     }
 
     fun getVaccineDetails(vaccineName: String): VaccineDetails? {
-        val newVaccine = convertToVaccineCode(vaccineName)
-        val vaccineDetails = vaccines[newVaccine]?.details()
-        return vaccineDetails
+        var newVaccineName = ""
+        if (vaccineName == "Bopv") {
+            newVaccineName = "bOPV"
+        }
+        val newVaccine = convertToVaccineCode(newVaccineName)
+        return vaccines[newVaccine]?.details()
     }
 
 }
