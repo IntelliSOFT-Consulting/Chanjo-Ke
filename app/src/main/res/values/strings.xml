@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Chanjo-Ke</string>
-    <string name="add_patient">Add Patient</string>
-    <string name="fab_content_desc">Add Patient</string>
+    <string name="add_patient">Add Client</string>
+    <string name="fab_content_desc">Add Client</string>
 
     <string name="title_patient_list">Registered Patients</string>
     <string name="syncing">Syncing</string>
@@ -20,8 +20,8 @@
     <string name="inputs_missing">Input missing</string>
     <string name="resources_saved">Details Updated</string>
     <string name="add_care_giver">Add Care Giver</string>
-    <string name="message_patient_updated">Patient details updated</string>
-    <string name="edit_patient">Edit Patient</string>
+    <string name="message_patient_updated">Client details updated</string>
+    <string name="edit_patient">Edit Client</string>
     <string name="tab_text_3">Client Details</string>
     <string name="register_client">Register Client</string>
     <string name="doses_administered">Doses Administered</string>
@@ -34,6 +34,10 @@
     <string name="aefi_outcome">AEFI Outcome</string>
     <string name="adverse_event">Adverse Event Following Immunization</string>
     <string name="action_aefi">AEFI</string>
+    <string name="home">Home</string>
+    <string name="clients">Clients</string>
+    <string name="vaccines">Vaccines</string>
+    <string name="profile">Profile</string>
 
 
 </resources>
