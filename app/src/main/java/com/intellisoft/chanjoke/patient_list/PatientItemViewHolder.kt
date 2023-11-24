@@ -17,11 +17,13 @@
 package com.intellisoft.chanjoke.patient_list
 
 import android.content.res.Resources
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.PatientListItemViewBinding
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.Period
 
@@ -31,7 +33,7 @@ class PatientItemViewHolder(binding: PatientListItemViewBinding) :
   private val nameView: TextView = binding.name
   private val idNumber: TextView = binding.idNumber
   private val tvPhoneNumber: TextView = binding.tvPhoneNumber
-  private val btnView: TextView = binding.btnView
+    val btnView: Button = binding.btnView
 
   private val viewName: TextView = binding.viewName
   private val viewId: TextView = binding.viewId
@@ -48,10 +50,10 @@ class PatientItemViewHolder(binding: PatientListItemViewBinding) :
     this.viewName.text = "Name:"
     this.viewId.text = "Age"
     this.viewPhoneNumber.text = "Phone number"
+    this.itemView.setOnClickListener {
+      onItemClicked(patientItem)
 
-//    this.idView.text = "Id: #---${getTruncatedId(patientItem)}"
-    this.itemView.setOnClickListener { onItemClicked(patientItem) }
-//    this.btnView.setOnClickListener { onItemClicked(patientItem) }
+    }
 
   }
 

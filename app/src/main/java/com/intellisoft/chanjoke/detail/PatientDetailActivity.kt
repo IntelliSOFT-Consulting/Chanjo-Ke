@@ -77,7 +77,22 @@ class PatientDetailActivity : AppCompatActivity() {
 
         adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(apn, getString(R.string.tab_text_2))
-//        adapter.addFragment(cd, getString(R.string.tab_text_3))
+
+        binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                // Set the background color of the selected tab dynamically
+                tab?.view?.setBackgroundResource(R.color.colorPrimary)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Handle tab unselection if needed
+                tab?.view?.setBackgroundResource(R.color.unselectedTab)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Handle tab reselection if needed
+            }
+        })
 
         val viewPager: ViewPager = binding.viewPager
         viewPager.adapter = adapter
@@ -96,7 +111,11 @@ class PatientDetailActivity : AppCompatActivity() {
         patientDetailsViewModel.getPatientDetailData()
 
         CoroutineScope(Dispatchers.IO).launch {
-            formatterClass.saveSharedPref("vaccinationFlow","recommendVaccineDetails", this@PatientDetailActivity)
+            formatterClass.saveSharedPref(
+                "vaccinationFlow",
+                "recommendVaccineDetails",
+                this@PatientDetailActivity
+            )
             administerVaccineViewModel.generateImmunizationRecord("", patientId)
         }
 
