@@ -9,5 +9,6 @@
     <color name="bac_trans2">#45BCB9B9</color>
     <color name="black">#000000</color>
     <color name="red">#E30303</color>
+    <color name="unselectedTab">#899CC8</color>
 
 </resources>

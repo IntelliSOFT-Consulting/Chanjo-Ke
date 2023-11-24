@@ -27,66 +27,66 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
-            android:layout_below="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/layout"
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
-                android:padding="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:padding="15dp">
 
                 <TextView
                     android:id="@+id/tvName"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:text="John Doe"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="John Doe"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold" />
 
                 <TableLayout
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
 
                     <TableRow>
 
                         <TextView
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textStyle="bold"
-                            android:text="DOB"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:text="DOB"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textStyle="bold" />
 
 
                         <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:text=":"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
                         <TextView
-                            android:layout_weight="1"
                             android:id="@+id/tvDob"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     </TableRow>
 
                     <View
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@android:color/darker_gray"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp" />
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:color/darker_gray" />
 
                     <TableRow>
 
@@ -99,30 +99,29 @@
 
 
                         <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:text=":"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
                         <TextView
-                            android:layout_weight="1"
                             android:id="@+id/tvGender"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     </TableRow>
 
                     <View
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@android:color/darker_gray"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@android:color/darker_gray" />
 
 
                 </TableLayout>
@@ -131,20 +130,21 @@
 
 
             <com.google.android.material.tabs.TabLayout
-                android:background="@color/colorPrimary"
-                android:layout_marginTop="20dp"
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabTextColor="@color/white"
-                app:tabGravity="center"
-                app:tabMode="scrollable" />
+                android:layout_marginTop="20dp"
+                android:background="@color/unselectedTab"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/red"
+                app:tabMode="fixed"
+                app:tabTextColor="@color/white" />
 
             <androidx.viewpager.widget.ViewPager
-                android:layout_marginBottom="70dp"
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="70dp" />
 
         </LinearLayout>
 

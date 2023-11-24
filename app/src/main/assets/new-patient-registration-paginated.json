@@ -622,11 +622,6 @@
           }
         },
         {
-          "linkId": "PR-address-constituency",
-          "type": "string",
-          "text": "Constituency"
-        },
-        {
           "linkId": "PR-address-ward",
           "type": "string",
           "text": "Ward"
