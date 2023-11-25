@@ -154,6 +154,15 @@ class PatientDetailActivity : AppCompatActivity() {
 
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
     private fun proceedToNavigate(s: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("functionToCall", s)
