@@ -130,20 +130,13 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
     if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("Practitioner")) {
         downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
     }
-  if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("Immunization")) {
-        downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
+  if (!downloadUrl.contains("\$everything") && downloadUrl.contains("Immunization")) {
+        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
     }
-  if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("ImmunizationRecommendation")) {
-        downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
+  if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ImmunizationRecommendation")) {
+        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
     }
 
-//    if (!downloadUrl.contains("\$everything") || !downloadUrl.contains("Immunization")) {
-//        downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
-//    }
-//
-//    if (!downloadUrl.contains("\$everything") || !downloadUrl.contains("ImmunizationRecommendation")) {
-//        downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
-//    }
 
     // Do not modify any URL set by a server that specifies the token of the page to return.
     if (downloadUrl.contains("&page_token")) {

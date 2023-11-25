@@ -187,7 +187,7 @@
                   "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
                   "valueExpression": {
                     "language": "text/fhirpath",
-                    "expression": "Patient.birthDate",
+                    "expression": "Patient.birthDate <=today()",
                     "name": "patientBirthDate"
                   }
                 }
@@ -220,6 +220,7 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.gender",
               "type": "choice",
               "text": "Gender",
+              "required": true,
               "extension": [
                 {
                   "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
@@ -362,6 +363,7 @@
             {
               "linkId": "patient-0-id",
               "type": "choice",
+              "required": true,
               "text": "Identification Type",
               "extension": [
                 {
@@ -412,6 +414,7 @@
                 {
                   "linkId": "PR-id-value",
                   "type": "string",
+                  "required": true,
                   "text": "ID Number"
                 }
               ]

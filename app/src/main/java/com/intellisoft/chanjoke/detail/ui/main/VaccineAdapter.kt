@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.MainActivity
@@ -22,6 +23,7 @@ class VaccineAdapter(
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
+        val lnViewDetails: LinearLayout = itemView.findViewById(R.id.ln_view_details)
         val logicalId: TextView = itemView.findViewById(R.id.logicalId)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
         val btnAddAefi: Button = itemView.findViewById(R.id.btnAddAefi)
@@ -49,7 +51,7 @@ class VaccineAdapter(
                 context.startActivity(intent)
 
             }
-            tvVaccineName.apply {
+            lnViewDetails.apply {
                 setOnClickListener {
                     FormatterClass().saveSharedPref("current_immunization", logicalId.text.toString(), context)
 

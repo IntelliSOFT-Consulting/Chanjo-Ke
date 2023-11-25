@@ -38,6 +38,7 @@
     <string name="clients">Clients</string>
     <string name="vaccines">Vaccines</string>
     <string name="profile">Profile</string>
+    <string name="add_vaccine">Add Vaccine</string>
 
 
 </resources>

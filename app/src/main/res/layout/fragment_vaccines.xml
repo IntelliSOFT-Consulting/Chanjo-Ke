@@ -1,53 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="15dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <Button
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="center"
             android:id="@+id/btnUpdateHistory"
-            android:text="Update Client History"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:text="Update Client History" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            tools:listitem="@layout/administered_vaccines"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            tools:listitem="@layout/administered_vaccines" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:gravity="end"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="end"
+        android:orientation="horizontal">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/administerVaccine"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="12dp"
             android:clickable="true"
-            android:foregroundTint="#ffffff"
-            app:srcCompat="@drawable/ic_plus_24"
-            android:contentDescription="Administer Vaccine" />
+            android:icon="@android:drawable/ic_input_add"
+            android:text="Add Vaccine"
+            android:textColor="#ffffff"
+            app:backgroundTint="@color/colorPrimary"
+            app:iconGravity="textStart"
+            app:iconTint="#ffffff" />
+
 
     </LinearLayout>
-
 
 
 </RelativeLayout>
