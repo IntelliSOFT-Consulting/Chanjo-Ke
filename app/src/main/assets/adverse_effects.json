@@ -17,8 +17,8 @@
       }
     },
     {
-      "url" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
-      "valueCode" : "prior-edit"
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
+      "valueCode": "prior-edit"
     }
   ],
   "item": [
@@ -595,6 +595,88 @@
                   "valueCoding": {
                     "code": "808-11",
                     "display": "AEFI Outcome",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "person-reporting-group",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "person-reporting",
+              "type": "string",
+              "required": true,
+              "text": "Name of Person Reporting",
+              "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+            },
+            {
+              "linkId": "person-reporting-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "133-22",
+                    "display": "Name of Person Reporting",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "phone-number-group",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "expression": "Observation"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "phone-number",
+              "type": "string",
+              "required": true,
+              "text": "Phone Number",
+              "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
+            },
+            {
+              "linkId": "phone-number-code",
+              "type": "string",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "122-22",
+                    "display": "Phone Number",
                     "system": "http://loinc.org"
                   }
                 }

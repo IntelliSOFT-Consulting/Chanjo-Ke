@@ -79,7 +79,9 @@ class PatientDetailsViewModel(
         var contact_gender = ""
         searchResult.first().let {
             name = it.name[0].nameAsSingleString
-            phone = it.telecom.first().value
+            phone = if (it.hasTelecom()) if (it.telecom.first()
+                    .hasValue()
+            ) it.telecom.first().value else "" else ""
             dob = LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
                 .toString()
             gender = it.genderElement.valueAsString
@@ -89,8 +91,16 @@ class PatientDetailsViewModel(
                 if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
         }
 
-        FormatterClass().saveSharedPref("patientDob",dob, getApplication<Application>().applicationContext)
-        FormatterClass().saveSharedPref("patientId",patientId, getApplication<Application>().applicationContext)
+        FormatterClass().saveSharedPref(
+            "patientDob",
+            dob,
+            getApplication<Application>().applicationContext
+        )
+        FormatterClass().saveSharedPref(
+            "patientId",
+            patientId,
+            getApplication<Application>().applicationContext
+        )
 
         return PatientData(
             name,
@@ -189,7 +199,7 @@ class PatientDetailsViewModel(
                 }
 
                 val codeableConceptTargetStatus = recommendation[0].forecastStatus
-                if (codeableConceptTargetStatus.hasText()){
+                if (codeableConceptTargetStatus.hasText()) {
                     appointmentStatus = codeableConceptTargetStatus.text
                 }
 
@@ -197,14 +207,15 @@ class PatientDetailsViewModel(
             }
         }
         if (targetDisease != "") {
-            doseNumber = vaccinationManager.getVaccineDetails(targetDisease.replace(" ",""))?.dosage
+            doseNumber =
+                vaccinationManager.getVaccineDetails(targetDisease.replace(" ", ""))?.dosage
 
         }
 
 
 
 
-        return DbAppointmentDetails(date, doseNumber, targetDisease,appointmentStatus)
+        return DbAppointmentDetails(date, doseNumber, targetDisease, appointmentStatus)
 
 
     }

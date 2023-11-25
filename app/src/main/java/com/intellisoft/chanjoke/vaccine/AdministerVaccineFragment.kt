@@ -50,6 +50,7 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
             addQuestionnaireFragment()
         }
 
+
         patientId = formatterClass.getSharedPref("patientId", requireContext())
         observeResourcesSaveAction()
 

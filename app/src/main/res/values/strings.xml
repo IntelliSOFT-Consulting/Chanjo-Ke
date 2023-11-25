@@ -3,7 +3,7 @@
     <string name="add_patient">Add Client</string>
     <string name="fab_content_desc">Add Client</string>
 
-    <string name="title_patient_list">Registered Patients</string>
+    <string name="title_patient_list">Registered Clients</string>
     <string name="syncing">Syncing</string>
     <string name="sync">Sync</string>
     <string name="query_hint_patient_search">Enter Client Name / ID</string>
@@ -27,11 +27,11 @@
     <string name="doses_administered">Doses Administered</string>
     <string name="type_of_aefi">Type of AEFI</string>
     <string name="brief_details_on_aefi">Brief details on AEFI</string>
-    <string name="onset_of_event">Onset of Event</string>
-    <string name="past_medical_history">Past Medical History</string>
-    <string name="reaction_severity">Reaction Severity</string>
-    <string name="action_taken">Action Taken</string>
-    <string name="aefi_outcome">AEFI Outcome</string>
+    <string name="onset_of_event">Onset of Event:</string>
+    <string name="past_medical_history">Past Medical History:</string>
+    <string name="reaction_severity">Reaction Severity:</string>
+    <string name="action_taken">Action Taken:</string>
+    <string name="aefi_outcome">AEFI Outcome:</string>
     <string name="adverse_event">Adverse Event Following Immunization</string>
     <string name="action_aefi">AEFI</string>
     <string name="home">Home</string>
@@ -41,6 +41,12 @@
     <string name="add_vaccine">Add Vaccine</string>
     <string name="info">Info</string>
     <string name="this_is_the_information_field">Select record to update</string>
+    <string name="name_of_person_reporting">Name of Person Reporting:</string>
+    <string name="contact">Contact:</string>
+    <string name="healthcare_worker">Healthcare Worker:</string>
+    <string name="date_reported">Date Reported:</string>
+    <string name="facility">Facility:</string>
+    <string name="success">Success</string>
 
 
 </resources>

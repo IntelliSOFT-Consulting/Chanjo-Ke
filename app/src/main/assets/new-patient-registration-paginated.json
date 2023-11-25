@@ -408,16 +408,10 @@
               ]
             },
             {
-              "linkId": "PR-id",
-              "type": "group",
-              "item": [
-                {
-                  "linkId": "PR-id-value",
-                  "type": "string",
-                  "required": true,
-                  "text": "ID Number"
-                }
-              ]
+              "linkId": "PR-id-value",
+              "type": "string",
+              "required": true,
+              "text": "ID Number"
             }
           ]
         }

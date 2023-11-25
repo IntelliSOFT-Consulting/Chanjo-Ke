@@ -11,13 +11,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnUpdateHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:text="Update Client History" />
+            android:clickable="true"
+            android:icon="@android:drawable/ic_input_add"
+            android:text="Update Client History"
+            android:textColor="#ffffff"
+            app:backgroundTint="@color/colorPrimary"
+            app:iconGravity="textStart"
+            app:iconTint="#ffffff" />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

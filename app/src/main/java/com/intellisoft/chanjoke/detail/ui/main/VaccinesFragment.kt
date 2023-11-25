@@ -196,46 +196,6 @@ class VaccinesFragment : Fragment() {
             customDialog.dismiss()
         }
 
-       /* val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Info")
-        builder.setMessage("Select Record to Update")
-        builder.setPositiveButton("Vaccine Details") { _: DialogInterface, i: Int ->
-
-            formatterClass.saveSharedPref(
-                "questionnaireJson",
-                "update_history_specifics.json",
-                requireContext()
-            )
-            formatterClass.saveSharedPref(
-                "vaccinationFlow",
-                "updateVaccineDetails",
-                requireContext()
-            )
-
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
-            intent.putExtra("patientId", patientId)
-            startActivity(intent)
-
-        }
-        builder.setNegativeButton("Client Record") { dialogInterface: DialogInterface, i: Int ->
-
-            formatterClass.saveSharedPref(
-                "questionnaireJson",
-                "update_history.json",
-                requireContext()
-            )
-
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
-            intent.putExtra("patientId", patientId)
-            startActivity(intent)
-
-
-        }
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()*/
 
     }
 

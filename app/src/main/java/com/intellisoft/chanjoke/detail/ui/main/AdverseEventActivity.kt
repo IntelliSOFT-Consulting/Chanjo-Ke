@@ -85,6 +85,16 @@ class AdverseEventActivity : AppCompatActivity() {
                 encounterId.toString(),
              "808-11"
             )
+            nameOfPersonTextView.text = extractAefiData(
+                patientId.toString(),
+                encounterId.toString(),
+             "133-22"
+            )
+            contactTextView.text = extractAefiData(
+                patientId.toString(),
+                encounterId.toString(),
+             "122-22"
+            )
         }
 
     }

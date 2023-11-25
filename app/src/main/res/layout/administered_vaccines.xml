@@ -203,14 +203,16 @@
 
             </TableLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddAefi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:text="Add AEFI" />
-
+                android:clickable="true"
+                android:text="Add AEFI"
+                android:textColor="#ffffff"
+                app:backgroundTint="@color/colorPrimary"
+                app:iconTint="#ffffff" />
 
         </LinearLayout>
 

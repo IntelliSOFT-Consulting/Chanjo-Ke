@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
@@ -26,7 +27,7 @@ class VaccineAdapter(
         val lnViewDetails: LinearLayout = itemView.findViewById(R.id.ln_view_details)
         val logicalId: TextView = itemView.findViewById(R.id.logicalId)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
-        val btnAddAefi: Button = itemView.findViewById(R.id.btnAddAefi)
+        val btnAddAefi: MaterialButton = itemView.findViewById(R.id.btnAddAefi)
         val tvDateAdministered: TextView = itemView.findViewById(R.id.tvDateAdministered)
         val vaccineDosage: TextView = itemView.findViewById(R.id.vaccineDosage)
 
@@ -40,12 +41,16 @@ class VaccineAdapter(
                     "questionnaireJson",
                     "adverse_effects.json", context
                 )
+                FormatterClass().saveSharedPref(
+                    "title",
+                    "AEFI", context
+                )
 
                 FormatterClass().saveSharedPref("vaccinationFlow", "addAefi", context)
                 FormatterClass().saveSharedPref(
                     "encounter_logical_id", logicalId.text.toString(), context
                 )
-               val intent = Intent(context, MainActivity::class.java)
+                val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
                 intent.putExtra("patientId", patientId)
                 context.startActivity(intent)
@@ -53,7 +58,11 @@ class VaccineAdapter(
             }
             lnViewDetails.apply {
                 setOnClickListener {
-                    FormatterClass().saveSharedPref("current_immunization", logicalId.text.toString(), context)
+                    FormatterClass().saveSharedPref(
+                        "current_immunization",
+                        logicalId.text.toString(),
+                        context
+                    )
 
                     val patientId = FormatterClass().getSharedPref("patientId", context)
                     FormatterClass().saveSharedPref(
