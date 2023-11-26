@@ -173,5 +173,11 @@ class FormatterClass {
         return stockList
     }
 
+    fun formatString(input: String): String {
+        val words = input.split("(?=[A-Z])".toRegex())
+        val result = words.joinToString(" ") { it.capitalize() }
+        return result
+    }
+
 
 }

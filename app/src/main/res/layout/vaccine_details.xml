@@ -7,30 +7,43 @@
     app:cardCornerRadius="2dp"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_weight="1"
-        android:id="@+id/cardViewRegisterClient"
+    <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/tvDetailName"
+            android:padding="20dp"
+            android:text="Vaccine batch number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_weight="1"
+            android:id="@+id/cardViewRegisterClient"
+            android:layout_width="0dp"
             android:layout_height="wrap_content">
 
             <TextView
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:background="@color/bac_trans"
                 android:id="@+id/tvDetail"
                 android:padding="20dp"
                 android:text="Vaccine batch number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    </com.google.android.material.card.MaterialCardView>
+
+
+    </LinearLayout>
+
+
+
 
 
 </LinearLayout>

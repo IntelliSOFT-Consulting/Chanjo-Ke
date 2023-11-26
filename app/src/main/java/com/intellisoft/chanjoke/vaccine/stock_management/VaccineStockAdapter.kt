@@ -22,6 +22,7 @@ class VaccineStockAdapter(private var dbVaccineStockDetailsList: ArrayList<DbVac
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
+        val tvDetailName: TextView = itemView.findViewById(R.id.tvDetailName)
         val tvDetail: TextView = itemView.findViewById(R.id.tvDetail)
 
         init {
@@ -57,6 +58,7 @@ class VaccineStockAdapter(private var dbVaccineStockDetailsList: ArrayList<DbVac
         val name = dbVaccineStockDetailsList[position].name
         val value = dbVaccineStockDetailsList[position].value
 
+        holder.tvDetailName.text = FormatterClass().formatString(value)
         holder.tvDetail.text = name
 
 
