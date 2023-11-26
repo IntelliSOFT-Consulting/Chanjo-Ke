@@ -79,7 +79,14 @@ class PatientDetailsViewModel(
         var contact_gender = ""
         searchResult.first().let {
             name = it.name[0].nameAsSingleString
-            phone = it.telecom.first().value
+            phone = ""
+            if (it.hasTelecom()) {
+                if (it.telecom.isNotEmpty()){
+                    if (it.telecom.first().hasValue()){
+                        phone = it.telecom.first().value
+                    }
+                }
+            }
             dob = LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
                 .toString()
             gender = it.genderElement.valueAsString
@@ -172,9 +179,17 @@ class PatientDetailsViewModel(
 
     private fun createRecommendation(it: ImmunizationRecommendation): DbAppointmentDetails {
 
-
+        var date = ""
         val vaccinationManager = VaccinationManager()
-        val date = if (it.date != null) it.date.toString() else ""
+        if (it.hasRecommendation() && it.recommendation.isNotEmpty()) {
+           if (it.recommendation[0].hasDateCriterion() &&
+               it.recommendation[0].dateCriterion.isNotEmpty() &&
+               it.recommendation[0].dateCriterion[0].hasValue()){
+               val dateCriterion = it.recommendation[0].dateCriterion[0].value.toString()
+               date = dateCriterion
+           }
+
+        }
         var targetDisease = ""
         var doseNumber: String? = ""
         var appointmentStatus = ""
