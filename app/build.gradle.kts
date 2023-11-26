@@ -43,76 +43,6 @@ android {
   }
 }
 
-configurations.all {
-  resolutionStrategy {
-    force(HapiFhir.caffeine)
-
-    force(HapiFhir.fhirBase)
-    force(HapiFhir.fhirClient)
-    force(HapiFhir.fhirCoreConvertors)
-
-    force(HapiFhir.fhirCoreDstu2)
-    force(HapiFhir.fhirCoreDstu2016)
-    force(HapiFhir.fhirCoreDstu3)
-    force(HapiFhir.fhirCoreR4)
-    force(HapiFhir.fhirCoreR4b)
-    force(HapiFhir.fhirCoreR5)
-    force(HapiFhir.fhirCoreUtils)
-
-    force(HapiFhir.structuresDstu2)
-    force(HapiFhir.structuresDstu3)
-    force(HapiFhir.structuresR4)
-    force(HapiFhir.structuresR5)
-
-    force(HapiFhir.validation)
-    force(HapiFhir.validationDstu3)
-    force(HapiFhir.validationR4)
-    force(HapiFhir.validationR5)
-  }
-}
-
-object Versions {
-  const val caffeine = "2.9.1"
-
-  // Hapi FHIR and HL7 Core Components are interlinked.
-  // Newer versions of HapiFhir don't work on Android due to the use of Caffeine 3+
-  // Wait for this to release (6.3): https://github.com/hapifhir/hapi-fhir/pull/4196
-  const val hapiFhir = "6.0.1"
-
-  // Newer versions don't work on Android due to Apache Commons Codec:
-  // Wait for this fix: https://github.com/hapifhir/org.hl7.fhir.core/issues/1046
-  const val hapiFhirCore = "5.6.36"
-}
-
-object HapiFhir {
-  const val fhirBase = "ca.uhn.hapi.fhir:hapi-fhir-base:${Versions.hapiFhir}"
-  const val fhirClient = "ca.uhn.hapi.fhir:hapi-fhir-client:${Versions.hapiFhir}"
-  const val structuresDstu2 = "ca.uhn.hapi.fhir:hapi-fhir-structures-dstu2:${Versions.hapiFhir}"
-  const val structuresDstu3 = "ca.uhn.hapi.fhir:hapi-fhir-structures-dstu3:${Versions.hapiFhir}"
-  const val structuresR4 = "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${Versions.hapiFhir}"
-  const val structuresR4b = "ca.uhn.hapi.fhir:hapi-fhir-structures-r4b:${Versions.hapiFhir}"
-  const val structuresR5 = "ca.uhn.hapi.fhir:hapi-fhir-structures-r5:${Versions.hapiFhir}"
-
-  const val validation = "ca.uhn.hapi.fhir:hapi-fhir-validation:${Versions.hapiFhir}"
-  const val validationDstu3 =
-    "ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu3:${Versions.hapiFhir}"
-  const val validationR4 = "ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:${Versions.hapiFhir}"
-  const val validationR5 = "ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r5:${Versions.hapiFhir}"
-
-  const val fhirCoreDstu2 = "ca.uhn.hapi.fhir:org.hl7.fhir.dstu2:${Versions.hapiFhirCore}"
-  const val fhirCoreDstu2016 = "ca.uhn.hapi.fhir:org.hl7.fhir.dstu2016may:${Versions.hapiFhirCore}"
-  const val fhirCoreDstu3 = "ca.uhn.hapi.fhir:org.hl7.fhir.dstu3:${Versions.hapiFhirCore}"
-  const val fhirCoreR4 = "ca.uhn.hapi.fhir:org.hl7.fhir.r4:${Versions.hapiFhirCore}"
-  const val fhirCoreR4b = "ca.uhn.hapi.fhir:org.hl7.fhir.r4b:${Versions.hapiFhirCore}"
-  const val fhirCoreR5 = "ca.uhn.hapi.fhir:org.hl7.fhir.r5:${Versions.hapiFhirCore}"
-  const val fhirCoreUtils = "ca.uhn.hapi.fhir:org.hl7.fhir.utilities:${Versions.hapiFhirCore}"
-  const val fhirCoreConvertors = "ca.uhn.hapi.fhir:org.hl7.fhir.convertors:${Versions.hapiFhirCore}"
-
-  // Runtime dependency that is required to run FhirPath (also requires minSDK of 26).
-  // Version 3.0 uses java.lang.System.Logger, which is not available on Android
-  // Replace for Guava when this PR gets merged: https://github.com/hapifhir/hapi-fhir/pull/3977
-  const val caffeine = "com.github.ben-manes.caffeine:caffeine:${Versions.caffeine}"
-}
 
 dependencies {
   implementation("androidx.legacy:legacy-support-v4:1.0.0")
@@ -139,7 +69,5 @@ dependencies {
   implementation("net.openid:appauth:0.11.1")
   implementation("com.auth0.android:jwtdecode:2.0.1")
   implementation("com.google.android.fhir:engine:0.1.0-beta03")
-  implementation("com.google.android.fhir:data-capture:1.0.0")
-  implementation("com.google.android.fhir:knowledge:0.1.0-alpha01")
-  implementation("com.google.android.fhir:workflow:0.1.0-alpha03")
+  implementation("com.google.android.fhir:data-capture:1.0.0") 
 }

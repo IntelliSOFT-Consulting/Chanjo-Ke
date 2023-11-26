@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/bac_trans"
     android:layout_height="match_parent"
     tools:context=".shared.LandingPage">
 
@@ -13,20 +12,21 @@
 
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_margin="20dp"
-        android:layout_below="@+id/top_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_bar_layout"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TableLayout
                     android:layout_width="match_parent"
@@ -36,62 +36,62 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/cardViewSearchClient"
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
-                            
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+
+                            android:layout_margin="10dp"
+                            android:layout_weight="1">
 
                             <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:padding="20dp"
                                 android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:padding="20dp">
 
                                 <ImageButton
-                                    android:background="@drawable/ic_action_searches"
                                     android:layout_width="50dp"
-                                    android:layout_height="50dp"/>
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/ic_action_searches" />
 
                                 <TextView
-                                    android:gravity="center"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                                    android:text="Search    Client"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Search    Client"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                             </LinearLayout>
 
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
                             android:id="@+id/cardViewRegisterClient"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1">
 
                             <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:padding="20dp"
                                 android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:padding="20dp">
 
                                 <ImageButton
-                                    android:background="@drawable/ic_action_register_client"
                                     android:layout_width="50dp"
-                                    android:layout_height="50dp"/>
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/ic_action_register_client" />
 
                                 <TextView
-                                    android:gravity="center"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                                    android:text="Register Client"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Register Client"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                             </LinearLayout>
 
@@ -102,67 +102,66 @@
                     <TableRow>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
                             android:id="@+id/cardViewUpdateClient"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1">
 
                             <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:padding="20dp"
                                 android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:padding="20dp">
 
                                 <ImageButton
-                                    android:background="@drawable/ic_action_update_client"
                                     android:layout_width="50dp"
-                                    android:layout_height="50dp"/>
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/ic_action_update_client" />
 
                                 <TextView
-                                    android:gravity="center"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                                    android:text="Update Client History"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Update Client History"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                             </LinearLayout>
 
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
                             android:id="@+id/cardViewAdministerVaccine"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1">
 
                             <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:padding="20dp"
                                 android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:padding="20dp">
 
                                 <ImageButton
-                                    android:background="@drawable/ic_action_administer_vaccine"
                                     android:layout_width="50dp"
-                                    android:layout_height="50dp"/>
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/ic_action_administer_vaccine" />
 
                                 <TextView
-                                    android:gravity="center"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                                    android:text="Administer vaccine"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Administer vaccine"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                             </LinearLayout>
 
                         </com.google.android.material.card.MaterialCardView>
-
 
 
                     </TableRow>
@@ -170,64 +169,63 @@
                     <TableRow>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
-                            android:id="@+id/cardViewAefi"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:id="@+id/cardViewAefi"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1">
 
                             <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:padding="20dp"
                                 android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:padding="20dp">
 
                                 <ImageButton
-                                    android:background="@drawable/ic_action_aefi"
                                     android:layout_width="50dp"
-                                    android:layout_height="50dp"/>
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/ic_action_aefi" />
 
                                 <TextView
-                                    android:gravity="center"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                                    android:text="AEFI"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="AEFI"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                             </LinearLayout>
 
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1">
 
 
                         </com.google.android.material.card.MaterialCardView>
-
-
-
 
                     </TableRow>
 
                 </TableLayout>
 
-
-
-
             </LinearLayout>
 
         </ScrollView>
 
-
-
-
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/sdcLayoutsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/component_horizontal_margin"
+            android:clipToPadding="false"
+            android:paddingBottom="100dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:listitem="@layout/landing_page_item" />
 
     </LinearLayout>
 

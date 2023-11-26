@@ -29,4 +29,8 @@
     <dimen name="appbar_padding">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="component_horizontal_margin">16dp</dimen>
+    <dimen name="component_item_height">10dp</dimen>
+    <dimen name="component_vertical_margin">16dp</dimen>
+    <dimen name="icon_container_height">128dp</dimen>
 </resources> 
