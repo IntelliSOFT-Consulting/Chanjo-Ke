@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -33,6 +34,8 @@ class AppointmentAdapter(
         val tvDateScheduled: TextView = itemView.findViewById(R.id.tvDateScheduled)
         val tvDoseNumber: TextView = itemView.findViewById(R.id.tvDoseNumber)
         val btnAdministerVaccine: TextView = itemView.findViewById(R.id.btnAdministerVaccine)
+        val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
+
         val chipAppointment: Chip = itemView.findViewById(R.id.chipAppointment)
 
         init {
@@ -105,6 +108,7 @@ class AppointmentAdapter(
         holder.tvDateScheduled.text = dateScheduledFormat
         holder.tvDoseNumber.text = doseNumber
         holder.chipAppointment.text = appointmentStatus
+        holder.tvStatus.text = appointmentStatus
 
         if (appointmentStatus.equals(ImmunizationRecommendationStatus.DUE.name, ignoreCase = true)){
             holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_red_light)
@@ -115,6 +119,17 @@ class AppointmentAdapter(
             holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_green_dark)
         }else{
             holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_red_light)
+        }
+
+        if (appointmentStatus.equals(ImmunizationRecommendationStatus.DUE.name, ignoreCase = true)){
+            holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.red))
+        }else if (appointmentStatus.equals(ImmunizationRecommendationStatus.CONTRAINDICATED.name, ignoreCase = true)){
+            holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.darker_gray))
+        }else if (appointmentStatus.equals(ImmunizationRecommendationStatus.COMPLETE.name, ignoreCase = true)){
+            holder.btnAdministerVaccine.isVisible = false
+            holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
+        }else{
+            holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.red))
         }
 
 

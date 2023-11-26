@@ -198,23 +198,26 @@ class PatientDetailsViewModel(
         if (it.hasRecommendation()) {
             val recommendation = it.recommendation
             if (recommendation.isNotEmpty()) {
+                //targetDisease
                 val codeableConceptTargetDisease = recommendation[0].targetDisease
                 if (codeableConceptTargetDisease.hasText()) {
                     targetDisease = codeableConceptTargetDisease.text
                 }
 
+                //appointment status
                 val codeableConceptTargetStatus = recommendation[0].forecastStatus
                 if (codeableConceptTargetStatus.hasText()){
                     appointmentStatus = codeableConceptTargetStatus.text
                 }
 
+                //Dose number
+                if (recommendation[0].hasDoseNumber()){
+                    doseNumber = recommendation[0].doseNumber.asStringValue()
+                }
 
             }
         }
-        if (targetDisease != "") {
-            doseNumber = vaccinationManager.getVaccineDetails(targetDisease.replace(" ",""))?.dosage
 
-        }
 
 
 
