@@ -72,7 +72,7 @@ class YellowFever : BaseVaccine(36, "0.5ml", "Subcutaneous left upper arm", "1",
 //Covid 19
 class Astrazeneca : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
 class Moderna : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
-class JohnsonAndJohnson : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","1")
+class JohnsonAndJohnson : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","1","1")
 class PhizerBioNTech : BaseVaccine(11 * 52, "0.3ml", "Intramuscular Injection","2","2")
 class Sinopharm : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
 
@@ -90,7 +90,7 @@ class VaccinationManager {
 
         "Astrazeneca" to Astrazeneca(),
         "Moderna" to Moderna(),
-        "JohnsonAndJohnson" to JohnsonAndJohnson(),
+        "Johnson&Johnson" to JohnsonAndJohnson(),
         "PhizerBioNTech" to PhizerBioNTech(),
         "Sinopharm" to Sinopharm()
     )
@@ -110,7 +110,7 @@ class VaccinationManager {
             "MEASLES 2ND DOSE" -> "Measles2"
             "Astrazeneca" -> "Astrazeneca"
             "Moderna" -> "Moderna"
-            "JohnsonAndJohnson" -> "JohnsonAndJohnson"
+            "JOHNSON & JOHNSON" -> "Johnson&Johnson"
             "PhizerBioNTech" -> "PhizerBioNTech"
             "Sinopharm" -> "Sinopharm"
             else -> input.trim()

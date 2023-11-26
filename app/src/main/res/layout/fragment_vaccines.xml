@@ -34,17 +34,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <Button
+            android:drawableLeft="@drawable/ic_action_add"
             android:id="@+id/administerVaccine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="12dp"
-            android:clickable="true"
-            android:foregroundTint="#ffffff"
-            app:srcCompat="@drawable/ic_plus_24"
-            android:contentDescription="Administer Vaccine" />
+            android:textAllCaps="false"
+            android:text="Add Vaccine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
 
     </LinearLayout>
 
