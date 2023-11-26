@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.util.Log
 import java.time.LocalDate
 
 // Interface for the Vaccine
@@ -105,7 +106,8 @@ class VaccinationManager {
             "OPV II" -> "OPV2"
             "OPV III" -> "OPV3"
             "YELLOW FEVER" -> "YellowFever"
-            "MEASLES" -> "Measles1"
+            "MEASLES 1ST DOSE" -> "Measles1"
+            "MEASLES 2ND DOSE" -> "Measles2"
             "Astrazeneca" -> "Astrazeneca"
             "Moderna" -> "Moderna"
             "JohnsonAndJohnson" -> "JohnsonAndJohnson"
@@ -123,6 +125,8 @@ class VaccinationManager {
             vaccineName
         }
         val newVaccine = convertToVaccineCode(newVaccineName)
+        Log.e("-----",newVaccine)
+
         return vaccines[newVaccine]?.details()
     }
 
