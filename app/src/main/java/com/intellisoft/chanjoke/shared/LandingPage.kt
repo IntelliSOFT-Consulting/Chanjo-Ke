@@ -39,8 +39,6 @@ class LandingPage : Fragment() {
             bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
                 "new-patient-registration-paginated.json")
             findNavController().navigate(R.id.addPatientFragment, bundle)
-//            val intent = Intent(requireContext(), AddPatientActivity::class.java)
-//            startActivity(intent)
         }
         binding.cardViewUpdateClient.setOnClickListener {
             findNavController().navigate(R.id.patient_list)

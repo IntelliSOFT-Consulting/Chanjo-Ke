@@ -86,6 +86,7 @@ class VaccinationManager {
         "Measles2" to Measles2(),
         "Measles3" to Measles3(),
         "YellowFever" to YellowFever(),
+
         "Astrazeneca" to Astrazeneca(),
         "Moderna" to Moderna(),
         "JohnsonAndJohnson" to JohnsonAndJohnson(),
