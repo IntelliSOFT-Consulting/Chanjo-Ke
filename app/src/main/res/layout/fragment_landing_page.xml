@@ -171,8 +171,7 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
-
+                            android:id="@+id/cardViewAefi"
                             android:layout_margin="10dp"
                             android:layout_weight="1">
 
@@ -201,7 +200,6 @@
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/cardViewAefi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"

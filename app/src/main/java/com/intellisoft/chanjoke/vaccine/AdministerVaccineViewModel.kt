@@ -324,7 +324,7 @@ class AdministerVaccineViewModel(
             val codeableConceptStatusReason = CodeableConcept()
             codeableConceptStatusReason.text = statusReason
             val forecastList = ArrayList<CodeableConcept>()
-            forecastList.add(codeableConceptStatus)
+            forecastList.add(codeableConceptStatusReason)
 
             immunizationRequest.forecastReason = forecastList
         }
@@ -421,27 +421,32 @@ class AdministerVaccineViewModel(
 
                 //Get Next Date
                 val dateTime = observationFromCode(
-                    "112-11",
+                    "833-23",
                     patientId,
                     encounterId)
                 val nextDateStr = dateTime.dateTime
 
+                Log.e("********",nextDateStr.toString())
 
-                val nextDate = FormatterClass().convertStringToDate("nextDateStr", "")
+                if (nextDateStr != null){
+                    val nextDate = FormatterClass().convertStringToDate(nextDateStr, "yyyy-MM-dd'T'HH:mm:ssXXX")
 
-                //Contraindication reasons
-                val statusReason = observationFromCode(
-                    "321-12",
-                    patientId,
-                    encounterId)
-                val statusReasonStr = statusReason.value
+                    //Contraindication reasons
+                    val statusReason = observationFromCode(
+                        "321-12",
+                        patientId,
+                        encounterId)
+                    val statusReasonStr = statusReason.value
 
-                val recommendation = createImmunizationRecommendationResource(patientId,
-                    nextDate,
-                    "Contraindicated",
-                    statusReasonStr,
-                    null)
-                saveResourceToDatabase(recommendation, "ImmRec")
+                    val recommendation = createImmunizationRecommendationResource(patientId,
+                        nextDate,
+                        "Contraindicated",
+                        statusReasonStr,
+                        null)
+                    saveResourceToDatabase(recommendation, "ImmRec")
+                }
+
+
 
             }
 
@@ -457,10 +462,6 @@ class AdministerVaccineViewModel(
                 patientId,
                 encounterId)
             val targetDisease = vaccineType.value
-
-            /**
-             * TODO: Add validation for Polio(IPV 1), Measles, Covid 19. The form should give the specific vaccine
-             */
 
             FormatterClass().saveSharedPref("targetDisease", targetDisease, getApplication<Application>().applicationContext)
             val vaccineDetails = VaccinationManager().getVaccineDetails(targetDisease)

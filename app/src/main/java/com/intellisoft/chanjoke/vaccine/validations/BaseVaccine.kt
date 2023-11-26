@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.util.Log
 import java.time.LocalDate
 
 // Interface for the Vaccine
@@ -71,7 +72,7 @@ class YellowFever : BaseVaccine(36, "0.5ml", "Subcutaneous left upper arm", "1",
 //Covid 19
 class Astrazeneca : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
 class Moderna : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
-class JohnsonAndJohnson : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","1")
+class JohnsonAndJohnson : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","1","1")
 class PhizerBioNTech : BaseVaccine(11 * 52, "0.3ml", "Intramuscular Injection","2","2")
 class Sinopharm : BaseVaccine(17 * 52, "0.5ml", "Intramuscular Injection","2","2")
 
@@ -86,9 +87,10 @@ class VaccinationManager {
         "Measles2" to Measles2(),
         "Measles3" to Measles3(),
         "YellowFever" to YellowFever(),
+
         "Astrazeneca" to Astrazeneca(),
         "Moderna" to Moderna(),
-        "JohnsonAndJohnson" to JohnsonAndJohnson(),
+        "Johnson&Johnson" to JohnsonAndJohnson(),
         "PhizerBioNTech" to PhizerBioNTech(),
         "Sinopharm" to Sinopharm()
     )
@@ -104,10 +106,11 @@ class VaccinationManager {
             "OPV II" -> "OPV2"
             "OPV III" -> "OPV3"
             "YELLOW FEVER" -> "YellowFever"
-            "MEASLES" -> "Measles1"
+            "MEASLES 1ST DOSE" -> "Measles1"
+            "MEASLES 2ND DOSE" -> "Measles2"
             "Astrazeneca" -> "Astrazeneca"
             "Moderna" -> "Moderna"
-            "JohnsonAndJohnson" -> "JohnsonAndJohnson"
+            "JOHNSON & JOHNSON" -> "Johnson&Johnson"
             "PhizerBioNTech" -> "PhizerBioNTech"
             "Sinopharm" -> "Sinopharm"
             else -> input.trim()
@@ -122,6 +125,8 @@ class VaccinationManager {
             vaccineName
         }
         val newVaccine = convertToVaccineCode(newVaccineName)
+        Log.e("-----",newVaccine)
+
         return vaccines[newVaccine]?.details()
     }
 
