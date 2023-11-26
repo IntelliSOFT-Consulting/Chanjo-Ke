@@ -51,6 +51,12 @@ class VaccineStockManagement : AppCompatActivity() {
             intent.putExtra("patientId", patientId)
             startActivity(intent)
         }
+        findViewById<Button>(R.id.btnCancel).setOnClickListener {
+
+//            val intent = Intent(this, PatientDetailActivity::class.java)
+//            intent.putExtra("patientId", patientId)
+//            startActivity(intent)
+        }
 
         getStockManagement()
 
