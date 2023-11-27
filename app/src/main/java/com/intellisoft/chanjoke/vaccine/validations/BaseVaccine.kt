@@ -119,10 +119,22 @@ class VaccinationManager {
 
     fun getVaccineDetails(vaccineName: String): VaccineDetails? {
         var newVaccineName = ""
-        newVaccineName = if (vaccineName == "Bopv") {
-            "bOPV"
-        }else{
-            vaccineName
+        newVaccineName = when (vaccineName) {
+            "Bopv" -> {
+                "bOPV"
+            }
+            "Opv1" -> {
+                "OPV I"
+            }
+            "Opv2" -> {
+                "OPV II"
+            }
+            "Opv3" -> {
+                "OPV III"
+            }
+            else -> {
+                vaccineName
+            }
         }
         val newVaccine = convertToVaccineCode(newVaccineName)
         Log.e("-----",newVaccine)

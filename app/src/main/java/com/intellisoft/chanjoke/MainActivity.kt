@@ -17,6 +17,7 @@ import com.intellisoft.chanjoke.databinding.ActivityMainBinding
 import com.intellisoft.chanjoke.detail.ui.main.UpdateFragment
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.shared.Login
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -59,8 +60,14 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.navigation_profile -> {
                     // Handle notifications item click
-                    Toast.makeText(this, "Under development", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this, "Under development", Toast.LENGTH_SHORT).show()
                     viewModel.triggerOneTimeSync()
+
+                    val intent = Intent(this, Login::class.java)
+                    FormatterClass().saveSharedPref("isLoggedIn","false",this)
+                    startActivity(intent)
+                    finish()
+
                     true
                 }
 
