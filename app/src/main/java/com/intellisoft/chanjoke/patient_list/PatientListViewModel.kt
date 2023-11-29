@@ -98,7 +98,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
                     )
                 }
 
-                sort(Patient.GIVEN, Order.ASCENDING)
+                sort(Patient.BIRTHDATE, Order.DESCENDING)
                 count = 100
                 from = 0
             }

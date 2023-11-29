@@ -1,6 +1,8 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.util.Log
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 // Interface segregation principle
 interface DbVaccine {
@@ -28,7 +30,8 @@ data class SeriesVaccine(
     val targetDisease: String,
     val seriesDoses: Int, // Recommended number of doses for immunity
     val vaccineList: List<BasicVaccine>,
-    val related: List<SeriesVaccine>? = null
+    val related: List<SeriesVaccine>? = null,
+    val isRoutine: Boolean = true
 ) : DbVaccine {
     override val vaccineCode: String
         get() = vaccineList.firstOrNull()?.vaccineCode ?: ""
@@ -133,29 +136,7 @@ fun createVaccines(): List<SeriesVaccine> {
 
     //Covid
 
-    val covidAstrazeneca = "IMCOV-ASTRA"
-    val covidAstra = SeriesVaccine(
-        covidAstrazeneca,
-        "Covid",
-        2,
-        listOf(
-            BasicVaccine(covidAstrazeneca+"1", "Astrazeneca 1st Dose", "Intramuscular Injection", 939, 0, "0.5ml","1"),
-            BasicVaccine(covidAstrazeneca+"2", "Astrazeneca 2nd Dose", "Intramuscular Injection", 951, 0, "0.5ml","2")
-        )
-    )
-
-    val covidJohnsonAndJohnson = "IMCOV-JnJ"
-    val covidJnJ = SeriesVaccine(
-        covidJohnsonAndJohnson,
-        "Covid",
-        1,
-        listOf(
-            BasicVaccine(covidJohnsonAndJohnson+"0", "Johnson & Johnson", "Intramuscular Injection", 939, 0, "0.5ml","1"),
-        )
-    )
-
     val covidMain = "IMCOV-"
-
     val covidMainSeries = SeriesVaccine(
         covidMain,
         "Covid",
@@ -174,10 +155,9 @@ fun createVaccines(): List<SeriesVaccine> {
 
             BasicVaccine(covidMain+"1", "Sinopharm 1st Dose", "Intramuscular Injection", 939, 0, "0.5ml","1"),
             BasicVaccine(covidMain+"2", "Sinopharm 2nd Dose", "Intramuscular Injection", 943, 0, "0.5ml","2"),
-
-
             ),
-        related = null
+        related = null,
+        false
     )
 
     return listOf(polioSeries, yellowFeverSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,covidMainSeries)
@@ -219,21 +199,52 @@ class ImmunizationHandler() {
 
 
     // Liskov substitution principle
-    fun getAvailableVaccines(dob: LocalDate = LocalDate.now()): List<AvailableVaccine?> {
-        return vaccines.map { vaccine ->
-            if (vaccine is SeriesVaccine) {
-                val isEligible = checkEligibility(vaccine, dob)
-                AvailableVaccine(vaccine, isEligible)
-            } else {
-                null
-            }
-        }
-    }
+//    fun getAvailableVaccines(dob: LocalDate = LocalDate.now()): List<AvailableVaccine?> {
+//        return vaccines.map { vaccine ->
+//            if (vaccine is SeriesVaccine) {
+//                val isEligible = checkEligibility(vaccine, dob)
+//                AvailableVaccine(vaccine, isEligible)
+//            } else {
+//                null
+//            }
+//        }
+//    }
+//    private fun checkEligibility(seriesVaccine: SeriesVaccine, dob: LocalDate): Boolean {
+//        val weeksSinceDOB = LocalDate.now().minusWeeks(seriesVaccine.administrativeWeeksSinceDOB.toLong())
+//        return weeksSinceDOB.isAfter(dob)
+//    }
 
-    private fun checkEligibility(seriesVaccine: SeriesVaccine, dob: LocalDate): Boolean {
-        val weeksSinceDOB = LocalDate.now().minusWeeks(seriesVaccine.administrativeWeeksSinceDOB.toLong())
+    private fun checkEligibility(basicVaccine: BasicVaccine, dob: LocalDate): Boolean {
+        val weeksSinceDOB = LocalDate.now().minusWeeks(basicVaccine.administrativeWeeksSinceDOB.toLong())
         return weeksSinceDOB.isAfter(dob)
     }
+
+    fun getNextDoseDetails(vaccineCode: String, dob: LocalDate): Triple<String?, BasicVaccine?, SeriesVaccine?> {
+        val seriesVaccine = vaccines
+            .filterIsInstance<SeriesVaccine>()
+            .find { series -> series.vaccineList.any { it.vaccineCode == vaccineCode } }
+
+        seriesVaccine?.let { series ->
+            val currentDoseIndex = series.vaccineList.indexOfFirst { it.vaccineCode == vaccineCode }
+
+            if (currentDoseIndex != -1 && currentDoseIndex < series.vaccineList.size - 1) {
+                val nextDoseNumber = currentDoseIndex + 1
+                val nextDose = series.vaccineList[nextDoseNumber]
+
+                // Calculate the next date based on the provided dob and administrativeWeeksSinceDOB
+                val nextDate = dob.plusWeeks(nextDose.administrativeWeeksSinceDOB.toLong())
+                if (nextDate.isAfter(LocalDate.now()) || nextDate.isEqual(LocalDate.now())){
+                    return Triple(nextDate.toString(), nextDose, seriesVaccine)
+                }
+
+            }
+        }
+
+        return Triple(null, null, null)
+    }
+
+
+
 
 
     data class AvailableVaccine(val vaccine: SeriesVaccine, val isEligible: Boolean)

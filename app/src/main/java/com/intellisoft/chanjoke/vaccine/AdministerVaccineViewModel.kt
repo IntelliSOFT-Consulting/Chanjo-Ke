@@ -261,28 +261,87 @@ class AdministerVaccineViewModel(
             }
 
         }
+        //Vaccine code
+        val administeredProduct = FormatterClass().getSharedPref(
+            "administeredProduct", getApplication<Application>().applicationContext)
+        //Get info on the vaccine
+        if (administeredProduct != null){
+            val vaccineCode = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
+            if (vaccineCode != null){
+                val vaccineCodeConcept = CodeableConcept()
+                vaccineCodeConcept.text = vaccineCode.vaccineName
 
-        //Delete Vaccination information
-//        val stockList = ArrayList<String>()
-//        stockList.addAll(
-//            listOf(
-//                "vaccinationTargetDisease",
-//                "vaccinationDosage",
-//                "vaccinationAdministrationMethod",
-//                "vaccinationBatchNumber",
-//                "vaccinationExpirationDate",
-//                "vaccinationBrand",
-//                "vaccinationManufacturer",
-//                "vaccinationDoseNumber",
-//                "vaccinationSeriesDoses",
-//                "vaccinationSeries"
-//            )
-//        )
-//        stockList.forEach {
-//            FormatterClass().deleteSharedPref(it,
-//                getApplication<Application>().applicationContext)
-//        }
+                val codingList = ArrayList<Coding>()
+                val vaccineCoding = Coding()
+                vaccineCoding.code = vaccineCode.vaccineCode
+                vaccineCoding.display = vaccineCode.vaccineName
+                codingList.add(vaccineCoding)
+                vaccineCodeConcept.coding = codingList
+
+                immunization.vaccineCode = vaccineCodeConcept
+            }
+        }
+
         return immunization
+
+
+    }
+
+    private suspend fun createNextImmunization() {
+
+        val formatterClass = FormatterClass()
+
+        /**
+         * TODO: Check if the Vaccine exists
+         */
+
+        //Vaccine code
+        val administeredProduct = FormatterClass().getSharedPref(
+            "administeredProduct", getApplication<Application>().applicationContext)
+        val patientDob = FormatterClass().getSharedPref(
+            "patientDob", getApplication<Application>().applicationContext)
+        val patientId = FormatterClass().getSharedPref(
+            "patientId", getApplication<Application>().applicationContext)
+        //Get info on the vaccine
+        if (administeredProduct != null && patientDob != null && patientId != null) {
+
+            val dobDate = formatterClass.convertStringToDate(patientDob,"yyyy-MM-dd")
+            if (dobDate != null){
+                val dobLocalDate = formatterClass.convertDateToLocalDate(dobDate)
+                val vaccineCode = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
+                if (vaccineCode != null) {
+                    val immunizationHandler = ImmunizationHandler()
+                    val nextImmunizationPair = immunizationHandler.getNextDoseDetails(vaccineCode.vaccineCode, dobLocalDate)
+
+                    val nextDate = nextImmunizationPair.first
+                    val basicVaccine = nextImmunizationPair.second
+                    val seriesVaccine = nextImmunizationPair.third
+
+                    if (nextDate != null && basicVaccine != null && seriesVaccine != null){
+                        formatterClass.saveStockValue(
+                            basicVaccine.vaccineName,
+                            seriesVaccine.targetDisease,
+                            getApplication<Application>().applicationContext)
+
+                        val dobNextDate = formatterClass.convertStringToDate(nextDate, "yyyy-MM-dd")
+                        if (dobNextDate != null){
+                            val recommendation = createImmunizationRecommendationResource(patientId,
+                                dobNextDate,
+                                "due",
+                                "Recommend vaccination",
+                                null)
+                            saveResourceToDatabase(recommendation, "ImmRec")
+                        }
+
+                    }
+
+
+                }
+            }
+
+
+        }
+
 
 
     }
@@ -377,8 +436,8 @@ class AdministerVaccineViewModel(
             immunizationRequest.supportingImmunization = immunizationReferenceList
         }
 
-        if (status == "Contraindicated"){
-            //Target Disease
+        if (status == "Contraindicated" || status == "due"){
+            //Administered vaccine
             val administeredProduct = FormatterClass().getSharedPref(
                 "administeredProduct",
                 getApplication<Application>().applicationContext)
@@ -426,10 +485,14 @@ class AdministerVaccineViewModel(
                 /**
                  * User choose to administer vaccine, send immunisation status as Completed
                  * Generate immunization resource
-                 * No need to create a Recommendation
+                 * No need to create a Recommendation. It's only created for the next vaccine in the series
                  */
                 val immunization = createImmunizationResource(encounterId,patientId, ImmunizationStatus.COMPLETED)
                 saveResourceToDatabase(immunization, "Imm")
+
+                //Generate the next immunization
+                createNextImmunization()
+
             }else{
                 /**
                  * User did not select Yes administer vaccine
@@ -497,7 +560,12 @@ class AdministerVaccineViewModel(
             val immunization = createImmunizationResource(encounterId, patientId, ImmunizationStatus.COMPLETED)
             saveResourceToDatabase(immunization, "update")
 
-        }else if (vaccinationFlow == "recommendVaccineDetails"){
+            //Generate the next immunization
+            createNextImmunization()
+
+        }
+
+        else if (vaccinationFlow == "recommendVaccineDetails"){
 
 //            /**
 //             * TODO: UPDATE THIS FLOW TO USE THE NEW FLOW
@@ -545,8 +613,6 @@ class AdministerVaccineViewModel(
 //            }
 
 
-        }else{
-
         }
 
 
@@ -591,7 +657,7 @@ class AdministerVaccineViewModel(
         }
 //    codeableConceptTargetDisease.id = generateUuid()
 
-    
+
         immunizationRequest.targetDisease = codeableConceptTargetDisease
 
 

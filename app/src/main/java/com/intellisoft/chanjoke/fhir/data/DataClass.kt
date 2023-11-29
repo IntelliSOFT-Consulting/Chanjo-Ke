@@ -5,7 +5,7 @@ import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 data class DbVaccineData(
     val logicalId: String,
     val vaccineName: String,
-    val vaccineDosage: String,
+    val doseNumber: String,
     val dateAdministered: String
 )
 

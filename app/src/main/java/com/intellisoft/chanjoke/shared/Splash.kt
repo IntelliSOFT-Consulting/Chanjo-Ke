@@ -9,8 +9,10 @@ import android.view.WindowManager
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.databinding.ActivitySplashBinding
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.SeriesVaccine
+import java.time.LocalDate
 
 class Splash : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
@@ -22,17 +24,6 @@ class Splash : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-
-        val immunizationHandler = ImmunizationHandler()
-        val (groupList, childList) = immunizationHandler.generateVaccineLists()
-
-        Log.e("------", "-------")
-        println(groupList)
-        println(childList)
-        Log.e("------", "-------")
-
-
-
         Handler().postDelayed({
             if (FormatterClass().getSharedPref("isLoggedIn", this@Splash) == "true") {
                 val intent = Intent(this, MainActivity::class.java)

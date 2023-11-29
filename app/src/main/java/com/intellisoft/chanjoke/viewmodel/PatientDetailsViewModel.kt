@@ -273,22 +273,17 @@ class PatientDetailsViewModel(
 
     private fun createEncounterItem(immunization: Immunization): DbVaccineData {
 
-        var targetDisease = ""
+        var vaccineName = ""
         var doseNumberValue = ""
-        var logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
+        val logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
         var dateScheduled = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
 
-        val protocolList = immunization.protocolApplied
-        protocolList.forEach {
-
-            //Target Disease
-
-            val targetDiseaseList = it.targetDisease
-            if (targetDiseaseList.isNotEmpty()) targetDisease = targetDiseaseList[0].text
-
+        if (immunization.hasVaccineCode()){
+            if (immunization.vaccineCode.hasText()) vaccineName = immunization.vaccineCode.text
         }
+
         if (immunization.hasOccurrenceDateTimeType()) {
             val fhirDate = immunization.occurrenceDateTimeType.valueAsString
             val convertedDate = FormatterClass().convertDateFormat(fhirDate)
@@ -296,13 +291,13 @@ class PatientDetailsViewModel(
                 dateScheduled = convertedDate
             }
         }
-        if (immunization.hasDoseQuantity()) {
-            doseNumberValue = immunization.doseQuantity.value.toString()
+        if (immunization.hasProtocolApplied()){
+            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue = immunization.protocolApplied[0].seriesDoses.asStringValue()
         }
 
         return DbVaccineData(
             ref,
-            targetDisease,
+            vaccineName,
             doseNumberValue,
             dateScheduled
         )
