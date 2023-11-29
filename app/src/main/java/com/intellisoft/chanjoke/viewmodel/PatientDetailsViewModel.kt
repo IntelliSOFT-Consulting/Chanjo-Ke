@@ -228,11 +228,6 @@ class PatientDetailsViewModel(
             }
         }
 
-        if (targetDisease != "") {
-            doseNumber =
-                vaccinationManager.getVaccineDetails(targetDisease.replace(" ", ""))?.dosage
-        }
-
 
 
 

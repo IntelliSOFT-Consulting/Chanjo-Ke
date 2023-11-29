@@ -180,7 +180,7 @@ class FormatterClass {
 
         val immunizationHandler = ImmunizationHandler()
         val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
-        val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesVaccineName(targetDisease)
+        val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(targetDisease)
 
         if (seriesVaccineDetails != null && baseVaccineDetails != null){
 
