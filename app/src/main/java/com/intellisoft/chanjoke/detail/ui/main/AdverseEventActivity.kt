@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
@@ -44,56 +45,71 @@ class AdverseEventActivity : AppCompatActivity() {
                 ),
             ).get(PatientDetailsViewModel::class.java)
         binding.apply {
-            typeOfAEFITextView.text = extractAefiData(
-                patientId.toString(),
-                encounterId.toString(),
-                "882-22"
-            )
+            val type = extractAefiData(patientId.toString(), encounterId.toString(), "882-22")
+            Timber.e("Type ****** $type")
+            try {
+                val trimmedText = type.trim()
+
+                if (trimmedText.equals("Other", ignoreCase = true)) {
+                    Timber.e("Text is Other")
+                    lnOtherType.visibility = View.VISIBLE
+                    vOtherType.visibility = View.VISIBLE
+                    typeOfAEFIOtherTextView.text = extractAefiData(
+                        patientId.toString(),
+                        encounterId.toString(),
+                        "303-22"
+                    )
+                }
+            } catch (e: Exception) {
+
+            }
+            typeOfAEFITextView.text = type
+
             // Brief details on AEFI
             briefDetailsTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-               "833-22"
+                "833-22"
             )
             // Onset of Event
             onsetOfEventTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-               "833-23"
+                "833-23"
             )
             // Past Medical History
             pastMedicalHistoryTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-            "833-21"
+                "833-21"
             )
             // Reaction Severity
             reactionSeverityTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-            "880-11"
+                "880-11"
             )
             // Action Taken
             actionTakenTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-              "888-1"
+                "888-1"
             )
             // AEFI Outcome
             aefiOutcomeTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-             "808-11"
+                "808-11"
             )
             nameOfPersonTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-             "133-22"
+                "133-22"
             )
             contactTextView.text = extractAefiData(
                 patientId.toString(),
                 encounterId.toString(),
-             "122-22"
+                "122-22"
             )
         }
 
@@ -101,12 +117,13 @@ class AdverseEventActivity : AppCompatActivity() {
 
     private fun extractAefiData(patientId: String, encounterId: String, code: String): String {
         var text = "\t"
+
         /***
          * TODO: extract Observation by code
          */
-       val  data=patientDetailsViewModel.getObservationByCode(patientId, encounterId, code)
-        if (data!=null){
-            text="\t $data"
+        val data = patientDetailsViewModel.getObservationByCode(patientId, encounterId, code)
+        if (data != null) {
+            text = "\t $data"
         }
 
         return text
