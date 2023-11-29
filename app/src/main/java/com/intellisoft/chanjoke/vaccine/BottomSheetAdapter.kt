@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.vaccine
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -16,6 +17,10 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class BottomSheetAdapter(
@@ -78,21 +83,41 @@ class BottomSheetAdapter(
 
         textView.setOnClickListener {
 
-            val immunizationHandler = ImmunizationHandler()
-            val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(valueText)
-            val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesVaccineName(valueGroup)
+            CoroutineScope(Dispatchers.Main).launch {
 
-            Log.e("------->","<-------")
-            println(baseVaccineDetails)
-            println(seriesVaccineDetails)
-            Log.e("------->","<-------")
+                val progressDialog = ProgressDialog(context)
+                progressDialog.setTitle("Please wait..")
+                progressDialog.setMessage("Please be patient we process the request")
+                progressDialog.setCanceledOnTouchOutside(false)
+                progressDialog.show()
 
-//            FormatterClass().saveSharedPref("targetDisease", value, context)
-//            val patientId = FormatterClass().getSharedPref("patientId", context)
-//            val intent = Intent(context, VaccineStockManagement::class.java)
-//            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
-//            intent.putExtra("patientId", patientId)
-//            context.startActivity(intent)
+                val job = Job()
+                CoroutineScope(Dispatchers.IO + job).launch {
+
+                    val immunizationHandler = ImmunizationHandler()
+                    val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(valueText)
+                    val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(valueGroup)
+
+                    if (baseVaccineDetails != null){
+                        val administeredProduct = baseVaccineDetails.vaccineName
+                        FormatterClass().saveSharedPref("administeredProduct", administeredProduct, context)
+                    }
+                    if (seriesVaccineDetails != null){
+                        val targetDisease = seriesVaccineDetails.targetDisease
+                        FormatterClass().saveSharedPref("vaccinationTargetDisease", targetDisease, context)
+                    }
+
+                }.join()
+                val patientId = FormatterClass().getSharedPref("patientId", context)
+
+                val intent = Intent(context, VaccineStockManagement::class.java)
+                intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+                intent.putExtra("patientId", patientId)
+                context.startActivity(intent)
+
+                progressDialog.dismiss()
+            }
+
         }
 
         return textView

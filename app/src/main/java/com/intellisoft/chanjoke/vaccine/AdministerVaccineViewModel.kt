@@ -221,7 +221,7 @@ class AdministerVaccineViewModel(
         immunization.protocolApplied = protocolList
 
         //Dose Quantity is the amount of vaccine administered
-        val dosage = FormatterClass().getSharedPref("vaccinationDosage",
+        val dosage = FormatterClass().getSharedPref("vaccinationDoseQuantity",
             getApplication<Application>().applicationContext)
         if (dosage != null){
             val nonDosage = FormatterClass().removeNonNumeric(dosage)
@@ -456,64 +456,74 @@ class AdministerVaccineViewModel(
              * The request is from the update history -> vaccine details screens,
              * Get the type of vaccine from observation , save to shared pref and create immunisation
              */
-            //Type of vaccine
+            //Administered Product
             val vaccineType = observationFromCode(
                 "222-11",
                 patientId,
                 encounterId)
-            val targetDisease = vaccineType.value
+            val administeredProduct = vaccineType.value
 
-            FormatterClass().saveSharedPref("targetDisease", targetDisease, getApplication<Application>().applicationContext)
-            val vaccineDetails = VaccinationManager().getVaccineDetails(targetDisease)
-            if (vaccineDetails != null){
-                FormatterClass().generateStockValue(vaccineDetails, getApplication<Application>().applicationContext)
-            }
+            //Target Disease
+            val disease = observationFromCode(
+                "882-22",
+                patientId,
+                encounterId)
+            val targetDisease = disease.value
+
+            //Save resources to Shared preference
+            FormatterClass().saveStockValue(administeredProduct, targetDisease, getApplication<Application>().applicationContext)
+
+
             //Vaccine details have been saved
             val immunization = createImmunizationResource(encounterId, patientId, ImmunizationStatus.COMPLETED)
             saveResourceToDatabase(immunization, "update")
 
         }else if (vaccinationFlow == "recommendVaccineDetails"){
 
-            val patientDetailsViewModel = PatientDetailsViewModel(getApplication(),fhirEngine, patientId)
-            val missingVaccineList = FormatterClass().getEligibleVaccines(getApplication<Application>().applicationContext, patientDetailsViewModel)
-            Log.e("***","*** missingVaccine 1 $missingVaccineList")
-
-            missingVaccineList.forEach {
-                FormatterClass().saveSharedPref("targetDisease", it, getApplication<Application>().applicationContext)
-                val vaccineDetails = VaccinationManager().getVaccineDetails(it)
-
-                if (vaccineDetails != null){
-                    FormatterClass().generateStockValue(vaccineDetails, getApplication<Application>().applicationContext)
-
-                    //Get weeks after Dob that we should create
-                    val dob = FormatterClass().getSharedPref("patientDob", getApplication<Application>().applicationContext)
-                    val weeksAfterDob = vaccineDetails.timeToAdminister
-                    val dobDate = FormatterClass().convertStringToDate(dob.toString(), "yyyy-MM-dd")
-
-                    val dobLocalDate = dobDate?.let { it1 ->
-                        FormatterClass().convertDateToLocalDate(
-                            it1
-                        )
-                    }
-
-                    val nextDateStr = dobLocalDate?.let { it1 ->
-                        FormatterClass().calculateDateAfterWeeksAsString(
-                            it1, weeksAfterDob)
-                    }
-
-                    val nextDate = FormatterClass().convertStringToDate(nextDateStr.toString(), "yyyy-MM-dd")
-
-
-                    //Vaccine details have been saved
-                    val recommendation = createImmunizationRecommendationResource(patientId,
-                        nextDate,
-                        "due",
-                        null,
-                        null)
-                    saveResourceToDatabase(recommendation, "RecImm")
-
-                }
-            }
+//            /**
+//             * TODO: UPDATE THIS FLOW TO USE THE NEW FLOW
+//             */
+//
+//            val patientDetailsViewModel = PatientDetailsViewModel(getApplication(),fhirEngine, patientId)
+//            val missingVaccineList = FormatterClass().getEligibleVaccines(getApplication<Application>().applicationContext, patientDetailsViewModel)
+//            Log.e("***","*** missingVaccine 1 $missingVaccineList")
+//
+//            missingVaccineList.forEach {
+//                FormatterClass().saveSharedPref("targetDisease", it, getApplication<Application>().applicationContext)
+//                val vaccineDetails = VaccinationManager().getVaccineDetails(it)
+//
+//                if (vaccineDetails != null){
+//                    FormatterClass().generateStockValue(vaccineDetails, getApplication<Application>().applicationContext)
+//
+//                    //Get weeks after Dob that we should create
+//                    val dob = FormatterClass().getSharedPref("patientDob", getApplication<Application>().applicationContext)
+//                    val weeksAfterDob = vaccineDetails.timeToAdminister
+//                    val dobDate = FormatterClass().convertStringToDate(dob.toString(), "yyyy-MM-dd")
+//
+//                    val dobLocalDate = dobDate?.let { it1 ->
+//                        FormatterClass().convertDateToLocalDate(
+//                            it1
+//                        )
+//                    }
+//
+//                    val nextDateStr = dobLocalDate?.let { it1 ->
+//                        FormatterClass().calculateDateAfterWeeksAsString(
+//                            it1, weeksAfterDob)
+//                    }
+//
+//                    val nextDate = FormatterClass().convertStringToDate(nextDateStr.toString(), "yyyy-MM-dd")
+//
+//
+//                    //Vaccine details have been saved
+//                    val recommendation = createImmunizationRecommendationResource(patientId,
+//                        nextDate,
+//                        "due",
+//                        null,
+//                        null)
+//                    saveResourceToDatabase(recommendation, "RecImm")
+//
+//                }
+//            }
 
 
         }else{

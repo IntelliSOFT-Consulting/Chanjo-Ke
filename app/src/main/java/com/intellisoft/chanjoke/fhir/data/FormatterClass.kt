@@ -5,6 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.util.Log
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import com.intellisoft.chanjoke.vaccine.validations.VaccineDetails
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -150,6 +151,7 @@ class FormatterClass {
     }
 
     fun generateStockValue(vaccineDetails: VaccineDetails,context: Context):ArrayList<DbVaccineStockDetails>{
+
         val targetDisease = getSharedPref("targetDisease", context).toString()
         val stockList = ArrayList<DbVaccineStockDetails>()
         stockList.addAll(
@@ -171,6 +173,44 @@ class FormatterClass {
             saveSharedPref(it.name,it.value,context)
         }
         return stockList
+    }
+
+    fun saveStockValue(administeredProduct:String, targetDisease:String, context: Context):ArrayList<DbVaccineStockDetails>{
+        val stockList = ArrayList<DbVaccineStockDetails>()
+
+        val immunizationHandler = ImmunizationHandler()
+        val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
+        val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesVaccineName(targetDisease)
+
+        if (seriesVaccineDetails != null && baseVaccineDetails != null){
+
+            stockList.addAll(
+                listOf(
+                    DbVaccineStockDetails("vaccinationTargetDisease",targetDisease),
+                    DbVaccineStockDetails("administeredProduct",administeredProduct),
+
+                    DbVaccineStockDetails("vaccinationSeriesDoses",seriesVaccineDetails.seriesDoses.toString()),
+
+                    DbVaccineStockDetails("vaccinationDoseQuantity",baseVaccineDetails.doseQuantity),
+                    DbVaccineStockDetails("vaccinationDoseNumber",baseVaccineDetails.doseNumber),
+                    DbVaccineStockDetails("vaccinationBrand",baseVaccineDetails.vaccineName),
+                    DbVaccineStockDetails("vaccinationSite",baseVaccineDetails.administrativeMethod),
+
+                    DbVaccineStockDetails("vaccinationExpirationDate",""),
+                    DbVaccineStockDetails("vaccinationBatchNumber",""),
+                    DbVaccineStockDetails("vaccinationManufacturer","")
+                )
+            )
+
+            //Save to shared pref
+            stockList.forEach{
+                saveSharedPref(it.name,it.value,context)
+            }
+
+        }
+        return stockList
+
+
     }
 
     fun formatString(input: String): String {

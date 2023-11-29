@@ -282,14 +282,14 @@
                       "valueCoding": {
                         "system": "http://loinc.org",
                         "code": "22500-3-1",
-                        "display": "Measles-Rubella 1"
+                        "display": "Measles-Rubella 1st Dose"
                       }
                     },
                     {
                       "valueCoding": {
                         "system": "http://loinc.org",
                         "code": "22500-3-2",
-                        "display": "Measles-Rubella 2"
+                        "display": "Measles-Rubella 2nd Dose"
                       }
                     }
                   ]

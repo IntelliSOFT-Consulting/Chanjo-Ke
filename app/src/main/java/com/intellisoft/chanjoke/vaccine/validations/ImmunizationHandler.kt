@@ -24,12 +24,16 @@ data class BasicVaccine(
 ) : DbVaccine
 
 data class SeriesVaccine(
-    override val vaccineCode: String,
-    override val vaccineName: String,
+    val diseaseCode: String,
+    val targetDisease: String,
     val seriesDoses: Int, // Recommended number of doses for immunity
     val vaccineList: List<BasicVaccine>,
     val related: List<String>? = null
 ) : DbVaccine {
+    override val vaccineCode: String
+        get() = vaccineList.firstOrNull()?.vaccineCode ?: ""
+    override val vaccineName: String
+        get() = vaccineList.firstOrNull()?.vaccineName ?: ""
 
     // Implementing properties of the DbVaccine interface
     override val administrativeMethod: String
@@ -144,10 +148,10 @@ class ImmunizationHandler() {
     }
 
     // Function to get series vaccine details by code
-    fun getSeriesVaccineDetailsBySeriesVaccineName(vaccineName: String): SeriesVaccine? {
+    fun getSeriesVaccineDetailsBySeriesTargetName(targetDisease: String): SeriesVaccine? {
         return vaccines
             .filterIsInstance<SeriesVaccine>()
-            .find { it.vaccineName == vaccineName }
+            .find { it.targetDisease == targetDisease }
     }
 
 
@@ -156,8 +160,8 @@ class ImmunizationHandler() {
         val childList = mutableMapOf<String, List<String>>()
 
         vaccines.forEach { vaccine ->
-            groupList.add(vaccine.vaccineName)
-            childList[vaccine.vaccineName] = vaccine.vaccineList.map { it.vaccineName }
+            groupList.add(vaccine.targetDisease)
+            childList[vaccine.targetDisease] = vaccine.vaccineList.map { it.vaccineName }
         }
 
         return Pair(groupList, childList)
