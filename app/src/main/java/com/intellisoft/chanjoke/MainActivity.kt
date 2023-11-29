@@ -132,9 +132,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun editFunction(patientId: String) {
 
-        /*      findNavController(R.id.nav_host_fragment_activity_bottem_navigation)
-                  .navigate(MainActivityDirections.actionToEditPatientFragment(patientId))
-         */
         formatter.saveSharedPref("patientId", patientId, this)
         val bundle = Bundle()
         bundle.putString(UpdateFragment.QUESTIONNAIRE_FRAGMENT_TAG, "update.json")

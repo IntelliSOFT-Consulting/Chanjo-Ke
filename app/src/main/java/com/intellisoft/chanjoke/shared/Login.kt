@@ -35,7 +35,7 @@ class Login : AppCompatActivity() {
             if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
                 if (username == "admin" && password == "password") {
 
-                    FormatterClass().saveSharedPref("isLoggedIn", "true", this@Login)
+                    FormatterClass().saveSharedPref("isLoggedIn", "false", this@Login)
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     this@Login.finish()

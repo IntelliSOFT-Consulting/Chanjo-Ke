@@ -14,7 +14,7 @@
         android:icon="@android:drawable/ic_popup_sync"
         app:iconTint="@android:color/holo_green_dark"
         android:title="Sync"
-        android:visible="true"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 
 </menu>

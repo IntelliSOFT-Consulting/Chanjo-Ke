@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +17,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
+import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
+import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentVaccinesBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -134,11 +139,24 @@ class VaccinesFragment : Fragment() {
 
     private fun createDialog() {
 
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Info")
-        builder.setMessage("Select Record to Update")
-        builder.setPositiveButton("Vaccine Details") { _: DialogInterface, i: Int ->
+        val customDialogView = LayoutInflater.from(context).inflate(R.layout.custom_dialog_layout, null)
 
+        // Find views within the custom layout
+        val vaccineDetails: MaterialButton = customDialogView.findViewById(R.id.vaccineDetails)
+        val clientDetails: MaterialButton = customDialogView.findViewById(R.id.clientDetails)
+        val cancelButton: ImageButton = customDialogView.findViewById(R.id.cancel_button)
+
+        // Set up the AlertDialog
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(customDialogView)
+        // Set up any other UI interactions or logic here
+
+        // Create and show the AlertDialog
+        val customDialog = builder.create()
+        customDialog.show()
+
+        // Example: Set an onClickListener for the "Close" button
+        vaccineDetails.setOnClickListener {
             formatterClass.saveSharedPref(
                 "questionnaireJson",
                 "update_history_specifics.json",
@@ -154,10 +172,9 @@ class VaccinesFragment : Fragment() {
             intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
             intent.putExtra("patientId", patientId)
             startActivity(intent)
-
+            customDialog.dismiss() // Close the dialog
         }
-        builder.setNegativeButton("Client Record") { dialogInterface: DialogInterface, i: Int ->
-
+        clientDetails.setOnClickListener {
             formatterClass.saveSharedPref(
                 "questionnaireJson",
                 "update_history.json",
@@ -168,12 +185,18 @@ class VaccinesFragment : Fragment() {
             intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
             intent.putExtra("patientId", patientId)
             startActivity(intent)
-
-
+            customDialog.dismiss() // Close the dialog
         }
 
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+        // Example: Set a dismiss listener for additional actions when the dialog is dismissed
+        customDialog.setOnDismissListener {
+            // Additional actions when the dialog is dismissed
+        }
+        cancelButton.setOnClickListener {
+            // Additional actions when the dialog is dismissed
+            customDialog.dismiss()
+        }
+
 
     }
 

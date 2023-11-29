@@ -370,7 +370,7 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity",
               "item": [
                 {
-                  "text": "Current Body Weight",
+                  "text": "Current Body Weight (kg)",
                   "type": "decimal",
                   "required": true,
                   "linkId": "current-body-weight-decimal",
@@ -378,7 +378,7 @@
                   "extension": [
                     {
                       "url": "http://hl7.org/fhir/StructureDefinition/minValue",
-                      "valueDecimal": 10
+                      "valueDecimal": 1
                     },
                     {
                       "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
