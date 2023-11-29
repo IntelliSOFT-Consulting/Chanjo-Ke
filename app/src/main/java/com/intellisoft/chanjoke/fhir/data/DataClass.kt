@@ -1,5 +1,7 @@
 package com.intellisoft.chanjoke.fhir.data
 
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+
 data class DbVaccineData(
     val logicalId: String,
     val vaccineName: String,
