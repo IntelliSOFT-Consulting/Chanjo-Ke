@@ -93,7 +93,7 @@
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.given",
                   "type": "string",
                   "required": true,
-                  "text": "First Name",
+                  "text": "First Name *",
                   "_text": {
                     "extension": [
                       {
@@ -160,7 +160,7 @@
                   "definition": "http://hl7.org/fhir/StructureDefinition/datatypes#HumanName.family",
                   "type": "string",
                   "required": true,
-                  "text": "Last Name",
+                  "text": "Last Name *",
                   "_text": {
                     "extension": [
                       {
@@ -196,7 +196,7 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.birthDate",
               "type": "date",
               "required": true,
-              "text": "Date of Birth",
+              "text": "Date of Birth *",
               "_text": {
                 "extension": [
                   {
@@ -219,7 +219,7 @@
               "linkId": "patient-0-gender",
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.gender",
               "type": "choice",
-              "text": "Gender",
+              "text": "Sex *",
               "required": true,
               "extension": [
                 {
@@ -284,19 +284,6 @@
                       {
                         "language": "sw",
                         "value": "Nyingine"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "valueCoding": {
-                    "system": "http://hl7.org/fhir/administrative-gender",
-                    "code": "unknown",
-                    "display": "Unknown",
-                    "designation": [
-                      {
-                        "language": "sw",
-                        "value": "Haijulikani"
                       }
                     ]
                   }
@@ -733,7 +720,7 @@
           "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.city",
           "type": "string",
           "required": true,
-          "text": "County",
+          "text": "County *",
           "_text": {
             "extension": [
               {
