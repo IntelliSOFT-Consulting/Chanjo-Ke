@@ -95,6 +95,7 @@ class VaccinesFragment : Fragment() {
             val bottomSheetFragment = BottomSheetFragment()
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
 
+            
         }
 
         binding.btnUpdateHistory.setOnClickListener {

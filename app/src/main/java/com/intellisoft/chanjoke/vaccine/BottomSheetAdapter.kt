@@ -70,11 +70,14 @@ class BottomSheetAdapter(
 
         // Implement your child view here
         val value = getChild(groupPosition, childPosition).toString()
-        textView.text = value.lowercase().capitalize(Locale.ROOT)
+        val valueText = value.uppercase()
+        textView.text = valueText
 
         textView.setOnClickListener {
 
             FormatterClass().saveSharedPref("targetDisease", value, context)
+
+
 
             val patientId = FormatterClass().getSharedPref("patientId", context)
 

@@ -33,7 +33,18 @@
                 android:textStyle="bold"
                 tools:text="Appointment 1" />
 
+            <TextView
+                android:id="@+id/tvStatus"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/red"
+                android:text="Due"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <com.google.android.material.chip.Chip
+                android:visibility="gone"
                 android:layout_marginEnd="10dp"
                 android:textColor="@android:color/holo_red_dark"
                 android:id="@+id/chipAppointment"
