@@ -361,57 +361,97 @@
               ]
             },
             {
-              "linkId": "patient-0-id",
-              "type": "choice",
-              "required": true,
-              "text": "Identification Type",
-              "extension": [
+              "linkId": "PR-identify",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier",
+              "item": [
                 {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                  "valueCodeableConcept": {
-                    "coding": [
-                      {
-                        "system": "http://hl7.org/fhir/questionnaire-item-control",
-                        "code": "drop-down",
-                        "display": "Drop Down"
+                  "linkId": "patient-identify-type",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.type",
+                  "type": "choice",
+                  "text": "Identification Type",
+                  "required": true,
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                      "valueExpression": {
+                        "system": "http://hl7.org/fhir/administrative-gender",
+                        "language": "text/fhirpath",
+                        "expression": "Patient.identifier.type",
+                        "name": "patientIdentifier"
                       }
-                    ]
-                  }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "drop-down",
+                            "display": "Drop Down"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://hl7.org/fhir/administrative-gender",
+                        "code": "birthcertificate",
+                        "display": "Birth Certificate"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://hl7.org/fhir/administrative-gender",
+                        "code": "nationalId",
+                        "display": "National ID"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://hl7.org/fhir/administrative-gender",
+                        "code": "passport",
+                        "display": "Passport"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                  "valueCode": "horizontal"
-                }
-              ],
-              "answerOption": [
-                {
-                  "valueCoding": {
-                    "system": "http://hl7.org/fhir/administrative-gender",
-                    "code": "birthcertificate",
-                    "display": "Birth Certificate"
-                  }
+                  "linkId": "PR-identifier-system",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.system",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "type": "string",
+                  "text": "system",
+                  "initial": [
+                    {
+                      "valueString": "identification"
+                    }
+                  ]
                 },
                 {
-                  "valueCoding": {
-                    "system": "http://hl7.org/fhir/administrative-gender",
-                    "code": "nationalId",
-                    "display": "National ID"
-                  }
-                },
-                {
-                  "valueCoding": {
-                    "system": "http://hl7.org/fhir/administrative-gender",
-                    "code": "passport",
-                    "display": "Passport"
-                  }
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                      "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "Patient.identifier.value",
+                        "name": "patientTelecom"
+                      }
+                    }
+                  ],
+                  "linkId": "PR-telecom-value",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.value",
+                  "type": "string",
+                  "text": "ID Number"
                 }
               ]
-            },
-            {
-              "linkId": "PR-id-value",
-              "type": "string",
-              "required": true,
-              "text": "ID Number"
             }
           ]
         }
@@ -421,11 +461,13 @@
       "text": "Caregivers",
       "linkId": "PR-caregivers",
       "type": "group",
+      "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact",
       "item": [
         {
           "linkId": "patient-rshp",
           "type": "choice",
           "text": "Caregiver type",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.relationship",
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -442,19 +484,27 @@
             {
               "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
               "valueCode": "horizontal"
+            },
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.contact.relationship",
+                "name": "patientRelationship"
+              }
             }
           ],
           "answerOption": [
             {
               "valueCoding": {
-                "system": "http://hl7.org/fhir/administrative-gender",
+                "system": "http://hl7.org/fhir/ValueSet/patient-contactrelationship",
                 "code": "fatherId",
                 "display": "Father"
               }
             },
             {
               "valueCoding": {
-                "system": "http://hl7.org/fhir/administrative-gender",
+                "system": "http://hl7.org/fhir/ValueSet/patient-contactrelationship",
                 "code": "motherId",
                 "display": "Mother"
               }
@@ -469,14 +519,68 @@
           ]
         },
         {
-          "linkId": "PR-caregiver-name",
-          "type": "string",
-          "text": "Caregiver's name"
+          "linkId": "patient-contact-name",
+          "type": "group",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.name",
+          "item": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "Patient.contact.name.given",
+                    "name": "patientContactName"
+                  }
+                }
+              ],
+              "linkId": "PR-name-text",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.name.given",
+              "type": "string",
+              "required": true,
+              "text": "Care Giver Name"
+            }
+          ]
         },
         {
-          "linkId": "PR-caregiver-phone",
-          "type": "string",
-          "text": "Caregiver's phone"
+          "linkId": "patient-relationship-telecom",
+          "type": "group",
+          "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.telecom",
+          "item": [
+            {
+              "linkId": "patient-contact-telecom-system",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.telecom.system",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "type": "string",
+              "text": "system",
+              "initial": [
+                {
+                  "valueString": "phone"
+                }
+              ]
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "Patient.contact.telecom.value",
+                    "name": "patientContactTelecom"
+                  }
+                }
+              ],
+              "linkId": "patient-contact-telecom-value",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.telecom.value",
+              "type": "string",
+              "text": "Phone Number"
+            }
+          ]
         },
         {
           "text": "Caregivers",
@@ -485,9 +589,10 @@
           "repeats": true,
           "item": [
             {
-              "linkId": "patient-rshp1",
+              "linkId": "patient-rshp-1",
               "type": "choice",
               "text": "Caregiver type",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.relationship",
               "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
@@ -504,20 +609,28 @@
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
                   "valueCode": "horizontal"
+                },
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "Patient.contact.relationship",
+                    "name": "patientRelationship"
+                  }
                 }
               ],
               "answerOption": [
                 {
                   "valueCoding": {
-                    "system": "http://hl7.org/fhir/administrative-gender",
-                    "code": "fatherId1",
+                    "system": "http://hl7.org/fhir/ValueSet/patient-contactrelationship",
+                    "code": "fatherId",
                     "display": "Father"
                   }
                 },
                 {
                   "valueCoding": {
-                    "system": "http://hl7.org/fhir/administrative-gender",
-                    "code": "motherId1",
+                    "system": "http://hl7.org/fhir/ValueSet/patient-contactrelationship",
+                    "code": "motherId",
                     "display": "Mother"
                   }
                 },
@@ -531,14 +644,68 @@
               ]
             },
             {
-              "linkId": "PR-caregiver-name1",
-              "type": "string",
-              "text": "Caregiver's name"
+              "linkId": "patient-contact-name-1",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.name",
+              "item": [
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                      "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "Patient.contact.name.given",
+                        "name": "patientContactName"
+                      }
+                    }
+                  ],
+                  "linkId": "PR-name-text-1",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.name.given",
+                  "type": "string",
+                  "required": true,
+                  "text": "Care Giver Name"
+                }
+              ]
             },
             {
-              "linkId": "PR-caregiver-phone1",
-              "type": "string",
-              "text": "Caregiver's phone"
+              "linkId": "patient-relationship-telecom-1",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.telecom",
+              "item": [
+                {
+                  "linkId": "patient-contact-telecom-system",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.telecom.system",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "type": "string",
+                  "text": "system",
+                  "initial": [
+                    {
+                      "valueString": "phone"
+                    }
+                  ]
+                },
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                      "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "Patient.contact.telecom.value",
+                        "name": "patientContactTelecom"
+                      }
+                    }
+                  ],
+                  "linkId": "patient-contact-telecom-value-1",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.telecom.value",
+                  "type": "string",
+                  "text": "Phone Number"
+                }
+              ]
             }
           ]
         }
