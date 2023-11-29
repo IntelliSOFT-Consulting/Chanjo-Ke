@@ -98,17 +98,17 @@ class PatientDetailActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
-        patientDetailsViewModel.livePatientData.observe(this) {
-            binding.apply {
-                tvName.text = it.name
-                tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
-                tvDob.text = formatterClass.convertDateFormat(it.dob)
-//                tvContact.text = it.contact_name
-//                tvPhone.text = it.contact_phone
-//                tvContactGender.text = it.contact_gender
-            }
-        }
-        patientDetailsViewModel.getPatientDetailData()
+//        patientDetailsViewModel.livePatientData.observe(this) {
+//            binding.apply {
+//                tvName.text = it.name
+//                tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
+//                tvDob.text = formatterClass.convertDateFormat(it.dob)
+////                tvContact.text = it.contact_name
+////                tvPhone.text = it.contact_phone
+////                tvContactGender.text = it.contact_gender
+//            }
+//        }
+//        patientDetailsViewModel.getPatientDetailData()
 
         CoroutineScope(Dispatchers.IO).launch {
             formatterClass.saveSharedPref(

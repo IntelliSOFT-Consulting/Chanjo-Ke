@@ -28,7 +28,7 @@ data class SeriesVaccine(
     val targetDisease: String,
     val seriesDoses: Int, // Recommended number of doses for immunity
     val vaccineList: List<BasicVaccine>,
-    val related: List<String>? = null
+    val related: List<SeriesVaccine>? = null
 ) : DbVaccine {
     override val vaccineCode: String
         get() = vaccineList.firstOrNull()?.vaccineCode ?: ""
@@ -130,7 +130,57 @@ fun createVaccines(): List<SeriesVaccine> {
             BasicVaccine(measles+"2", "Measles-Rubella 2nd Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 79, 0, "0.5ml","2")
         )
     )
-    return listOf(polioSeries, yellowFeverSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries)
+
+    //Covid
+
+    val covidAstrazeneca = "IMCOV-ASTRA"
+    val covidAstra = SeriesVaccine(
+        covidAstrazeneca,
+        "Covid",
+        2,
+        listOf(
+            BasicVaccine(covidAstrazeneca+"1", "Astrazeneca 1st Dose", "Intramuscular Injection", 939, 0, "0.5ml","1"),
+            BasicVaccine(covidAstrazeneca+"2", "Astrazeneca 2nd Dose", "Intramuscular Injection", 951, 0, "0.5ml","2")
+        )
+    )
+
+    val covidJohnsonAndJohnson = "IMCOV-JnJ"
+    val covidJnJ = SeriesVaccine(
+        covidJohnsonAndJohnson,
+        "Covid",
+        1,
+        listOf(
+            BasicVaccine(covidJohnsonAndJohnson+"0", "Johnson & Johnson", "Intramuscular Injection", 939, 0, "0.5ml","1"),
+        )
+    )
+
+    val covidMain = "IMCOV-"
+
+    val covidMainSeries = SeriesVaccine(
+        covidMain,
+        "Covid",
+        1,
+        listOf(
+            BasicVaccine(covidMain+"1", "Astrazeneca 1st Dose", "Intramuscular Injection", 939, 0, "0.5ml","1"),
+            BasicVaccine(covidMain+"2", "Astrazeneca 2nd Dose", "Intramuscular Injection", 951, 0, "0.5ml","2"),
+
+            BasicVaccine(covidMain+"0", "Johnson & Johnson", "Intramuscular Injection", 939, 0, "0.5ml","1"),
+
+            BasicVaccine(covidMain+"1", "Moderna 1st Dose", "Intramuscular Injection", 939, 0, "0.5ml","1"),
+            BasicVaccine(covidMain+"2", "Moderna 2nd Dose", "Intramuscular Injection", 943, 0, "0.5ml","2"),
+
+            BasicVaccine(covidMain+"1", "Pfizer-BioNTech 1st Dose", "Intramuscular Injection", 939, 0, "0.5ml","1"),
+            BasicVaccine(covidMain+"2", "Pfizer-BioNTech 2nd Dose", "Intramuscular Injection", 943, 0, "0.5ml","2"),
+
+            BasicVaccine(covidMain+"1", "Sinopharm 1st Dose", "Intramuscular Injection", 939, 0, "0.5ml","1"),
+            BasicVaccine(covidMain+"2", "Sinopharm 2nd Dose", "Intramuscular Injection", 943, 0, "0.5ml","2"),
+
+
+            ),
+        related = null
+    )
+
+    return listOf(polioSeries, yellowFeverSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,covidMainSeries)
 }
 
 class ImmunizationHandler() {
@@ -185,27 +235,6 @@ class ImmunizationHandler() {
         return weeksSinceDOB.isAfter(dob)
     }
 
-    fun groupRelatedVaccines(): Map<String, List<DbVaccine>> {
-        val groupedVaccines = mutableMapOf<String, MutableList<DbVaccine>>()
-
-        vaccines.forEach { vaccine ->
-            if (vaccine is SeriesVaccine && !vaccine.related.isNullOrEmpty()) {
-                vaccine.related.forEach { relatedCode ->
-                    val relatedVaccine = vaccines.find { it.vaccineCode == relatedCode }
-                    if (relatedVaccine != null) {
-                        groupedVaccines
-                            .getOrPut(vaccine.vaccineCode) { mutableListOf() }
-                            .add(vaccine)
-                        groupedVaccines
-                            .getOrPut(relatedCode) { mutableListOf() }
-                            .add(relatedVaccine)
-                    }
-                }
-            }
-        }
-
-        return groupedVaccines
-    }
 
     data class AvailableVaccine(val vaccine: SeriesVaccine, val isEligible: Boolean)
 

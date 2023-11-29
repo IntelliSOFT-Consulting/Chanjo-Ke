@@ -99,48 +99,9 @@ class VaccinationManager {
         return vaccines.values.filter { it.isEligible(dob) }.map { it.details() }
     }
 
-    private fun convertToVaccineCode(input: String): String {
-        return when (input.trim().toUpperCase()) {
-            "Bopv" -> "bOPV"
-            "OPV I" -> "OPV1"
-            "OPV II" -> "OPV2"
-            "OPV III" -> "OPV3"
-            "YELLOW FEVER" -> "YellowFever"
-            "MEASLES 1ST DOSE" -> "Measles1"
-            "MEASLES 2ND DOSE" -> "Measles2"
-            "Astrazeneca" -> "Astrazeneca"
-            "Moderna" -> "Moderna"
-            "JOHNSON & JOHNSON" -> "Johnson&Johnson"
-            "PhizerBioNTech" -> "PhizerBioNTech"
-            "Sinopharm" -> "Sinopharm"
-            else -> input.trim()
-        }
-    }
 
-    fun getVaccineDetails(vaccineName: String): VaccineDetails? {
-        var newVaccineName = ""
-        newVaccineName = when (vaccineName) {
-            "Bopv" -> {
-                "bOPV"
-            }
-            "Opv1" -> {
-                "OPV I"
-            }
-            "Opv2" -> {
-                "OPV II"
-            }
-            "Opv3" -> {
-                "OPV III"
-            }
-            else -> {
-                vaccineName
-            }
-        }
-        val newVaccine = convertToVaccineCode(newVaccineName)
-        Log.e("-----",newVaccine)
 
-        return vaccines[newVaccine]?.details()
-    }
+
 
 }
 

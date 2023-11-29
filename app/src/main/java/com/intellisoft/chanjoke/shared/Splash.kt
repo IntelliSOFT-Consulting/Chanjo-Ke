@@ -22,6 +22,17 @@ class Splash : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+
+        val immunizationHandler = ImmunizationHandler()
+        val (groupList, childList) = immunizationHandler.generateVaccineLists()
+
+        Log.e("------", "-------")
+        println(groupList)
+        println(childList)
+        Log.e("------", "-------")
+
+
+
         Handler().postDelayed({
             if (FormatterClass().getSharedPref("isLoggedIn", this@Splash) == "true") {
                 val intent = Intent(this, MainActivity::class.java)
