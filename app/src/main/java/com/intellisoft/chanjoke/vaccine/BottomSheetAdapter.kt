@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.vaccine
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import java.util.Locale
 
 class BottomSheetAdapter(
@@ -60,7 +62,7 @@ class BottomSheetAdapter(
 
         // Implement your group view here
         val value = getGroup(groupPosition).toString()
-        textView.text = value.lowercase().capitalize(Locale.ROOT)
+        textView.text = value
         return textView
     }
 
@@ -69,22 +71,26 @@ class BottomSheetAdapter(
         val textView: TextView = view.findViewById(R.id.childTextView)
 
         // Implement your child view here
-        val value = getChild(groupPosition, childPosition).toString()
-        val valueText = value.uppercase()
+        val valueText = getChild(groupPosition, childPosition).toString()
         textView.text = valueText
+
+//        val valueGroup = getGroup(groupPosition).toString()
 
         textView.setOnClickListener {
 
-            FormatterClass().saveSharedPref("targetDisease", value, context)
+            val immunizationHandler = ImmunizationHandler()
+            val vaccineDetails = immunizationHandler.getVaccineDetailsByVaccineName(valueText)
 
+            Log.e("------->","<-------")
+            println(vaccineDetails)
+            Log.e("------->","<-------")
 
-
-            val patientId = FormatterClass().getSharedPref("patientId", context)
-
-            val intent = Intent(context, VaccineStockManagement::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
-            intent.putExtra("patientId", patientId)
-            context.startActivity(intent)
+//            FormatterClass().saveSharedPref("targetDisease", value, context)
+//            val patientId = FormatterClass().getSharedPref("patientId", context)
+//            val intent = Intent(context, VaccineStockManagement::class.java)
+//            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+//            intent.putExtra("patientId", patientId)
+//            context.startActivity(intent)
         }
 
         return textView

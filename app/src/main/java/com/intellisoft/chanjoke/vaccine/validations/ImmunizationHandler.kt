@@ -49,10 +49,10 @@ fun createVaccines(): List<SeriesVaccine> {
     val polio = "IMPO-"
     val polioSeries = SeriesVaccine(
         polio,
-        "POLIO",
+        "Polio",
         4,
         listOf(
-            BasicVaccine(polio+"OPV", "OPV", "Oral", 0, 0, "2 drops"),
+            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 0, 0, "2 drops"),
             BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, 0, "2 drops"),
             BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, 0, "2 drops"),
             BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, 0, "2 drops")
@@ -63,7 +63,7 @@ fun createVaccines(): List<SeriesVaccine> {
     val yellowFever = "IMYF-"
     val yellowFeverSeries = SeriesVaccine(
         yellowFever,
-        "YELLOW FEVER",
+        "Yellow Fever",
         1,
         listOf(
             BasicVaccine(yellowFever+"I", "Yellow Fever", "Subcutaneous left upper arm", 40, 0, "0.5ml")
@@ -114,63 +114,31 @@ fun createVaccines(): List<SeriesVaccine> {
     val measles = "IMMEAS-"
     val measlesSeries = SeriesVaccine(
         measles,
-        "MEASLES",
+        "Measles",
         1,
         listOf(
             BasicVaccine(measles+"1", "Measles-Rubella 1st Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 27, 0, "0.5ml"),
             BasicVaccine(measles+"2", "Measles-Rubella 2nd Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 40, 0, "0.5ml")
         )
     )
-
-
-    return listOf(
-        polioSeries, yellowFeverSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries
-
-    )
+    return listOf(polioSeries, yellowFeverSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries)
 }
 
 class ImmunizationHandler() {
 
     val vaccines = createVaccines()
     // Open-closed principle
-    fun getVaccineDetails(vaccineCode: String): Pair<String, Any?>  {
-        val vaccine = vaccines.find { it.vaccineCode == vaccineCode }
-        return vaccine?.let { getSeriesVaccineDetails(it) } ?: Pair("ERROR", null)
+
+    fun getVaccineDetailsByVaccineName(vaccineName: String): DbVaccine? {
+
+        return vaccines
+            .asSequence()
+            .filterIsInstance<SeriesVaccine>()
+            .flatMap { it.vaccineList.asSequence() + it } // Flatten SeriesVaccine to include BasicVaccine
+            .find { it.vaccineName == vaccineName }
     }
 
-    fun getVaccineDetailsByName(vaccineName: String): Pair<String, Any?> {
-        val vaccine = vaccines.find { it.vaccineName == vaccineName }
-        return vaccine?.let { getSeriesVaccineDetails(it) } ?: Pair("ERROR", null)
-    }
 
-    private fun getSeriesVaccineDetails(vaccine: DbVaccine): Pair<String, Any?> {
-
-        return if (vaccine is SeriesVaccine){
-            Pair("SERIES", vaccine)
-        }else{
-            Pair("BASE", vaccine)
-        }
-
-
-
-//        return if (vaccine is SeriesVaccine) {
-//            buildString {
-//                append("DbVaccine Code: ${vaccine.vaccineCode}\n")
-//                append("DbVaccine Name: ${vaccine.vaccineName}\n")
-//                append("Administrative Method: ${vaccine.administrativeMethod}\n")
-//                append("Administrative Weeks Since DOB: ${vaccine.administrativeWeeksSinceDOB}\n")
-//                append("Administrative Weeks Since Previous: ${vaccine.administrativeWeeksSincePrevious}\n")
-//                append("Dosage: ${vaccine.dosage}\n")
-//                append("DbVaccine List:\n")
-//                vaccine.vaccineList.forEach { basicVaccine ->
-//                    append(getBaseVaccineDetails(basicVaccine))
-//                }
-//                append("\n")
-//            }
-//        } else {
-//            getBaseVaccineDetails(vaccine as BasicVaccine)
-//        }
-    }
 
     fun generateVaccineLists(): Pair<List<String>, Map<String, List<String>>> {
         val groupList = mutableListOf<String>()
@@ -184,17 +152,6 @@ class ImmunizationHandler() {
         return Pair(groupList, childList)
     }
 
-    private fun getBaseVaccineDetails(basicVaccine: BasicVaccine): String {
-        return buildString {
-            append("DbVaccine Code: ${basicVaccine.vaccineCode}\n")
-            append("DbVaccine Name: ${basicVaccine.vaccineName}\n")
-            append("Administrative Method: ${basicVaccine.administrativeMethod}\n")
-            append("Administrative Weeks Since DOB: ${basicVaccine.administrativeWeeksSinceDOB}\n")
-            append("Administrative Weeks Since Previous: ${basicVaccine.administrativeWeeksSincePrevious}\n")
-            append("Dosage: ${basicVaccine.dosage}\n")
-            append("\n")
-        }
-    }
 
     // Liskov substitution principle
     fun getAvailableVaccines(dob: LocalDate = LocalDate.now()): List<AvailableVaccine?> {
