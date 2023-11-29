@@ -190,7 +190,7 @@ class PatientDetailsViewModel(
     private fun createRecommendation(it: ImmunizationRecommendation): DbAppointmentDetails {
 
         var date = ""
-        val vaccinationManager = VaccinationManager()
+
         if (it.hasRecommendation() && it.recommendation.isNotEmpty()) {
            if (it.recommendation[0].hasDateCriterion() &&
                it.recommendation[0].dateCriterion.isNotEmpty() &&
@@ -203,6 +203,7 @@ class PatientDetailsViewModel(
         var targetDisease = ""
         var doseNumber: String? = ""
         var appointmentStatus = ""
+        var vaccineName = ""
 
 
         if (it.hasRecommendation()) {
@@ -225,6 +226,11 @@ class PatientDetailsViewModel(
                     doseNumber = recommendation[0].doseNumber.asStringValue()
                 }
 
+                //Contraindicated vaccine code
+                if (recommendation[0].hasContraindicatedVaccineCode()){
+                    vaccineName = recommendation[0].contraindicatedVaccineCode[0].text
+                }
+
             }
         }
 
@@ -232,7 +238,7 @@ class PatientDetailsViewModel(
 
 
 
-        return DbAppointmentDetails(date, doseNumber, targetDisease, appointmentStatus)
+        return DbAppointmentDetails(date, doseNumber,targetDisease, vaccineName, appointmentStatus)
 
 
     }

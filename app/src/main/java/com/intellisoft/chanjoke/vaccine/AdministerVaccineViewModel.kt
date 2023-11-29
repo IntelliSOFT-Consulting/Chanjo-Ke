@@ -34,6 +34,7 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -295,6 +296,7 @@ class AdministerVaccineViewModel(
         immunizationId:String?,
         ):ImmunizationRecommendation{
 
+        val immunizationHandler = ImmunizationHandler()
         val immunizationRecommendation = ImmunizationRecommendation()
         val patientReference = Reference("Patient/$patientId")
         val id = generateUuid()
@@ -375,6 +377,25 @@ class AdministerVaccineViewModel(
             immunizationRequest.supportingImmunization = immunizationReferenceList
         }
 
+        if (status == "Contraindicated"){
+            //Target Disease
+            val administeredProduct = FormatterClass().getSharedPref(
+                "administeredProduct",
+                getApplication<Application>().applicationContext)
+            if (administeredProduct != null){
+                val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
+                if (baseVaccineDetails != null){
+                    val contraindicationCodeableConceptList = ArrayList<CodeableConcept>()
+                    val codeableConceptContraindicatedVaccineCode = CodeableConcept()
+                    codeableConceptContraindicatedVaccineCode.text = administeredProduct
+                    contraindicationCodeableConceptList.add(codeableConceptContraindicatedVaccineCode)
+                    immunizationRequest.contraindicatedVaccineCode = contraindicationCodeableConceptList
+                }
+            }
+
+
+        }
+
         //Supporting Patient Information
         /**
          * TODO: Check on this
@@ -425,8 +446,6 @@ class AdministerVaccineViewModel(
                     patientId,
                     encounterId)
                 val nextDateStr = dateTime.dateTime
-
-                Log.e("********",nextDateStr.toString())
 
                 if (nextDateStr != null){
                     val nextDate = FormatterClass().convertStringToDate(nextDateStr, "yyyy-MM-dd'T'HH:mm:ssXXX")
@@ -489,7 +508,7 @@ class AdministerVaccineViewModel(
 //            Log.e("***","*** missingVaccine 1 $missingVaccineList")
 //
 //            missingVaccineList.forEach {
-//                FormatterClass().saveSharedPref("targetDisease", it, getApplication<Application>().applicationContext)
+//                FormatterClass().saveSharedPref("vaccinationTargetDisease", it, getApplication<Application>().applicationContext)
 //                val vaccineDetails = VaccinationManager().getVaccineDetails(it)
 //
 //                if (vaccineDetails != null){
