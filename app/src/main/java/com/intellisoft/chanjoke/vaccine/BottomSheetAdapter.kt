@@ -74,15 +74,17 @@ class BottomSheetAdapter(
         val valueText = getChild(groupPosition, childPosition).toString()
         textView.text = valueText
 
-//        val valueGroup = getGroup(groupPosition).toString()
+        val valueGroup = getGroup(groupPosition).toString()
 
         textView.setOnClickListener {
 
             val immunizationHandler = ImmunizationHandler()
-            val vaccineDetails = immunizationHandler.getVaccineDetailsByVaccineName(valueText)
+            val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(valueText)
+            val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesVaccineName(valueGroup)
 
             Log.e("------->","<-------")
-            println(vaccineDetails)
+            println(baseVaccineDetails)
+            println(seriesVaccineDetails)
             Log.e("------->","<-------")
 
 //            FormatterClass().saveSharedPref("targetDisease", value, context)

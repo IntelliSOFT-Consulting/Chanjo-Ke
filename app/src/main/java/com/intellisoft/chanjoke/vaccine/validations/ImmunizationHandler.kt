@@ -9,7 +9,8 @@ interface DbVaccine {
     val administrativeMethod: String
     val administrativeWeeksSinceDOB: Int
     val administrativeWeeksSincePrevious: Int
-    val dosage: String
+    val doseQuantity: String
+    val doseNumber: String //Dose number within series
 }
 
 data class BasicVaccine(
@@ -18,13 +19,14 @@ data class BasicVaccine(
     override val administrativeMethod: String,
     override val administrativeWeeksSinceDOB: Int,
     override val administrativeWeeksSincePrevious: Int,
-    override val dosage: String
+    override val doseQuantity: String,
+    override val doseNumber: String, //Dose number within series
 ) : DbVaccine
 
 data class SeriesVaccine(
     override val vaccineCode: String,
     override val vaccineName: String,
-    val seriesDoses: Int,
+    val seriesDoses: Int, // Recommended number of doses for immunity
     val vaccineList: List<BasicVaccine>,
     val related: List<String>? = null
 ) : DbVaccine {
@@ -39,8 +41,10 @@ data class SeriesVaccine(
     override val administrativeWeeksSincePrevious: Int
         get() = vaccineList.firstOrNull()?.administrativeWeeksSincePrevious ?: 0
 
-    override val dosage: String
-        get() = vaccineList.firstOrNull()?.dosage ?: "N/A"
+    override val doseQuantity: String
+        get() = vaccineList.firstOrNull()?.doseQuantity ?: "0"
+    override val doseNumber: String
+        get() = vaccineList.firstOrNull()?.doseNumber ?: "0"
 }
 
 
@@ -52,10 +56,10 @@ fun createVaccines(): List<SeriesVaccine> {
         "Polio",
         4,
         listOf(
-            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 0, 0, "2 drops"),
-            BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, 0, "2 drops"),
-            BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, 0, "2 drops"),
-            BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, 0, "2 drops")
+            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 0, 0, "2 drops","1"),
+            BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, 0, "2 drops","2"),
+            BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, 0, "2 drops","3"),
+            BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, 0, "2 drops","4")
         )
     )
 
@@ -66,7 +70,7 @@ fun createVaccines(): List<SeriesVaccine> {
         "Yellow Fever",
         1,
         listOf(
-            BasicVaccine(yellowFever+"I", "Yellow Fever", "Subcutaneous left upper arm", 40, 0, "0.5ml")
+            BasicVaccine(yellowFever+"I", "Yellow Fever", "Subcutaneous left upper arm", 40, 0, "0.5ml","1")
         )
     )
 
@@ -80,7 +84,7 @@ fun createVaccines(): List<SeriesVaccine> {
         "BCG",
         1,
         listOf(
-            BasicVaccine(bcg+"I", "BCG", "Intradermal", 0, 0, "0.5ml")
+            BasicVaccine(bcg+"I", "BCG", "Intradermal", 0, 0, "0.5ml","1")
         )
     )
 
@@ -91,9 +95,9 @@ fun createVaccines(): List<SeriesVaccine> {
         "DPT-HepB+Hib",
         1,
         listOf(
-            BasicVaccine(dpt+"1", "DPT-HepB+Hib 1", "Intramuscular into the upper outer aspect of left thigh", 6, 0, "0.5ml"),
-            BasicVaccine(dpt+"2", "DPT-HepB+Hib 2", "Intramuscular into the upper outer aspect of left thigh", 10, 0, "0.5ml"),
-            BasicVaccine(dpt+"3", "DPT-HepB+Hib 3", "Intramuscular into the upper outer aspect of left thigh", 14, 0, "0.5ml")
+            BasicVaccine(dpt+"1", "DPT-HepB+Hib 1", "Intramuscular into the upper outer aspect of left thigh", 6, 0, "0.5ml","1"),
+            BasicVaccine(dpt+"2", "DPT-HepB+Hib 2", "Intramuscular into the upper outer aspect of left thigh", 10, 0, "0.5ml","2"),
+            BasicVaccine(dpt+"3", "DPT-HepB+Hib 3", "Intramuscular into the upper outer aspect of left thigh", 14, 0, "0.5ml","3")
         )
     )
 
@@ -104,9 +108,9 @@ fun createVaccines(): List<SeriesVaccine> {
         "PCV10",
         1,
         listOf(
-            BasicVaccine(pcv+"1", "PCV10 1", "Intramuscular into the upper outer aspect of right thigh", 6, 0, "0.5ml"),
-            BasicVaccine(pcv+"2", "PCV10 2", "Intramuscular into the upper outer aspect of right thigh", 10, 0, "0.5ml"),
-            BasicVaccine(pcv+"3", "PCV10 3", "Intramuscular into the upper outer aspect of right thigh", 14, 0, "0.5ml")
+            BasicVaccine(pcv+"1", "PCV10 1", "Intramuscular into the upper outer aspect of right thigh", 6, 0, "0.5ml","1"),
+            BasicVaccine(pcv+"2", "PCV10 2", "Intramuscular into the upper outer aspect of right thigh", 10, 0, "0.5ml","2"),
+            BasicVaccine(pcv+"3", "PCV10 3", "Intramuscular into the upper outer aspect of right thigh", 14, 0, "0.5ml","3")
         )
     )
 
@@ -115,10 +119,11 @@ fun createVaccines(): List<SeriesVaccine> {
     val measlesSeries = SeriesVaccine(
         measles,
         "Measles",
-        1,
+        2,
         listOf(
-            BasicVaccine(measles+"1", "Measles-Rubella 1st Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 27, 0, "0.5ml"),
-            BasicVaccine(measles+"2", "Measles-Rubella 2nd Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 40, 0, "0.5ml")
+            BasicVaccine(measles+"0", "Measles-Rubella", "Subcutaneous into the right upper arm (deltoid muscle)", 27, 0, "0.5ml","0"),
+            BasicVaccine(measles+"1", "Measles-Rubella 1st Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 40, 0, "0.5ml","1"),
+            BasicVaccine(measles+"2", "Measles-Rubella 2nd Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 79, 0, "0.5ml","2")
         )
     )
     return listOf(polioSeries, yellowFeverSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries)
@@ -129,7 +134,7 @@ class ImmunizationHandler() {
     val vaccines = createVaccines()
     // Open-closed principle
 
-    fun getVaccineDetailsByVaccineName(vaccineName: String): DbVaccine? {
+    fun getVaccineDetailsByBasicVaccineName(vaccineName: String): DbVaccine? {
 
         return vaccines
             .asSequence()
@@ -138,6 +143,12 @@ class ImmunizationHandler() {
             .find { it.vaccineName == vaccineName }
     }
 
+    // Function to get series vaccine details by code
+    fun getSeriesVaccineDetailsBySeriesVaccineName(vaccineName: String): SeriesVaccine? {
+        return vaccines
+            .filterIsInstance<SeriesVaccine>()
+            .find { it.vaccineName == vaccineName }
+    }
 
 
     fun generateVaccineLists(): Pair<List<String>, Map<String, List<String>>> {
