@@ -28,53 +28,58 @@ import java.time.LocalDate
 import java.time.Period
 
 class PatientItemViewHolder(binding: PatientListItemViewBinding) :
-  RecyclerView.ViewHolder(binding.root) {
-//  private val statusView: ImageView = binding.status
-  private val nameView: TextView = binding.name
-  private val idNumber: TextView = binding.idNumber
-  private val tvPhoneNumber: TextView = binding.tvPhoneNumber
+    RecyclerView.ViewHolder(binding.root) {
+    //  private val statusView: ImageView = binding.status
+    private val nameView: TextView = binding.name
+    private val idNumber: TextView = binding.idNumber
+    private val tvPhoneNumber: TextView = binding.tvPhoneNumber
     val btnView: Button = binding.btnView
 
-  private val viewName: TextView = binding.viewName
-  private val viewId: TextView = binding.viewId
-  private val viewPhoneNumber: TextView = binding.viewPhoneNumber
+    private val viewName: TextView = binding.viewName
+    private val viewId: TextView = binding.viewId
+    private val viewPhoneNumber: TextView = binding.viewPhoneNumber
 
-  fun bindTo(
-    patientItem: PatientListViewModel.PatientItem,
-    onItemClicked: (PatientListViewModel.PatientItem) -> Unit,
-  ) {
-    this.nameView.text = patientItem.name
-    this.idNumber.text = getFormattedAge(patientItem, idNumber.context.resources)
-    this.tvPhoneNumber.text = patientItem.phone
+    fun bindTo(
+        patientItem: PatientListViewModel.PatientItem,
+        onItemClicked: (PatientListViewModel.PatientItem) -> Unit,
+    ) {
+        this.nameView.text = patientItem.name
+        this.idNumber.text =
+            patientItem.identification//getFormattedAge(patientItem, idNumber.context.resources)
+        this.tvPhoneNumber.text = patientItem.phone
 
-    this.viewName.text = "Name:"
-    this.viewId.text = "Age"
-    this.viewPhoneNumber.text = "Phone number"
-    this.itemView.setOnClickListener {
-      onItemClicked(patientItem)
+        this.viewName.text = "Name:"
+        this.viewId.text = "ID Number"
+        this.viewPhoneNumber.text = "Phone number"
+        this.itemView.setOnClickListener {
+            onItemClicked(patientItem)
+
+        }
 
     }
 
-  }
 
+    private fun getFormattedAge(
+        patientItem: PatientListViewModel.PatientItem,
+        resources: Resources,
+    ): String {
+        if (patientItem.dob == null) return ""
+        return Period.between(patientItem.dob, LocalDate.now()).let {
+            when {
+                it.years > 0 -> resources.getQuantityString(R.plurals.ageYear, it.years, it.years)
+                it.months > 0 -> resources.getQuantityString(
+                    R.plurals.ageMonth,
+                    it.months,
+                    it.months
+                )
 
-
-  private fun getFormattedAge(
-    patientItem: PatientListViewModel.PatientItem,
-    resources: Resources,
-  ): String {
-    if (patientItem.dob == null) return ""
-    return Period.between(patientItem.dob, LocalDate.now()).let {
-      when {
-        it.years > 0 -> resources.getQuantityString(R.plurals.ageYear, it.years, it.years)
-        it.months > 0 -> resources.getQuantityString(R.plurals.ageMonth, it.months, it.months)
-        else -> resources.getQuantityString(R.plurals.ageDay, it.days, it.days)
-      }
+                else -> resources.getQuantityString(R.plurals.ageDay, it.days, it.days)
+            }
+        }
     }
-  }
 
-  /** The new ui just shows shortened id with just last 3 characters. */
-  private fun getTruncatedId(patientItem: PatientListViewModel.PatientItem): String {
-    return patientItem.resourceId.takeLast(3)
-  }
+    /** The new ui just shows shortened id with just last 3 characters. */
+    private fun getTruncatedId(patientItem: PatientListViewModel.PatientItem): String {
+        return patientItem.resourceId.takeLast(3)
+    }
 }

@@ -163,7 +163,7 @@ class PatientListFragment : Fragment() {
                             searchView.query.toString().trim()
                         )
                         mainActivityViewModel.updateLastSyncTimestamp()
-                        fadeOutTopBanner(it)
+
                     }
 
                     is SyncJobStatus.Failed -> {
@@ -172,7 +172,7 @@ class PatientListFragment : Fragment() {
                             searchView.query.toString().trim()
                         )
                         mainActivityViewModel.updateLastSyncTimestamp()
-                        fadeOutTopBanner(it)
+
                     }
 
                     else -> {
@@ -181,7 +181,7 @@ class PatientListFragment : Fragment() {
                             searchView.query.toString().trim()
                         )
                         mainActivityViewModel.updateLastSyncTimestamp()
-                        fadeOutTopBanner(it)
+
                     }
                 }
             }
@@ -213,40 +213,4 @@ class PatientListFragment : Fragment() {
 
     }
 
-    private fun fadeInTopBanner(state: SyncJobStatus) {
-        if (topBanner.visibility != View.VISIBLE) {
-            syncStatus.text = resources.getString(R.string.syncing).uppercase()
-            syncPercent.text = ""
-            syncProgress.progress = 0
-            syncProgress.visibility = View.VISIBLE
-            topBanner.visibility = View.VISIBLE
-            val animation = AnimationUtils.loadAnimation(topBanner.context, R.anim.fade_in)
-            topBanner.startAnimation(animation)
-        } else if (state is SyncJobStatus.InProgress) {
-            val progress =
-                state
-                    .let { it.completed.toDouble().div(it.total) }
-                    .let { if (it.isNaN()) 0.0 else it }
-                    .times(100)
-                    .roundToInt()
-            "$progress% ${state.syncOperation.name.lowercase()}ed".also { syncPercent.text = it }
-            syncProgress.progress = progress
-        }
-    }
-
-    private fun fadeOutTopBanner(state: SyncJobStatus) {
-        if (state is SyncJobStatus.Finished) syncPercent.text = ""
-        syncProgress.visibility = View.GONE
-
-        if (topBanner.visibility == View.VISIBLE) {
-            "${
-                resources.getString(R.string.sync).uppercase()
-            } ${state::class.java.simpleName.uppercase()}"
-                .also { syncStatus.text = it }
-
-            val animation = AnimationUtils.loadAnimation(topBanner.context, R.anim.fade_out)
-            topBanner.startAnimation(animation)
-            Handler(Looper.getMainLooper()).postDelayed({ topBanner.visibility = View.GONE }, 2000)
-        }
-    }
 }

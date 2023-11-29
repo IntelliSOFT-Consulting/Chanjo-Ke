@@ -187,6 +187,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         val country = if (hasAddress()) address[0].country else ""
         val isActive = active
         val html: String = if (hasText()) text.div.valueAsString else ""
+        val identification: String = if (hasIdentifier()) identifier[0].value else "N/A"
 
         return PatientListViewModel.PatientItem(
             id = position.toString(),
@@ -194,6 +195,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             name = name,
             gender = gender ?: "",
             dob = dob,
+            identification = identification,
             phone = phone ?: "",
             city = city ?: "",
             country = country ?: "",
