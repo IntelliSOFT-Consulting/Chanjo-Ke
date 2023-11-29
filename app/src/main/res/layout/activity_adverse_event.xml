@@ -70,11 +70,37 @@
                     android:layout_weight="3" />
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/ln_other_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:visibility="gone.
+"
+                android:weightSum="4">
+
+                <!-- Type of AEFI -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/typeOfAEFIOtherTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3" />
+            </LinearLayout>
+
             <View
+                android:id="@+id/v_other_type"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_margin="3dp"
-                android:background="@color/bac_trans2" />
+                android:background="@color/bac_trans2"
+              />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -292,6 +318,7 @@
                 android:layout_height="1dp"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -310,7 +337,7 @@
                     android:id="@+id/healthcareWorkerTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"  />
+                    android:layout_weight="3" />
             </LinearLayout>
 
             <View
@@ -318,6 +345,34 @@
                 android:layout_height="1dp"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="4">
+
+                <!-- Designation-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/healthcare_worker_designation" />
+
+                <TextView
+                    android:id="@+id/designationTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="3dp"
+                android:background="@color/bac_trans2" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -344,6 +399,7 @@
                 android:layout_height="1dp"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -362,7 +418,7 @@
                     android:id="@+id/facilityTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"  />
+                    android:layout_weight="3" />
             </LinearLayout>
 
             <View

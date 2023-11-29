@@ -47,6 +47,7 @@
     <string name="date_reported">Date Reported:</string>
     <string name="facility">Facility:</string>
     <string name="success">Success</string>
+    <string name="healthcare_worker_designation">Designation</string>
 
 
 </resources>
