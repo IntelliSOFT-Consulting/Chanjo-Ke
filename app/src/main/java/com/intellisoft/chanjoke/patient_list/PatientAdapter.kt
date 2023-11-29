@@ -69,9 +69,12 @@ class PatientAdapter(
 
         val name = dbPatientList[position].name
         val age = dbPatientList[position].dob
+        val idNumber = dbPatientList[position].identification
+        val phoneNumber = dbPatientList[position].phone
 
         holder.name.text = name
-        holder.idNumber.text = age.toString()
+        holder.idNumber.text = idNumber
+        holder.tvPhoneNumber.text = phoneNumber
 
         holder.viewPhoneNumber.text = "Phone Number"
         holder.viewId.text = "Id Number"

@@ -73,17 +73,26 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
                     .show()
                 return@observe
             }
-            Toast.makeText(
+            val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", requireContext())
+            var valueText = if (vaccinationFlow == "addAefi"){
+                "AEFI Saved successfully!"
+            }else if (vaccinationFlow == "createVaccineDetails"){
+                "Vaccine details captured successfully!"
+            }else if (vaccinationFlow == "updateVaccineDetails"){
+                "Record has been updated successfully!"
+            } else{
+                "Record has been captured successfully!"
+            }
+
+            FormatterClass().customDialog(
                 requireContext(),
-                getString(R.string.resources_saved),
-                Toast.LENGTH_SHORT
-            )
-                .show()
+                valueText,
+                this)
 
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
-
-            NavHostFragment.findNavController(this).navigateUp()
+//            val intent = Intent(requireContext(), MainActivity::class.java)
+//            startActivity(intent)
+//
+//            NavHostFragment.findNavController(this).navigateUp()
 
 
         }

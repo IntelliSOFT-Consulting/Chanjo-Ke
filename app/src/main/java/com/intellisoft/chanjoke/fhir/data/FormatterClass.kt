@@ -4,6 +4,13 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
@@ -217,6 +224,29 @@ class FormatterClass {
         val words = input.split("(?=[A-Z])".toRegex())
         val result = words.joinToString(" ") { it.capitalize() }
         return result
+    }
+
+    fun customDialog(context: Context, valueText: String, fragment: Fragment){
+        val builder = AlertDialog.Builder(context)
+        val inflater = LayoutInflater.from(context)
+        val view = inflater.inflate(R.layout.bottom_dialog_layout, null)
+        builder.setView(view)
+        val alertDialog = builder.create()
+        alertDialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        alertDialog.setCancelable(false)
+        alertDialog.window?.setGravity(android.view.Gravity.BOTTOM)
+        view.findViewById<TextView>(R.id.info_textview).apply {
+            text = valueText
+        }
+        val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
+        closeMaterialButton.setOnClickListener {
+            alertDialog.dismiss()
+            NavHostFragment.findNavController(fragment).navigateUp()
+        }
+        alertDialog.show()
     }
 
 

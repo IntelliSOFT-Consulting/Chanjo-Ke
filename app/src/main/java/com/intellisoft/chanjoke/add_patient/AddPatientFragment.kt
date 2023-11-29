@@ -32,6 +32,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.intellisoft.chanjoke.R
 import com.google.android.fhir.datacapture.QuestionnaireFragment
 import com.google.android.material.button.MaterialButton
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 
 /** A fragment class to show patient registration screen. */
@@ -107,26 +108,8 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
                 return@observe
             }
 
-            val builder = AlertDialog.Builder(requireContext())
-            val inflater = LayoutInflater.from(requireContext())
-            val view = inflater.inflate(R.layout.bottom_dialog_layout, null)
-            builder.setView(view)
-            val alertDialog = builder.create()
-            alertDialog.window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            alertDialog.setCancelable(false)
-            alertDialog.window?.setGravity(android.view.Gravity.BOTTOM)
-            view.findViewById<TextView>(R.id.info_textview).apply {
-                text = "Client added successfully"
-            }
-            val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
-            closeMaterialButton.setOnClickListener {
-                alertDialog.dismiss()
-                NavHostFragment.findNavController(this).navigateUp()
-            }
-            alertDialog.show()
+            FormatterClass().customDialog(requireContext(), "Client added successfully!",this)
+
 
         }
     }

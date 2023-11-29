@@ -44,7 +44,7 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
               "item": [
                 {
-                  "text": "Type of Vaccine",
+                  "text": "Type of Vaccine *",
                   "linkId": "type-of-vaccine-choice",
                   "type": "choice",
                   "required": true,
@@ -90,7 +90,7 @@
                       "valueCoding": {
                         "system": "http://loinc.org",
                         "code": "30956-74",
-                        "display": "Measles "
+                        "display": "Measles"
                       }
                     }
                   ]
@@ -452,7 +452,7 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
               "item": [
                 {
-                  "text": "Place of Vaccination",
+                  "text": "Place of Vaccination *",
                   "linkId": "place-of-service-choice",
                   "type": "choice",
                   "required": true,
@@ -529,7 +529,7 @@
               "linkId": "date-of-last-dose",
               "type": "dateTime",
               "required": true,
-              "text": "Date of Last Dose",
+              "text": "Date of Last Dose *",
               "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueDateTime"
             },
             {
@@ -560,10 +560,10 @@
       "code": [
         {
           "code": "60484-3",
-          "display": "CDC Immunization panel"
+          "display": "Update Vaccine History"
         }
       ],
-      "text": "CDC Immunization panel",
+      "text": "Update Vaccine History",
       "required": false
     }
   ]
