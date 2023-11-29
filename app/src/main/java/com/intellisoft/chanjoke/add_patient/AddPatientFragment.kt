@@ -17,9 +17,13 @@
 package com.intellisoft.chanjoke.add_patient
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -27,85 +31,109 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.intellisoft.chanjoke.R
 import com.google.android.fhir.datacapture.QuestionnaireFragment
+import com.google.android.material.button.MaterialButton
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 
 /** A fragment class to show patient registration screen. */
 class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
 
-  private val viewModel: AddPatientViewModel by viewModels()
+    private val viewModel: AddPatientViewModel by viewModels()
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    setUpActionBar()
-    setHasOptionsMenu(true)
-    updateArguments()
-    if (savedInstanceState == null) {
-      addQuestionnaireFragment()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpActionBar()
+        setHasOptionsMenu(true)
+        updateArguments()
+        if (savedInstanceState == null) {
+            addQuestionnaireFragment()
+        }
+        observePatientSaveAction()
+        childFragmentManager.setFragmentResultListener(
+            QuestionnaireFragment.SUBMIT_REQUEST_KEY,
+            viewLifecycleOwner,
+        ) { _, _ ->
+            onSubmitAction()
+        }
     }
-    observePatientSaveAction()
-    childFragmentManager.setFragmentResultListener(
-      QuestionnaireFragment.SUBMIT_REQUEST_KEY,
-      viewLifecycleOwner,
-    ) { _, _ ->
-      onSubmitAction()
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                NavHostFragment.findNavController(this).navigateUp()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
-  }
 
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-      android.R.id.home -> {
-        NavHostFragment.findNavController(this).navigateUp()
-        true
-      }
-      else -> super.onOptionsItemSelected(item)
+    private fun setUpActionBar() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = requireContext().getString(R.string.add_patient)
+            setDisplayHomeAsUpEnabled(true)
+        }
     }
-  }
 
-  private fun setUpActionBar() {
-    (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-      title = requireContext().getString(R.string.add_patient)
-      setDisplayHomeAsUpEnabled(true)
+    private fun updateArguments() {
+        requireArguments()
+            .putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
     }
-  }
 
-  private fun updateArguments() {
-    requireArguments()
-      .putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
-  }
-
-  private fun addQuestionnaireFragment() {
-    childFragmentManager.commit {
-      replace(
-        R.id.add_patient_container,
-        QuestionnaireFragment.builder().setQuestionnaire(viewModel.questionnaireJson).build(),
-        QUESTIONNAIRE_FRAGMENT_TAG,
-      )
+    private fun addQuestionnaireFragment() {
+        childFragmentManager.commit {
+            replace(
+                R.id.add_patient_container,
+                QuestionnaireFragment.builder().setQuestionnaire(viewModel.questionnaireJson)
+                    .build(),
+                QUESTIONNAIRE_FRAGMENT_TAG,
+            )
+        }
     }
-  }
 
-  private fun onSubmitAction() {
-    val questionnaireFragment =
-      childFragmentManager.findFragmentByTag(QUESTIONNAIRE_FRAGMENT_TAG) as QuestionnaireFragment
-    savePatient(questionnaireFragment.getQuestionnaireResponse())
-  }
-
-  private fun savePatient(questionnaireResponse: QuestionnaireResponse) {
-    viewModel.savePatient(questionnaireResponse)
-  }
-
-  private fun observePatientSaveAction() {
-    viewModel.isPatientSaved.observe(viewLifecycleOwner) {
-      if (!it) {
-        Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
-        return@observe
-      }
-      Toast.makeText(requireContext(), "Patient is saved.", Toast.LENGTH_SHORT).show()
-      NavHostFragment.findNavController(this).navigateUp()
+    private fun onSubmitAction() {
+        val questionnaireFragment =
+            childFragmentManager.findFragmentByTag(QUESTIONNAIRE_FRAGMENT_TAG) as QuestionnaireFragment
+        savePatient(questionnaireFragment.getQuestionnaireResponse())
     }
-  }
 
-  companion object {
-    const val QUESTIONNAIRE_FILE_PATH_KEY = "questionnaire-file-path-key"
-    const val QUESTIONNAIRE_FRAGMENT_TAG = "questionnaire-fragment-tag"
-  }
+    private fun savePatient(questionnaireResponse: QuestionnaireResponse) {
+        viewModel.savePatient(questionnaireResponse)
+    }
+
+    private fun observePatientSaveAction() {
+        viewModel.isPatientSaved.observe(viewLifecycleOwner) {
+            if (!it) {
+                Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
+                return@observe
+            }
+
+            val builder = AlertDialog.Builder(requireContext())
+            val inflater = LayoutInflater.from(requireContext())
+            val view = inflater.inflate(R.layout.bottom_dialog_layout, null)
+            builder.setView(view)
+            val alertDialog = builder.create()
+            alertDialog.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            alertDialog.setCancelable(false)
+            alertDialog.window?.setGravity(android.view.Gravity.BOTTOM)
+            view.findViewById<TextView>(R.id.info_textview).apply {
+                text = "Client added successfully"
+            }
+            val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
+            closeMaterialButton.setOnClickListener {
+                alertDialog.dismiss()
+                NavHostFragment.findNavController(this).navigateUp()
+            }
+            alertDialog.show()
+
+        }
+    }
+
+
+    companion object {
+        const val QUESTIONNAIRE_FILE_PATH_KEY = "questionnaire-file-path-key"
+        const val QUESTIONNAIRE_FRAGMENT_TAG = "questionnaire-fragment-tag"
+    }
 }

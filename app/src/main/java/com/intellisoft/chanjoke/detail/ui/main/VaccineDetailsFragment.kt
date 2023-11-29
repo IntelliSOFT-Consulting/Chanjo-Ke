@@ -62,10 +62,7 @@ class VaccineDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val actionBar: ActionBar? = (requireActivity() as? AppCompatActivity)?.supportActionBar
-        actionBar?.apply {
-            title = "Vaccine Details"
-        }
+
         binding.apply {
             val vaccineName = FormatterClass().getSharedPref("vaccine_name", requireContext())
             val vaccineDose = FormatterClass().getSharedPref("vaccine_dose", requireContext())
@@ -79,18 +76,18 @@ class VaccineDetailsFragment : Fragment() {
             tvYearsSince.text =
                 generateDaysSince(vaccineDate.toString(), days = false, month = false)
 
-
+            if (vaccineName != null) {
+                tvTitle.text = vaccineName.replace("Vaccine:","")
+            }
             val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
-            Timber.e("patientDob *** $patientDob")
-            val age = generateAgeSince(patientDob,vaccineDate)
-            Timber.e("patientDob *** $age")
-            Timber.e("patientDob *** $vaccineDate")
+            val age = generateAgeSince(patientDob, vaccineDate)
             tvAgeThen.text = age
+
         }
         loadVaccineAdverseEvents()
     }
 
-    private fun generateAgeSince(dateString: String?,vaccineDate: String?): String {
+    private fun generateAgeSince(dateString: String?, vaccineDate: String?): String {
         return try {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val formatter2 = DateTimeFormatter.ofPattern("MMM dd yyyy")
@@ -100,7 +97,7 @@ class VaccineDetailsFragment : Fragment() {
             val date2 = LocalDate.parse(vaccineDate, formatter2)
             // Calculate the period between the two dates
             val period = Period.between(date1, date2)
-           when {
+            when {
                 period.years > 1 -> "${period.years} years ${period.months} months ${period.days} days"
                 period.years == 1 -> "${period.years} year ${period.months} months ${period.days} days"
                 period.months > 1 -> "${period.months} months ${period.days} days"
