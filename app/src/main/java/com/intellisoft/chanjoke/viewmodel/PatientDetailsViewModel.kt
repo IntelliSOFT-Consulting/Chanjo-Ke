@@ -65,6 +65,10 @@ class PatientDetailsViewModel(
         viewModelScope.launch { livePatientData.value = getPatientDetailDataModel() }
     }
 
+    fun getPatientInfo()= runBlocking{
+        getPatientDetailDataModel()
+    }
+
     private suspend fun getPatientDetailDataModel(): PatientData {
         val searchResult =
             fhirEngine.search<Patient> {
@@ -89,13 +93,17 @@ class PatientDetailsViewModel(
                 }
             }
 
-            dob = LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
-                .toString()
-            gender = it.genderElement.valueAsString
-            contact_name = if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
-            contact_phone = if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
-            contact_gender =
-                if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+            if (it.hasBirthDateElement()){
+                if (it.birthDateElement.hasValue()) dob = LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE).toString()
+            }
+
+            if (it.hasContact()){
+                if (it.contactFirstRep.hasName()) contact_name = if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
+                if (it.contactFirstRep.hasTelecom()) contact_phone = if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
+                if (it.contactFirstRep.hasGenderElement()) contact_gender = if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+            }
+
+            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
         }
 
         FormatterClass().saveSharedPref(
