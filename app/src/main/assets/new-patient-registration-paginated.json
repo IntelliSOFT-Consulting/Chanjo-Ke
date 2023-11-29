@@ -375,7 +375,7 @@
                     {
                       "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
                       "valueExpression": {
-                        "system": "http://hl7.org/fhir/administrative-gender",
+                        "system": "http://hl7.org/fhir/administrative-identifier",
                         "language": "text/fhirpath",
                         "expression": "Patient.identifier.type",
                         "name": "patientIdentifier"
@@ -397,21 +397,21 @@
                   "answerOption": [
                     {
                       "valueCoding": {
-                        "system": "http://hl7.org/fhir/administrative-gender",
+                        "system": "http://hl7.org/fhir/administrative-identifier",
                         "code": "birthcertificate",
                         "display": "Birth Certificate"
                       }
                     },
                     {
                       "valueCoding": {
-                        "system": "http://hl7.org/fhir/administrative-gender",
+                        "system": "http://hl7.org/fhir/administrative-identifier",
                         "code": "nationalId",
                         "display": "National ID"
                       }
                     },
                     {
                       "valueCoding": {
-                        "system": "http://hl7.org/fhir/administrative-gender",
+                        "system": "http://hl7.org/fhir/administrative-identifier",
                         "code": "passport",
                         "display": "Passport"
                       }
