@@ -3,10 +3,19 @@ package com.intellisoft.chanjoke.fhir.data
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
-import com.intellisoft.chanjoke.vaccine.validations.VaccineDetails
+import com.intellisoft.chanjoke.patient_list.PatientListViewModel
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +23,7 @@ import kotlinx.coroutines.launch
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.Period
 import java.util.Date
 import java.util.Locale
 
@@ -106,77 +116,100 @@ class FormatterClass {
         return calculatedDate.toString()
     }
 
-    fun getEligibleVaccines(
-        context: Context,
-        patientDetailsViewModel: PatientDetailsViewModel):List<String>{
 
-        val dob = getSharedPref("patientDob", context)
-        val patientId = getSharedPref("patientId", context)
+    fun saveStockValue(administeredProduct:String, targetDisease:String, context: Context):ArrayList<DbVaccineStockDetails>{
+        val stockList = ArrayList<DbVaccineStockDetails>()
 
-        if (patientId != null && dob != null){
-            //Convert dob to LocalDate
-            val birthDate = LocalDate.parse(dob)
+        val immunizationHandler = ImmunizationHandler()
+        val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
+        val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(targetDisease)
 
-            /**
-             * Get the vaccines from BaseVaccine
-             */
-            val vaccinationManager = VaccinationManager()
-            val vaccineList = vaccinationManager.getEligibleVaccines(birthDate)
+        if (seriesVaccineDetails != null && baseVaccineDetails != null){
 
-            /**
-             * Get the Vaccines for this person
-             */
-            val vaccinationList =  patientDetailsViewModel.getEncounterList()
+            stockList.addAll(
+                listOf(
+                    DbVaccineStockDetails("vaccinationTargetDisease",targetDisease),
+                    DbVaccineStockDetails("administeredProduct",administeredProduct),
 
-            val missingVaccineList = vaccineList.filter { vaccine ->
-                vaccinationList.none { adverseEvent -> adverseEvent.vaccineName == vaccine.name }
-            }.map { it.name }
-            /**
-             * Get recommendations and check if the vaccine has already been created as a recommendation
-             */
-            val recommendationList = patientDetailsViewModel.recommendationList()
+                    DbVaccineStockDetails("vaccinationSeriesDoses",seriesVaccineDetails.seriesDoses.toString()),
 
-            val listToRecommend = missingVaccineList.filter { vaccine ->
-                recommendationList.none() {recommend ->
-                    val targetDisease = recommend.targetDisease.replace(" ", "").uppercase()
-                    val missingVaccine = vaccine.replace(" ", "").uppercase()
-                    targetDisease == missingVaccine
-                }
+                    DbVaccineStockDetails("vaccinationDoseQuantity",baseVaccineDetails.doseQuantity),
+                    DbVaccineStockDetails("vaccinationDoseNumber",baseVaccineDetails.doseNumber),
+                    DbVaccineStockDetails("vaccinationBrand",baseVaccineDetails.vaccineName),
+                    DbVaccineStockDetails("vaccinationSite",baseVaccineDetails.administrativeMethod),
+
+                    DbVaccineStockDetails("vaccinationExpirationDate",""),
+                    DbVaccineStockDetails("vaccinationBatchNumber",""),
+                    DbVaccineStockDetails("vaccinationManufacturer","")
+                )
+            )
+
+            //Save to shared pref
+            stockList.forEach{
+                saveSharedPref(it.name,it.value,context)
             }
 
-            return listToRecommend
-        }
-        return emptyList()
-    }
-
-    fun generateStockValue(vaccineDetails: VaccineDetails,context: Context):ArrayList<DbVaccineStockDetails>{
-        val targetDisease = getSharedPref("targetDisease", context).toString()
-        val stockList = ArrayList<DbVaccineStockDetails>()
-        stockList.addAll(
-            listOf(
-                DbVaccineStockDetails("vaccinationTargetDisease",targetDisease.lowercase().capitalize(Locale.ROOT)),
-                DbVaccineStockDetails("vaccinationDosage",vaccineDetails.dosage),
-                DbVaccineStockDetails("vaccinationAdministrationMethod",vaccineDetails.administrationMethod),
-                DbVaccineStockDetails("vaccinationDoseNumber",vaccineDetails.doseNumber),
-                DbVaccineStockDetails("vaccinationSeriesDoses",vaccineDetails.seriesDoses),
-                DbVaccineStockDetails("vaccinationBatchNumber",""),
-                DbVaccineStockDetails("vaccinationExpirationDate",""),
-                DbVaccineStockDetails("vaccinationBrand",""),
-                DbVaccineStockDetails("vaccinationManufacturer","")
-            )
-        )
-
-        //Save to shared pref
-        stockList.forEach{
-            saveSharedPref(it.name,it.value,context)
         }
         return stockList
+
+
     }
 
     fun formatString(input: String): String {
         val words = input.split("(?=[A-Z])".toRegex())
         val result = words.joinToString(" ") { it.capitalize() }
         return result
+    }
+
+    fun customDialog(context: Context, valueText: String, fragment: Fragment){
+        val builder = AlertDialog.Builder(context)
+        val inflater = LayoutInflater.from(context)
+        val view = inflater.inflate(R.layout.bottom_dialog_layout, null)
+        builder.setView(view)
+        val alertDialog = builder.create()
+        alertDialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        alertDialog.setCancelable(false)
+        alertDialog.window?.setGravity(android.view.Gravity.BOTTOM)
+        view.findViewById<TextView>(R.id.info_textview).apply {
+            text = valueText
+        }
+        val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
+        closeMaterialButton.setOnClickListener {
+            alertDialog.dismiss()
+            NavHostFragment.findNavController(fragment).navigateUp()
+        }
+        alertDialog.show()
+    }
+
+    fun getFormattedAge(
+        dob: String?,
+        resources: Resources,
+    ): String {
+        if (dob == null) return ""
+        val dobFormat = convertDateFormat(dob)
+        if (dobFormat != null){
+            val dobDate = convertStringToDate(dobFormat, "MMM d yyyy")
+            if (dobDate != null){
+                val finalDate = convertDateToLocalDate(dobDate)
+                return Period.between(finalDate, LocalDate.now()).let {
+                    when {
+                        it.years > 0 -> resources.getQuantityString(R.plurals.ageYear, it.years, it.years)
+                        it.months > 0 -> resources.getQuantityString(
+                            R.plurals.ageMonth,
+                            it.months,
+                            it.months
+                        )
+
+                        else -> resources.getQuantityString(R.plurals.ageDay, it.days, it.days)
+                    }
+                }
+            }
+        }
+        return ""
+
     }
 
 

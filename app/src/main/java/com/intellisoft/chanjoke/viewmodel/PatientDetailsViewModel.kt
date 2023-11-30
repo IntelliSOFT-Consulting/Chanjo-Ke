@@ -25,7 +25,6 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.utils.Constants.AEFI_DATE
 import com.intellisoft.chanjoke.utils.Constants.AEFI_TYPE
-import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -65,6 +64,10 @@ class PatientDetailsViewModel(
         viewModelScope.launch { livePatientData.value = getPatientDetailDataModel() }
     }
 
+    fun getPatientInfo()= runBlocking{
+        getPatientDetailDataModel()
+    }
+
     private suspend fun getPatientDetailDataModel(): PatientData {
         val searchResult =
             fhirEngine.search<Patient> {
@@ -89,12 +92,17 @@ class PatientDetailsViewModel(
                 }
             }
 
-            dob = LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
-                .toString()
-            gender = it.genderElement.valueAsString
-            contact_name = if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
-            contact_phone = if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
-//            contact_gender =                if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+            if (it.hasBirthDateElement()){
+                if (it.birthDateElement.hasValue()) dob = LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE).toString()
+            }
+
+            if (it.hasContact()){
+                if (it.contactFirstRep.hasName()) contact_name = if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
+                if (it.contactFirstRep.hasTelecom()) contact_phone = if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
+                if (it.contactFirstRep.hasGenderElement()) contact_gender = if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+            }
+
+            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
         }
 
         FormatterClass().saveSharedPref(
@@ -118,7 +126,6 @@ class PatientDetailsViewModel(
             contact_gender = contact_gender
         )
     }
-
 
     data class PatientData(
         val name: String,
@@ -189,7 +196,7 @@ class PatientDetailsViewModel(
     private fun createRecommendation(it: ImmunizationRecommendation): DbAppointmentDetails {
 
         var date = ""
-        val vaccinationManager = VaccinationManager()
+
         if (it.hasRecommendation() && it.recommendation.isNotEmpty()) {
            if (it.recommendation[0].hasDateCriterion() &&
                it.recommendation[0].dateCriterion.isNotEmpty() &&
@@ -202,6 +209,7 @@ class PatientDetailsViewModel(
         var targetDisease = ""
         var doseNumber: String? = ""
         var appointmentStatus = ""
+        var vaccineName = ""
 
 
         if (it.hasRecommendation()) {
@@ -224,19 +232,19 @@ class PatientDetailsViewModel(
                     doseNumber = recommendation[0].doseNumber.asStringValue()
                 }
 
+                //Contraindicated vaccine code
+                if (recommendation[0].hasContraindicatedVaccineCode()){
+                    vaccineName = recommendation[0].contraindicatedVaccineCode[0].text
+                }
+
             }
         }
 
-        if (targetDisease != "") {
-            doseNumber =
-                vaccinationManager.getVaccineDetails(targetDisease.replace(" ", ""))?.dosage
-        }
 
 
 
 
-
-        return DbAppointmentDetails(date, doseNumber, targetDisease, appointmentStatus)
+        return DbAppointmentDetails(date, doseNumber,targetDisease, vaccineName, appointmentStatus)
 
 
     }
@@ -263,22 +271,17 @@ class PatientDetailsViewModel(
 
     private fun createEncounterItem(immunization: Immunization): DbVaccineData {
 
-        var targetDisease = ""
+        var vaccineName = ""
         var doseNumberValue = ""
-        var logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
+        val logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
         var dateScheduled = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
 
-        val protocolList = immunization.protocolApplied
-        protocolList.forEach {
-
-            //Target Disease
-
-            val targetDiseaseList = it.targetDisease
-            if (targetDiseaseList.isNotEmpty()) targetDisease = targetDiseaseList[0].text
-
+        if (immunization.hasVaccineCode()){
+            if (immunization.vaccineCode.hasText()) vaccineName = immunization.vaccineCode.text
         }
+
         if (immunization.hasOccurrenceDateTimeType()) {
             val fhirDate = immunization.occurrenceDateTimeType.valueAsString
             val convertedDate = FormatterClass().convertDateFormat(fhirDate)
@@ -286,13 +289,13 @@ class PatientDetailsViewModel(
                 dateScheduled = convertedDate
             }
         }
-        if (immunization.hasDoseQuantity()) {
-            doseNumberValue = immunization.doseQuantity.value.toString()
+        if (immunization.hasProtocolApplied()){
+            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue = immunization.protocolApplied[0].seriesDoses.asStringValue()
         }
 
         return DbVaccineData(
             ref,
-            targetDisease,
+            vaccineName,
             doseNumberValue,
             dateScheduled
         )

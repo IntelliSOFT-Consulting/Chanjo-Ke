@@ -21,6 +21,7 @@
         <activity
             android:name=".vaccine.stock_management.VaccineStockManagement"
             android:exported="false"
+            android:label="Client Details"
             android:parentActivityName=".detail.PatientDetailActivity" />
         <activity
             android:name=".shared.ForgotPassword"

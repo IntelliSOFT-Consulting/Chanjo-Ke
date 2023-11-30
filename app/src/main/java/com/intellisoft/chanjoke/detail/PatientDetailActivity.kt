@@ -5,21 +5,18 @@ import android.os.Bundle
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.navArgs
+import androidx.lifecycle.lifecycleScope
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.ui.main.SectionsPagerAdapter
 import com.intellisoft.chanjoke.databinding.ActivityPatientDetailBinding
 import com.intellisoft.chanjoke.detail.ui.main.AppointmentsFragment
-import com.intellisoft.chanjoke.detail.ui.main.ClientDetailsFragment
 import com.intellisoft.chanjoke.detail.ui.main.VaccinesFragment
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.utils.AppUtils
@@ -32,6 +29,7 @@ import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PatientDetailActivity : AppCompatActivity() {
     private lateinit var fhirEngine: FhirEngine
@@ -43,6 +41,7 @@ class PatientDetailActivity : AppCompatActivity() {
     private var formatterClass = FormatterClass()
 
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
+    val livePatientData: MutableLiveData<PatientDetailsViewModel.PatientData> = MutableLiveData()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,26 +97,8 @@ class PatientDetailActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
-        patientDetailsViewModel.livePatientData.observe(this) {
-            binding.apply {
-                tvName.text = it.name
-                tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
-                tvDob.text = formatterClass.convertDateFormat(it.dob)
-//                tvContact.text = it.contact_name
-//                tvPhone.text = it.contact_phone
-//                tvContactGender.text = it.contact_gender
-            }
-        }
-        patientDetailsViewModel.getPatientDetailData()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            formatterClass.saveSharedPref(
-                "vaccinationFlow",
-                "recommendVaccineDetails",
-                this@PatientDetailActivity
-            )
-            administerVaccineViewModel.generateImmunizationRecord("", patientId)
-        }
+        getPatientDetails()
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -153,6 +134,51 @@ class PatientDetailActivity : AppCompatActivity() {
         }
 
     }
+
+
+    private fun getPatientDetails() {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val patientDetail = patientDetailsViewModel.getPatientInfo()
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.apply {
+                    tvName.text = patientDetail.name
+                    tvGender.text = AppUtils().capitalizeFirstLetter(patientDetail.gender)
+                    tvDob.text = formatterClass.convertDateFormat(patientDetail.dob)
+                    tvAge.text = formatterClass.getFormattedAge(patientDetail.dob,tvAge.context.resources)
+
+                }
+            }
+
+
+
+//            patientDetailsViewModel.livePatientData.observe(this) {
+//                binding.apply {
+//                    tvName.text = it.name
+//                    tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
+//                    tvDob.text = formatterClass.convertDateFormat(it.dob)
+////                tvContact.text = it.contact_name
+////                tvPhone.text = it.contact_phone
+////                tvContactGender.text = it.contact_gender
+//                }
+//            }
+        }
+
+
+
+
+
+    }
+
+//    CoroutineScope(Dispatchers.IO).launch {
+//        formatterClass.saveSharedPref(
+//            "vaccinationFlow",
+//            "recommendVaccineDetails",
+//            this@PatientDetailActivity
+//        )
+//        administerVaccineViewModel.generateImmunizationRecord("", patientId)
+//    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

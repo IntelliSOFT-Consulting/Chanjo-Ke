@@ -45,6 +45,7 @@ class AppointmentAdapter(
                 val formatterClass = FormatterClass()
                 val patientId = FormatterClass().getSharedPref("patientId", context)
                 val targetDisease = entryList[pos].targetDisease
+                val administeredProduct = entryList[pos].vaccineName
 
                 formatterClass.saveSharedPref(
                     "questionnaireJson",
@@ -59,8 +60,13 @@ class AppointmentAdapter(
 
 
                 formatterClass.saveSharedPref(
-                    "targetDisease",
+                    "vaccinationTargetDisease",
                     targetDisease,
+                    context
+                )
+                formatterClass.saveSharedPref(
+                    "administeredProduct",
+                    administeredProduct,
                     context
                 )
 
@@ -98,13 +104,14 @@ class AppointmentAdapter(
     override fun onBindViewHolder(holder: Pager2ViewHolder, position: Int) {
 
         val targetDisease = entryList[position].targetDisease
+        val vaccineName = entryList[position].vaccineName
         val dateScheduled = entryList[position].dateScheduled
         val doseNumber = entryList[position].doseNumber
         val appointmentStatus = entryList[position].appointmentStatus
 
         val dateScheduledFormat = FormatterClass().convertDateFormat(dateScheduled)
 
-        holder.tvAppointment.text = targetDisease
+        holder.tvAppointment.text = vaccineName
         holder.tvDateScheduled.text = dateScheduledFormat
         holder.tvDoseNumber.text = doseNumber
         holder.chipAppointment.text = appointmentStatus
