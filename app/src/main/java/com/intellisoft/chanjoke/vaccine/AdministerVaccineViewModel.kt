@@ -542,17 +542,28 @@ class AdministerVaccineViewModel(
                 "222-11",
                 patientId,
                 encounterId)
-            val administeredProduct = vaccineType.value
+            val administeredProduct = vaccineType.value.trim()
 
             //Target Disease
             val disease = observationFromCode(
                 "882-22",
                 patientId,
                 encounterId)
-            val targetDisease = disease.value
+            val targetDisease = disease.value.trim()
 
-            //Save resources to Shared preference
-            FormatterClass().saveStockValue(administeredProduct, targetDisease, getApplication<Application>().applicationContext)
+            Log.e("++++++++++++","++++++++++")
+            println("vaccineType $vaccineType")
+            println("administeredProduct $administeredProduct")
+            println("-----------")
+            println("disease $disease")
+            println("targetDisease $targetDisease")
+            Log.e("++++++++++++","++++++++++")
+
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+                //Save resources to Shared preference
+                FormatterClass().saveStockValue(administeredProduct, targetDisease, getApplication<Application>().applicationContext)
+            }.join()
 
 
             //Vaccine details have been saved

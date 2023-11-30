@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.fhir.data
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
@@ -12,7 +13,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.button.MaterialButton
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 
@@ -179,7 +182,8 @@ class FormatterClass {
         val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
         closeMaterialButton.setOnClickListener {
             alertDialog.dismiss()
-            NavHostFragment.findNavController(fragment).navigateUp()
+            val intent = Intent(context, PatientDetailActivity::class.java)
+            context.startActivity(intent)
         }
         alertDialog.show()
     }

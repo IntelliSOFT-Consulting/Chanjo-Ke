@@ -88,9 +88,6 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
                 requireContext(),
                 valueText,
                 this)
-
-//            val intent = Intent(requireContext(), MainActivity::class.java)
-//            startActivity(intent)
 //
 //            NavHostFragment.findNavController(this).navigateUp()
 

@@ -8,6 +8,8 @@
     <TextView
         android:background="@drawable/text_view_border_white"
         android:padding="10dp"
+        android:paddingStart="50dp"
+        android:paddingEnd="10dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:text="Polio"
         android:id="@+id/headerTextView"
