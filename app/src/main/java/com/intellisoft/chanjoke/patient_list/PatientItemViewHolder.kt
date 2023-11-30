@@ -59,24 +59,7 @@ class PatientItemViewHolder(binding: PatientListItemViewBinding) :
     }
 
 
-    private fun getFormattedAge(
-        patientItem: PatientListViewModel.PatientItem,
-        resources: Resources,
-    ): String {
-        if (patientItem.dob == null) return ""
-        return Period.between(patientItem.dob, LocalDate.now()).let {
-            when {
-                it.years > 0 -> resources.getQuantityString(R.plurals.ageYear, it.years, it.years)
-                it.months > 0 -> resources.getQuantityString(
-                    R.plurals.ageMonth,
-                    it.months,
-                    it.months
-                )
 
-                else -> resources.getQuantityString(R.plurals.ageDay, it.days, it.days)
-            }
-        }
-    }
 
     /** The new ui just shows shortened id with just last 3 characters. */
     private fun getTruncatedId(patientItem: PatientListViewModel.PatientItem): String {

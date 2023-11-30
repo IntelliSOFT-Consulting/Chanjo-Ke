@@ -145,7 +145,7 @@ class PatientDetailActivity : AppCompatActivity() {
                     tvName.text = patientDetail.name
                     tvGender.text = AppUtils().capitalizeFirstLetter(patientDetail.gender)
                     tvDob.text = formatterClass.convertDateFormat(patientDetail.dob)
-
+                    tvAge.text = formatterClass.getFormattedAge(patientDetail.dob,tvAge.context.resources)
 
                 }
             }

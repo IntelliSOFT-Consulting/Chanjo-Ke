@@ -100,7 +100,7 @@ fun createVaccines(): List<SeriesVaccine> {
     val dptSeries = SeriesVaccine(
         dpt,
         "DPT-HepB+Hib",
-        1,
+        3,
         listOf(
             BasicVaccine(dpt+"1", "DPT-HepB+Hib 1", "Intramuscular into the upper outer aspect of left thigh", 6, 0, "0.5ml","1"),
             BasicVaccine(dpt+"2", "DPT-HepB+Hib 2", "Intramuscular into the upper outer aspect of left thigh", 10, 0, "0.5ml","2"),
@@ -113,7 +113,7 @@ fun createVaccines(): List<SeriesVaccine> {
     val pcvSeries = SeriesVaccine(
         pcv,
         "PCV10",
-        1,
+        3,
         listOf(
             BasicVaccine(pcv+"1", "PCV10 1", "Intramuscular into the upper outer aspect of right thigh", 6, 0, "0.5ml","1"),
             BasicVaccine(pcv+"2", "PCV10 2", "Intramuscular into the upper outer aspect of right thigh", 10, 0, "0.5ml","2"),

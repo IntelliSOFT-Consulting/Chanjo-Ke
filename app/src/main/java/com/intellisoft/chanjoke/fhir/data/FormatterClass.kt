@@ -3,6 +3,7 @@ package com.intellisoft.chanjoke.fhir.data
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import com.intellisoft.chanjoke.vaccine.validations.VaccineDetails
@@ -22,6 +24,7 @@ import kotlinx.coroutines.launch
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.Period
 import java.util.Date
 import java.util.Locale
 
@@ -247,6 +250,34 @@ class FormatterClass {
             NavHostFragment.findNavController(fragment).navigateUp()
         }
         alertDialog.show()
+    }
+
+    fun getFormattedAge(
+        dob: String?,
+        resources: Resources,
+    ): String {
+        if (dob == null) return ""
+        val dobFormat = convertDateFormat(dob)
+        if (dobFormat != null){
+            val dobDate = convertStringToDate(dobFormat, "MMM d yyyy")
+            if (dobDate != null){
+                val finalDate = convertDateToLocalDate(dobDate)
+                return Period.between(finalDate, LocalDate.now()).let {
+                    when {
+                        it.years > 0 -> resources.getQuantityString(R.plurals.ageYear, it.years, it.years)
+                        it.months > 0 -> resources.getQuantityString(
+                            R.plurals.ageMonth,
+                            it.months,
+                            it.months
+                        )
+
+                        else -> resources.getQuantityString(R.plurals.ageDay, it.days, it.days)
+                    }
+                }
+            }
+        }
+        return ""
+
     }
 
 

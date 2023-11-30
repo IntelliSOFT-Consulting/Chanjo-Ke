@@ -437,7 +437,7 @@
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.value",
                   "type": "string",
                   "required": true,
-                  "text": "ID Number"
+                  "text": "Identification Number"
                 }
               ]
             }
