@@ -195,7 +195,28 @@
               "linkId": "type-other",
               "type": "string",
               "required": true,
-              "text": "Specify",
+              "item": [
+                {
+                  "linkId": "care-giver-type",
+                  "text": "Specify",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
             },
             {
@@ -236,7 +257,28 @@
               "linkId": "brief-description",
               "type": "string",
               "required": true,
-              "text": "Brief Description on the AEFI",
+              "item": [
+                {
+                  "linkId": "care-giver-type",
+                  "text": "Brief Description on the AEFI",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
             },
             {
@@ -318,7 +360,28 @@
               "linkId": "medical-history",
               "type": "string",
               "required": true,
-              "text": "Past medical history",
+              "item": [
+                {
+                  "linkId": "care-giver-type",
+                  "text": "Past medical history",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
             },
             {
@@ -393,7 +456,28 @@
               "linkId": "treatment-given",
               "type": "string",
               "required": true,
-              "text": "Treatment Given",
+              "item": [
+                {
+                  "linkId": "care-giver-type",
+                  "text": "Treatment Given",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
             },
             {
@@ -579,7 +663,28 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
               "item": [
                 {
-                  "text": "AEFI Outcome",
+                  "item": [
+                    {
+                      "linkId": "aefi-outcome",
+                      "text": "AEFI Outcome",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
+                          }
+                        }
+                      ]
+                    }
+                  ],
                   "linkId": "AEFI-outcome-choice",
                   "type": "choice",
                   "required": true,
@@ -677,7 +782,28 @@
               "linkId": "person-reporting",
               "type": "string",
               "required": true,
-              "text": "Name of Person Reporting",
+              "item": [
+                {
+                  "linkId": "reporter",
+                  "text": "Name of Person Reporting",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
             },
             {
@@ -718,7 +844,28 @@
               "linkId": "phone-number",
               "type": "string",
               "required": true,
-              "text": "Phone Number",
+              "item": [
+                {
+                  "linkId": "reporter-phone",
+                  "text": "Phone Number",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
             },
             {

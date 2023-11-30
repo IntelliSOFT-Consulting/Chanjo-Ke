@@ -120,30 +120,45 @@ class FormatterClass {
     }
 
 
-    fun saveStockValue(administeredProduct:String, targetDisease:String, context: Context):ArrayList<DbVaccineStockDetails>{
+    fun saveStockValue(
+        administeredProduct: String,
+        targetDisease: String,
+        context: Context
+    ): ArrayList<DbVaccineStockDetails> {
         val stockList = ArrayList<DbVaccineStockDetails>()
 
         val immunizationHandler = ImmunizationHandler()
-        val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
-        val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(targetDisease)
+        val baseVaccineDetails =
+            immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
+        val seriesVaccineDetails =
+            immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(targetDisease)
 
-        if (seriesVaccineDetails != null && baseVaccineDetails != null){
+        if (seriesVaccineDetails != null && baseVaccineDetails != null) {
 
             stockList.addAll(
                 listOf(
-                    DbVaccineStockDetails("vaccinationTargetDisease",targetDisease),
-                    DbVaccineStockDetails("administeredProduct",administeredProduct),
+                    DbVaccineStockDetails("vaccinationTargetDisease", targetDisease),
+                    DbVaccineStockDetails("administeredProduct", administeredProduct),
 
-                    DbVaccineStockDetails("vaccinationSeriesDoses",seriesVaccineDetails.seriesDoses.toString()),
+                    DbVaccineStockDetails(
+                        "vaccinationSeriesDoses",
+                        seriesVaccineDetails.seriesDoses.toString()
+                    ),
 
-                    DbVaccineStockDetails("vaccinationDoseQuantity",baseVaccineDetails.doseQuantity),
-                    DbVaccineStockDetails("vaccinationDoseNumber",baseVaccineDetails.doseNumber),
-                    DbVaccineStockDetails("vaccinationBrand",baseVaccineDetails.vaccineName),
-                    DbVaccineStockDetails("vaccinationSite",baseVaccineDetails.administrativeMethod),
+                    DbVaccineStockDetails(
+                        "vaccinationDoseQuantity",
+                        baseVaccineDetails.doseQuantity
+                    ),
+                    DbVaccineStockDetails("vaccinationDoseNumber", baseVaccineDetails.doseNumber),
+                    DbVaccineStockDetails("vaccinationBrand", baseVaccineDetails.vaccineName),
+                    DbVaccineStockDetails(
+                        "vaccinationSite",
+                        baseVaccineDetails.administrativeMethod
+                    ),
 
-                    DbVaccineStockDetails("vaccinationExpirationDate",""),
-                    DbVaccineStockDetails("vaccinationBatchNumber",""),
-                    DbVaccineStockDetails("vaccinationManufacturer","")
+                    DbVaccineStockDetails("vaccinationExpirationDate", ""),
+                    DbVaccineStockDetails("vaccinationBatchNumber", ""),
+                    DbVaccineStockDetails("vaccinationManufacturer", "")
                 )
             )
 
@@ -182,8 +197,22 @@ class FormatterClass {
         val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
         closeMaterialButton.setOnClickListener {
             alertDialog.dismiss()
-            val intent = Intent(context, PatientDetailActivity::class.java)
-            context.startActivity(intent)
+            val patientId = getSharedPref("patientId", context)
+
+            val isRegistration = getSharedPref("isRegistration", context)
+            if (isRegistration != null) {
+                if (isRegistration == "true") {
+                    val intent = Intent(context, PatientDetailActivity::class.java)
+                    intent.putExtra("patientId", patientId)
+                    context.startActivity(intent)
+                    deleteSharedPref("isRegistration", context)
+                }
+            }else{
+                val intent = Intent(context, PatientDetailActivity::class.java)
+                intent.putExtra("patientId", patientId)
+                context.startActivity(intent)
+            }
+//            NavHostFragment.findNavController(fragment).navigateUp()
         }
         alertDialog.show()
     }
@@ -194,13 +223,18 @@ class FormatterClass {
     ): String {
         if (dob == null) return ""
         val dobFormat = convertDateFormat(dob)
-        if (dobFormat != null){
+        if (dobFormat != null) {
             val dobDate = convertStringToDate(dobFormat, "MMM d yyyy")
-            if (dobDate != null){
+            if (dobDate != null) {
                 val finalDate = convertDateToLocalDate(dobDate)
                 return Period.between(finalDate, LocalDate.now()).let {
                     when {
-                        it.years > 0 -> resources.getQuantityString(R.plurals.ageYear, it.years, it.years)
+                        it.years > 0 -> resources.getQuantityString(
+                            R.plurals.ageYear,
+                            it.years,
+                            it.years
+                        )
+
                         it.months > 0 -> resources.getQuantityString(
                             R.plurals.ageMonth,
                             it.months,

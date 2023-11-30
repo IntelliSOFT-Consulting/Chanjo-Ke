@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -46,6 +47,7 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
         setUpActionBar()
         setHasOptionsMenu(true)
         updateArguments()
+        onBackPressed()
         if (savedInstanceState == null) {
             addQuestionnaireFragment()
         }
@@ -59,6 +61,27 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
             viewLifecycleOwner,
         ) { _, _ ->
             onSubmitAction()
+        }
+    }
+    private fun showCancelScreenerQuestionnaireAlertDialog() {
+        val alertDialog: AlertDialog? =
+            activity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setMessage(getString(R.string.cancel_questionnaire_message))
+                    setPositiveButton(getString(android.R.string.yes)) { _, _ ->
+                        NavHostFragment.findNavController(this@AdministerVaccineFragment).navigateUp()
+                    }
+                    setNegativeButton(getString(android.R.string.no)) { _, _ -> }
+                }
+                builder.create()
+            }
+        alertDialog?.show()
+    }
+
+    private fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
+            showCancelScreenerQuestionnaireAlertDialog()
         }
     }
 
@@ -98,7 +121,7 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                NavHostFragment.findNavController(this).navigateUp()
+                showCancelScreenerQuestionnaireAlertDialog()
                 true
             }
 

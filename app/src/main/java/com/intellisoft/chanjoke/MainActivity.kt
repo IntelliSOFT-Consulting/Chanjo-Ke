@@ -19,6 +19,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.shared.Login
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
@@ -36,14 +37,16 @@ class MainActivity : AppCompatActivity() {
             findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
         setSupportActionBar(toolbar)
         val navController = findNavController(R.id.nav_host_fragment_activity_bottem_navigation)
-
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setHomeButtonEnabled(false)
+            setHomeAsUpIndicator(null)
+        }
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    // Handle home item click
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
+                    navController.navigate(R.id.landing_page)
                     true
                 }
 
@@ -53,18 +56,15 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.navigation_vaccine -> {
-                    // Handle notifications item click
                     navController.navigate(R.id.patient_list)
                     true
                 }
 
                 R.id.navigation_profile -> {
-                    // Handle notifications item click
-//                    Toast.makeText(this, "Under development", Toast.LENGTH_SHORT).show()
                     viewModel.triggerOneTimeSync()
 
                     val intent = Intent(this, Login::class.java)
-                    FormatterClass().saveSharedPref("isLoggedIn","false",this)
+                    FormatterClass().saveSharedPref("isLoggedIn", "false", this)
                     startActivity(intent)
                     finish()
 
@@ -78,6 +78,11 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.updateLastSyncTimestamp()
         viewModel.triggerOneTimeSync()
+        //        load initial landing page
+        navController.navigate(R.id.landing_page)
+        Timber.e("*********")
+        Timber.e(intent.getStringExtra("functionToCall"))
+        Timber.e("*********")
         when (intent.getStringExtra("functionToCall")) {
             "updateFunction" -> {
                 val patientId = intent.getStringExtra("patientId")
@@ -115,12 +120,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
+                R.id.landing_page,
                 R.id.patient_list, R.id.updateFragment, R.id.editPatientFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+
 
     }
 
@@ -156,34 +164,6 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
             R.id.careGiverFragment, bundle
         )
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_item_option1 -> {
-
-                findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(R.id.patientDetailActivity)
-                true
-            }
-
-            R.id.menu_item_option2 -> {
-                viewModel.triggerOneTimeSync()
-                true
-            }
-            // Add more cases for additional menu items if needed
-
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun updateFunction(patientId: String) {

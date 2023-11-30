@@ -127,7 +127,6 @@ class PatientDetailsViewModel(
         )
     }
 
-
     data class PatientData(
         val name: String,
         val phone: String,
