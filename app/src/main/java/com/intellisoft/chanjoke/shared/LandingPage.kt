@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -30,7 +31,11 @@ class LandingPage : Fragment() {
     ): View? {
 
         _binding = FragmentLandingPageBinding.inflate(inflater, container, false)
-
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setHomeButtonEnabled(false)
+            setHomeAsUpIndicator(null)
+        }
         return _binding.root
 
     }
@@ -73,27 +78,7 @@ class LandingPage : Fragment() {
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.sdcLayoutsRecyclerView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(context, 2)
-        /*      binding.cardViewSearchClient.setOnClickListener {
-                  findNavController().navigate(R.id.patient_list)
-              }
-              binding.cardViewRegisterClient.setOnClickListener {
-                  val bundle = Bundle()
-                  bundle.putString(AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
-                      "new-patient-registration-paginated.json")
-                  findNavController().navigate(R.id.addPatientFragment, bundle)
-      //            val intent = Intent(requireContext(), AddPatientActivity::class.java)
-      //            startActivity(intent)
-              }
-              binding.cardViewUpdateClient.setOnClickListener {
-                  findNavController().navigate(R.id.patient_list)
-              }
-              binding.cardViewAdministerVaccine.setOnClickListener {
-                  findNavController().navigate(R.id.patient_list)
-              }
-              binding.cardViewAefi.setOnClickListener {
-                  findNavController().navigate(R.id.patient_list)
-              }
-      */
+
 
     }
 

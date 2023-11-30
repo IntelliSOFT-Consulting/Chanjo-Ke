@@ -17,6 +17,7 @@
 package com.intellisoft.chanjoke.add_patient
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -29,9 +30,7 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
-import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.HumanName
@@ -67,7 +66,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
      *
      * @param questionnaireResponse patient registration questionnaire response
      */
-    fun savePatient(questionnaireResponse: QuestionnaireResponse) {
+    fun savePatient(questionnaireResponse: QuestionnaireResponse, context: Context) {
         viewModelScope.launch {
             if (
                 QuestionnaireResponseValidator.validateQuestionnaireResponse(
@@ -97,6 +96,12 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             patient.id = patientId
             fhirEngine.create(patient)
 
+            /**
+             * Utilized patient's id for navigation
+             * */
+
+            FormatterClass().saveSharedPref("patientId", patientId, context)
+            FormatterClass().saveSharedPref("isRegistration", "true", context)
 
             isPatientSaved.value = true
         }

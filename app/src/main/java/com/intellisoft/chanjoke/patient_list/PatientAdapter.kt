@@ -41,7 +41,7 @@ class PatientAdapter(
             val pos = adapterPosition
             val id = dbPatientList[pos].resourceId
 
-            FormatterClass().saveSharedPref("patientId", id.toString(), context)
+            FormatterClass().saveSharedPref("patientId", id, context)
 
             val intent = Intent(context, PatientDetailActivity::class.java)
             intent.putExtra("patientId", id)

@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/landing_page"
         android:name="com.intellisoft.chanjoke.shared.LandingPage"
-        android:label="Home"
-        tools:layout="@layout/fragment_landing_page" >
+        android:label=""
+        tools:layout="@layout/fragment_landing_page">
         <action
             android:id="@+id/action_patient_list_to_addPatientFragment"
             app:destination="@id/addPatientFragment" />
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/patient_list"
         android:name="com.intellisoft.chanjoke.patient_list.PatientListFragment"
-        android:label="Client List"
+        android:label=""
         tools:layout="@layout/patient_list_view">
 
         <action
@@ -37,15 +37,15 @@
         tools:layout="@layout/add_patient_fragment" />
 
 
-  <!--  <activity
-        android:id="@+id/mainActivity"
-        android:name="com.intellisoft.chanjoke.MainActivity"
-        android:label="activity_patient_detail"
-        tools:layout="@layout/activity_main">
-        <action
-            android:id="@+id/action_to_editPatientFragment"
-            app:destination="@id/editPatientFragment" />
-    </activity>-->
+    <!--  <activity
+          android:id="@+id/mainActivity"
+          android:name="com.intellisoft.chanjoke.MainActivity"
+          android:label="activity_patient_detail"
+          tools:layout="@layout/activity_main">
+          <action
+              android:id="@+id/action_to_editPatientFragment"
+              app:destination="@id/editPatientFragment" />
+      </activity>-->
     <activity
         android:id="@+id/patientDetailActivity"
         android:name="com.intellisoft.chanjoke.detail.PatientDetailActivity"

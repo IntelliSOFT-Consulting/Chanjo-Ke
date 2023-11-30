@@ -93,24 +93,28 @@
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.given",
                   "type": "string",
                   "required": true,
-                  "text": "First Name *",
-                  "_text": {
-                    "extension": [
-                      {
-                        "extension": [
-                          {
-                            "url": "lang",
-                            "valueCode": "sw"
-                          },
-                          {
-                            "url": "content",
-                            "valueString": "Jina la kwanza"
+                  "item": [
+                    {
+                      "linkId": "firstname",
+                      "text": "First Name",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
                           }
-                        ],
-                        "url": "http://hl7.org/fhir/StructureDefinition/translation"
-                      }
-                    ]
-                  }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "extension": [
@@ -126,24 +130,28 @@
                   "linkId": "PR-name-middle",
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.name.given",
                   "type": "string",
-                  "text": "Middle Name",
-                  "_text": {
-                    "extension": [
-                      {
-                        "extension": [
-                          {
-                            "url": "lang",
-                            "valueCode": "sw"
-                          },
-                          {
-                            "url": "content",
-                            "valueString": "Jina la kwanza"
+                  "item": [
+                    {
+                      "linkId": "middle-name",
+                      "text": "Middle Name",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
                           }
-                        ],
-                        "url": "http://hl7.org/fhir/StructureDefinition/translation"
-                      }
-                    ]
-                  }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "extension": [
@@ -160,24 +168,28 @@
                   "definition": "http://hl7.org/fhir/StructureDefinition/datatypes#HumanName.family",
                   "type": "string",
                   "required": true,
-                  "text": "Last Name *",
-                  "_text": {
-                    "extension": [
-                      {
-                        "extension": [
-                          {
-                            "url": "lang",
-                            "valueCode": "sw"
-                          },
-                          {
-                            "url": "content",
-                            "valueString": "Jina la ukoo"
+                  "item": [
+                    {
+                      "linkId": "last-name",
+                      "text": "Last Name *",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
                           }
-                        ],
-                        "url": "http://hl7.org/fhir/StructureDefinition/translation"
-                      }
-                    ]
-                  }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -187,7 +199,7 @@
                   "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
                   "valueExpression": {
                     "language": "text/fhirpath",
-                    "expression": "Patient.birthDate <=today()",
+                    "expression": "Patient.birthDate",
                     "name": "patientBirthDate"
                   }
                 }
@@ -196,30 +208,55 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.birthDate",
               "type": "date",
               "required": true,
-              "text": "Date of Birth *",
-              "_text": {
-                "extension": [
-                  {
-                    "extension": [
-                      {
-                        "url": "lang",
-                        "valueCode": "sw"
-                      },
-                      {
-                        "url": "content",
-                        "valueString": "Tarehe ya kuzaliwa"
+              "item": [
+                {
+                  "linkId": "birth-date",
+                  "text": "Birth Date *",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
                       }
-                    ],
-                    "url": "http://hl7.org/fhir/StructureDefinition/translation"
-                  }
-                ]
-              }
+                    }
+                  ]
+                }
+              ]
             },
             {
               "linkId": "patient-0-gender",
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.gender",
               "type": "choice",
-              "text": "Sex *",
+              "item": [
+                {
+                  "linkId": "gender",
+                  "text": "Gender *",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "required": true,
               "extension": [
                 {
@@ -229,18 +266,6 @@
                     "language": "text/fhirpath",
                     "expression": "Patient.gender",
                     "name": "patientGender"
-                  }
-                },
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                  "valueCodeableConcept": {
-                    "coding": [
-                      {
-                        "system": "http://hl7.org/fhir/questionnaire-item-control",
-                        "code": "radio-button",
-                        "display": "Radio Button"
-                      }
-                    ]
                   }
                 },
                 {
@@ -326,24 +351,28 @@
                   "linkId": "PR-telecom-value",
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.telecom.value",
                   "type": "string",
-                  "text": "Phone Number",
-                  "_text": {
-                    "extension": [
-                      {
-                        "extension": [
-                          {
-                            "url": "lang",
-                            "valueCode": "sw"
-                          },
-                          {
-                            "url": "content",
-                            "valueString": "Nambari ya simu"
+                  "item": [
+                    {
+                      "linkId": "phone-number",
+                      "text": "Phone Number",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
                           }
-                        ],
-                        "url": "http://hl7.org/fhir/StructureDefinition/translation"
-                      }
-                    ]
-                  }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -356,7 +385,29 @@
                   "linkId": "patient-identify-type",
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.type",
                   "type": "choice",
-                  "text": "Identification Type",
+                  "text": "",
+                  "item": [
+                    {
+                      "linkId": "identification-type",
+                      "text": "Identification Type *",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
+                          }
+                        }
+                      ]
+                    }
+                  ],
                   "required": true,
                   "extension": [
                     {
@@ -437,7 +488,28 @@
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.value",
                   "type": "string",
                   "required": true,
-                  "text": "Identification Number"
+                  "item": [
+                    {
+                      "linkId": "identification-number",
+                      "text": "Identification Number *",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -454,7 +526,28 @@
         {
           "linkId": "patient-rshp",
           "type": "choice",
-          "text": "Caregiver type",
+          "item": [
+            {
+              "linkId": "caregiver-type",
+              "text": "Caregiver Type ",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
           "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.relationship",
           "extension": [
             {
@@ -526,7 +619,28 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.name.given",
               "type": "string",
               "required": true,
-              "text": "Care Giver Name"
+              "item": [
+                {
+                  "linkId": "caregiver-name",
+                  "text": "Care Giver Name *",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -566,7 +680,28 @@
               "linkId": "patient-contact-telecom-value",
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.telecom.value",
               "type": "string",
-              "text": "Phone Number"
+              "item": [
+                {
+                  "linkId": "care-give-number",
+                  "text": "Phone Number",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -579,7 +714,28 @@
             {
               "linkId": "patient-rshp-1",
               "type": "choice",
-              "text": "Caregiver type",
+              "item": [
+                {
+                  "linkId": "care-giver-type",
+                  "text": "Caregiver Type",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.relationship",
               "extension": [
                 {
@@ -651,7 +807,28 @@
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.name.given",
                   "type": "string",
                   "required": true,
-                  "text": "Care Giver Name"
+                  "item": [
+                    {
+                      "linkId": "care-giver-name",
+                      "text": "Care Giver Name *",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -691,7 +868,28 @@
                   "linkId": "patient-contact-telecom-value-1",
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact.telecom.value",
                   "type": "string",
-                  "text": "Phone Number"
+                  "item": [
+                    {
+                      "linkId": "care-giver-phone",
+                      "text": "Phone Number *",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -720,24 +918,28 @@
           "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.city",
           "type": "string",
           "required": true,
-          "text": "County *",
-          "_text": {
-            "extension": [
-              {
-                "extension": [
-                  {
-                    "url": "lang",
-                    "valueCode": "sw"
-                  },
-                  {
-                    "url": "content",
-                    "valueString": "Mji"
+          "item": [
+            {
+              "linkId": "county",
+              "text": "County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
                   }
-                ],
-                "url": "http://hl7.org/fhir/StructureDefinition/translation"
-              }
-            ]
-          }
+                }
+              ]
+            }
+          ]
         },
         {
           "extension": [
@@ -754,39 +956,106 @@
           "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.country",
           "type": "string",
           "required": true,
-          "text": "Sub county",
-          "_text": {
-            "extension": [
-              {
-                "extension": [
-                  {
-                    "url": "lang",
-                    "valueCode": "sw"
-                  },
-                  {
-                    "url": "content",
-                    "valueString": "Nchi"
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
                   }
-                ],
-                "url": "http://hl7.org/fhir/StructureDefinition/translation"
-              }
-            ]
-          }
+                }
+              ]
+            }
+          ]
         },
         {
           "linkId": "PR-address-ward",
           "type": "string",
-          "text": "Ward"
+          "item": [
+            {
+              "linkId": "ward",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "linkId": "PR-address-town",
           "type": "string",
-          "text": "Town/Trading centre"
+          "item": [
+            {
+              "linkId": "trading-center",
+              "text": "Town/Trading centre",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "linkId": "PR-address-estate",
           "type": "string",
-          "text": "Estate & House No./Village"
+          "item": [
+            {
+              "linkId": "estate",
+              "text": "Estate & House No./Village",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     }

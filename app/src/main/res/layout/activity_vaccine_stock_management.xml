@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".vaccine.stock_management.VaccineStockManagement">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -24,38 +24,50 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/layout"
         android:id="@+id/recyclerView"
         android:name="com.google.fhirengine.example.PatientListFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/layout"
         android:layout_marginTop="10dp"
         android:paddingBottom="80dp"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".PatientListActivity"/>
+        tools:context=".PatientListActivity" />
 
     <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
 
-        <Button
-            android:layout_weight="1"
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
-            android:text="Cancel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:text="Cancel"
+            android:textColor="#ffffff"
+            app:backgroundTint="@color/colorPrimary"
+            app:iconGravity="textStart"
+            app:iconTint="#ffffff" />
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
-            android:text="Next"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:text="Next"
+            android:textColor="#ffffff"
+            app:backgroundTint="@color/colorPrimary"
+            app:iconGravity="textStart"
+            app:iconTint="#ffffff" />
 
     </LinearLayout>
 

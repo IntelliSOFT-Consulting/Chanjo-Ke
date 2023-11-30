@@ -522,7 +522,7 @@
                       "valueCoding": {
                         "system": "http://loinc.org",
                         "code": "LA21205-2",
-                        "display": "patient not tested"
+                        "display": "client not tested"
                       }
                     },
                     {
