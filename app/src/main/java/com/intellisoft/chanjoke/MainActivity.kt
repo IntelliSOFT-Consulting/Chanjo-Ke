@@ -19,6 +19,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.shared.Login
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
@@ -77,6 +78,11 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.updateLastSyncTimestamp()
         viewModel.triggerOneTimeSync()
+        //        load initial landing page
+        navController.navigate(R.id.landing_page)
+        Timber.e("*********")
+        Timber.e(intent.getStringExtra("functionToCall"))
+        Timber.e("*********")
         when (intent.getStringExtra("functionToCall")) {
             "updateFunction" -> {
                 val patientId = intent.getStringExtra("patientId")
@@ -114,6 +120,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.landing_page,
@@ -121,8 +128,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-//        load initial landing page
-        navController.navigate(R.id.landing_page)
+
 
     }
 
