@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/patient_list"
         android:name="com.intellisoft.chanjoke.patient_list.PatientListFragment"
-        android:label="Registered Clients"
+        android:label=""
         tools:layout="@layout/patient_list_view">
 
         <action
