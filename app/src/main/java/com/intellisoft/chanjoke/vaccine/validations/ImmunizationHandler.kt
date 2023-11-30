@@ -134,6 +134,57 @@ fun createVaccines(): List<SeriesVaccine> {
         )
     )
 
+    //Rota Virus
+    val rotaVirus = "IMROTA-"
+    val rotaSeries = SeriesVaccine(
+        rotaVirus,
+        "Rota Virus",
+        3,
+        listOf(
+           BasicVaccine(rotaVirus+"1", "Rota Virus 1st Dose", "Oral", 6, 0, "0.5ml","1"),
+           BasicVaccine(rotaVirus+"2", "Rota Virus 2nd Dose", "Oral", 10, 0, "0.5ml","2"),
+           BasicVaccine(rotaVirus+"3", "Rota Virus 3rd Dose", "Oral", 14, 0, "0.5ml","3"),
+        )
+    )
+
+    //Vitamin A
+    val vitaminA = "IMVIT-"
+    val vitaminASeries = SeriesVaccine(
+        vitaminA,
+        "Vitamin A",
+        3,
+        listOf(
+           BasicVaccine(vitaminA+"1", "Vitamin A 1st Dose", "Oral", 26, 0, "100,000OUI","1"),
+           BasicVaccine(vitaminA+"2", "Vitamin A 2nd Dose", "Oral", 52, 0, "200,000OUI","2"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 3rd Dose", "Oral", 78, 0, "1Capsule","3"),
+        )
+    )
+
+    //Vitamin A
+    val malaria = "IMMALA-"
+    val malariaSeries = SeriesVaccine(
+        malaria,
+        "RTS/AS01 (Malaria)",
+        4,
+        listOf(
+            BasicVaccine(malaria+"1", "RTS/AS01 (Malaria Vaccine - 1)", "Intramuscular left deltoid muscle", 26, 0, "0.5ml","1"),
+            BasicVaccine(malaria+"2", "RTS/AS01 (Malaria Vaccine - 2)", "Intramuscular left deltoid muscle", 30, 0, "0.5ml","2"),
+            BasicVaccine(malaria+"3", "RTS/AS01 (Malaria Vaccine - 3)", "Intramuscular left deltoid muscle", 39, 0, "0.5ml","3"),
+            BasicVaccine(malaria+"4", "RTS/AS01 (Malaria Vaccine - 4)", "Intramuscular left deltoid muscle", 104, 0, "0.5ml","4")
+        )
+    )
+    //HPV Vaccine
+    val hpvVaccine = "IMHPV-"
+    val hpvSeries = SeriesVaccine(
+        hpvVaccine,
+        "HPV",
+        2,
+        listOf(
+            BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, 0, "0.5ml","1"),
+            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 842, 0, "0.5ml","1")
+       )
+    )
+
     //Covid
 
     val covidMain = "IMCOV-"
@@ -160,7 +211,7 @@ fun createVaccines(): List<SeriesVaccine> {
         false
     )
 
-    return listOf(polioSeries, yellowFeverSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,covidMainSeries)
+    return listOf(polioSeries, yellowFeverSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,covidMainSeries,rotaSeries,vitaminASeries,malariaSeries,hpvSeries)
 }
 
 class ImmunizationHandler() {

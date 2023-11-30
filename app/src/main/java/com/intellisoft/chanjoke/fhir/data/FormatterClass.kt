@@ -15,8 +15,7 @@ import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
-import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
-import com.intellisoft.chanjoke.vaccine.validations.VaccineDetails
+
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -117,73 +116,6 @@ class FormatterClass {
         return calculatedDate.toString()
     }
 
-    fun getEligibleVaccines(
-        context: Context,
-        patientDetailsViewModel: PatientDetailsViewModel):List<String>{
-
-        val dob = getSharedPref("patientDob", context)
-        val patientId = getSharedPref("patientId", context)
-
-        if (patientId != null && dob != null){
-            //Convert dob to LocalDate
-            val birthDate = LocalDate.parse(dob)
-
-            /**
-             * Get the vaccines from BaseVaccine
-             */
-            val vaccinationManager = VaccinationManager()
-            val vaccineList = vaccinationManager.getEligibleVaccines(birthDate)
-
-            /**
-             * Get the Vaccines for this person
-             */
-            val vaccinationList =  patientDetailsViewModel.getEncounterList()
-
-            val missingVaccineList = vaccineList.filter { vaccine ->
-                vaccinationList.none { adverseEvent -> adverseEvent.vaccineName == vaccine.name }
-            }.map { it.name }
-            /**
-             * Get recommendations and check if the vaccine has already been created as a recommendation
-             */
-            val recommendationList = patientDetailsViewModel.recommendationList()
-
-            val listToRecommend = missingVaccineList.filter { vaccine ->
-                recommendationList.none() {recommend ->
-                    val targetDisease = recommend.targetDisease.replace(" ", "").uppercase()
-                    val missingVaccine = vaccine.replace(" ", "").uppercase()
-                    targetDisease == missingVaccine
-                }
-            }
-
-            return listToRecommend
-        }
-        return emptyList()
-    }
-
-    fun generateStockValue(vaccineDetails: VaccineDetails,context: Context):ArrayList<DbVaccineStockDetails>{
-
-        val targetDisease = getSharedPref("targetDisease", context).toString()
-        val stockList = ArrayList<DbVaccineStockDetails>()
-        stockList.addAll(
-            listOf(
-                DbVaccineStockDetails("vaccinationTargetDisease",targetDisease.lowercase().capitalize(Locale.ROOT)),
-                DbVaccineStockDetails("vaccinationDosage",vaccineDetails.dosage),
-                DbVaccineStockDetails("vaccinationAdministrationMethod",vaccineDetails.administrationMethod),
-                DbVaccineStockDetails("vaccinationDoseNumber",vaccineDetails.doseNumber),
-                DbVaccineStockDetails("vaccinationSeriesDoses",vaccineDetails.seriesDoses),
-                DbVaccineStockDetails("vaccinationBatchNumber",""),
-                DbVaccineStockDetails("vaccinationExpirationDate",""),
-                DbVaccineStockDetails("vaccinationBrand",""),
-                DbVaccineStockDetails("vaccinationManufacturer","")
-            )
-        )
-
-        //Save to shared pref
-        stockList.forEach{
-            saveSharedPref(it.name,it.value,context)
-        }
-        return stockList
-    }
 
     fun saveStockValue(administeredProduct:String, targetDisease:String, context: Context):ArrayList<DbVaccineStockDetails>{
         val stockList = ArrayList<DbVaccineStockDetails>()
