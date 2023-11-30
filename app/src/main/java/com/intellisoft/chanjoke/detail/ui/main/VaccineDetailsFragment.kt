@@ -76,8 +76,11 @@ class VaccineDetailsFragment : Fragment() {
             tvYearsSince.text =
                 generateDaysSince(vaccineDate.toString(), days = false, month = false)
 
-            if (vaccineName != null) {
-                tvTitle.text = vaccineName.replace("Vaccine:","")
+
+            (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+                if (vaccineName != null) {
+                    title=vaccineName.replace("Vaccine:","")
+                }
             }
             val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
             val age = generateAgeSince(patientDob, vaccineDate)
