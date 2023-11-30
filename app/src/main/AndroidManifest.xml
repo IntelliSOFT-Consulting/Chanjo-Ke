@@ -35,11 +35,12 @@
         <activity
             android:name=".detail.PatientDetailActivity"
             android:exported="false"
-            android:label="@string/title_activity_patient_detail"
+            android:label=""
             android:theme="@style/Theme.Zanzibar.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="" />
         <activity
             android:name=".shared.Splash"
             android:exported="true"
