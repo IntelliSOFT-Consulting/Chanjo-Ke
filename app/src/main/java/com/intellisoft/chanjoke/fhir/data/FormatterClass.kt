@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.fhir.data
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 
@@ -35,12 +37,14 @@ class FormatterClass {
         editor.putString(key, value);
         editor.apply();
     }
+
     fun getSharedPref(key: String, context: Context): String? {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)
         return sharedPreferences.getString(key, null)
 
     }
+
     fun deleteSharedPref(key: String, context: Context) {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)
@@ -49,19 +53,22 @@ class FormatterClass {
         editor.apply();
 
     }
+
     fun convertStringToDate(dateString: String, format: String): Date? {
         return try {
             val dateFormat = SimpleDateFormat(format, Locale.getDefault())
             dateFormat.parse(dateString) ?: Date()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             null
         }
 
     }
+
     fun convertDateToLocalDate(date: Date): LocalDate {
         val instant = date.toInstant()
         return instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
     }
+
     fun removeNonNumeric(input: String): String {
         // Regex pattern to match numeric values (with optional decimal part)
         val numericPattern = Regex("[0-9]+(\\.[0-9]+)?")
@@ -72,6 +79,7 @@ class FormatterClass {
         // Extract the numeric value or return an empty string if not found
         return matchResult?.value ?: ""
     }
+
     fun convertDateFormat(inputDate: String): String? {
         // Define the input date formats to check
         val inputDateFormats = arrayOf(
@@ -90,7 +98,6 @@ class FormatterClass {
 
             // Add more formats as needed
         )
-
 
 
         // Try parsing the input date with each format
@@ -117,36 +124,51 @@ class FormatterClass {
     }
 
 
-    fun saveStockValue(administeredProduct:String, targetDisease:String, context: Context):ArrayList<DbVaccineStockDetails>{
+    fun saveStockValue(
+        administeredProduct: String,
+        targetDisease: String,
+        context: Context
+    ): ArrayList<DbVaccineStockDetails> {
         val stockList = ArrayList<DbVaccineStockDetails>()
 
         val immunizationHandler = ImmunizationHandler()
-        val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
-        val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(targetDisease)
+        val baseVaccineDetails =
+            immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
+        val seriesVaccineDetails =
+            immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(targetDisease)
 
-        if (seriesVaccineDetails != null && baseVaccineDetails != null){
+        if (seriesVaccineDetails != null && baseVaccineDetails != null) {
 
             stockList.addAll(
                 listOf(
-                    DbVaccineStockDetails("vaccinationTargetDisease",targetDisease),
-                    DbVaccineStockDetails("administeredProduct",administeredProduct),
+                    DbVaccineStockDetails("vaccinationTargetDisease", targetDisease),
+                    DbVaccineStockDetails("administeredProduct", administeredProduct),
 
-                    DbVaccineStockDetails("vaccinationSeriesDoses",seriesVaccineDetails.seriesDoses.toString()),
+                    DbVaccineStockDetails(
+                        "vaccinationSeriesDoses",
+                        seriesVaccineDetails.seriesDoses.toString()
+                    ),
 
-                    DbVaccineStockDetails("vaccinationDoseQuantity",baseVaccineDetails.doseQuantity),
-                    DbVaccineStockDetails("vaccinationDoseNumber",baseVaccineDetails.doseNumber),
-                    DbVaccineStockDetails("vaccinationBrand",baseVaccineDetails.vaccineName),
-                    DbVaccineStockDetails("vaccinationSite",baseVaccineDetails.administrativeMethod),
+                    DbVaccineStockDetails(
+                        "vaccinationDoseQuantity",
+                        baseVaccineDetails.doseQuantity
+                    ),
+                    DbVaccineStockDetails("vaccinationDoseNumber", baseVaccineDetails.doseNumber),
+                    DbVaccineStockDetails("vaccinationBrand", baseVaccineDetails.vaccineName),
+                    DbVaccineStockDetails(
+                        "vaccinationSite",
+                        baseVaccineDetails.administrativeMethod
+                    ),
 
-                    DbVaccineStockDetails("vaccinationExpirationDate",""),
-                    DbVaccineStockDetails("vaccinationBatchNumber",""),
-                    DbVaccineStockDetails("vaccinationManufacturer","")
+                    DbVaccineStockDetails("vaccinationExpirationDate", ""),
+                    DbVaccineStockDetails("vaccinationBatchNumber", ""),
+                    DbVaccineStockDetails("vaccinationManufacturer", "")
                 )
             )
 
             //Save to shared pref
-            stockList.forEach{
-                saveSharedPref(it.name,it.value,context)
+            stockList.forEach {
+                saveSharedPref(it.name, it.value, context)
             }
 
         }
@@ -161,7 +183,7 @@ class FormatterClass {
         return result
     }
 
-    fun customDialog(context: Context, valueText: String, fragment: Fragment){
+    fun customDialog(context: Context, valueText: String, fragment: Fragment) {
         val builder = AlertDialog.Builder(context)
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.bottom_dialog_layout, null)
@@ -179,6 +201,16 @@ class FormatterClass {
         val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
         closeMaterialButton.setOnClickListener {
             alertDialog.dismiss()
+            val isRegistration = getSharedPref("isRegistration", context)
+            if (isRegistration != null) {
+                if (isRegistration == "true") {
+                    val patientId = getSharedPref("patientId", context)
+                    val intent = Intent(context, PatientDetailActivity::class.java)
+                    intent.putExtra("patientId", patientId)
+                    context.startActivity(intent)
+                    deleteSharedPref("isRegistration", context)
+                }
+            }
             NavHostFragment.findNavController(fragment).navigateUp()
         }
         alertDialog.show()
@@ -190,13 +222,18 @@ class FormatterClass {
     ): String {
         if (dob == null) return ""
         val dobFormat = convertDateFormat(dob)
-        if (dobFormat != null){
+        if (dobFormat != null) {
             val dobDate = convertStringToDate(dobFormat, "MMM d yyyy")
-            if (dobDate != null){
+            if (dobDate != null) {
                 val finalDate = convertDateToLocalDate(dobDate)
                 return Period.between(finalDate, LocalDate.now()).let {
                     when {
-                        it.years > 0 -> resources.getQuantityString(R.plurals.ageYear, it.years, it.years)
+                        it.years > 0 -> resources.getQuantityString(
+                            R.plurals.ageYear,
+                            it.years,
+                            it.years
+                        )
+
                         it.months > 0 -> resources.getQuantityString(
                             R.plurals.ageMonth,
                             it.months,
