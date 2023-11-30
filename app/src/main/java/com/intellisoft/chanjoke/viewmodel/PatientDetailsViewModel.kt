@@ -94,8 +94,7 @@ class PatientDetailsViewModel(
             gender = it.genderElement.valueAsString
             contact_name = if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
             contact_phone = if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
-            contact_gender =
-                if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+//            contact_gender =                if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
         }
 
         FormatterClass().saveSharedPref(
