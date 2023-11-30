@@ -13,7 +13,6 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.DbVaccineStockDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.validations.VaccinationManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +24,6 @@ class VaccineStockManagement : AppCompatActivity() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var recyclerView:RecyclerView
     private var patientId = ""
-    private var targetDisease = ""
     private var formatterClass = FormatterClass()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +31,6 @@ class VaccineStockManagement : AppCompatActivity() {
         setContentView(R.layout.activity_vaccine_stock_management)
 
         patientId = formatterClass.getSharedPref("patientId", this).toString()
-        targetDisease = formatterClass.getSharedPref("targetDisease", this).toString()
 
         recyclerView = findViewById(R.id.recyclerView)
         layoutManager = LinearLayoutManager(
@@ -53,9 +50,9 @@ class VaccineStockManagement : AppCompatActivity() {
         }
         findViewById<Button>(R.id.btnCancel).setOnClickListener {
 
-//            val intent = Intent(this, PatientDetailActivity::class.java)
-//            intent.putExtra("patientId", patientId)
-//            startActivity(intent)
+            val intent = Intent(this, PatientDetailActivity::class.java)
+            intent.putExtra("patientId", patientId)
+            startActivity(intent)
         }
 
         getStockManagement()
@@ -65,18 +62,12 @@ class VaccineStockManagement : AppCompatActivity() {
     private fun getStockManagement() {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val vaccinationManager = VaccinationManager()
 
-            val vaccineDetails = vaccinationManager.getVaccineDetails(targetDisease)
-            Log.e("******", "****** $vaccineDetails")
+            val administeredProduct = formatterClass.getSharedPref("administeredProduct", this@VaccineStockManagement)
+            val vaccinationTargetDisease = formatterClass.getSharedPref("vaccinationTargetDisease", this@VaccineStockManagement)
 
-            if (vaccineDetails != null) {
-
-                /**
-                 * TODO: Add all these tto shared Preference
-                 */
-
-                val stockList = formatterClass.generateStockValue(vaccineDetails, this@VaccineStockManagement)
+            if (administeredProduct != null && vaccinationTargetDisease != null){
+                val stockList = formatterClass.saveStockValue(administeredProduct,vaccinationTargetDisease, this@VaccineStockManagement)
                 val dbVaccineStockDetailsList= ArrayList<DbVaccineStockDetails>()
                 for(i in stockList){
                     val dbVaccineStockDetails = DbVaccineStockDetails(i.value, i.name)
@@ -84,14 +75,9 @@ class VaccineStockManagement : AppCompatActivity() {
                 }
                 val vaccineStockAdapter = VaccineStockAdapter(dbVaccineStockDetailsList, this@VaccineStockManagement)
                 CoroutineScope(Dispatchers.Main).launch { recyclerView.adapter = vaccineStockAdapter }
-
-            } else {
-                val intent = Intent(this@VaccineStockManagement, PatientDetailActivity::class.java)
-                startActivity(intent)
             }
+
         }
-
-
 
     }
 

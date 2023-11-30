@@ -60,9 +60,9 @@ class VaccineStockAdapter(private var dbVaccineStockDetailsList: ArrayList<DbVac
 
         var vaccine = FormatterClass().formatString(value)
 
-        if (vaccine.contains("Vaccination Target Disease")) {
-            vaccine = "Vaccine name"
-        }
+//        if (vaccine.contains("Vaccination Target Disease")) {
+//            vaccine = "Vaccine name"
+//        }
         holder.tvDetailName.text = vaccine
         holder.tvDetail.text = name
 

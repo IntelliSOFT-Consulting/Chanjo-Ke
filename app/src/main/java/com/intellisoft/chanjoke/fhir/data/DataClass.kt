@@ -1,9 +1,11 @@
 package com.intellisoft.chanjoke.fhir.data
 
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+
 data class DbVaccineData(
     val logicalId: String,
     val vaccineName: String,
-    val vaccineDosage: String,
+    val doseNumber: String,
     val dateAdministered: String
 )
 
@@ -42,5 +44,6 @@ data class DbAppointmentDetails(
     val dateScheduled: String,
     val doseNumber: String?,
     val targetDisease: String,
+    val vaccineName: String,
     val appointmentStatus: String
 )

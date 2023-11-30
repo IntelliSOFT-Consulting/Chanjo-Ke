@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.vaccine
 
 import android.os.Bundle
+import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,10 @@ import android.widget.ExpandableListView
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.DbVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.vaccine.validations.SeriesVaccine
 
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
@@ -21,13 +26,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         val expandableListView: ExpandableListView = view.findViewById(R.id.expandableListView)
 
-        val groupList = listOf("POLIO", "YELLOW FEVER", "COVID", "MEASLES")
-        val childList = mapOf(
-            "POLIO" to listOf("bOPV", "OPV I", "OPV II", "OPV III"),
-            "YELLOW FEVER" to listOf("YELLOW FEVER"),
-            "COVID" to listOf("Astrazeneca","Moderna","Johnson & Johnson","PhizerBioNTech","Sinopharm"),
-            "MEASLES" to listOf("MEASLES 1st Dose","MEASLES 2nd Dose")
-        )
+        val immunizationHandler = ImmunizationHandler()
+        val (groupList, childList) = immunizationHandler.generateVaccineLists()
 
         val adapter = BottomSheetAdapter(groupList, childList, requireContext())
         expandableListView.setAdapter(adapter)

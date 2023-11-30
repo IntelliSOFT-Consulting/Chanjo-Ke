@@ -28,8 +28,11 @@ class VaccineAdapter(
         val logicalId: TextView = itemView.findViewById(R.id.logicalId)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
         val btnAddAefi: MaterialButton = itemView.findViewById(R.id.btnAddAefi)
-        val tvDateAdministered: TextView = itemView.findViewById(R.id.tvDateAdministered)
+
         val vaccineDosage: TextView = itemView.findViewById(R.id.vaccineDosage)
+
+        val tvDateAdministered: TextView = itemView.findViewById(R.id.tvDateAdministered)
+        val tvDoseNumber: TextView = itemView.findViewById(R.id.tvDoseNumber)
 
         init {
             itemView.setOnClickListener(this)
@@ -111,15 +114,15 @@ class VaccineAdapter(
 
 
         val vaccineName = entryList[position].vaccineName
-        val vaccineDosage = entryList[position].vaccineDosage
+        val doseNumber = entryList[position].doseNumber
         val logicalId = entryList[position].logicalId
         val dateAdministered = entryList[position].dateAdministered
 
-        holder.tvVaccineName.text = "Vaccine: $vaccineName"
+        holder.tvVaccineName.text = vaccineName
         holder.logicalId.text = logicalId
-        holder.vaccineDosage.text = vaccineDosage
+        holder.vaccineDosage.text = doseNumber
         holder.tvDateAdministered.text = dateAdministered
-
+        holder.tvDoseNumber.text = doseNumber
 
     }
 
