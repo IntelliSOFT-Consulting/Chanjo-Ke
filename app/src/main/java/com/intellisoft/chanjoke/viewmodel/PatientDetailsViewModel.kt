@@ -22,6 +22,7 @@ import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.EncounterItem
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.utils.Constants.AEFI_DATE
 import com.intellisoft.chanjoke.utils.Constants.AEFI_TYPE
@@ -64,7 +65,7 @@ class PatientDetailsViewModel(
         viewModelScope.launch { livePatientData.value = getPatientDetailDataModel() }
     }
 
-    fun getPatientInfo()= runBlocking{
+    fun getPatientInfo() = runBlocking {
         getPatientDetailDataModel()
     }
 
@@ -85,21 +86,26 @@ class PatientDetailsViewModel(
 
             phone = ""
             if (it.hasTelecom()) {
-                if (it.telecom.isNotEmpty()){
-                    if (it.telecom.first().hasValue()){
+                if (it.telecom.isNotEmpty()) {
+                    if (it.telecom.first().hasValue()) {
                         phone = it.telecom.first().value
                     }
                 }
             }
 
-            if (it.hasBirthDateElement()){
-                if (it.birthDateElement.hasValue()) dob = LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE).toString()
+            if (it.hasBirthDateElement()) {
+                if (it.birthDateElement.hasValue()) dob =
+                    LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
+                        .toString()
             }
 
-            if (it.hasContact()){
-                if (it.contactFirstRep.hasName()) contact_name = if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
-                if (it.contactFirstRep.hasTelecom()) contact_phone = if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
-                if (it.contactFirstRep.hasGenderElement()) contact_gender = if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+            if (it.hasContact()) {
+                if (it.contactFirstRep.hasName()) contact_name =
+                    if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
+                if (it.contactFirstRep.hasTelecom()) contact_phone =
+                    if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
+                if (it.contactFirstRep.hasGenderElement()) contact_gender =
+                    if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
             }
 
             if (it.hasGenderElement()) gender = it.genderElement.valueAsString
@@ -198,12 +204,13 @@ class PatientDetailsViewModel(
         var date = ""
 
         if (it.hasRecommendation() && it.recommendation.isNotEmpty()) {
-           if (it.recommendation[0].hasDateCriterion() &&
-               it.recommendation[0].dateCriterion.isNotEmpty() &&
-               it.recommendation[0].dateCriterion[0].hasValue()){
-               val dateCriterion = it.recommendation[0].dateCriterion[0].value.toString()
-               date = dateCriterion
-           }
+            if (it.recommendation[0].hasDateCriterion() &&
+                it.recommendation[0].dateCriterion.isNotEmpty() &&
+                it.recommendation[0].dateCriterion[0].hasValue()
+            ) {
+                val dateCriterion = it.recommendation[0].dateCriterion[0].value.toString()
+                date = dateCriterion
+            }
 
         }
         var targetDisease = ""
@@ -228,12 +235,12 @@ class PatientDetailsViewModel(
                 }
 
                 //Dose number
-                if (recommendation[0].hasDoseNumber()){
+                if (recommendation[0].hasDoseNumber()) {
                     doseNumber = recommendation[0].doseNumber.asStringValue()
                 }
 
                 //Contraindicated vaccine code
-                if (recommendation[0].hasContraindicatedVaccineCode()){
+                if (recommendation[0].hasContraindicatedVaccineCode()) {
                     vaccineName = recommendation[0].contraindicatedVaccineCode[0].text
                 }
 
@@ -244,7 +251,7 @@ class PatientDetailsViewModel(
 
 
 
-        return DbAppointmentDetails(date, doseNumber,targetDisease, vaccineName, appointmentStatus)
+        return DbAppointmentDetails(date, doseNumber, targetDisease, vaccineName, appointmentStatus)
 
 
     }
@@ -278,7 +285,7 @@ class PatientDetailsViewModel(
 
         val ref = logicalId.toString().replace("Encounter/", "")
 
-        if (immunization.hasVaccineCode()){
+        if (immunization.hasVaccineCode()) {
             if (immunization.vaccineCode.hasText()) vaccineName = immunization.vaccineCode.text
         }
 
@@ -289,8 +296,9 @@ class PatientDetailsViewModel(
                 dateScheduled = convertedDate
             }
         }
-        if (immunization.hasProtocolApplied()){
-            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue = immunization.protocolApplied[0].seriesDoses.asStringValue()
+        if (immunization.hasProtocolApplied()) {
+            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue =
+                immunization.protocolApplied[0].seriesDoses.asStringValue()
         }
 
         return DbVaccineData(
@@ -378,8 +386,9 @@ class PatientDetailsViewModel(
         patientId: String,
         encounterId: String,
         codeValue: String
-    ): String {
-        var data = ""
+    ): ObservationDateValue {
+        var date = ""
+        var dataValue = ""
         fhirEngine
             .search<Observation> {
                 filter(Observation.SUBJECT, { value = "Patient/$patientId" })
@@ -396,10 +405,14 @@ class PatientDetailsViewModel(
             }
             .map { createObservationItem(it, getApplication<Application>().resources) }
             .firstOrNull()?.let {
-                data = it.value
+                date = it.effective
+                dataValue = it.value
             }
 
-        return data
+        return ObservationDateValue(
+            date,
+            dataValue,
+        )
 
     }
 
@@ -445,11 +458,13 @@ class PatientDetailsViewModel(
                 ""
             }
         val valueString = "$value $valueUnit"
+        val dateTimeString = if (observation.hasIssued()) observation.issued.toString() else ""
+
 
         return PatientListViewModel.ObservationItem(
             observation.logicalId,
             observationCode,
-            "$value",
+            "$dateTimeString",
             "$valueString",
         )
     }

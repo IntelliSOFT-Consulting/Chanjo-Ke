@@ -30,6 +30,10 @@ data class DbCodeValue(
     val value: String,
     val dateTime:String? = null
 )
+data class ObservationDateValue(
+    val date: String,
+    val value: String,
+)
 
 enum class NavigationDetails {
     ADMINISTER_VACCINE,
