@@ -122,6 +122,7 @@ class AdministerVaccineViewModel(
                         resource.id = uuid
                         resource.subject = subjectReference
                         resource.encounter = encounterReference
+                        resource.issued = Date()
                         saveResourceToDatabase(resource, "Obs " + uuid)
                     }
                 }

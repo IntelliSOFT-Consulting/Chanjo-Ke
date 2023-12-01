@@ -17,8 +17,8 @@
       }
     },
     {
-      "url" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
-      "valueCode" : "prior-edit"
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
+      "valueCode": "prior-edit"
     }
   ],
   "item": [
@@ -153,7 +153,28 @@
               "linkId": "contraindications-value",
               "type": "string",
               "required": true,
-              "text": "Enter contraindications",
+              "item": [
+                {
+                  "linkId": "enter-contraindications",
+                  "text": "Enter contraindications",
+                  "type": "display",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "flyover",
+                            "display": "Fly-over"
+                          }
+                        ],
+                        "text": "Flyover"
+                      }
+                    }
+                  ]
+                }
+              ],
               "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueString"
             },
             {
@@ -370,7 +391,28 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity",
               "item": [
                 {
-                  "text": "Current Body Weight (kg)",
+                  "item": [
+                    {
+                      "linkId": "current-weight",
+                      "text": "Current Body Weight",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
+                          }
+                        }
+                      ]
+                    }
+                  ],
                   "type": "decimal",
                   "required": true,
                   "linkId": "current-body-weight-decimal",
@@ -382,23 +424,64 @@
                     },
                     {
                       "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-                      "valueDecimal": 500
+                      "valueDecimal": 10000
                     }
                   ]
                 },
                 {
                   "linkId": "current-body-weight-quantity-code",
-                  "type": "string",
+                  "type": "choice",
+                  "required": true,
                   "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.code",
                   "extension": [
                     {
-                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
-                      "valueBoolean": true
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "drop-down",
+                            "display": "Drop down"
+                          }
+                        ],
+                        "text": "Drop down"
+                      }
                     }
                   ],
-                  "initial": [
+                  "answerOption": [
                     {
-                      "valueString": "kg"
+                      "valueCoding": {
+                        "code": "g",
+                        "display": "G"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "code": "kg",
+                        "display": "Kg"
+                      }
+                    }
+                  ],
+                  "item": [
+                    {
+                      "linkId": "current-weight-unit",
+                      "text": "Unit",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },

@@ -30,6 +30,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.intellisoft.chanjoke.R
 import com.google.android.fhir.datacapture.QuestionnaireFragment
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 
 /** A fragment class to show patient registration screen. */
@@ -127,8 +128,13 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
                 Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
                 return@observe
             }
-
-            FormatterClass().customDialog(requireContext(), "Client added successfully!", this)
+//            val blurBackgroundDialog = BlurBackgroundDialog(this,requireContext())
+//            blurBackgroundDialog.show()
+            FormatterClass().customDialog(
+                requireContext(),
+                "Client added successfully!",
+                this
+            )
 
 
         }

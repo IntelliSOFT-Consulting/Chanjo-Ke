@@ -50,7 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
-                android:text="View" />
+                android:text="View"
+                android:textColor="@color/colorPrimary" />
         </LinearLayout>
     </TableRow>
 </TableLayout>
