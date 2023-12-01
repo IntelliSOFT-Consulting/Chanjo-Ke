@@ -16,8 +16,6 @@
 
 package com.intellisoft.chanjoke.vaccine
 
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -29,11 +27,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
-import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.google.android.fhir.datacapture.QuestionnaireFragment
-import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 
 /** A fragment class to show patient registration screen. */
 class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
@@ -96,8 +93,10 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
                     .show()
                 return@observe
             }
+            val blurBackgroundDialog = BlurBackgroundDialog(this,requireContext())
+            blurBackgroundDialog.show()
             val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", requireContext())
-            var valueText = if (vaccinationFlow == "addAefi"){
+            val valueText = if (vaccinationFlow == "addAefi"){
                 "AEFI Saved successfully!"
             }else if (vaccinationFlow == "createVaccineDetails"){
                 "Vaccine details captured successfully!"
@@ -106,11 +105,12 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
             } else{
                 "Record has been captured successfully!"
             }
-
-            FormatterClass().customDialog(
-                requireContext(),
-                valueText,
-                this)
+//
+//            FormatterClass().customDialog(
+//                blurBackgroundDialog,
+//                requireContext(),
+//                valueText,
+//                this)
 
 //            val intent = Intent(requireContext(), MainActivity::class.java)
 //            startActivity(intent)

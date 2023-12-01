@@ -5,7 +5,6 @@ import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -15,13 +14,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
-import com.intellisoft.chanjoke.patient_list.PatientListViewModel
+import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 
-import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -183,7 +178,11 @@ class FormatterClass {
         return result
     }
 
-    fun customDialog(context: Context, valueText: String, fragment: Fragment) {
+    fun customDialog(
+        context: Context,
+        valueText: String,
+        fragment: Fragment
+    ) {
         val builder = AlertDialog.Builder(context)
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.bottom_dialog_layout, null)
