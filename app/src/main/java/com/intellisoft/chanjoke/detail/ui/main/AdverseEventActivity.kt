@@ -25,6 +25,12 @@ class AdverseEventActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
+        binding.apply {
+            btnClose.setOnClickListener {
+                onBackPressed()
+            }
+        }
+
         supportActionBar?.apply {
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)

@@ -27,5 +27,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorAccent</item>
     </style>
-
+    <style name="OutlinedButtonStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="strokeColor">@color/colorPrimary</item>
+    </style>
 </resources>
