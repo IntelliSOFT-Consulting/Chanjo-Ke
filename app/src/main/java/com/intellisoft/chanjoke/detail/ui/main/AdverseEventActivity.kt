@@ -25,6 +25,12 @@ class AdverseEventActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
+        binding.apply {
+            btnClose.setOnClickListener {
+                onBackPressed()
+            }
+        }
+
         supportActionBar?.apply {
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
@@ -111,8 +117,32 @@ class AdverseEventActivity : AppCompatActivity() {
                 encounterId.toString(),
                 "122-22"
             )
+            dateReportedTextView.text = extractAefiOccuranceData(
+                patientId.toString(),
+                encounterId.toString(),
+                "882-22"
+            )
         }
 
+    }
+
+    private fun extractAefiOccuranceData(
+        patientId: String,
+        encounterId: String,
+        code: String
+    ): CharSequence? {
+        var text = "\t"
+
+        /***
+         * TODO: extract Observation by code
+         */
+        val data = patientDetailsViewModel.getObservationByCode(patientId, encounterId, code)
+        if (data != null) {
+            val refinedDate = FormatterClass().convertDateFormat(data.date)
+            text = "\t $refinedDate"
+        }
+
+        return text
     }
 
     private fun extractAefiData(patientId: String, encounterId: String, code: String): String {
@@ -123,7 +153,7 @@ class AdverseEventActivity : AppCompatActivity() {
          */
         val data = patientDetailsViewModel.getObservationByCode(patientId, encounterId, code)
         if (data != null) {
-            text = "\t $data"
+            text = "\t ${data.value}"
         }
 
         return text
