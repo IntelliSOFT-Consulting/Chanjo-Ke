@@ -45,6 +45,7 @@ data class DbVaccineStockDetails(
     val value: String
 )
 data class DbAppointmentDetails(
+    val appointmentId:String,
     val dateScheduled: String,
     val doseNumber: String?,
     val targetDisease: String,

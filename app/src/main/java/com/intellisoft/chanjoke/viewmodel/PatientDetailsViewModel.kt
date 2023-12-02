@@ -201,6 +201,10 @@ class PatientDetailsViewModel(
 
     private fun createRecommendation(it: ImmunizationRecommendation): DbAppointmentDetails {
 
+        var appointmentId = ""
+
+        if (it.hasId()) appointmentId = it.id.replace("ImmunizationRecommendation/", "")
+
         var date = ""
 
         if (it.hasRecommendation() && it.recommendation.isNotEmpty()) {
@@ -251,7 +255,7 @@ class PatientDetailsViewModel(
 
 
 
-        return DbAppointmentDetails(date, doseNumber, targetDisease, vaccineName, appointmentStatus)
+        return DbAppointmentDetails(appointmentId, date, doseNumber, targetDisease, vaccineName, appointmentStatus)
 
 
     }

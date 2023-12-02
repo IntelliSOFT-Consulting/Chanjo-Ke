@@ -25,6 +25,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
+import ca.uhn.fhir.rest.gclient.TokenClientParam
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbCodeValue
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
@@ -32,6 +33,7 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
+import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -490,6 +492,16 @@ class AdministerVaccineViewModel(
                 val immunization = createImmunizationResource(encounterId,patientId, ImmunizationStatus.COMPLETED)
                 saveResourceToDatabase(immunization, "Imm")
 
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    //Check if its from a contraindication
+//                    val isContraindicated = FormatterClass().getSharedPref("isContraindicated", getApplication<Application>().applicationContext)
+//                    if (isContraindicated != null){
+//                        //Update Contraindicated status to Comple
+//                        updateRecommendation(isContraindicated, patientId, "Complete")
+//                    }
+//                }
+
+
                 //Generate the next immunization
                 createNextImmunization()
 
@@ -629,64 +641,34 @@ class AdministerVaccineViewModel(
 
     }
 
-
-
-    suspend fun createImmunisationRecommendation(
-        recommendedDate: Date?,
-        immunization: Immunization,
-        patientId: String,
-        encounterId: String) {
+    private suspend fun updateRecommendation(contraindicatedId: String, patientId: String, status: String) {
+        //Update Contraindicated status
 
 
         val immunizationRecommendation = ImmunizationRecommendation()
         val patientReference = Reference("Patient/$patientId")
-        val id = generateUuid()
-
         immunizationRecommendation.patient = patientReference
-        immunizationRecommendation.id = id
-
-        if (recommendedDate != null) immunizationRecommendation.date = recommendedDate
+        immunizationRecommendation.id = contraindicatedId
 
         //Recommendation
         val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
         val immunizationRequest = ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
 
+        //Status
+        val codeableConceptStatus = CodeableConcept()
+        codeableConceptStatus.text = status
+        immunizationRequest.forecastStatus = codeableConceptStatus
 
-        //Target Disease
-        val codeableConceptTargetDisease = CodeableConcept()
-        val protocolApplied = immunization.protocolApplied
+        recommendationList.add(immunizationRequest)
+        immunizationRecommendation.recommendation = recommendationList
 
+        FormatterClass().deleteSharedPref("isContraindicated",
+            getApplication<Application>().applicationContext)
 
-        protocolApplied.forEach { appliedComponent ->
-            val appliedTargetDisease = appliedComponent.targetDisease
-            appliedTargetDisease.forEach {
-
-
-                if (it.hasText()) codeableConceptTargetDisease.text = it.text
-                if (it.hasCoding()) codeableConceptTargetDisease.coding = it.coding
-            }
-        }
-//    codeableConceptTargetDisease.id = generateUuid()
-
-
-        immunizationRequest.targetDisease = codeableConceptTargetDisease
-
-
-        //Dose number
-        val doseNumber = immunization.doseQuantity.value
-        val intValue = doseNumber.toInt()
-        val positiveIntType = PositiveIntType(intValue)
-        immunizationRequest.doseNumber = positiveIntType
-
-
-
-
-
-
-        saveResourceToDatabase(immunizationRecommendation, "ImmReccomend "+id)
-
+        saveResourceToDatabase(immunizationRecommendation, "ImmRec")
 
     }
+
 
 
     private suspend fun observationFromCode(
