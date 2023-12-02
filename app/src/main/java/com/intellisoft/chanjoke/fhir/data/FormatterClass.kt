@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.button.MaterialButton
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
@@ -53,17 +54,15 @@ class FormatterClass {
         return try {
             val dateFormat = SimpleDateFormat(format, Locale.getDefault())
             dateFormat.parse(dateString) ?: Date()
-        } catch (e: Exception) {
+        }catch (e:Exception){
             null
         }
 
     }
-
     fun convertDateToLocalDate(date: Date): LocalDate {
         val instant = date.toInstant()
         return instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
     }
-
     fun removeNonNumeric(input: String): String {
         // Regex pattern to match numeric values (with optional decimal part)
         val numericPattern = Regex("[0-9]+(\\.[0-9]+)?")
@@ -74,7 +73,6 @@ class FormatterClass {
         // Extract the numeric value or return an empty string if not found
         return matchResult?.value ?: ""
     }
-
     fun convertDateFormat(inputDate: String): String? {
         // Define the input date formats to check
         val inputDateFormats = arrayOf(
@@ -93,6 +91,7 @@ class FormatterClass {
 
             // Add more formats as needed
         )
+
 
 
         // Try parsing the input date with each format
@@ -162,8 +161,8 @@ class FormatterClass {
             )
 
             //Save to shared pref
-            stockList.forEach {
-                saveSharedPref(it.name, it.value, context)
+            stockList.forEach{
+                saveSharedPref(it.name,it.value,context)
             }
 
         }
@@ -200,17 +199,22 @@ class FormatterClass {
         val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
         closeMaterialButton.setOnClickListener {
             alertDialog.dismiss()
+            val patientId = getSharedPref("patientId", context)
+
             val isRegistration = getSharedPref("isRegistration", context)
             if (isRegistration != null) {
                 if (isRegistration == "true") {
-                    val patientId = getSharedPref("patientId", context)
                     val intent = Intent(context, PatientDetailActivity::class.java)
                     intent.putExtra("patientId", patientId)
                     context.startActivity(intent)
                     deleteSharedPref("isRegistration", context)
                 }
+            }else{
+                val intent = Intent(context, PatientDetailActivity::class.java)
+                intent.putExtra("patientId", patientId)
+                context.startActivity(intent)
             }
-            NavHostFragment.findNavController(fragment).navigateUp()
+//            NavHostFragment.findNavController(fragment).navigateUp()
         }
         alertDialog.show()
     }

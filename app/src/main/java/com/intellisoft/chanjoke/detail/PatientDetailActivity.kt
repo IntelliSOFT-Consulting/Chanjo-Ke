@@ -187,6 +187,8 @@ class PatientDetailActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
     private fun proceedToNavigate(s: String) {

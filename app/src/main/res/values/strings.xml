@@ -10,7 +10,7 @@
     <string name="description_status">Status</string>
 
     <string name="title_activity_patient_detail">PatientDetailActivity</string>
-    <string name="tab_text_1">Administered Vaccines</string>
+    <string name="tab_text_1">Vaccination  History</string>
     <string name="tab_text_2">Appointments</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

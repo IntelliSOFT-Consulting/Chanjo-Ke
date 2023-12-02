@@ -52,17 +52,21 @@ class BlurBackgroundDialog(
         val closeMaterialButton = findViewById<MaterialButton>(R.id.closeMaterialButton)
         closeMaterialButton.setOnClickListener {
             dismiss()
+            val patientId = FormatterClass().getSharedPref("patientId", context)
+
             val isRegistration = FormatterClass().getSharedPref("isRegistration", context)
             if (isRegistration != null) {
                 if (isRegistration == "true") {
-                    val patientId = FormatterClass().getSharedPref("patientId", context)
                     val intent = Intent(context, PatientDetailActivity::class.java)
                     intent.putExtra("patientId", patientId)
                     context.startActivity(intent)
                     FormatterClass().deleteSharedPref("isRegistration", context)
                 }
+            }else{
+                val intent = Intent(context, PatientDetailActivity::class.java)
+                intent.putExtra("patientId", patientId)
+                context.startActivity(intent)
             }
-            NavHostFragment.findNavController(fragment = fragment).navigateUp()
         }
     }
 }

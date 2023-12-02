@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
+import android.widget.ExpandableListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +27,8 @@ import java.util.Locale
 class BottomSheetAdapter(
     private val groupList: List<String>,
     private val childList: Map<String, List<String>>,
-    private val context: Context
-    ) : BaseExpandableListAdapter() {
+    private val context: Context,
+) : BaseExpandableListAdapter() {
 
     override fun getGroupCount(): Int {
         return groupList.size
@@ -118,7 +119,9 @@ class BottomSheetAdapter(
                 progressDialog.dismiss()
             }
 
+
         }
+
 
         return textView
     }

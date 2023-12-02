@@ -18,6 +18,8 @@ import com.intellisoft.chanjoke.vaccine.validations.SeriesVaccine
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
+    private var lastExpandedPosition = -1
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,6 +27,23 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val view = inflater.inflate(R.layout.fragment_bottom_sheet, container, false)
 
         val expandableListView: ExpandableListView = view.findViewById(R.id.expandableListView)
+
+        expandableListView.setOnGroupClickListener { parent, view, groupPosition, id ->
+            // Handle group click here
+            if (lastExpandedPosition != -1 && lastExpandedPosition != groupPosition) {
+                expandableListView.collapseGroup(lastExpandedPosition)
+            }
+
+            if (expandableListView.isGroupExpanded(groupPosition)) {
+                expandableListView.collapseGroup(groupPosition)
+                lastExpandedPosition = -1
+            } else {
+                expandableListView.expandGroup(groupPosition)
+                lastExpandedPosition = groupPosition
+            }
+
+            true // Return true to consume the click event
+        }
 
         val immunizationHandler = ImmunizationHandler()
         val (groupList, childList) = immunizationHandler.generateVaccineLists()

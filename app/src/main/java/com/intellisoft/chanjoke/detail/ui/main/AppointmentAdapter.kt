@@ -46,6 +46,8 @@ class AppointmentAdapter(
                 val patientId = FormatterClass().getSharedPref("patientId", context)
                 val targetDisease = entryList[pos].targetDisease
                 val administeredProduct = entryList[pos].vaccineName
+                val appointmentStatus = entryList[pos].appointmentStatus.trim()
+                val appointmentId = entryList[pos].appointmentId.trim()
 
                 formatterClass.saveSharedPref(
                     "questionnaireJson",
@@ -69,6 +71,15 @@ class AppointmentAdapter(
                     administeredProduct,
                     context
                 )
+
+//                if (appointmentStatus == "Contraindicated" && appointmentId != ""){
+//                    formatterClass.saveSharedPref(
+//                        "isContraindicated",
+//                        appointmentId,
+//                        context
+//                    )
+//                }
+
 
                 val intent = Intent(context, VaccineStockManagement::class.java)
                 intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
