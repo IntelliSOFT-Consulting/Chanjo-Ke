@@ -327,7 +327,7 @@ class AdministerVaccineViewModel(
                         if (dobNextDate != null){
                             val recommendation = createImmunizationRecommendationResource(patientId,
                                 dobNextDate,
-                                "due",
+                                "Due",
                                 "Recommend vaccination",
                                 null)
                             saveResourceToDatabase(recommendation, "ImmRec")
@@ -436,7 +436,7 @@ class AdministerVaccineViewModel(
             immunizationRequest.supportingImmunization = immunizationReferenceList
         }
 
-        if (status == "Contraindicated" || status == "due"){
+        if (status == "Contraindicated" || status == "Due"){
             //Administered vaccine
             val administeredProduct = FormatterClass().getSharedPref(
                 "administeredProduct",
@@ -615,7 +615,7 @@ class AdministerVaccineViewModel(
 //                    //Vaccine details have been saved
 //                    val recommendation = createImmunizationRecommendationResource(patientId,
 //                        nextDate,
-//                        "due",
+//                        "Due",
 //                        null,
 //                        null)
 //                    saveResourceToDatabase(recommendation, "RecImm")

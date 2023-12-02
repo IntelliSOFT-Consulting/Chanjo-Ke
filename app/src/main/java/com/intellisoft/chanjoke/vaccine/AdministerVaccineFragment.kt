@@ -95,28 +95,6 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
             }
             val blurBackgroundDialog = BlurBackgroundDialog(this,requireContext())
             blurBackgroundDialog.show()
-            val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", requireContext())
-            val valueText = if (vaccinationFlow == "addAefi"){
-                "AEFI Saved successfully!"
-            }else if (vaccinationFlow == "createVaccineDetails"){
-                "Vaccine details captured successfully!"
-            }else if (vaccinationFlow == "updateVaccineDetails"){
-                "Record has been updated successfully!"
-            } else{
-                "Record has been captured successfully!"
-            }
-//
-//            FormatterClass().customDialog(
-//                blurBackgroundDialog,
-//                requireContext(),
-//                valueText,
-//                this)
-
-//            val intent = Intent(requireContext(), MainActivity::class.java)
-//            startActivity(intent)
-//
-//            NavHostFragment.findNavController(this).navigateUp()
-
 
         }
     }
