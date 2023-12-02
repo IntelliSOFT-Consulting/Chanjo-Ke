@@ -77,7 +77,7 @@ class PatientAdapter(
         holder.tvPhoneNumber.text = phoneNumber
 
         holder.viewPhoneNumber.text = "Phone Number"
-        holder.viewId.text = "Id Number"
+        holder.viewId.text = "Identification No"
         holder.viewName.text = "Name"
 
     }
