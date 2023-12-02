@@ -31,6 +31,9 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.google.android.fhir.datacapture.QuestionnaireFragment
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /** A fragment class to show patient registration screen. */
 class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
@@ -83,20 +86,28 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
     }
 
     private fun observeResourcesSaveAction() {
-        viewModel.isResourcesSaved.observe(viewLifecycleOwner) {
-            if (!it) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.inputs_missing),
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-                return@observe
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            CoroutineScope(Dispatchers.Main).launch {
+                viewModel.isResourcesSaved.observe(viewLifecycleOwner) {
+                    if (!it) {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.inputs_missing),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        return@observe
+                    }
+                    val blurBackgroundDialog = BlurBackgroundDialog(this@AdministerVaccineFragment,requireContext())
+                    blurBackgroundDialog.show()
+
+                }
             }
-            val blurBackgroundDialog = BlurBackgroundDialog(this,requireContext())
-            blurBackgroundDialog.show()
 
         }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
