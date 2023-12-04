@@ -54,6 +54,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:singleLine="true"
                     android:id="@+id/etUsername"
                     android:textColor="@color/black"
                     android:drawablePadding="15dp"
@@ -72,6 +73,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:singleLine="true"
                     android:inputType="textPassword"
                     android:id="@+id/etPassword"
                     android:textColor="@color/black"
