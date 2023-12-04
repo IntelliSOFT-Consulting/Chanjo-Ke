@@ -12,6 +12,8 @@ buildscript {
     classpath("com.diffplug.spotless:spotless-plugin-gradle:6.6.0")
     classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0")
 
+    // Add the Maven coordinates and latest version of the plugin
+    classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle.kts files
   }
