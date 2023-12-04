@@ -62,7 +62,6 @@
                     android:drawableStart="@drawable/ic_action_email"
                     android:drawablePadding="15dp"
                     android:hint="Username"
-                    android:singleLine="true"
                     android:textColor="@color/black" />
 
             </LinearLayout>
