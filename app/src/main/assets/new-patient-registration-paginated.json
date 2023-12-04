@@ -438,7 +438,7 @@
                       "valueExpression": {
                         "language": "text/fhirpath",
                         "expression": "Patient.identifier.value",
-                        "name": "patientTelecom"
+                        "name": "patientIdentification"
                       }
                     }
                   ],

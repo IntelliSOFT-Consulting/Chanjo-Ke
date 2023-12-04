@@ -31,6 +31,7 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.google.android.fhir.datacapture.QuestionnaireFragment
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
+import com.intellisoft.chanjoke.utils.ProgressDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,6 +42,7 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
     private val viewModel: AdministerVaccineViewModel by viewModels()
     private val formatterClass = FormatterClass()
     private var patientId: String? = null
+    private val progressDialogFragment = ProgressDialogFragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,6 +65,7 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
             onSubmitAction()
         }
     }
+
     private fun showCancelScreenerQuestionnaireAlertDialog() {
         val alertDialog: AlertDialog? =
             activity?.let {
@@ -70,7 +73,8 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
                 builder.apply {
                     setMessage(getString(R.string.cancel_questionnaire_message))
                     setPositiveButton(getString(android.R.string.yes)) { _, _ ->
-                        NavHostFragment.findNavController(this@AdministerVaccineFragment).navigateUp()
+                        NavHostFragment.findNavController(this@AdministerVaccineFragment)
+                            .navigateUp()
                     }
                     setNegativeButton(getString(android.R.string.no)) { _, _ -> }
                 }
@@ -91,6 +95,9 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
 
             CoroutineScope(Dispatchers.Main).launch {
                 viewModel.isResourcesSaved.observe(viewLifecycleOwner) {
+                    if (progressDialogFragment.isVisible) {
+                        progressDialogFragment.dismiss()
+                    }
                     if (!it) {
                         Toast.makeText(
                             requireContext(),
@@ -100,7 +107,8 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
                             .show()
                         return@observe
                     }
-                    val blurBackgroundDialog = BlurBackgroundDialog(this@AdministerVaccineFragment,requireContext())
+                    val blurBackgroundDialog =
+                        BlurBackgroundDialog(this@AdministerVaccineFragment, requireContext())
                     blurBackgroundDialog.show()
 
                 }
@@ -147,7 +155,7 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
     }
 
     private fun onSubmitAction() {
-
+        progressDialogFragment.show(requireFragmentManager(), "progressDialog")
         val questionnaireFragment =
             childFragmentManager.findFragmentByTag(QUESTIONNAIRE_FRAGMENT_TAG) as QuestionnaireFragment
         viewModel.saveScreenerEncounter(
@@ -156,8 +164,6 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
         )
 
     }
-
-
 
 
     companion object {
