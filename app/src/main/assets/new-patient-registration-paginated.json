@@ -96,7 +96,7 @@
                   "item": [
                     {
                       "linkId": "firstname",
-                      "text": "First Name",
+                      "text": "First Name *",
                       "type": "display",
                       "extension": [
                         {
@@ -208,55 +208,13 @@
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.birthDate",
               "type": "date",
               "required": true,
-              "item": [
-                {
-                  "linkId": "birth-date",
-                  "text": "Birth Date *",
-                  "type": "display",
-                  "extension": [
-                    {
-                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                      "valueCodeableConcept": {
-                        "coding": [
-                          {
-                            "system": "http://hl7.org/fhir/questionnaire-item-control",
-                            "code": "flyover",
-                            "display": "Fly-over"
-                          }
-                        ],
-                        "text": "Flyover"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "text": "Date of Birth *"
             },
             {
               "linkId": "patient-0-gender",
               "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.gender",
               "type": "choice",
-              "item": [
-                {
-                  "linkId": "gender",
-                  "text": "Gender *",
-                  "type": "display",
-                  "extension": [
-                    {
-                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                      "valueCodeableConcept": {
-                        "coding": [
-                          {
-                            "system": "http://hl7.org/fhir/questionnaire-item-control",
-                            "code": "flyover",
-                            "display": "Fly-over"
-                          }
-                        ],
-                        "text": "Flyover"
-                      }
-                    }
-                  ]
-                }
-              ],
+              "text": "Sex *",
               "required": true,
               "extension": [
                 {
@@ -706,11 +664,15 @@
           ]
         },
         {
-          "text": "Caregivers",
           "linkId": "PR-caregivers1",
           "type": "group",
           "repeats": true,
           "item": [
+            {
+              "text": "Care Giver",
+              "type": "display",
+              "linkId": "care-giver-list"
+            },
             {
               "linkId": "patient-rshp-1",
               "type": "choice",
