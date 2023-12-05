@@ -238,7 +238,7 @@
                   "linkId": "event-date-time",
                   "type": "dateTime",
                   "required": true,
-                  "text": "Onset of event",
+                  "text": "Next Vaccination dates *",
                   "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueDateTime"
                 },
                 {
