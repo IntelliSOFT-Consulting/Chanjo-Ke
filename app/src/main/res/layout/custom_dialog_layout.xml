@@ -91,7 +91,7 @@
                 android:layout_weight="0.1" />
 
             <com.google.android.material.button.MaterialButton
-                android:visibility="visible"
+                android:visibility="invisible"
                 android:id="@+id/clientDetails"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

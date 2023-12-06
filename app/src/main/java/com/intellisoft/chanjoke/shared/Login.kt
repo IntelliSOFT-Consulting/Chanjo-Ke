@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -27,7 +28,7 @@ class Login : AppCompatActivity() {
          * TODO: This is dummy login workflow
          */
 
-        findViewById<Button>(R.id.btnLogin).setOnClickListener {
+        findViewById<MaterialButton>(R.id.btnLogin).setOnClickListener {
 
             val username = etUsername.text.toString()
             val password = etPassword.text.toString()

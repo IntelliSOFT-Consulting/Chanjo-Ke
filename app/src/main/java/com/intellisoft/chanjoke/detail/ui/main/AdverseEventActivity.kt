@@ -57,7 +57,7 @@ class AdverseEventActivity : AppCompatActivity() {
                 val trimmedText = type.trim()
 
                 if (trimmedText.equals("Other", ignoreCase = true)) {
-                    Timber.e("Text is Other")
+
                     lnOtherType.visibility = View.VISIBLE
                     vOtherType.visibility = View.VISIBLE
                     typeOfAEFIOtherTextView.text = extractAefiData(

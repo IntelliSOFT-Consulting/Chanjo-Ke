@@ -1,19 +1,24 @@
 package com.intellisoft.chanjoke.detail.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ContentInfoCompat.Flags
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
 import com.intellisoft.chanjoke.databinding.FragmentVaccineDetailsBinding
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.adapters.EventsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -62,6 +67,13 @@ class VaccineDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        onBackPressed()
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = getString(R.string.administer_vaccine)
+            setDisplayHomeAsUpEnabled(true)
+        }
 
         binding.apply {
             val vaccineName = FormatterClass().getSharedPref("vaccine_name", requireContext())
@@ -79,7 +91,7 @@ class VaccineDetailsFragment : Fragment() {
 
             (requireActivity() as AppCompatActivity).supportActionBar?.apply {
                 if (vaccineName != null) {
-                    title=vaccineName.replace("Vaccine:","")
+                    title = vaccineName.replace("Vaccine:", "")
                 }
             }
             val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
@@ -88,6 +100,12 @@ class VaccineDetailsFragment : Fragment() {
 
         }
         loadVaccineAdverseEvents()
+    }
+
+    private fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
+            exitPageSection()
+        }
     }
 
     private fun generateAgeSince(dateString: String?, vaccineDate: String?): String {
@@ -157,12 +175,20 @@ class VaccineDetailsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                NavHostFragment.findNavController(this@VaccineDetailsFragment).navigateUp()
+                exitPageSection()
                 true
             }
 
             else -> false
         }
+    }
+
+    private fun exitPageSection() {
+        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+        val intent = Intent(context, PatientDetailActivity::class.java)
+        intent.putExtra("patientId", patientId)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        requireContext().startActivity(intent)
     }
 
 }
