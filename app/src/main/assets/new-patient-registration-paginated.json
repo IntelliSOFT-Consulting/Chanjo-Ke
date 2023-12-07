@@ -202,6 +202,38 @@
                     "expression": "Patient.birthDate",
                     "name": "patientBirthDate"
                   }
+                },
+                {
+                  "url": "http://ehelse.no/fhir/StructureDefinition/validationtext",
+                  "valueString": "Cannot be a date in the future"
+                },
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+                  "valueDate": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
+                        "valueExpression": {
+                          "language": "text/fhirpath",
+                          "expression": "today() - 26000 days"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+                  "valueDate": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
+                        "valueExpression": {
+                          "language": "text/fhirpath",
+                          "expression": "today()"
+                        }
+                      }
+                    ]
+                  }
                 }
               ],
               "linkId": "patient-0-birth-date",

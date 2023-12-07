@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,12 +8,16 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <include
+        android:id="@+id/top_bar_layout"
+        layout="@layout/top_bar_layout_blank" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/top_bar_layout"
         android:orientation="vertical"
-        android:padding="15dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:padding="15dp">
 
         <TextView
             android:id="@+id/tv_vaccine_name"
@@ -178,6 +182,7 @@
             android:layout_height="1dp"
             android:layout_margin="3dp"
             android:background="@color/bac_trans2" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -203,6 +208,7 @@
             android:layout_height="1dp"
             android:layout_margin="3dp"
             android:background="@color/bac_trans2" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -286,5 +292,4 @@
             tools:context=".PatientListActivity"
             tools:listitem="@layout/aefi_card_view" />
     </LinearLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

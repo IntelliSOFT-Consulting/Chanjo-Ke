@@ -75,16 +75,23 @@ class VaccinesFragment : Fragment() {
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.setHasFixedSize(true)
 
-        patientDetailsViewModel = ViewModelProvider(this,
-           PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
+        patientDetailsViewModel = ViewModelProvider(
+            this,
+            PatientDetailsViewModelFactory(
+                requireContext().applicationContext as Application,
+                fhirEngine,
+                patientId
+            )
         )[PatientDetailsViewModel::class.java]
 
         binding.administerVaccine.setOnClickListener {
 
+            formatterClass.deleteSharedPref("title", requireContext())
             formatterClass.saveSharedPref(
                 "questionnaireJson",
                 "contraindications.json",
-                requireContext())
+                requireContext()
+            )
 
             formatterClass.saveSharedPref(
                 "vaccinationFlow",
@@ -95,7 +102,7 @@ class VaccinesFragment : Fragment() {
             val bottomSheetFragment = BottomSheetFragment()
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
 
-            
+
         }
 
         binding.btnUpdateHistory.setOnClickListener {
@@ -113,7 +120,7 @@ class VaccinesFragment : Fragment() {
 
         println(encounterList)
 
-        val vaccineAdapter = VaccineAdapter(encounterList,requireContext())
+        val vaccineAdapter = VaccineAdapter(encounterList, requireContext())
         binding.recyclerView.adapter = vaccineAdapter
     }
 
@@ -139,7 +146,8 @@ class VaccinesFragment : Fragment() {
 
     private fun createDialog() {
 
-        val customDialogView = LayoutInflater.from(context).inflate(R.layout.custom_dialog_layout, null)
+        val customDialogView =
+            LayoutInflater.from(context).inflate(R.layout.custom_dialog_layout, null)
 
         // Find views within the custom layout
         val vaccineDetails: MaterialButton = customDialogView.findViewById(R.id.vaccineDetails)

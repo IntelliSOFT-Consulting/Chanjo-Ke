@@ -23,6 +23,7 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -47,6 +48,14 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpActionBar()
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = FormatterClass().getSharedPref("title", requireContext())
+                ?: getString(R.string.administer_vaccine)
+            setDisplayHomeAsUpEnabled(true)
+        }
+
         setHasOptionsMenu(true)
         updateArguments()
         onBackPressed()
