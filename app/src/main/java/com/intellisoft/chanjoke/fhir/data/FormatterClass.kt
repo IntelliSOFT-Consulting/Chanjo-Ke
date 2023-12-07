@@ -24,6 +24,7 @@ import java.time.LocalDate
 import java.time.Period
 import java.util.Date
 import java.util.Locale
+import kotlin.random.Random
 
 class FormatterClass {
     fun saveSharedPref(key: String, value: String, context: Context) {
@@ -250,6 +251,12 @@ class FormatterClass {
         }
         return ""
 
+    }
+
+    fun generate8DigitNumber(): String {
+        return (1..8)
+            .map { Random.nextInt(0, 10) }
+            .joinToString("")
     }
 
 
