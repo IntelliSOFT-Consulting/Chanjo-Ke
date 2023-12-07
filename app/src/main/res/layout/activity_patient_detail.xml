@@ -83,7 +83,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:background="@android:color/darker_gray" />
 
                     <TableRow>
@@ -117,7 +117,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:background="@android:color/darker_gray" />
 
 
@@ -152,7 +152,41 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@android:color/darker_gray" />
+
+                    <TableRow>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="System ID"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:text=":"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+
+                        <TextView
+                            android:id="@+id/tvSystemId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    </TableRow>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="5dp"
                         android:background="@android:color/darker_gray" />
 
 
