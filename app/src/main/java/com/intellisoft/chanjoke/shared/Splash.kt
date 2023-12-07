@@ -24,6 +24,10 @@ class Splash : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+
+        val cccc = FormatterClass().generateRandomCode()
+        Log.e("---------",cccc)
+
         Handler().postDelayed({
             if (FormatterClass().getSharedPref("isLoggedIn", this@Splash) == "true") {
                 val intent = Intent(this, MainActivity::class.java)

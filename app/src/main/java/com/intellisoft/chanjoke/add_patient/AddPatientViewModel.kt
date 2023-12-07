@@ -115,7 +115,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             typeCodeableConcept.coding = codingList
             typeCodeableConcept.text = Identifiers.SYSTEM_GENERATED.name
 
-            identifier.value = FormatterClass().generate8DigitNumber()
+            identifier.value = FormatterClass().generateRandomCode()
             identifier.system = "identification"
             identifier.type = typeCodeableConcept
 

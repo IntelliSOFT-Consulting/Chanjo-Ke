@@ -22,6 +22,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Period
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.random.Random
@@ -253,9 +254,40 @@ class FormatterClass {
 
     }
 
-    fun generate8DigitNumber(): String {
-        return (1..8)
-            .map { Random.nextInt(0, 10) }
+    fun generateRandomCode(): String {
+        // Get current date
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("ddMMyyyy")
+        val formattedDate = dateFormat.format(currentDate)
+
+        /**
+         * The code works as follows,
+         * The first Code represents the year, month, date represented as per in the alphabetical order
+         * The date is added as is
+         * The last 4 letters are random number
+         */
+
+        // Extract year, month, and day
+        val year = formattedDate.substring(4)
+        val month = formattedDate.substring(2, 4)
+        val day = formattedDate.substring(0, 2)
+
+        // Generate the first three characters
+        val firstChar = ('A'.toInt() + year.toInt() % 10).toChar()
+        val secondChar = ('A'.toInt() + month.toInt()).toChar()
+        val thirdChar = day
+
+        // Generate the next four characters
+        val randomChars = generateRandomChars(4)
+
+        // Combine all parts to form the final code
+        return "$firstChar$secondChar$thirdChar$randomChars"
+    }
+
+    fun generateRandomChars(n: Int): String {
+        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return (1..n)
+            .map { chars[Random.nextInt(chars.length)] }
             .joinToString("")
     }
 
