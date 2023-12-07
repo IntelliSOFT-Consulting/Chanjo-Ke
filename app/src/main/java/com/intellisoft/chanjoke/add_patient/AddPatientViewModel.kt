@@ -100,27 +100,26 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             patient.id = patientId
 
             /**
-             * TODO: Add a system generated Identifier
+             * TODO: Add a system generated Identifier, the value should have the Facility's KMFL code
              */
-            val identifierList = ArrayList<Identifier>()
             val identifier = Identifier()
-            identifier.value = FormatterClass().generate8DigitNumber()
-            identifier.system = "identification"
 
             val typeCodeableConcept = CodeableConcept()
 
             val codingList = ArrayList<Coding>()
             val coding = Coding()
             coding.system = "http://hl7.org/fhir/administrative-identifier"
-            coding.code = Identifiers.SYSTEM_GENERATED.name
-            coding.display = Identifiers.SYSTEM_GENERATED.name.lowercase()
+            coding.code = Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-","")
+            coding.display = Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-"," ").uppercase()
             codingList.add(coding)
             typeCodeableConcept.coding = codingList
             typeCodeableConcept.text = Identifiers.SYSTEM_GENERATED.name
 
-            identifierList.add(identifier)
+            identifier.value = FormatterClass().generate8DigitNumber()
+            identifier.system = "identification"
+            identifier.type = typeCodeableConcept
 
-            patient.identifier = identifierList
+            patient.identifier.add(identifier)
 
             fhirEngine.create(patient)
 
