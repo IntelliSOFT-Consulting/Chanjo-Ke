@@ -22,8 +22,10 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Period
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.random.Random
 
 class FormatterClass {
     fun saveSharedPref(key: String, value: String, context: Context) {
@@ -177,47 +179,7 @@ class FormatterClass {
         return result
     }
 
-    fun customDialog(
-        context: Context,
-        valueText: String,
-        fragment: Fragment
-    ) {
-        val builder = AlertDialog.Builder(context)
-        val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.bottom_dialog_layout, null)
-        builder.setView(view)
-        val alertDialog = builder.create()
-        alertDialog.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        alertDialog.setCancelable(false)
-        alertDialog.window?.setGravity(android.view.Gravity.BOTTOM)
-        view.findViewById<TextView>(R.id.info_textview).apply {
-            text = valueText
-        }
-        val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
-        closeMaterialButton.setOnClickListener {
-            alertDialog.dismiss()
-            val patientId = getSharedPref("patientId", context)
 
-            val isRegistration = getSharedPref("isRegistration", context)
-            if (isRegistration != null) {
-                if (isRegistration == "true") {
-                    val intent = Intent(context, PatientDetailActivity::class.java)
-                    intent.putExtra("patientId", patientId)
-                    context.startActivity(intent)
-                    deleteSharedPref("isRegistration", context)
-                }
-            }else{
-                val intent = Intent(context, PatientDetailActivity::class.java)
-                intent.putExtra("patientId", patientId)
-                context.startActivity(intent)
-            }
-//            NavHostFragment.findNavController(fragment).navigateUp()
-        }
-        alertDialog.show()
-    }
 
     fun getFormattedAge(
         dob: String?,
@@ -250,6 +212,43 @@ class FormatterClass {
         }
         return ""
 
+    }
+
+    fun generateRandomCode(): String {
+        // Get current date
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("ddMMyyyy")
+        val formattedDate = dateFormat.format(currentDate)
+
+        /**
+         * The code works as follows,
+         * The first Code represents the year, month, date represented as per in the alphabetical order
+         * The date is added as is
+         * The last 4 letters are random number
+         */
+
+        // Extract year, month, and day
+        val year = formattedDate.substring(4)
+        val month = formattedDate.substring(2, 4)
+        val day = formattedDate.substring(0, 2)
+
+        // Generate the first three characters
+        val firstChar = ('A'.toInt() + year.toInt() % 10).toChar()
+        val secondChar = ('A'.toInt() + month.toInt()).toChar()
+        val thirdChar = day
+
+        // Generate the next four characters
+        val randomChars = generateRandomChars(4)
+
+        // Combine all parts to form the final code
+        return "$firstChar$secondChar$thirdChar$randomChars"
+    }
+
+    fun generateRandomChars(n: Int): String {
+        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return (1..n)
+            .map { chars[Random.nextInt(chars.length)] }
+            .joinToString("")
     }
 
 

@@ -41,6 +41,10 @@ enum class NavigationDetails {
     CLIENT_LIST
 }
 
+enum class Identifiers{
+    SYSTEM_GENERATED
+}
+
 data class DbVaccineStockDetails(
     val name: String,
     val value: String

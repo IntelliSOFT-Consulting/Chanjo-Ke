@@ -31,9 +31,13 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.Identifiers
 import java.util.UUID
 import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.CodeableConcept
+import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.HumanName
+import org.hl7.fhir.r4.model.Identifier
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
@@ -94,6 +98,29 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val patientId = generateUuid()
             val patient = entry.resource as Patient
             patient.id = patientId
+
+            /**
+             * TODO: Add a system generated Identifier, the value should have the Facility's KMFL code
+             */
+            val identifier = Identifier()
+
+            val typeCodeableConcept = CodeableConcept()
+
+            val codingList = ArrayList<Coding>()
+            val coding = Coding()
+            coding.system = "http://hl7.org/fhir/administrative-identifier"
+            coding.code = Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-","")
+            coding.display = Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-"," ").uppercase()
+            codingList.add(coding)
+            typeCodeableConcept.coding = codingList
+            typeCodeableConcept.text = Identifiers.SYSTEM_GENERATED.name
+
+            identifier.value = FormatterClass().generateRandomCode()
+            identifier.system = "identification"
+            identifier.type = typeCodeableConcept
+
+            patient.identifier.add(identifier)
+
             fhirEngine.create(patient)
 
             /**

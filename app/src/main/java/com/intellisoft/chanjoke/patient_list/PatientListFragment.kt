@@ -32,6 +32,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.sync.SyncJobStatus
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.roundToInt
@@ -51,6 +52,7 @@ class PatientListFragment : Fragment() {
         get() = _binding!!
 
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+    private var isSearched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +66,16 @@ class PatientListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        isSearched = false
+
+        val patientListAction = formatterClass.getSharedPref("patientListAction", requireContext())
+        if (patientListAction != null && patientListAction == NavigationDetails.ADMINISTER_VACCINE.name){
+            binding.patientListContainer.linearVaccinationVenue.visibility = View.VISIBLE
+            formatterClass.deleteSharedPref("patientListAction", requireContext())
+
+        }
+
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
 //            title = resources.getString(R.string.title_patient_list)
@@ -89,8 +101,16 @@ class PatientListFragment : Fragment() {
 //            },
 //        )
         patientListViewModel.liveSearchedPatients.observe(viewLifecycleOwner) {
+
             Timber.d("Submitting ${it.count()} patient records")
             val patientList = ArrayList(it)
+
+            if (patientList.isEmpty() && isSearched){
+                //Display client not found
+                val noPatientDialog = NoPatientDialog(requireContext())
+                noPatientDialog.show()
+            }
+
             val patientAdapter = PatientAdapter(patientList, requireContext())
             recyclerView.adapter = patientAdapter
 
@@ -110,11 +130,13 @@ class PatientListFragment : Fragment() {
         searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
+                    isSearched = true
                     patientListViewModel.searchPatientsByName(newText)
                     return true
                 }
 
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    isSearched = true
                     patientListViewModel.searchPatientsByName(query)
                     return true
                 }

@@ -31,4 +31,9 @@
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="strokeColor">@color/colorPrimary</item>
     </style>
+    <style name="NoBackgroundDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
 </resources>

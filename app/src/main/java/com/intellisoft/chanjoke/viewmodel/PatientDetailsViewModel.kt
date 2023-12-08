@@ -22,6 +22,7 @@ import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.EncounterItem
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.utils.Constants.AEFI_DATE
@@ -81,6 +82,7 @@ class PatientDetailsViewModel(
         var contact_name = ""
         var contact_phone = ""
         var contact_gender = ""
+        var systemId = ""
         searchResult.first().let {
             name = it.name[0].nameAsSingleString
 
@@ -109,6 +111,17 @@ class PatientDetailsViewModel(
             }
 
             if (it.hasGenderElement()) gender = it.genderElement.valueAsString
+
+            if (it.hasIdentifier()){
+                it.identifier.forEach {identifier ->
+                    val codeableConceptType = identifier.type
+                    if (codeableConceptType.hasText() && codeableConceptType.text.contains(Identifiers.SYSTEM_GENERATED.name)){
+                        if (identifier.hasValue()){
+                            systemId = identifier.value
+                        }
+                    }
+                }
+            }
         }
 
         FormatterClass().saveSharedPref(
@@ -129,7 +142,8 @@ class PatientDetailsViewModel(
             gender,
             contact_name = contact_name,
             contact_phone = contact_phone,
-            contact_gender = contact_gender
+            contact_gender = contact_gender,
+            systemId
         )
     }
 
@@ -140,7 +154,8 @@ class PatientDetailsViewModel(
         val gender: String,
         val contact_name: String?,
         val contact_phone: String?,
-        val contact_gender: String?
+        val contact_gender: String?,
+        val systemId: String?,
     ) {
         override fun toString(): String = name
     }
