@@ -1,8 +1,12 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.content.Context
 import android.util.Log
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import kotlin.math.abs
 
 // Interface segregation principle
 interface DbVaccine {
@@ -236,14 +240,34 @@ class ImmunizationHandler() {
     }
 
 
-    fun generateVaccineLists(): Pair<List<String>, Map<String, List<String>>> {
+    fun generateVaccineLists(context:Context): Pair<List<String>, Map<String, List<String>>> {
         val groupList = mutableListOf<String>()
         val childList = mutableMapOf<String, List<String>>()
 
-        vaccines.forEach { vaccine ->
-            groupList.add(vaccine.targetDisease)
-            childList[vaccine.targetDisease] = vaccine.vaccineList.map { it.vaccineName }
+        val patientDob = FormatterClass().getSharedPref("patientDob", context)
+        if (patientDob != null){
+            val dobDate = FormatterClass().convertStringToDate(patientDob,"yyyy-MM-dd")
+            if (dobDate != null){
+                val dobLocalDate = FormatterClass().convertDateToLocalDate(dobDate)
+                vaccines.forEach { vaccine ->
+                    val eligibleVaccines = vaccine.vaccineList.filter { basicVaccine ->
+                        checkEligibility(basicVaccine, dobLocalDate)
+                    }
+
+                    if (eligibleVaccines.isNotEmpty()) {
+                        groupList.add(vaccine.targetDisease)
+                        childList[vaccine.targetDisease] = eligibleVaccines.map { it.vaccineName }
+                    }
+                }
+            }
+
         }
+//        vaccines.forEach { vaccine ->
+//            groupList.add(vaccine.targetDisease)
+//            childList[vaccine.targetDisease] = vaccine.vaccineList.map { it.vaccineName }
+//        }
+
+
 
         return Pair(groupList, childList)
     }
@@ -265,10 +289,20 @@ class ImmunizationHandler() {
 //        return weeksSinceDOB.isAfter(dob)
 //    }
 
-    private fun checkEligibility(basicVaccine: BasicVaccine, dob: LocalDate): Boolean {
-        val weeksSinceDOB = LocalDate.now().minusWeeks(basicVaccine.administrativeWeeksSinceDOB.toLong())
-        return weeksSinceDOB.isAfter(dob)
+//    private fun checkEligibility(basicVaccine: BasicVaccine, dob: LocalDate): Boolean {
+//        val weeksSinceDOB = LocalDate.now().minusWeeks(basicVaccine.administrativeWeeksSinceDOB.toLong())
+//        return weeksSinceDOB.isAfter(dob)
+//    }
+
+    fun checkEligibility(basicVaccine: BasicVaccine, dob: LocalDate): Boolean {
+        val weeksSinceBirth = ChronoUnit.WEEKS.between(dob, LocalDate.now()).toInt()
+        val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
+        return abs(weeksSinceBirth - administrativeWeeksSinceDOB) <= 2
     }
+
+
+
+
 
     fun getNextDoseDetails(vaccineCode: String, dob: LocalDate): Triple<String?, BasicVaccine?, SeriesVaccine?> {
         val seriesVaccine = vaccines

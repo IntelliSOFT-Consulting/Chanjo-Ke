@@ -46,7 +46,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         val immunizationHandler = ImmunizationHandler()
-        val (groupList, childList) = immunizationHandler.generateVaccineLists()
+        val (groupList, childList) = immunizationHandler.generateVaccineLists(requireContext())
 
         val adapter = BottomSheetAdapter(groupList, childList, requireContext())
         expandableListView.setAdapter(adapter)
