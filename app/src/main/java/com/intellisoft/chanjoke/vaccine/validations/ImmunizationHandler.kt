@@ -1,10 +1,15 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.app.ProgressDialog
 import android.content.Context
-import android.util.Log
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
 
@@ -157,11 +162,18 @@ fun createVaccines(): List<SeriesVaccine> {
     val vitaminASeries = SeriesVaccine(
         vitaminA,
         "Vitamin A",
-        3,
+        10,
         listOf(
            BasicVaccine(vitaminA+"1", "Vitamin A 1st Dose", "Oral", 26, 0, "100,000OUI","1"),
            BasicVaccine(vitaminA+"2", "Vitamin A 2nd Dose", "Oral", 52, 0, "200,000OUI","2"),
            BasicVaccine(vitaminA+"3", "Vitamin A 3rd Dose", "Oral", 78, 0, "1Capsule","3"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 4th Dose", "Oral", 104, 0, "1Capsule","4"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 5th Dose", "Oral", 130, 0, "1Capsule","5"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 6th Dose", "Oral", 156, 0, "1Capsule","6"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 7th Dose", "Oral", 182, 0, "1Capsule","7"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 8th Dose", "Oral", 208, 0, "1Capsule","8"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 9th Dose", "Oral", 234, 0, "1Capsule","9"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 10th Dose", "Oral", 260, 0, "1Capsule","10"),
         )
     )
 
@@ -240,33 +252,61 @@ class ImmunizationHandler() {
             .find { it.targetDisease == targetDisease }
     }
 
+    fun eligibleVaccineList(context: Context, patientDetailsViewModel: PatientDetailsViewModel)= runBlocking {
+        generateVaccineLists(context, patientDetailsViewModel)
+    }
 
-    fun generateVaccineLists(context:Context): Pair<List<String>, Map<String, List<String>>> {
+    private suspend fun generateVaccineLists(context: Context, patientDetailsViewModel: PatientDetailsViewModel):
+            Pair<List<String>, Map<String, List<String>>> {
+
         val groupList = mutableListOf<String>()
         val childList = mutableMapOf<String, List<String>>()
 
-        val patientDob = FormatterClass().getSharedPref("patientDob", context)
-        if (patientDob != null){
-            val dobDate = FormatterClass().convertStringToDate(patientDob,"yyyy-MM-dd")
-            if (dobDate != null){
-                val dobLocalDate = FormatterClass().convertDateToLocalDate(dobDate)
-                vaccines.forEach { vaccine ->
-                    val eligibleVaccines = vaccine.vaccineList.filter { basicVaccine ->
-                        checkEligibility(basicVaccine, dobLocalDate)
-                    }
+        var progressDialog =  ProgressDialog(context)
+        progressDialog.setMessage("Loading Vaccines...")
+        progressDialog.setTitle("Please wait")
+        progressDialog.show()
 
-                    if (eligibleVaccines.isNotEmpty()) {
-                        groupList.add(vaccine.targetDisease)
-                        childList[vaccine.targetDisease] = eligibleVaccines.map { it.vaccineName }
+        val job = Job()
+        CoroutineScope(Dispatchers.IO + job).launch {
+            val patientDob = FormatterClass().getSharedPref("patientDob", context)
+            if (patientDob != null){
+                val dobDate = FormatterClass().convertStringToDate(patientDob,"yyyy-MM-dd")
+                if (dobDate != null){
+                    val dobLocalDate = FormatterClass().convertDateToLocalDate(dobDate)
+                    vaccines.forEach { vaccine ->
+                        val eligibleVaccines = vaccine.vaccineList.filter { basicVaccine ->
+                            checkEligibility(basicVaccine, dobLocalDate)
+                        }
+
+                        //Vaccinated List
+                        val vaccineList = patientDetailsViewModel.getVaccineList()
+
+                        // Filter out the vaccines that are already in the vaccineList
+                        val notVaccinated = eligibleVaccines.filter { eligibleVaccine ->
+                            vaccineList.none { it.vaccineName == eligibleVaccine.vaccineName }
+                        }
+
+                        if (notVaccinated.isNotEmpty()) {
+                            groupList.add(vaccine.targetDisease)
+                            childList[vaccine.targetDisease] = notVaccinated.map { it.vaccineName }
+                        }
+
+//                    if (eligibleVaccines.isNotEmpty()) {
+//                        groupList.add(vaccine.targetDisease)
+//                        childList[vaccine.targetDisease] = eligibleVaccines.map { it.vaccineName }
+//                    }
                     }
                 }
+
             }
+        }.join()
 
-        }
-
+        progressDialog.dismiss()
 
         return Pair(groupList, childList)
     }
+
 
 
     // Liskov substitution principle

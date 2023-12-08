@@ -145,6 +145,7 @@
             </LinearLayout>
 
             <Button
+                android:visibility="gone"
                 android:padding="10dp"
                 android:id="@+id/btnAdministerVaccine"
                 android:layout_gravity="center"
