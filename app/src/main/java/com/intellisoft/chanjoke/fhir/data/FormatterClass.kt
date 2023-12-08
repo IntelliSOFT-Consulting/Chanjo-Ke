@@ -179,47 +179,7 @@ class FormatterClass {
         return result
     }
 
-    fun customDialog(
-        context: Context,
-        valueText: String,
-        fragment: Fragment
-    ) {
-        val builder = AlertDialog.Builder(context)
-        val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.bottom_dialog_layout, null)
-        builder.setView(view)
-        val alertDialog = builder.create()
-        alertDialog.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        alertDialog.setCancelable(false)
-        alertDialog.window?.setGravity(android.view.Gravity.BOTTOM)
-        view.findViewById<TextView>(R.id.info_textview).apply {
-            text = valueText
-        }
-        val closeMaterialButton = view.findViewById<MaterialButton>(R.id.closeMaterialButton)
-        closeMaterialButton.setOnClickListener {
-            alertDialog.dismiss()
-            val patientId = getSharedPref("patientId", context)
 
-            val isRegistration = getSharedPref("isRegistration", context)
-            if (isRegistration != null) {
-                if (isRegistration == "true") {
-                    val intent = Intent(context, PatientDetailActivity::class.java)
-                    intent.putExtra("patientId", patientId)
-                    context.startActivity(intent)
-                    deleteSharedPref("isRegistration", context)
-                }
-            }else{
-                val intent = Intent(context, PatientDetailActivity::class.java)
-                intent.putExtra("patientId", patientId)
-                context.startActivity(intent)
-            }
-//            NavHostFragment.findNavController(fragment).navigateUp()
-        }
-        alertDialog.show()
-    }
 
     fun getFormattedAge(
         dob: String?,

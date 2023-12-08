@@ -16,6 +16,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.intellisoft.chanjoke.add_patient.AddPatientFragment
 import com.intellisoft.chanjoke.databinding.ActivityMainBinding
 import com.intellisoft.chanjoke.detail.ui.main.UpdateFragment
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -87,6 +88,9 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.landing_page)
 
         when (intent.getStringExtra("functionToCall")) {
+            "registerFunction" -> {
+                registerFunction()
+            }
             "updateFunction" -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
@@ -183,6 +187,16 @@ class MainActivity : AppCompatActivity() {
 
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
             R.id.updateFragment,
+            bundle
+        )
+    }
+    private fun registerFunction() {
+        val bundle = Bundle()
+        bundle.putString(
+            AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
+            "new-patient-registration-paginated.json")
+        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
+            R.id.addPatientFragment,
             bundle
         )
     }

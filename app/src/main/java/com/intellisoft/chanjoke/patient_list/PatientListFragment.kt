@@ -51,6 +51,7 @@ class PatientListFragment : Fragment() {
         get() = _binding!!
 
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+    private var isSearched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +65,8 @@ class PatientListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        isSearched = false
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
 //            title = resources.getString(R.string.title_patient_list)
@@ -89,8 +92,16 @@ class PatientListFragment : Fragment() {
 //            },
 //        )
         patientListViewModel.liveSearchedPatients.observe(viewLifecycleOwner) {
+
             Timber.d("Submitting ${it.count()} patient records")
             val patientList = ArrayList(it)
+
+            if (patientList.isEmpty() && isSearched){
+                //Display client not found
+                val noPatientDialog = NoPatientDialog(requireContext())
+                noPatientDialog.show()
+            }
+
             val patientAdapter = PatientAdapter(patientList, requireContext())
             recyclerView.adapter = patientAdapter
 
@@ -110,11 +121,13 @@ class PatientListFragment : Fragment() {
         searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
+                    isSearched = true
                     patientListViewModel.searchPatientsByName(newText)
                     return true
                 }
 
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    isSearched = true
                     patientListViewModel.searchPatientsByName(query)
                     return true
                 }
