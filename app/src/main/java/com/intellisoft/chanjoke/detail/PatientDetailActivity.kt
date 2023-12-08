@@ -25,6 +25,7 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -189,6 +190,8 @@ class PatientDetailActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("functionToCall", NavigationDetails.CLIENT_LIST.name)
+        intent.putExtra("patientId", patientId)
         startActivity(intent)
     }
 

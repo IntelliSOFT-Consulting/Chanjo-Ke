@@ -39,6 +39,7 @@
     <string name="vaccines">Vaccines</string>
     <string name="profile">Profile</string>
     <string name="add_vaccine">Add Vaccine</string>
+    <string name="administer_vaccine">Administer Vaccine</string>
     <string name="info">Info</string>
     <string name="this_is_the_information_field">Select record to update</string>
     <string name="name_of_person_reporting">Name of Person Reporting:</string>

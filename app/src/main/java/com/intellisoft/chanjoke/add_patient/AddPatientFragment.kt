@@ -23,12 +23,14 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.intellisoft.chanjoke.R
 import com.google.android.fhir.datacapture.QuestionnaireFragment
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import org.hl7.fhir.r4.model.QuestionnaireResponse
@@ -40,6 +42,13 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = getString(R.string.register_client)
+            setDisplayHomeAsUpEnabled(true)
+        }
+
         setUpActionBar()
         setHasOptionsMenu(true)
         updateArguments()
@@ -68,9 +77,11 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
     }
 
     private fun setUpActionBar() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-            title = requireContext().getString(R.string.add_patient)
-            setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as AppCompatActivity).apply {
+            supportActionBar?.apply {
+                title = requireContext().getString(R.string.add_patient)
+                setDisplayHomeAsUpEnabled(true)
+            }
         }
     }
 
@@ -119,7 +130,7 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
     }
 
     private fun savePatient(questionnaireResponse: QuestionnaireResponse) {
-        viewModel.savePatient(questionnaireResponse,requireContext())
+        viewModel.savePatient(questionnaireResponse, requireContext())
     }
 
     private fun observePatientSaveAction() {
@@ -128,13 +139,14 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
                 Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
                 return@observe
             }
-//            val blurBackgroundDialog = BlurBackgroundDialog(this,requireContext())
-//            blurBackgroundDialog.show()
-            FormatterClass().customDialog(
-                requireContext(),
-                "Client added successfully!",
-                this
-            )
+            val blurBackgroundDialog =
+                BlurBackgroundDialog(this@AddPatientFragment, requireContext())
+            blurBackgroundDialog.show()
+//            FormatterClass().customDialog(
+//                requireContext(),
+//                "Client added successfully!",
+//                this
+//            )
 
 
         }

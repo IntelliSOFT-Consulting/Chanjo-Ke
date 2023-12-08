@@ -22,28 +22,41 @@ class BlurBackgroundDialog(
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.layout_blur_background)
-        val layoutParams = window?.attributes
-        layoutParams?.width = WindowManager.LayoutParams.MATCH_PARENT
-        layoutParams?.height = WindowManager.LayoutParams.MATCH_PARENT
-        window?.attributes = layoutParams
+        // Set window attributes to cover the entire screen
+        window?.apply {
+            attributes?.width = WindowManager.LayoutParams.MATCH_PARENT
+            attributes?.height = WindowManager.LayoutParams.MATCH_PARENT
 
-        // Make the dialog cover the status bar and navigation bar
-        window?.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
-        setCancelable(true)
-        setCanceledOnTouchOutside(true)
+            // Make the dialog cover the status bar and navigation bar
+            setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+
+            setBackgroundDrawableResource(android.R.color.transparent) // Set a transparent background
+        }
+        setCancelable(false)
+        setCanceledOnTouchOutside(false)
         window?.setBackgroundDrawableResource(R.color.colorPrimary)
-        val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", context)
-        val valueText = if (vaccinationFlow == "addAefi") {
-            "AEFI Saved successfully!"
-        } else if (vaccinationFlow == "createVaccineDetails") {
-            "Vaccine details captured successfully!"
-        } else if (vaccinationFlow == "updateVaccineDetails") {
-            "Record has been updated successfully!"
-        } else {
-            "Record has been captured successfully!"
+        var valueText = when (FormatterClass().getSharedPref("vaccinationFlow", context)) {
+            "addAefi" -> {
+                "AEFI Saved successfully!"
+            }
+
+            "createVaccineDetails" -> {
+                "Vaccine details captured successfully!"
+            }
+
+            "updateVaccineDetails" -> {
+                "Record has been updated successfully!"
+            }
+
+            else -> {
+                "Record has been captured successfully!"
+            }
+        }
+        if (FormatterClass().getSharedPref("isRegistration", context) == "true") {
+            valueText = "Client added successfully!"
         }
 
         findViewById<TextView>(R.id.info_textview).apply {
@@ -62,7 +75,7 @@ class BlurBackgroundDialog(
                     context.startActivity(intent)
                     FormatterClass().deleteSharedPref("isRegistration", context)
                 }
-            }else{
+            } else {
                 val intent = Intent(context, PatientDetailActivity::class.java)
                 intent.putExtra("patientId", patientId)
                 context.startActivity(intent)

@@ -54,7 +54,6 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:singleLine="true"
                     android:id="@+id/etUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -62,6 +61,7 @@
                     android:drawableStart="@drawable/ic_action_email"
                     android:drawablePadding="15dp"
                     android:hint="Username"
+                    android:singleLine="true"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -72,7 +72,7 @@
                 android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
-                <EditText 
+                <EditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -98,8 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Forgot Password?"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/black" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             </LinearLayout>
 
@@ -112,14 +111,16 @@
             android:layout_marginTop="10dp"
             android:gravity="center">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="100dp"
                 android:paddingEnd="100dp"
                 android:text="Login"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             setHomeAsUpIndicator(null)
         }
 
+
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -83,9 +85,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.triggerOneTimeSync()
         //        load initial landing page
         navController.navigate(R.id.landing_page)
-        Timber.e("*********")
-        Timber.e(intent.getStringExtra("functionToCall"))
-        Timber.e("*********")
+
         when (intent.getStringExtra("functionToCall")) {
             "updateFunction" -> {
                 val patientId = intent.getStringExtra("patientId")
@@ -121,6 +121,13 @@ class MainActivity : AppCompatActivity() {
                     administerVaccine(patientId, R.id.vaccineDetailsFragment)
                 }
             }
+
+            NavigationDetails.CLIENT_LIST.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    administerVaccine(patientId, R.id.patient_list)
+                }
+            }
         }
 
 
@@ -131,9 +138,8 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-
     }
+
 
     private fun administerVaccine(patientId: String, administerVaccine: Int) {
         val questionnaireJson = formatter.getSharedPref("questionnaireJson", this)

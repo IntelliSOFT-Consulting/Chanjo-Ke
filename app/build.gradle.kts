@@ -3,6 +3,7 @@ plugins {
   id("kotlin-android")
   id("androidx.navigation.safeargs.kotlin")
   id("com.google.firebase.crashlytics")
+    id("com.google.gms.google-services")
 
 }
 
