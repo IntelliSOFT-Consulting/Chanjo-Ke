@@ -1,10 +1,9 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
 import android.content.Context
-import android.util.Log
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
 
@@ -241,7 +240,7 @@ class ImmunizationHandler() {
     }
 
 
-    fun generateVaccineLists(context:Context): Pair<List<String>, Map<String, List<String>>> {
+    fun generateVaccineLists(context: Context, patientDetailsViewModel: PatientDetailsViewModel): Pair<List<String>, Map<String, List<String>>> {
         val groupList = mutableListOf<String>()
         val childList = mutableMapOf<String, List<String>>()
 
@@ -255,18 +254,35 @@ class ImmunizationHandler() {
                         checkEligibility(basicVaccine, dobLocalDate)
                     }
 
-                    if (eligibleVaccines.isNotEmpty()) {
-                        groupList.add(vaccine.targetDisease)
-                        childList[vaccine.targetDisease] = eligibleVaccines.map { it.vaccineName }
+                    //Vaccinated List
+                    val vaccineList = patientDetailsViewModel.getVaccineList()
+
+                    // Filter out the vaccines that are already in the vaccineList
+                    val notVaccinated = eligibleVaccines.filter { eligibleVaccine ->
+                        vaccineList.none { it.vaccineName == eligibleVaccine.vaccineName }
                     }
+
+                    if (notVaccinated.isNotEmpty()) {
+                        groupList.add(vaccine.targetDisease)
+                        childList[vaccine.targetDisease] = notVaccinated.map { it.vaccineName }
+                    }
+
+//                    if (eligibleVaccines.isNotEmpty()) {
+//                        groupList.add(vaccine.targetDisease)
+//                        childList[vaccine.targetDisease] = eligibleVaccines.map { it.vaccineName }
+//                    }
                 }
             }
 
         }
 
 
+
         return Pair(groupList, childList)
     }
+
+    //List of given Vaccines
+
 
 
     // Liskov substitution principle

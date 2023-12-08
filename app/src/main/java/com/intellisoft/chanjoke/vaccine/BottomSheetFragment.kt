@@ -1,31 +1,50 @@
 package com.intellisoft.chanjoke.vaccine
 
+import android.app.Application
 import android.os.Bundle
-import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ExpandableListView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.fhir.FhirEngine
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
-import com.intellisoft.chanjoke.vaccine.validations.DbVaccine
+import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
-import com.intellisoft.chanjoke.vaccine.validations.SeriesVaccine
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private var lastExpandedPosition = -1
+    private lateinit var patientDetailsViewModel: PatientDetailsViewModel
+    private lateinit var fhirEngine: FhirEngine
+    private lateinit var patientId: String
+    private val formatterClass = FormatterClass()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_bottom_sheet, container, false)
+
+        fhirEngine = FhirApplication.fhirEngine(requireContext())
+        patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
+
+        patientDetailsViewModel = ViewModelProvider(
+            this,
+            PatientDetailsViewModelFactory(
+                requireContext().applicationContext as Application,
+                fhirEngine,
+                patientId
+            )
+        )[PatientDetailsViewModel::class.java]
 
         val expandableListView: ExpandableListView = view.findViewById(R.id.expandableListView)
         val tvTitle: TextView = view.findViewById(R.id.tvTitle)
@@ -48,7 +67,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         val immunizationHandler = ImmunizationHandler()
-        val (groupList, childList) = immunizationHandler.generateVaccineLists(requireContext())
+        val (groupList, childList) = immunizationHandler.generateVaccineLists(requireContext(), patientDetailsViewModel)
 
         if (groupList.isEmpty()){
             val text = "Client Not eligible for any vaccines"

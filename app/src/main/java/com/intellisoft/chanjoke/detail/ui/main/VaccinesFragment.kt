@@ -116,11 +116,9 @@ class VaccinesFragment : Fragment() {
 
     private fun getVaccinations() {
 
-        val encounterList = patientDetailsViewModel.getEncounterList()
+        val vaccineList = patientDetailsViewModel.getVaccineList()
 
-        println(encounterList)
-
-        val vaccineAdapter = VaccineAdapter(encounterList, requireContext())
+        val vaccineAdapter = VaccineAdapter(vaccineList, requireContext())
         binding.recyclerView.adapter = vaccineAdapter
     }
 
