@@ -145,25 +145,17 @@ class PatientDetailActivity : AppCompatActivity() {
                 binding.apply {
                     tvName.text = patientDetail.name
                     tvGender.text = AppUtils().capitalizeFirstLetter(patientDetail.gender)
-                    tvDob.text = formatterClass.convertDateFormat(patientDetail.dob)
-                    tvAge.text = formatterClass.getFormattedAge(patientDetail.dob,tvAge.context.resources)
                     tvSystemId.text = patientDetail.systemId
+
+                    val dob = formatterClass.convertDateFormat(patientDetail.dob)
+                    val age = formatterClass.getFormattedAge(patientDetail.dob,tvAge.context.resources)
+                    val dobAge = "$dob ($age)"
+
+                    tvDob.text = dobAge
 
                 }
             }
 
-
-
-//            patientDetailsViewModel.livePatientData.observe(this) {
-//                binding.apply {
-//                    tvName.text = it.name
-//                    tvGender.text = AppUtils().capitalizeFirstLetter(it.gender)
-//                    tvDob.text = formatterClass.convertDateFormat(it.dob)
-////                tvContact.text = it.contact_name
-////                tvPhone.text = it.contact_phone
-////                tvContactGender.text = it.contact_gender
-//                }
-//            }
         }
 
 
@@ -172,14 +164,6 @@ class PatientDetailActivity : AppCompatActivity() {
 
     }
 
-//    CoroutineScope(Dispatchers.IO).launch {
-//        formatterClass.saveSharedPref(
-//            "vaccinationFlow",
-//            "recommendVaccineDetails",
-//            this@PatientDetailActivity
-//        )
-//        administerVaccineViewModel.generateImmunizationRecord("", patientId)
-//    }
 
 
     override fun onSupportNavigateUp(): Boolean {

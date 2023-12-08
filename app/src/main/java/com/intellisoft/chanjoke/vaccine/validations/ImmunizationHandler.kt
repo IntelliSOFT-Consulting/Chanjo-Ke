@@ -162,11 +162,18 @@ fun createVaccines(): List<SeriesVaccine> {
     val vitaminASeries = SeriesVaccine(
         vitaminA,
         "Vitamin A",
-        3,
+        10,
         listOf(
            BasicVaccine(vitaminA+"1", "Vitamin A 1st Dose", "Oral", 26, 0, "100,000OUI","1"),
            BasicVaccine(vitaminA+"2", "Vitamin A 2nd Dose", "Oral", 52, 0, "200,000OUI","2"),
            BasicVaccine(vitaminA+"3", "Vitamin A 3rd Dose", "Oral", 78, 0, "1Capsule","3"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 4th Dose", "Oral", 104, 0, "1Capsule","4"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 5th Dose", "Oral", 130, 0, "1Capsule","5"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 6th Dose", "Oral", 156, 0, "1Capsule","6"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 7th Dose", "Oral", 182, 0, "1Capsule","7"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 8th Dose", "Oral", 208, 0, "1Capsule","8"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 9th Dose", "Oral", 234, 0, "1Capsule","9"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 10th Dose", "Oral", 260, 0, "1Capsule","10"),
         )
     )
 
