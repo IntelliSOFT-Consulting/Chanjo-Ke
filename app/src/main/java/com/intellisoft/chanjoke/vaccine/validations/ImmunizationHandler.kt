@@ -65,12 +65,13 @@ fun createVaccines(): List<SeriesVaccine> {
     val polioSeries = SeriesVaccine(
         polio,
         "Polio",
-        4,
+        5,
         listOf(
             BasicVaccine(polio+"bOPV", "bOPV", "Oral", 0, 0, "2 drops","1"),
             BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, 0, "2 drops","2"),
             BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, 0, "2 drops","3"),
-            BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, 0, "2 drops","4")
+            BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, 0, "2 drops","4"),
+            BasicVaccine(polio+"IPV I", "IPV I", "Oral", 14, 0, "2 drops","5")
         )
     )
 
