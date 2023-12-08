@@ -67,7 +67,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         val immunizationHandler = ImmunizationHandler()
-        val (groupList, childList) = immunizationHandler.generateVaccineLists(requireContext(), patientDetailsViewModel)
+        val (groupList, childList) = immunizationHandler.eligibleVaccineList(requireContext(), patientDetailsViewModel)
 
         if (groupList.isEmpty()){
             val text = "Client Not eligible for any vaccines"

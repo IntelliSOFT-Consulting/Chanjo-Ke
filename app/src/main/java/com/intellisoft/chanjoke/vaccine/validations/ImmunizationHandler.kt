@@ -1,8 +1,14 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.app.ProgressDialog
 import android.content.Context
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
@@ -239,49 +245,60 @@ class ImmunizationHandler() {
             .find { it.targetDisease == targetDisease }
     }
 
+    fun eligibleVaccineList(context: Context, patientDetailsViewModel: PatientDetailsViewModel)= runBlocking {
+        generateVaccineLists(context, patientDetailsViewModel)
+    }
 
-    fun generateVaccineLists(context: Context, patientDetailsViewModel: PatientDetailsViewModel): Pair<List<String>, Map<String, List<String>>> {
+    private suspend fun generateVaccineLists(context: Context, patientDetailsViewModel: PatientDetailsViewModel):
+            Pair<List<String>, Map<String, List<String>>> {
+
         val groupList = mutableListOf<String>()
         val childList = mutableMapOf<String, List<String>>()
 
-        val patientDob = FormatterClass().getSharedPref("patientDob", context)
-        if (patientDob != null){
-            val dobDate = FormatterClass().convertStringToDate(patientDob,"yyyy-MM-dd")
-            if (dobDate != null){
-                val dobLocalDate = FormatterClass().convertDateToLocalDate(dobDate)
-                vaccines.forEach { vaccine ->
-                    val eligibleVaccines = vaccine.vaccineList.filter { basicVaccine ->
-                        checkEligibility(basicVaccine, dobLocalDate)
-                    }
+        var progressDialog =  ProgressDialog(context)
+        progressDialog.setMessage("Loading Vaccines...")
+        progressDialog.setTitle("Please wait")
+        progressDialog.show()
 
-                    //Vaccinated List
-                    val vaccineList = patientDetailsViewModel.getVaccineList()
+        val job = Job()
+        CoroutineScope(Dispatchers.IO + job).launch {
+            val patientDob = FormatterClass().getSharedPref("patientDob", context)
+            if (patientDob != null){
+                val dobDate = FormatterClass().convertStringToDate(patientDob,"yyyy-MM-dd")
+                if (dobDate != null){
+                    val dobLocalDate = FormatterClass().convertDateToLocalDate(dobDate)
+                    vaccines.forEach { vaccine ->
+                        val eligibleVaccines = vaccine.vaccineList.filter { basicVaccine ->
+                            checkEligibility(basicVaccine, dobLocalDate)
+                        }
 
-                    // Filter out the vaccines that are already in the vaccineList
-                    val notVaccinated = eligibleVaccines.filter { eligibleVaccine ->
-                        vaccineList.none { it.vaccineName == eligibleVaccine.vaccineName }
-                    }
+                        //Vaccinated List
+                        val vaccineList = patientDetailsViewModel.getVaccineList()
 
-                    if (notVaccinated.isNotEmpty()) {
-                        groupList.add(vaccine.targetDisease)
-                        childList[vaccine.targetDisease] = notVaccinated.map { it.vaccineName }
-                    }
+                        // Filter out the vaccines that are already in the vaccineList
+                        val notVaccinated = eligibleVaccines.filter { eligibleVaccine ->
+                            vaccineList.none { it.vaccineName == eligibleVaccine.vaccineName }
+                        }
+
+                        if (notVaccinated.isNotEmpty()) {
+                            groupList.add(vaccine.targetDisease)
+                            childList[vaccine.targetDisease] = notVaccinated.map { it.vaccineName }
+                        }
 
 //                    if (eligibleVaccines.isNotEmpty()) {
 //                        groupList.add(vaccine.targetDisease)
 //                        childList[vaccine.targetDisease] = eligibleVaccines.map { it.vaccineName }
 //                    }
+                    }
                 }
+
             }
+        }.join()
 
-        }
-
-
+        progressDialog.dismiss()
 
         return Pair(groupList, childList)
     }
-
-    //List of given Vaccines
 
 
 
