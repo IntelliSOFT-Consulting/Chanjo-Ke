@@ -32,6 +32,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.sync.SyncJobStatus
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.roundToInt
@@ -67,6 +68,14 @@ class PatientListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         isSearched = false
+
+        val patientListAction = formatterClass.getSharedPref("patientListAction", requireContext())
+        if (patientListAction != null && patientListAction == NavigationDetails.ADMINISTER_VACCINE.name){
+            binding.patientListContainer.linearVaccinationVenue.visibility = View.VISIBLE
+            formatterClass.deleteSharedPref("patientListAction", requireContext())
+
+        }
+
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
 //            title = resources.getString(R.string.title_patient_list)

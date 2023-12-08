@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientFragment
 import com.intellisoft.chanjoke.databinding.FragmentLandingPageBinding
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.viewmodel.LayoutListViewModel
 import com.intellisoft.chanjoke.viewmodel.LayoutsRecyclerViewAdapter
 import timber.log.Timber
@@ -23,6 +25,7 @@ class LandingPage : Fragment() {
     private lateinit var viewModel: LandingPageViewModel
     private lateinit var _binding: FragmentLandingPageBinding
     private val binding get() = _binding
+    private var formatterClass = FormatterClass()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +39,9 @@ class LandingPage : Fragment() {
             setHomeButtonEnabled(false)
             setHomeAsUpIndicator(null)
         }
+
+        formatterClass.deleteSharedPref("patientListAction", requireContext())
+
         return _binding.root
 
     }
@@ -62,6 +68,8 @@ class LandingPage : Fragment() {
 
             "Administer vaccine" -> {
                 findNavController().navigate(R.id.patient_list)
+                formatterClass.saveSharedPref("patientListAction",
+                    NavigationDetails.ADMINISTER_VACCINE.name, requireContext())
             }
 
             "AEFI" -> {
