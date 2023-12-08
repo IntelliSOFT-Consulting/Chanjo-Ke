@@ -262,11 +262,6 @@ class ImmunizationHandler() {
             }
 
         }
-//        vaccines.forEach { vaccine ->
-//            groupList.add(vaccine.targetDisease)
-//            childList[vaccine.targetDisease] = vaccine.vaccineList.map { it.vaccineName }
-//        }
-
 
 
         return Pair(groupList, childList)
@@ -274,27 +269,8 @@ class ImmunizationHandler() {
 
 
     // Liskov substitution principle
-//    fun getAvailableVaccines(dob: LocalDate = LocalDate.now()): List<AvailableVaccine?> {
-//        return vaccines.map { vaccine ->
-//            if (vaccine is SeriesVaccine) {
-//                val isEligible = checkEligibility(vaccine, dob)
-//                AvailableVaccine(vaccine, isEligible)
-//            } else {
-//                null
-//            }
-//        }
-//    }
-//    private fun checkEligibility(seriesVaccine: SeriesVaccine, dob: LocalDate): Boolean {
-//        val weeksSinceDOB = LocalDate.now().minusWeeks(seriesVaccine.administrativeWeeksSinceDOB.toLong())
-//        return weeksSinceDOB.isAfter(dob)
-//    }
 
-//    private fun checkEligibility(basicVaccine: BasicVaccine, dob: LocalDate): Boolean {
-//        val weeksSinceDOB = LocalDate.now().minusWeeks(basicVaccine.administrativeWeeksSinceDOB.toLong())
-//        return weeksSinceDOB.isAfter(dob)
-//    }
-
-    fun checkEligibility(basicVaccine: BasicVaccine, dob: LocalDate): Boolean {
+    private fun checkEligibility(basicVaccine: BasicVaccine, dob: LocalDate): Boolean {
         val weeksSinceBirth = ChronoUnit.WEEKS.between(dob, LocalDate.now()).toInt()
         val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
         return abs(weeksSinceBirth - administrativeWeeksSinceDOB) <= 2

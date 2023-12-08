@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ExpandableListView
+import android.widget.TextView
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.intellisoft.chanjoke.R
@@ -27,6 +28,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val view = inflater.inflate(R.layout.fragment_bottom_sheet, container, false)
 
         val expandableListView: ExpandableListView = view.findViewById(R.id.expandableListView)
+        val tvTitle: TextView = view.findViewById(R.id.tvTitle)
 
         expandableListView.setOnGroupClickListener { parent, view, groupPosition, id ->
             // Handle group click here
@@ -47,6 +49,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         val immunizationHandler = ImmunizationHandler()
         val (groupList, childList) = immunizationHandler.generateVaccineLists(requireContext())
+
+        if (groupList.isEmpty()){
+            val text = "Client Not eligible for any vaccines"
+            tvTitle.text = text
+        }
 
         val adapter = BottomSheetAdapter(groupList, childList, requireContext())
         expandableListView.setAdapter(adapter)
