@@ -145,17 +145,16 @@
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:visibility="gone"
+                android:padding="10dp"
                 android:id="@+id/btnAdministerVaccine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:clickable="true"
-                android:icon="@android:drawable/ic_input_add"
                 android:text="Administer Vaccine"
                 android:textColor="#ffffff"
-                app:backgroundTint="@color/colorPrimary"
-                app:iconGravity="textStart"
-                app:iconTint="#ffffff" />
+                app:backgroundTint="@color/colorPrimary" />
 
         </LinearLayout>
 

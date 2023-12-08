@@ -21,6 +21,7 @@ import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import org.hl7.fhir.r4.model.codesystems.ImmunizationRecommendationStatus
+import java.time.LocalDate
 
 class AppointmentAdapter(
     private var entryList: ArrayList<DbAppointmentDetails>,
@@ -119,29 +120,38 @@ class AppointmentAdapter(
         val vaccineName = entryList[position].vaccineName
         val dateScheduled = entryList[position].dateScheduled
         val doseNumber = entryList[position].doseNumber
-        val appointmentStatus = entryList[position].appointmentStatus
+        val dbAppointmentStatus = entryList[position].appointmentStatus
+        var appointmentStatus = dbAppointmentStatus
 
-        val dateScheduledFormat = FormatterClass().convertDateFormat(dateScheduled)
+        val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
 
         holder.tvAppointment.text = vaccineName
-        holder.tvDateScheduled.text = dateScheduledFormat
         holder.tvDoseNumber.text = doseNumber
-        holder.chipAppointment.text = appointmentStatus
-        holder.tvStatus.text = appointmentStatus
 
-        if (appointmentStatus.equals(ImmunizationRecommendationStatus.DUE.name, ignoreCase = true)){
-            holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_red_light)
-        }else if (appointmentStatus.equals(ImmunizationRecommendationStatus.CONTRAINDICATED.name, ignoreCase = true)){
-            holder.chipAppointment.setChipBackgroundColorResource(android.R.color.darker_gray)
-        }else if (appointmentStatus.equals(ImmunizationRecommendationStatus.COMPLETE.name, ignoreCase = true)){
-            holder.btnAdministerVaccine.isVisible = false
-            holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_green_dark)
-        }else{
-            holder.chipAppointment.setChipBackgroundColorResource(android.R.color.holo_red_light)
+        //Check if dateScheduled is past
+        if (dobFormat != null){
+            holder.tvDateScheduled.text = dobFormat
+
+            val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
+            if (dobDate != null) {
+                val targetDate = FormatterClass().convertDateToLocalDate(dobDate)
+                val currentDate = LocalDate.now()
+
+                // Check if the target date is in the past
+                if (targetDate.isBefore(currentDate)) {
+                    if (!dbAppointmentStatus.equals(ImmunizationRecommendationStatus.COMPLETE.name, ignoreCase = true)){
+                        appointmentStatus = ImmunizationRecommendationStatus.OVERDUE.name
+                    }
+                }
+            }
         }
 
+
+        holder.tvStatus.text = appointmentStatus
+
+
         if (appointmentStatus.equals(ImmunizationRecommendationStatus.DUE.name, ignoreCase = true)){
-            holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.red))
+            holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
         }else if (appointmentStatus.equals(ImmunizationRecommendationStatus.CONTRAINDICATED.name, ignoreCase = true)){
             holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.darker_gray))
         }else if (appointmentStatus.equals(ImmunizationRecommendationStatus.COMPLETE.name, ignoreCase = true)){

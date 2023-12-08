@@ -276,26 +276,26 @@ class PatientDetailsViewModel(
     }
 
 
-    fun getEncounterList() = runBlocking {
-        getEncounterDetails()
+    fun getVaccineList() = runBlocking {
+        getVaccineListDetails()
     }
 
-    private suspend fun getEncounterDetails(): ArrayList<DbVaccineData> {
+    private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {
 
-        val encounterList = ArrayList<DbVaccineData>()
+        val vaccineList = ArrayList<DbVaccineData>()
 
         fhirEngine
             .search<Immunization> {
                 filter(Immunization.PATIENT, { value = "Patient/$patientId" })
                 sort(Immunization.DATE, Order.DESCENDING)
             }
-            .map { createEncounterItem(it) }
-            .let { encounterList.addAll(it) }
+            .map { createVaccineItem(it) }
+            .let { vaccineList.addAll(it) }
 
-        return encounterList
+        return vaccineList
     }
 
-    private fun createEncounterItem(immunization: Immunization): DbVaccineData {
+    private fun createVaccineItem(immunization: Immunization): DbVaccineData {
 
         var vaccineName = ""
         var doseNumberValue = ""
