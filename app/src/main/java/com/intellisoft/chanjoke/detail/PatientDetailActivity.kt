@@ -2,6 +2,8 @@ package com.intellisoft.chanjoke.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -157,14 +159,7 @@ class PatientDetailActivity : AppCompatActivity() {
             }
 
         }
-
-
-
-
-
     }
-
-
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
@@ -179,18 +174,24 @@ class PatientDetailActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun proceedToNavigate(s: String) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("functionToCall", s)
-        intent.putExtra("patientId", patientId)
-        startActivity(intent)
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.edit_details, menu)
+        return true
     }
 
-    fun updateFunction() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("functionToCall", "updateFunction")
-        intent.putExtra("patientId", patientId)
-        startActivity(intent)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_item_edit -> {
+                // Handle option 1 click
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("functionToCall", NavigationDetails.EDIT_CLIENT.name)
+                intent.putExtra("patientId", patientId)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }

@@ -47,12 +47,12 @@ class EditPatientFragment : Fragment(R.layout.add_patient_fragment) {
         ) { _, _ ->
             onSubmitAction()
         }
-      /*  childFragmentManager.setFragmentResultListener(
-            QuestionnaireFragment.CANCEL_REQUEST_KEY,
-            viewLifecycleOwner,
-        ) { _, _ ->
-            NavHostFragment.findNavController(this@EditPatientFragment).navigateUp()
-        }*/
+//        childFragmentManager.setFragmentResultListener(
+//            QuestionnaireFragment.CANCEL_REQUEST_KEY,
+//            viewLifecycleOwner,
+//        ) { _, _ ->
+//            NavHostFragment.findNavController(this@EditPatientFragment).navigateUp()
+//        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -88,4 +88,5 @@ class EditPatientFragment : Fragment(R.layout.add_patient_fragment) {
         const val QUESTIONNAIRE_FILE_PATH_KEY = "edit-questionnaire-file-path-key"
         const val QUESTIONNAIRE_FRAGMENT_TAG = "edit-questionnaire-fragment-tag"
     }
+
 }
