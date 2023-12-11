@@ -268,6 +268,206 @@
           ]
         },
         {
+          "linkId": "type-of-last-hpv-dose-group",
+          "type": "group",
+          "enableWhen": [
+            {
+              "question": "type-of-vaccine-choice",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "HPV",
+                "display": "HPV"
+              }
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "lastDoseType"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "type-of-hpv-last-dose",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "item": [
+                {
+                  "text": "Type of last HPV dose",
+                  "linkId": "type-of-hpv-last-dose-choice",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "drop-down",
+                            "display": "Drop down"
+                          }
+                        ],
+                        "text": "Drop down"
+                      }
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "500-002-4",
+                        "display": "HPV-1"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "500-002-5",
+                        "display": "HPV-2"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "type-of-hpv-last-dose-code",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "222-11",
+                    "display": "Type of last dose",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "months-between-group",
+          "type": "group",
+          "enableWhen": [
+            {
+              "question": "type-of-vaccine-choice",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "HPV",
+                "display": "HPV"
+              }
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "cd4Percentage"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "months-between",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity",
+              "item": [
+                {
+                  "text": "Number of months between first and second HPV doses",
+                  "type": "decimal",
+                  "required": true,
+                  "linkId": "months-between-decimal",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.value",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+                      "valueDecimal": 0
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+                      "valueDecimal": 10000
+                    }
+                  ]
+                },
+                {
+                  "linkId": "months-between-quantity-code",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.code",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "initial": [
+                    {
+                      "valueCoding": {
+                        "code": "4721-522",
+                        "display": "Number of months between first and second HPV doses ",
+                        "system": "http://loinc.org"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "linkId": "months-between-system",
+                  "type": "string",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.system",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "initial": [
+                    {
+                      "valueString": "http://unitsofmeasure.org"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "months-between-code",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "12121-5",
+                    "display": "Number of months between first and second HPV doses",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
           "linkId": "unknown-product-group",
           "type": "group",
           "enableWhen": [
