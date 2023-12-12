@@ -19,10 +19,11 @@ class LayoutListViewModel(application: Application, private val state: SavedStat
         @DrawableRes val iconId: Int,
         val textId: String,
     ) {
-        SEARCH_CLIENT(R.drawable.ic_action_searches, "Search Client"),
-        REGISTER_CLIENT(R.drawable.ic_action_register_client, "Register Client"),
-        UPDATE_CLIENT_HISTORY(R.drawable.ic_action_update_client, "Update Client History"),
-        ADMINISTER_VACCINE(R.drawable.ic_action_administer_vaccine, "Administer vaccine"),
-        AEFI(R.drawable.ic_action_aefi, "AEFI"),
+        SEARCH_CLIENT(R.drawable.search, "Search Client"),
+        REGISTER_CLIENT(R.drawable.register, "Register Client"),
+        UPDATE_CLIENT_HISTORY(R.drawable.update_client, "Update Client History"),
+        ADMINISTER_VACCINE(R.drawable.administer, "Administer vaccine"),
+        AEFI(R.drawable.aefi, "AEFI"),
+        APPOINMENTS(R.drawable.appoinments, "Appointments"),
     }
 }
