@@ -15,7 +15,7 @@
         <LinearLayout
             android:id="@+id/iconContainer"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,8 +24,8 @@
 
             <ImageView
                 android:id="@+id/componentLayoutIconImageview"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:contentDescription="components"
                 android:scaleType="centerCrop" />
         </LinearLayout>

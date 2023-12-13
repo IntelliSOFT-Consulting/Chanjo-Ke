@@ -73,6 +73,7 @@ class AppointmentAdapter(
                     context
                 )
 
+                formatterClass.deleteSharedPref("title", context)
 //                if (appointmentStatus == "Contraindicated" && appointmentId != ""){
 //                    formatterClass.saveSharedPref(
 //                        "isContraindicated",

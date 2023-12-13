@@ -15,6 +15,7 @@ import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.FhirSyncWorker //Import the local fhir
 import com.google.android.fhir.sync.Sync
 import com.google.android.fhir.sync.remote.HttpLogger
+import com.intellisoft.chanjoke.utils.Constants.BASE_URL
 import timber.log.Timber
 
 class FhirApplication : Application(), DataCaptureConfig.Provider {
@@ -35,7 +36,7 @@ class FhirApplication : Application(), DataCaptureConfig.Provider {
                 enableEncryptionIfSupported = false,
                 DatabaseErrorStrategy.RECREATE_AT_OPEN,
                 ServerConfiguration(
-                    "http://162.254.33.53:8083/fhir/",
+                    BASE_URL,
                     httpLogger =
                     HttpLogger(
                         HttpLogger.Configuration(

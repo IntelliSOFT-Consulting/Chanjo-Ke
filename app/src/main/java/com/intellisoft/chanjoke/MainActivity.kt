@@ -132,6 +132,12 @@ class MainActivity : AppCompatActivity() {
                     administerVaccine(patientId, R.id.patient_list)
                 }
             }
+            NavigationDetails.EDIT_CLIENT.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    navController.navigate(R.id.editPatientFragment)
+                }
+            }
         }
 
 

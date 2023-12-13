@@ -173,7 +173,10 @@ class VaccinesFragment : Fragment() {
                 "updateVaccineDetails",
                 requireContext()
             )
-
+            FormatterClass().saveSharedPref(
+                "title",
+                "Update Vaccine Details", requireContext()
+            )
             val intent = Intent(context, MainActivity::class.java)
             intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
             intent.putExtra("patientId", patientId)
@@ -186,7 +189,10 @@ class VaccinesFragment : Fragment() {
                 "update_history.json",
                 requireContext()
             )
-
+            FormatterClass().saveSharedPref(
+                "title",
+                "Update Client Details", requireContext()
+            )
             val intent = Intent(context, MainActivity::class.java)
             intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
             intent.putExtra("patientId", patientId)
