@@ -13,12 +13,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.ui.main.SectionsPagerAdapter
 import com.intellisoft.chanjoke.databinding.ActivityPatientDetailBinding
-import com.intellisoft.chanjoke.detail.ui.main.AppointmentsFragment
+import com.intellisoft.chanjoke.detail.ui.main.RecommendationFragment
 import com.intellisoft.chanjoke.detail.ui.main.VaccinesFragment
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.utils.AppUtils
@@ -26,13 +25,13 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.intellisoft.chanjoke.detail.ui.main.AppointmentsFragment
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class PatientDetailActivity : AppCompatActivity() {
     private lateinit var fhirEngine: FhirEngine
@@ -70,15 +69,19 @@ class PatientDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val adapter = SectionsPagerAdapter(supportFragmentManager)
+
         val vaccine = VaccinesFragment()
         vaccine.arguments = bundle
-        val apn = AppointmentsFragment()
+
+        val apn = RecommendationFragment()
         apn.arguments = bundle
-//        val cd = ClientDetailsFragment()
-//        cd.arguments = bundle
+
+        val appointment = AppointmentsFragment()
+        appointment.arguments = bundle
 
         adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(apn, getString(R.string.tab_text_2))
+        adapter.addFragment(appointment, getString(R.string.tab_text_4))
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {

@@ -18,10 +18,10 @@ import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import org.hl7.fhir.r4.model.codesystems.ImmunizationRecommendationStatus
 import java.time.LocalDate
 
-class AppointmentAdapter(
+class RecommendationAdapter(
     private var entryList: ArrayList<DbAppointmentDetails>,
     private val context: Context
-) : RecyclerView.Adapter<AppointmentAdapter.Pager2ViewHolder>() {
+) : RecyclerView.Adapter<RecommendationAdapter.Pager2ViewHolder>() {
 
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
@@ -102,7 +102,7 @@ class AppointmentAdapter(
     ): Pager2ViewHolder {
         return Pager2ViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.appointments,
+                R.layout.recommendation,
                 parent,
                 false
             )
