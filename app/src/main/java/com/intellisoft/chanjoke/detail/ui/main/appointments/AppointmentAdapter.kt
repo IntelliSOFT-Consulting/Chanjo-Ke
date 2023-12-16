@@ -1,4 +1,4 @@
-package com.intellisoft.chanjoke.detail.ui.main
+package com.intellisoft.chanjoke.detail.ui.main.appointments
 
 import android.content.Context
 import android.content.Intent

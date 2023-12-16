@@ -1,4 +1,4 @@
-package com.intellisoft.chanjoke.detail.ui.main
+package com.intellisoft.chanjoke.detail.ui.main.appointments
 
 import android.app.Application
 import android.content.Intent
@@ -17,11 +17,9 @@ import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
-import com.intellisoft.chanjoke.databinding.FragmentVaccinesBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
@@ -70,6 +68,12 @@ class AppointmentsFragment : Fragment() {
                 patientId
             )
         )[PatientDetailsViewModel::class.java]
+
+        binding.addAppointment.setOnClickListener {
+
+
+
+        }
 
 //        binding.administerVaccine.setOnClickListener {
 //
