@@ -76,42 +76,17 @@ class AppointmentsFragment : Fragment() {
 
         }
 
-//        binding.administerVaccine.setOnClickListener {
-//
-//            formatterClass.deleteSharedPref("title", requireContext())
-//            formatterClass.saveSharedPref(
-//                "questionnaireJson",
-//                "contraindications.json",
-//                requireContext()
-//            )
-//
-//            formatterClass.saveSharedPref(
-//                "vaccinationFlow",
-//                "createVaccineDetails",
-//                requireContext()
-//            )
-//
-//            val bottomSheetFragment = BottomSheetFragment()
-//            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
-//
-//
-//        }
-//
-//        binding.btnUpdateHistory.setOnClickListener {
-//            createDialog()
-//
-//        }
 
-        getVaccinations()
+        getAppointments()
         return binding.root
     }
 
-    private fun getVaccinations() {
+    private fun getAppointments() {
 
-//        val vaccineList = patientDetailsViewModel.getVaccineList()
+        val appointmentList = patientDetailsViewModel.getAppointmentList()
 //
-//        val vaccineAdapter = AppointmentAdapter(vaccineList, requireContext())
-//        binding.recyclerView.adapter = vaccineAdapter
+        val vaccineAdapter = AppointmentAdapter(appointmentList, requireContext())
+        binding.recyclerView.adapter = vaccineAdapter
     }
 
 

@@ -27,7 +27,6 @@
                 android:layout_marginEnd="@dimen/small_text_margin"
                 android:layout_marginBottom="@dimen/small_text_margin"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:padding="20dp"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
                 android:textStyle="bold"
@@ -57,6 +56,7 @@
 
 
         <LinearLayout
+            android:background="@color/bac_trans2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -85,7 +85,6 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:gravity="center"
                             android:text="Description"
                             android:textStyle="bold" />
@@ -95,8 +94,6 @@
                             android:id="@+id/tvDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
                             android:text="@string/tab_text_5" />
 
                     </LinearLayout>

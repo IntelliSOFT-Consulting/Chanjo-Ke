@@ -45,8 +45,11 @@ enum class NavigationDetails {
 data class DbAppointmentData(
     val title:String,
     val description:String,
-    val recommendationId: String,
-    val dateScheduled: String
+    val recommendationId: String?,
+    val dateScheduled: String,
+
+    val recommendationList: ArrayList<DbAppointmentDetails>? = null,
+    val status:String = ""
 )
 
 enum class Identifiers{
