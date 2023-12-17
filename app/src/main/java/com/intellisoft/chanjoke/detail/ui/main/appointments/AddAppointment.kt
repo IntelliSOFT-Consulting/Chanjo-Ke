@@ -67,6 +67,7 @@ class AddAppointment : AppCompatActivity() {
                 }
 
                 val dbAppointmentData = DbAppointmentData(
+                    null,
                     title,
                     description,
                     vaccineId,

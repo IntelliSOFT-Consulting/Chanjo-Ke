@@ -337,6 +337,7 @@ class PatientDetailsViewModel(
         }
 
         return DbAppointmentData(
+            null,
             title,
             description,
             null,
