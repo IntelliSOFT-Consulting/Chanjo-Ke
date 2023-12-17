@@ -45,16 +45,7 @@ class AppointmentAdapter(
             val pos = adapterPosition
             val id = entryList[pos].id
 
-            val title = entryList[pos].title
-            val description = entryList[pos].description
-            val dateScheduled = entryList[pos].dateScheduled
-            val recommendationList = entryList[pos].recommendationList
-
-            formatterClass.saveSharedPref("title",title, context)
-            formatterClass.saveSharedPref("description",description, context)
-            formatterClass.saveSharedPref("dateScheduled",dateScheduled, context)
-            formatterClass.saveSharedPref("recommendationList",
-                recommendationList.toString(), context)
+            formatterClass.saveSharedPref("appointmentId",id.toString(), context)
 
             val intent = Intent(context, AppointmentDetails::class.java)
             context.startActivity(intent)

@@ -8,6 +8,8 @@ import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAppointmentDetailsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -37,18 +39,30 @@ class AppointmentDetails : AppCompatActivity() {
 
     private fun getAppointments() {
 
-        val title = formatterClass.getSharedPref("title", this)
-        val description = formatterClass.getSharedPref("description", this)
-        val dateScheduled = formatterClass.getSharedPref("dateScheduled", this)
-        val recommendationList = formatterClass.getSharedPref("recommendationList", this)
+        val appointmentId = formatterClass.getSharedPref("appointmentId", this)
+        val appointmentList = patientDetailsViewModel.getAppointmentList()
+        var recommendationList = ArrayList<DbAppointmentDetails>()
 
-        binding.tvTitle.text = title
-        binding.tvDescription.text = description
-        binding.tvDateScheduled.text = dateScheduled
+        val dbAppointmentData = appointmentList.find { it.id == appointmentId }
 
-        Log.e("----","----")
-        println("recommendationList $recommendationList")
-        Log.e("----","----")
+        if (dbAppointmentData != null){
+            recommendationList = dbAppointmentData.recommendationList!!
+
+            val title = dbAppointmentData.title
+            val description = dbAppointmentData.description
+            val dateScheduled = dbAppointmentData.dateScheduled
+
+            binding.tvTitle.text = title
+            binding.tvDescription.text = description
+            binding.tvDateScheduled.text = dateScheduled
+
+            Log.e("------","-------")
+            println(recommendationList)
+            Log.e("------","-------")
+
+
+        }
+
 
 
     }

@@ -319,12 +319,6 @@ class PatientDetailsViewModel(
             dateScheduled = startDate
         }
 
-        Log.e("-------","-------")
-        println("start $start")
-        println("startDate $startDate")
-        println("dateScheduled $dateScheduled")
-        Log.e("-------","-------")
-
         basedOnImmunizationRecommendationList.forEach { ref ->
             val immunizationRecommendation = ref.reference
             val recommendationId =
@@ -337,7 +331,7 @@ class PatientDetailsViewModel(
         }
 
         return DbAppointmentData(
-            null,
+            id,
             title,
             description,
             null,
