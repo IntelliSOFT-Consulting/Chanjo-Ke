@@ -314,16 +314,17 @@ class PatientDetailsViewModel(
         title = titleMatch?.groupValues?.get(1).toString()
         description = descriptionMatch?.groupValues?.get(1).toString()
 
-        Log.e("-------","-------")
-        println("title $title")
-        println("description $description")
-        Log.e("-------","-------")
-
-
         val startDate = FormatterClass().convertDateFormat(start.toString())
         if (startDate != null) {
             dateScheduled = startDate
         }
+
+        Log.e("-------","-------")
+        println("start $start")
+        println("startDate $startDate")
+        println("dateScheduled $dateScheduled")
+        Log.e("-------","-------")
+
         basedOnImmunizationRecommendationList.forEach { ref ->
             val immunizationRecommendation = ref.reference
             val recommendationId =

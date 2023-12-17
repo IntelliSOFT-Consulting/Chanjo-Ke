@@ -16,6 +16,8 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
+import org.hl7.fhir.r4.model.Appointment
+import org.hl7.fhir.r4.model.Appointment.AppointmentStatus
 import org.hl7.fhir.r4.model.codesystems.ImmunizationRecommendationStatus
 import java.time.LocalDate
 
@@ -66,13 +68,18 @@ class AppointmentAdapter(
         val dateScheduled = entryList[position].dateScheduled
         val status = entryList[position].status
 
-        val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
-
         holder.tvAppointment.text = title
         holder.tvDescription.text = description
 
-        holder.tvStatus.text = status
-        holder.tvAppointmentDate.text = dobFormat
+        holder.tvStatus.text = status.lowercase()
+        holder.tvAppointmentDate.text = dateScheduled
+
+
+        if (status.equals(AppointmentStatus.BOOKED.name, ignoreCase = true)){
+            holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+        }else{
+            holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.red))
+        }
 
     }
 
