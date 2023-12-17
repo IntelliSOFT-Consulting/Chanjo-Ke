@@ -71,7 +71,8 @@ class AppointmentsFragment : Fragment() {
 
         binding.addAppointment.setOnClickListener {
 
-
+            val intent = Intent(requireContext(), AddAppointment::class.java)
+            startActivity(intent)
 
         }
 
