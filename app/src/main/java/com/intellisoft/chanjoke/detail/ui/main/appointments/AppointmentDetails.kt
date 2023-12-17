@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAppointmentDetailsBinding
@@ -20,6 +22,7 @@ class AppointmentDetails : AppCompatActivity() {
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private lateinit var fhirEngine: FhirEngine
     private var formatterClass = FormatterClass()
+    private lateinit var layoutManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +37,14 @@ class AppointmentDetails : AppCompatActivity() {
             )
                 .get(PatientDetailsViewModel::class.java)
 
+        layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.setHasFixedSize(true)
+
         getAppointments()
     }
 
@@ -41,7 +52,7 @@ class AppointmentDetails : AppCompatActivity() {
 
         val appointmentId = formatterClass.getSharedPref("appointmentId", this)
         val appointmentList = patientDetailsViewModel.getAppointmentList()
-        var recommendationList = ArrayList<DbAppointmentDetails>()
+        val recommendationList: ArrayList<DbAppointmentDetails>
 
         val dbAppointmentData = appointmentList.find { it.id == appointmentId }
 
@@ -56,9 +67,8 @@ class AppointmentDetails : AppCompatActivity() {
             binding.tvDescription.text = description
             binding.tvDateScheduled.text = dateScheduled
 
-            Log.e("------","-------")
-            println(recommendationList)
-            Log.e("------","-------")
+            val appointmentDetailsAdapter = AppointmentDetailsAdapter(recommendationList, this)
+            binding.recyclerView.adapter = appointmentDetailsAdapter
 
 
         }
