@@ -43,7 +43,39 @@ class AppointmentDetailsAdapter(
             val formatterClass = FormatterClass()
             val pos = adapterPosition
             val id = entryList[pos].appointmentId
+            val patientId = FormatterClass().getSharedPref("patientId", context)
 
+            val targetDisease = entryList[pos].targetDisease
+            val administeredProduct = entryList[pos].vaccineName
+
+
+            formatterClass.saveSharedPref(
+                "questionnaireJson",
+                "contraindications.json",
+                context)
+
+            formatterClass.saveSharedPref(
+                "vaccinationFlow",
+                "createVaccineDetails",
+                context
+            )
+
+
+            formatterClass.saveSharedPref(
+                "vaccinationTargetDisease",
+                targetDisease,
+                context
+            )
+            formatterClass.saveSharedPref(
+                "administeredProduct",
+                administeredProduct,
+                context
+            )
+
+            val intent = Intent(context, VaccineStockManagement::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("patientId", patientId)
+            context.startActivity(intent)
 
 
         }
