@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
-import com.intellisoft.chanjoke.databinding.FragmentVaccinesBinding
+import com.intellisoft.chanjoke.databinding.FragmentRecommendationBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -24,14 +24,14 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [AppointmentsFragment.newInstance] factory method to
+ * Use the [RecommendationFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AppointmentsFragment : Fragment() {
+class RecommendationFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var binding: FragmentAppointmentsBinding
+    private lateinit var binding: FragmentRecommendationBinding
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private lateinit var patientId: String
     private lateinit var fhirEngine: FhirEngine
@@ -52,10 +52,7 @@ class AppointmentsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        binding = FragmentAppointmentsBinding.inflate(inflater, container, false)
-
-
-        binding = FragmentAppointmentsBinding.inflate(inflater, container, false)
+        binding = FragmentRecommendationBinding.inflate(inflater, container, false)
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
@@ -84,7 +81,7 @@ class AppointmentsFragment : Fragment() {
 
         println(recommendationList)
 
-        val vaccineAdapter = AppointmentAdapter(recommendationList,requireContext())
+        val vaccineAdapter = RecommendationAdapter(recommendationList,requireContext())
         binding.recyclerView.adapter = vaccineAdapter
  
     }
@@ -96,12 +93,12 @@ class AppointmentsFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment AppointmentsFragment.
+         * @return A new instance of fragment RecommendationFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            AppointmentsFragment().apply {
+            RecommendationFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

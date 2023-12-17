@@ -19,8 +19,8 @@ import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
-import com.intellisoft.chanjoke.fhir.data.EncounterItem
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
@@ -35,7 +35,7 @@ import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.hl7.fhir.r4.model.AdverseEvent
+import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Immunization
@@ -44,11 +44,6 @@ import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.RiskAssessment
-import timber.log.Timber
-import java.sql.Time
-import java.time.ZonedDateTime
-import java.util.Calendar
-import java.util.TimeZone
 
 /**
  * The ViewModel helper class for PatientItemRecyclerViewAdapter, that is responsible for preparing
@@ -275,6 +270,78 @@ class PatientDetailsViewModel(
 
     }
 
+
+    fun getAppointmentList() = runBlocking {
+        getAppointmentDetails()
+    }
+
+    private suspend fun getAppointmentDetails(): ArrayList<DbAppointmentData> {
+
+        val appointmentList = ArrayList<DbAppointmentData>()
+
+        fhirEngine
+            .search<Appointment> {
+                filter(Appointment.SUPPORTING_INFO, { value = "Patient/$patientId" })
+                sort(Appointment.DATE, Order.DESCENDING)
+            }
+            .map { createAppointment(it) }
+            .let { appointmentList.addAll(it) }
+
+        return appointmentList
+    }
+
+    private suspend fun createAppointment(it: Appointment):DbAppointmentData {
+
+        val recommendationList = getRecommendationList()
+
+        val id = if (it.hasId()) it.id else ""
+        val status = if (it.hasStatus()) it.status else ""
+        val input = if (it.hasDescription()) it.description else ""
+        val start = if (it.hasStart()) it.start else ""
+        val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
+            it.basedOn
+        } else {
+            emptyList()
+        }
+        var title = ""
+        var description = ""
+        var dateScheduled = ""
+        var recommendationSavedList = ArrayList<DbAppointmentDetails>()
+
+        val titleMatch = Regex("Title: (.+?) ").find(input)
+        val descriptionMatch = Regex("Description:(.+)").find(input)
+
+        title = titleMatch?.groupValues?.get(1).toString()
+        description = descriptionMatch?.groupValues?.get(1).toString()
+
+        val startDate = FormatterClass().convertDateFormat(start.toString())
+        if (startDate != null) {
+            dateScheduled = startDate
+        }
+
+        basedOnImmunizationRecommendationList.forEach { ref ->
+            val immunizationRecommendation = ref.reference
+            val recommendationId =
+                immunizationRecommendation.replace("ImmunizationRecommendation/", "")
+            val selectedRecommendation =
+                recommendationList.find { it.appointmentId == recommendationId }
+            if (selectedRecommendation != null) {
+                recommendationSavedList.add(selectedRecommendation)
+            }
+        }
+
+        return DbAppointmentData(
+            id,
+            title,
+            description,
+            null,
+            dateScheduled,
+            recommendationSavedList,
+            status.toString()
+        )
+
+
+    }
 
     fun getVaccineList() = runBlocking {
         getVaccineListDetails()

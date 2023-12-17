@@ -27,6 +27,8 @@ class VaccineAdapter(
         val lnViewDetails: LinearLayout = itemView.findViewById(R.id.ln_view_details)
         val logicalId: TextView = itemView.findViewById(R.id.logicalId)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
+        val tvAddAEFI: TextView = itemView.findViewById(R.id.tvAddAEFI)
+
         val btnAddAefi: MaterialButton = itemView.findViewById(R.id.btnAddAefi)
 
         val vaccineDosage: TextView = itemView.findViewById(R.id.vaccineDosage)
@@ -36,7 +38,7 @@ class VaccineAdapter(
 
         init {
             itemView.setOnClickListener(this)
-            btnAddAefi.setOnClickListener {
+            tvAddAEFI.setOnClickListener {
 
                 val patientId = FormatterClass().getSharedPref("patientId", context)
 
