@@ -3,6 +3,7 @@ package com.intellisoft.chanjoke.detail.ui.main.appointments
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,14 @@ class AppointmentDetails : AppCompatActivity() {
         binding = ActivityAppointmentDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         patientId = FormatterClass().getSharedPref("patientId", this).toString()
+
+        val toolBar=findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolBar)
+        supportActionBar?.apply {
+            setDisplayShowHomeEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+        }
+
         fhirEngine = FhirApplication.fhirEngine(this)
         patientDetailsViewModel =
             ViewModelProvider(
