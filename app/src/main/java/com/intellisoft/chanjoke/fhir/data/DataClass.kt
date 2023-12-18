@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.fhir.data
 
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import org.hl7.fhir.r4.model.ImmunizationRecommendation
 
 data class DbVaccineData(
     val logicalId: String,
@@ -41,6 +42,16 @@ enum class NavigationDetails {
     CLIENT_LIST,
     EDIT_CLIENT
 }
+data class DbAppointmentData(
+    val id: String? = null,
+    val title:String,
+    val description:String,
+    val recommendationId: String?,
+    val dateScheduled: String,
+
+    val recommendationList: ArrayList<DbAppointmentDetails>? = null,
+    val status:String = ""
+)
 
 enum class Identifiers{
     SYSTEM_GENERATED
@@ -50,6 +61,8 @@ data class DbVaccineStockDetails(
     val name: String,
     val value: String
 )
+
+//This is the recommendation
 data class DbAppointmentDetails(
     val appointmentId:String,
     val dateScheduled: String,

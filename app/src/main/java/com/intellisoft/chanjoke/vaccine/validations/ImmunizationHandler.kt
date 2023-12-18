@@ -177,7 +177,7 @@ fun createVaccines(): List<SeriesVaccine> {
         )
     )
 
-    //Vitamin A
+    //RTS/AS01 (Malaria)
     val malaria = "IMMALA-"
     val malariaSeries = SeriesVaccine(
         malaria,

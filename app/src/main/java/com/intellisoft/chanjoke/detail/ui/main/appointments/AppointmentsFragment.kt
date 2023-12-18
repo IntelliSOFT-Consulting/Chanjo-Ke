@@ -1,4 +1,4 @@
-package com.intellisoft.chanjoke.detail.ui.main
+package com.intellisoft.chanjoke.detail.ui.main.appointments
 
 import android.app.Application
 import android.content.Intent
@@ -16,27 +16,18 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.databinding.FragmentVaccinesBinding
+import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-class VaccinesFragment : Fragment() {
+class AppointmentsFragment : Fragment() {
 
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private lateinit var binding: FragmentVaccinesBinding
+
+    private lateinit var binding: FragmentAppointmentsBinding
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private lateinit var patientId: String
     private lateinit var fhirEngine: FhirEngine
@@ -46,8 +37,7 @@ class VaccinesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -56,7 +46,7 @@ class VaccinesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentVaccinesBinding.inflate(inflater, container, false)
+        binding = FragmentAppointmentsBinding.inflate(inflater, container, false)
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
@@ -79,63 +69,27 @@ class VaccinesFragment : Fragment() {
             )
         )[PatientDetailsViewModel::class.java]
 
-        binding.administerVaccine.setOnClickListener {
+        binding.addAppointment.setOnClickListener {
 
-            formatterClass.deleteSharedPref("title", requireContext())
-            formatterClass.saveSharedPref(
-                "questionnaireJson",
-                "contraindications.json",
-                requireContext()
-            )
-
-            formatterClass.saveSharedPref(
-                "vaccinationFlow",
-                "createVaccineDetails",
-                requireContext()
-            )
-
-            val bottomSheetFragment = BottomSheetFragment()
-            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
-
+            val intent = Intent(requireContext(), AddAppointment::class.java)
+            startActivity(intent)
 
         }
 
-        binding.btnUpdateHistory.setOnClickListener {
-            createDialog()
 
-        }
-
-        getVaccinations()
+        getAppointments()
         return binding.root
     }
 
-    private fun getVaccinations() {
+    private fun getAppointments() {
 
-        val vaccineList = patientDetailsViewModel.getVaccineList()
-
-        val vaccineAdapter = VaccineAdapter(vaccineList, requireContext())
+        val appointmentList = patientDetailsViewModel.getAppointmentList()
+//
+        val vaccineAdapter = AppointmentAdapter(appointmentList, requireContext())
         binding.recyclerView.adapter = vaccineAdapter
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RecommendationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RecommendationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 
     private fun createDialog() {
 

@@ -2,31 +2,26 @@ package com.intellisoft.chanjoke.detail.ui.main
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
-import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
-import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import org.hl7.fhir.r4.model.codesystems.ImmunizationRecommendationStatus
 import java.time.LocalDate
 
-class AppointmentAdapter(
+class RecommendationAdapter(
     private var entryList: ArrayList<DbAppointmentDetails>,
     private val context: Context
-) : RecyclerView.Adapter<AppointmentAdapter.Pager2ViewHolder>() {
+) : RecyclerView.Adapter<RecommendationAdapter.Pager2ViewHolder>() {
 
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
@@ -107,7 +102,7 @@ class AppointmentAdapter(
     ): Pager2ViewHolder {
         return Pager2ViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.appointments,
+                R.layout.recommendation,
                 parent,
                 false
             )

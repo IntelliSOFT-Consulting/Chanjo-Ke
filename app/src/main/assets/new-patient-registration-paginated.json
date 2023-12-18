@@ -443,6 +443,20 @@
                         "code": "passport",
                         "display": "Passport"
                       }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://hl7.org/fhir/administrative-identifier",
+                        "code": "nemis",
+                        "display": "NEMIS No"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://hl7.org/fhir/administrative-identifier",
+                        "code": "bNo",
+                        "display": "Birth Notification Number"
+                      }
                     }
                   ]
                 },

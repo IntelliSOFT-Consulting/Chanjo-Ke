@@ -28,12 +28,30 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvVaccineName"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Vaccine Name" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/tvVaccineName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Vaccine Name" />
+
+            <TextView
+                android:id="@+id/tvAddAEFI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:text="ADD AEFI" />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/ln_view_details"
@@ -100,6 +118,7 @@
 
 
             <com.google.android.material.button.MaterialButton
+                android:visibility="gone"
                 android:id="@+id/btnAddAefi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -35,6 +35,7 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -43,7 +44,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import java.util.UUID
 import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.CarePlan
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Condition
@@ -537,6 +540,7 @@ class AdministerVaccineViewModel(
                         "Contraindicated",
                         statusReasonStr,
                         null)
+
                     saveResourceToDatabase(recommendation, "ImmRec")
                 }
 
@@ -641,34 +645,6 @@ class AdministerVaccineViewModel(
 
     }
 
-    private suspend fun updateRecommendation(contraindicatedId: String, patientId: String, status: String) {
-        //Update Contraindicated status
-
-
-        val immunizationRecommendation = ImmunizationRecommendation()
-        val patientReference = Reference("Patient/$patientId")
-        immunizationRecommendation.patient = patientReference
-        immunizationRecommendation.id = contraindicatedId
-
-        //Recommendation
-        val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
-        val immunizationRequest = ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
-
-        //Status
-        val codeableConceptStatus = CodeableConcept()
-        codeableConceptStatus.text = status
-        immunizationRequest.forecastStatus = codeableConceptStatus
-
-        recommendationList.add(immunizationRequest)
-        immunizationRecommendation.recommendation = recommendationList
-
-        FormatterClass().deleteSharedPref("isContraindicated",
-            getApplication<Application>().applicationContext)
-
-        saveResourceToDatabase(immunizationRecommendation, "ImmRec")
-
-    }
-
 
 
     private suspend fun observationFromCode(
@@ -750,6 +726,66 @@ class AdministerVaccineViewModel(
             valueString,
             issuedDate
         )
+    }
+
+    //Create an appointment
+    fun createAppointment(dbAppointmentData: DbAppointmentData){
+        CoroutineScope(Dispatchers.IO).launch { generateAppointment(dbAppointmentData) }
+
+    }
+    private suspend fun generateAppointment(dbAppointmentData: DbAppointmentData){
+
+        val formatterClass = FormatterClass()
+        val title = dbAppointmentData.title
+        val description = dbAppointmentData.description
+        val dateScheduled = dbAppointmentData.dateScheduled
+        val recommendationId = dbAppointmentData.recommendationId
+
+        val patientId = formatterClass.getSharedPref("patientId",getApplication<Application>().applicationContext)
+        val patientReference = Reference("Patient/$patientId")
+        val recommendationReference = Reference("ImmunizationRecommendation/$recommendationId")
+
+        val appointment = Appointment()
+
+        val id = generateUuid()
+        appointment.id = id
+
+        //Status
+        appointment.setStatus(Appointment.AppointmentStatus.BOOKED)
+
+        //description
+        val newText = "Title: $title Description:$description"
+        appointment.description = newText
+
+        //List of based on references
+        val referenceList = ArrayList<Reference>()
+        referenceList.add(recommendationReference)
+        appointment.basedOn = referenceList
+
+        /**
+         * TODO: Change the patient resource from this
+         */
+        val supportingInfoList = ArrayList<Reference>()
+        supportingInfoList.add(patientReference)
+        appointment.supportingInformation = supportingInfoList
+
+        //Created
+        appointment.created = Date()
+
+        //start and end
+        val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
+        if (dobFormat != null){
+            val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
+            appointment.start = dobDate
+            saveResourceToDatabase(appointment, "appointment")
+        }
+
+        /**
+         * TODO: Add Participants
+         */
+
+
+
     }
 
 
