@@ -906,11 +906,31 @@
                 "expression": "Patient.address.city",
                 "name": "patientCity"
               }
+            },
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Location?partof=''"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "autocomplete",
+                    "display": "Auto-complete"
+                  }
+                ],
+                "text": "Auto-complete"
+              }
             }
           ],
           "linkId": "PR-address-city",
           "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.city",
-          "type": "string",
+          "type": "choice",
           "required": true,
           "item": [
             {
@@ -944,11 +964,31 @@
                 "expression": "Patient.address.country",
                 "name": "patientCity"
               }
+            },
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Location"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "autocomplete",
+                    "display": "Auto-complete"
+                  }
+                ],
+                "text": "Auto-complete"
+              }
             }
           ],
           "linkId": "PR-address-country",
           "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.country",
-          "type": "string",
+          "type": "choice",
           "required": true,
           "item": [
             {
