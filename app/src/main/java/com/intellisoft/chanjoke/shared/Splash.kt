@@ -11,7 +11,6 @@ import com.intellisoft.chanjoke.databinding.ActivitySplashBinding
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
-import com.intellisoft.chanjoke.vaccine.validations.SeriesVaccine
 import java.time.LocalDate
 
 class Splash : AppCompatActivity() {

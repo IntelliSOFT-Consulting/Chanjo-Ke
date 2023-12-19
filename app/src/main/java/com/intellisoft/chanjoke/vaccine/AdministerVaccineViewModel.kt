@@ -188,6 +188,11 @@ class AdministerVaccineViewModel(
         immunization.status = immunisationStatus
 
         //Date administered
+
+        /**
+         * TODO: Set to pick the saved data not the current date
+         */
+
         val currentDate = Date()
         immunization.occurrenceDateTimeType.value = currentDate
 
@@ -320,12 +325,12 @@ class AdministerVaccineViewModel(
 
                     val nextDate = nextImmunizationPair.first
                     val basicVaccine = nextImmunizationPair.second
-                    val seriesVaccine = nextImmunizationPair.third
+                    val routineVaccine = nextImmunizationPair.third
 
-                    if (nextDate != null && basicVaccine != null && seriesVaccine != null){
+                    if (nextDate != null && basicVaccine != null && routineVaccine != null){
                         formatterClass.saveStockValue(
                             basicVaccine.vaccineName,
-                            seriesVaccine.targetDisease,
+                            routineVaccine.targetDisease,
                             getApplication<Application>().applicationContext)
 
                         val dobNextDate = formatterClass.convertStringToDate(nextDate, "yyyy-MM-dd")
@@ -554,6 +559,11 @@ class AdministerVaccineViewModel(
              * The request is from the update history -> vaccine details screens,
              * Get the type of vaccine from observation , save to shared pref and create immunisation
              */
+
+            /**
+             * TODO: Check on the new Vaccines
+             */
+
             //Administered Product
             val vaccineType = observationFromCode(
                 "222-11",

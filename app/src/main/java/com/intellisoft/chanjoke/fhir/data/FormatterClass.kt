@@ -130,10 +130,10 @@ class FormatterClass {
         val immunizationHandler = ImmunizationHandler()
         val baseVaccineDetails =
             immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
-        val seriesVaccineDetails =
-            immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(targetDisease)
+        val routineVaccineDetails =
+            immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
 
-        if (seriesVaccineDetails != null && baseVaccineDetails != null) {
+        if (routineVaccineDetails != null && baseVaccineDetails != null) {
 
             stockList.addAll(
                 listOf(
@@ -142,7 +142,7 @@ class FormatterClass {
 
                     DbVaccineStockDetails(
                         "vaccinationSeriesDoses",
-                        seriesVaccineDetails.seriesDoses.toString()
+                        routineVaccineDetails.seriesDoses.toString()
                     ),
 
                     DbVaccineStockDetails(

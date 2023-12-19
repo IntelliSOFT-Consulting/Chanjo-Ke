@@ -97,14 +97,14 @@ class BottomSheetAdapter(
 
                     val immunizationHandler = ImmunizationHandler()
                     val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(valueText)
-                    val seriesVaccineDetails = immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(valueGroup)
+                    val routineVaccineDetails = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(valueGroup)
 
                     if (baseVaccineDetails != null){
                         val administeredProduct = baseVaccineDetails.vaccineName
                         FormatterClass().saveSharedPref("administeredProduct", administeredProduct, context)
                     }
-                    if (seriesVaccineDetails != null){
-                        val targetDisease = seriesVaccineDetails.targetDisease
+                    if (routineVaccineDetails != null){
+                        val targetDisease = routineVaccineDetails.targetDisease
                         FormatterClass().saveSharedPref("vaccinationTargetDisease", targetDisease, context)
                     }
 
