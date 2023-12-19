@@ -30,6 +30,8 @@ import com.google.android.fhir.search.search
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.hl7.fhir.r4.model.Location
 import org.hl7.fhir.r4.model.Patient
 
 /**
@@ -108,18 +110,23 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         return patients
     }
 
+    fun retrieveLocations() = runBlocking {
+        retrieveAllLocations()
+    }
 
-//  private suspend fun getRiskAssessments(): Map<String, RiskAssessment?> {
-//    return fhirEngine
-//      .search<RiskAssessment> {}
-//      .groupBy { it.resource.subject.reference }
-//      .mapValues { entry ->
-//        entry.value
-//          .filter { it.resource.hasOccurrence() }
-//          .maxByOrNull { it.resource.occurrenceDateTimeType.value }
-//          ?.resource
-//      }
-//  }
+    private suspend fun retrieveAllLocations(): List<LocationItem> {
+        val locations: MutableList<LocationItem> = mutableListOf()
+        fhirEngine.search<Location> {
+            sort(Location.NAME, Order.DESCENDING)
+            count = 100
+            from = 0
+        }
+            .mapIndexed { index, fhirPatient -> fhirPatient.toLocationItem(index + 1) }
+            .let { locations.addAll(it) }
+
+        return locations
+    }
+
 
     /** The Patient's details for display purposes. */
     data class PatientItem(
@@ -135,7 +142,14 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         val isActive: Boolean,
         val html: String,
         var risk: String? = "",
-//    var riskItem: RiskAssessmentItem? = null,
+    ) {
+        override fun toString(): String = name
+    }
+
+    data class LocationItem(
+        val id: String,
+        val resourceId: String,
+        val name: String,
     ) {
         override fun toString(): String = name
     }
@@ -208,5 +222,17 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
         country = country ?: "",
         isActive = isActive,
         html = html,
+    )
+}
+
+internal fun Location.toLocationItem(position: Int): PatientListViewModel.LocationItem {
+    // Show nothing if no values available for gender and date of birth.
+    val patientId = if (hasIdElement()) idElement.idPart else ""
+    val name = if (hasName()) name.toString() else ""
+
+    return PatientListViewModel.LocationItem(
+        id = position.toString(),
+        resourceId = patientId,
+        name = name,
     )
 }

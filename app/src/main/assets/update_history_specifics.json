@@ -1180,311 +1180,72 @@
               ]
             }
           ]
-        }
-      ],
-      "extension": [
+        },
         {
-          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-          "valueCodeableConcept": {
-            "coding": [
-              {
-                "system": "http://hl7.org/fhir/questionnaire-item-control",
-                "code": "page",
-                "display": "Page"
-              }
-            ],
-            "text": "Page"
-          }
-        }
-      ],
-      "type": "group",
-      "linkId": "9713588269744",
-      "code": [
-        {
-          "code": "60484-3",
-          "display": "Update Vaccine History"
-        }
-      ],
-      "text": "Update Vaccine History",
-      "required": false
-    },
-    {
-      "item": [
-        {
-          "linkId": "tst-test-results-group",
-          "type": "group",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
-              "valueExpression": {
-                "language": "application/x-fhir-query",
-                "expression": "Observation",
-                "name": "tstResults"
-              }
-            }
-          ],
           "item": [
             {
-              "linkId": "tst-test-results",
+              "linkId": "tst-test-results-group",
               "type": "group",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+                  "valueExpression": {
+                    "language": "application/x-fhir-query",
+                    "expression": "Observation",
+                    "name": "tstResults"
+                  }
+                }
+              ],
               "item": [
                 {
-                  "text": "Maternal's TST Test Result *",
-                  "linkId": "tst-test-results-choice",
-                  "type": "choice",
-                  "required": true,
-                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
-                  "extension": [
+                  "linkId": "tst-test-results",
+                  "type": "group",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+                  "item": [
                     {
-                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                      "valueCodeableConcept": {
-                        "coding": [
-                          {
-                            "system": "http://hl7.org/fhir/questionnaire-item-control",
-                            "code": "drop-down",
-                            "display": "Drop down"
+                      "text": "Maternal's TST Test Result *",
+                      "linkId": "tst-test-results-choice",
+                      "type": "choice",
+                      "required": true,
+                      "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "drop-down",
+                                "display": "Drop down"
+                              }
+                            ],
+                            "text": "Drop down"
                           }
-                        ],
-                        "text": "Drop down"
-                      }
-                    }
-                  ],
-                  "answerOption": [
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "TST-Positive",
-                        "display": "TST-Positive"
-                      }
-                    },
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "TST-Negative",
-                        "display": "TST-Negative"
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "linkId": "tst-test-results-code",
-              "type": "choice",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
-                  "valueBoolean": true
-                }
-              ],
-              "initial": [
-                {
-                  "valueCoding": {
-                    "code": "001-001",
-                    "display": "Maternal's TST Test Result",
-                    "system": "http://loinc.org"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "linkId": "exposed-group",
-          "type": "group",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
-              "valueExpression": {
-                "language": "application/x-fhir-query",
-                "expression": "Observation",
-                "name": "exposed"
-              }
-            }
-          ],
-          "item": [
-            {
-              "linkId": "measles-type-of-last-dose",
-              "type": "group",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
-              "item": [
-                {
-                  "text": "Exposed to close contact with TB",
-                  "linkId": "measles-type-of-last-dose-choice",
-                  "type": "choice",
-                  "required": true,
-                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
-                  "extension": [
-                    {
-                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
-                      "valueCode": "horizontal"
-                    }
-                  ],
-                  "answerOption": [
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "22500-13-1",
-                        "display": "Yes"
-                      }
-                    },
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "22500-13-2",
-                        "display": "No"
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "linkId": "type-of-last-dose-code",
-              "type": "choice",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
-                  "valueBoolean": true
-                }
-              ],
-              "initial": [
-                {
-                  "valueCoding": {
-                    "code": "222-00",
-                    "display": "Exposed to close contact with TB",
-                    "system": "http://loinc.org"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "linkId": "tst-client-test-results-group",
-          "type": "group",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
-              "valueExpression": {
-                "language": "application/x-fhir-query",
-                "expression": "Observation",
-                "name": "tstResults"
-              }
-            }
-          ],
-          "item": [
-            {
-              "linkId": "tst-client-test-results",
-              "type": "group",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
-              "item": [
-                {
-                  "text": "Client's TST Test Result *",
-                  "linkId": "tst-client-test-choice",
-                  "type": "choice",
-                  "required": true,
-                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
-                  "extension": [
-                    {
-                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                      "valueCodeableConcept": {
-                        "coding": [
-                          {
-                            "system": "http://hl7.org/fhir/questionnaire-item-control",
-                            "code": "drop-down",
-                            "display": "Drop down"
+                        }
+                      ],
+                      "answerOption": [
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "TST-Positive",
+                            "display": "TST-Positive"
                           }
-                        ],
-                        "text": "Drop down"
-                      }
-                    }
-                  ],
-                  "answerOption": [
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "TST-Positive",
-                        "display": "TST-Positive"
-                      }
-                    },
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "TST-Negative",
-                        "display": "TST-Negative"
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "linkId": "tst-client-test-code",
-              "type": "choice",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
-                  "valueBoolean": true
-                }
-              ],
-              "initial": [
-                {
-                  "valueCoding": {
-                    "code": "002-002",
-                    "display": "Client's TST Test Result",
-                    "system": "http://loinc.org"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "linkId": "cd4-percentage-group",
-          "type": "group",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
-              "valueExpression": {
-                "language": "application/x-fhir-query",
-                "expression": "Observation",
-                "name": "cd4Percentage"
-              }
-            }
-          ],
-          "item": [
-            {
-              "linkId": "cd4-percentage",
-              "type": "group",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity",
-              "item": [
-                {
-                  "text": "Client's CD4 percentage",
-                  "type": "decimal",
-                  "required": true,
-                  "linkId": "cd4-percentage-decimal",
-                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.value",
-                  "extension": [
-                    {
-                      "url": "http://hl7.org/fhir/StructureDefinition/minValue",
-                      "valueDecimal": 1
-                    },
-                    {
-                      "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-                      "valueDecimal": 10000
+                        },
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "TST-Negative",
+                            "display": "TST-Negative"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 {
-                  "linkId": "cd4-percentage-quantity-code",
+                  "linkId": "tst-test-results-code",
                   "type": "choice",
-                  "required": true,
-                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.code",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
                   "extension": [
                     {
                       "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
@@ -1494,17 +1255,69 @@
                   "initial": [
                     {
                       "valueCoding": {
-                        "code": "43421-522",
-                        "display": "CD4 percentage",
+                        "code": "001-001",
+                        "display": "Maternal's TST Test Result",
                         "system": "http://loinc.org"
                       }
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "linkId": "exposed-group",
+              "type": "group",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+                  "valueExpression": {
+                    "language": "application/x-fhir-query",
+                    "expression": "Observation",
+                    "name": "exposed"
+                  }
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "measles-type-of-last-dose",
+                  "type": "group",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+                  "item": [
+                    {
+                      "text": "Exposed to close contact with TB",
+                      "linkId": "measles-type-of-last-dose-choice",
+                      "type": "choice",
+                      "required": true,
+                      "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+                          "valueCode": "horizontal"
+                        }
+                      ],
+                      "answerOption": [
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "22500-13-1",
+                            "display": "Yes"
+                          }
+                        },
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "22500-13-2",
+                            "display": "No"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "linkId": "current-body-weight-system",
-                  "type": "string",
-                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.system",
+                  "linkId": "type-of-last-dose-code",
+                  "type": "choice",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
                   "extension": [
                     {
                       "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
@@ -1513,121 +1326,296 @@
                   ],
                   "initial": [
                     {
-                      "valueString": "http://unitsofmeasure.org"
+                      "valueCoding": {
+                        "code": "222-00",
+                        "display": "Exposed to close contact with TB",
+                        "system": "http://loinc.org"
+                      }
                     }
                   ]
                 }
               ]
             },
             {
-              "linkId": "cd4-percentage-code",
-              "type": "choice",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "linkId": "tst-client-test-results-group",
+              "type": "group",
               "extension": [
                 {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
-                  "valueBoolean": true
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+                  "valueExpression": {
+                    "language": "application/x-fhir-query",
+                    "expression": "Observation",
+                    "name": "tstResults"
+                  }
                 }
               ],
-              "initial": [
+              "item": [
                 {
-                  "valueCoding": {
-                    "code": "4321-5",
-                    "display": "Current Body Weight",
-                    "system": "http://loinc.org"
+                  "linkId": "tst-client-test-results",
+                  "type": "group",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+                  "item": [
+                    {
+                      "text": "Client's TST Test Result *",
+                      "linkId": "tst-client-test-choice",
+                      "type": "choice",
+                      "required": true,
+                      "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "drop-down",
+                                "display": "Drop down"
+                              }
+                            ],
+                            "text": "Drop down"
+                          }
+                        }
+                      ],
+                      "answerOption": [
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "TST-Positive",
+                            "display": "TST-Positive"
+                          }
+                        },
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "TST-Negative",
+                            "display": "TST-Negative"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "linkId": "tst-client-test-code",
+                  "type": "choice",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "initial": [
+                    {
+                      "valueCoding": {
+                        "code": "002-002",
+                        "display": "Client's TST Test Result",
+                        "system": "http://loinc.org"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "cd4-percentage-group",
+              "type": "group",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+                  "valueExpression": {
+                    "language": "application/x-fhir-query",
+                    "expression": "Observation",
+                    "name": "cd4Percentage"
                   }
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "cd4-percentage",
+                  "type": "group",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity",
+                  "item": [
+                    {
+                      "text": "Client's CD4 percentage",
+                      "type": "decimal",
+                      "required": true,
+                      "linkId": "cd4-percentage-decimal",
+                      "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.value",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+                          "valueDecimal": 1
+                        },
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+                          "valueDecimal": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "linkId": "cd4-percentage-quantity-code",
+                      "type": "choice",
+                      "required": true,
+                      "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.code",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                          "valueBoolean": true
+                        }
+                      ],
+                      "initial": [
+                        {
+                          "valueCoding": {
+                            "code": "43421-522",
+                            "display": "CD4 percentage",
+                            "system": "http://loinc.org"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "linkId": "current-body-weight-system",
+                      "type": "string",
+                      "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.system",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                          "valueBoolean": true
+                        }
+                      ],
+                      "initial": [
+                        {
+                          "valueString": "http://unitsofmeasure.org"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "linkId": "cd4-percentage-code",
+                  "type": "choice",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "initial": [
+                    {
+                      "valueCoding": {
+                        "code": "4321-5",
+                        "display": "Current Body Weight",
+                        "system": "http://loinc.org"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "maternal-hiv-status-group",
+              "type": "group",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+                  "valueExpression": {
+                    "language": "application/x-fhir-query",
+                    "expression": "Observation",
+                    "name": "maternalStatus"
+                  }
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "maternal-hiv-status",
+                  "type": "group",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+                  "item": [
+                    {
+                      "text": "Maternal HIV status *",
+                      "linkId": "maternal-hiv-status-choice",
+                      "type": "choice",
+                      "required": true,
+                      "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "drop-down",
+                                "display": "Drop down"
+                              }
+                            ],
+                            "text": "Drop down"
+                          }
+                        }
+                      ],
+                      "answerOption": [
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "Positive",
+                            "display": "Positive"
+                          }
+                        },
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "Negative",
+                            "display": "Negative"
+                          }
+                        },
+                        {
+                          "valueCoding": {
+                            "system": "http://loinc.org",
+                            "code": "Unknown",
+                            "display": "Unknown"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "linkId": "maternal-hiv-status-code",
+                  "type": "choice",
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                      "valueBoolean": true
+                    }
+                  ],
+                  "initial": [
+                    {
+                      "valueCoding": {
+                        "code": "003-003",
+                        "display": "Maternal HIV status",
+                        "system": "http://loinc.org"
+                      }
+                    }
+                  ]
                 }
               ]
             }
-          ]
-        },
-        {
-          "linkId": "maternal-hiv-status-group",
-          "type": "group",
-          "extension": [
+          ],
+          "enableWhen": [
             {
-              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
-              "valueExpression": {
-                "language": "application/x-fhir-query",
-                "expression": "Observation",
-                "name": "maternalStatus"
+              "question": "type-of-vaccine-choice",
+              "operator": "=",
+              "answerCoding": {
+                "system": "http://loinc.org",
+                "code": "30956-BCG",
+                "display": "BCG"
               }
             }
           ],
-          "item": [
-            {
-              "linkId": "maternal-hiv-status",
-              "type": "group",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
-              "item": [
-                {
-                  "text": "Maternal HIV status *",
-                  "linkId": "maternal-hiv-status-choice",
-                  "type": "choice",
-                  "required": true,
-                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
-                  "extension": [
-                    {
-                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                      "valueCodeableConcept": {
-                        "coding": [
-                          {
-                            "system": "http://hl7.org/fhir/questionnaire-item-control",
-                            "code": "drop-down",
-                            "display": "Drop down"
-                          }
-                        ],
-                        "text": "Drop down"
-                      }
-                    }
-                  ],
-                  "answerOption": [
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "Positive",
-                        "display": "Positive"
-                      }
-                    },
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "Negative",
-                        "display": "Negative"
-                      }
-                    },
-                    {
-                      "valueCoding": {
-                        "system": "http://loinc.org",
-                        "code": "Unknown",
-                        "display": "Unknown"
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "linkId": "maternal-hiv-status-code",
-              "type": "choice",
-              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
-                  "valueBoolean": true
-                }
-              ],
-              "initial": [
-                {
-                  "valueCoding": {
-                    "code": "003-003",
-                    "display": "Maternal HIV status",
-                    "system": "http://loinc.org"
-                  }
-                }
-              ]
-            }
-          ]
+          "type": "group",
+          "linkId": "bcg-extended"
         }
       ],
       "extension": [
@@ -1645,25 +1633,8 @@
           }
         }
       ],
-      "enableWhen": [
-        {
-          "question": "type-of-vaccine-choice",
-          "operator": "=",
-          "answerCoding": {
-            "system": "http://loinc.org",
-            "code": "30956-BCG",
-            "display": "BCG"
-          }
-        }
-      ],
       "type": "group",
       "linkId": "9713588269744",
-      "code": [
-        {
-          "code": "60484-3",
-          "display": "Update Vaccine History"
-        }
-      ],
       "text": "Update Vaccine History",
       "required": false
     }

@@ -108,8 +108,11 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
     }
 
     private fun updateArguments() {
-        requireArguments()
-            .putString(QUESTIONNAIRE_FILE_PATH_KEY, "new-patient-registration-paginated.json")
+        requireArguments().putString(
+            QUESTIONNAIRE_FILE_PATH_KEY,
+            "new-patient-registration-paginated.json"
+//            "registration.json"
+        )
     }
 
     private fun addQuestionnaireFragment() {
@@ -117,6 +120,7 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
             replace(
                 R.id.add_patient_container,
                 QuestionnaireFragment.builder().setQuestionnaire(viewModel.questionnaireJson)
+                    .showReviewPageBeforeSubmit(true)
                     .build(),
                 QUESTIONNAIRE_FRAGMENT_TAG,
             )

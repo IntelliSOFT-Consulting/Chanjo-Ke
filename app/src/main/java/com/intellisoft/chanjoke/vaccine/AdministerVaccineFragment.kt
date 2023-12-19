@@ -157,7 +157,10 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
         childFragmentManager.commit {
             replace(
                 R.id.administerVaccine,
-                QuestionnaireFragment.builder().setQuestionnaire(viewModel.questionnaire).build(),
+                QuestionnaireFragment.builder()
+                    .setQuestionnaire(viewModel.questionnaire)
+                    .showReviewPageBeforeSubmit(true)
+                    .build(),
                 QUESTIONNAIRE_FRAGMENT_TAG,
             )
         }
