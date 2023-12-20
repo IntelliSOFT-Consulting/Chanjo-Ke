@@ -414,9 +414,43 @@ class ImmunizationHandler() {
 
 
 
-
-
     // Liskov substitution principle
+    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>){
+
+        val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) = vaccines
+
+        // Routine list
+        val remainingRoutineList = routineList.map { routineVaccine ->
+            routineVaccine.copy(vaccineList = routineVaccine.vaccineList.filter {
+                administeredVaccineNotPresent(it, administeredList)
+            })
+        }.filter { it.vaccineList.isNotEmpty() }
+
+        //Pregnancy  list
+        val remainingPregnancyList = pregnancyVaccineList.map { pregnancyVaccine ->
+            pregnancyVaccine.copy(vaccineList = pregnancyVaccine.vaccineList.filter {
+                administeredVaccineNotPresent(it, administeredList)
+            })
+        }.filter { it.vaccineList.isNotEmpty() }
+
+        //Non-routine list
+        val remainingNonRoutineList = nonRoutineVaccineList.map { nonRoutineVaccine ->
+            nonRoutineVaccine.copy(vaccineList = nonRoutineVaccine.vaccineList.map { routineVaccine ->
+                routineVaccine.copy(vaccineList = routineVaccine.vaccineList.filter {
+                    administeredVaccineNotPresent(it, administeredList)
+                })
+            }.filter { it.vaccineList.isNotEmpty() })
+        }.filter { it.vaccineList.isNotEmpty() }
+
+        Log.e("------->","<--------")
+        println(remainingRoutineList)
+        println(remainingPregnancyList)
+        println(remainingNonRoutineList)
+        Log.e("------->","<--------")
+
+
+
+    }
 
 
     // Helper function to check if a vaccine is not present in the administered list

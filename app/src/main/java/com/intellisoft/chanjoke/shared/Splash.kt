@@ -17,6 +17,7 @@ import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import java.time.LocalDate
+import java.util.Arrays
 
 class Splash : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
@@ -48,16 +49,15 @@ class Splash : AppCompatActivity() {
 //        val vaccineList = patientDetailsViewModel.getVaccineList()
         val administeredList = ArrayList<BasicVaccine>()
 
-//        val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName("BCG")
-//        if (basicVaccine != null) {
-//            administeredList.add(basicVaccine)
-//        }
+        val basicVaccine1 = immunizationHandler.getVaccineDetailsByBasicVaccineName("OPV I")
+        val basicVaccine2 = immunizationHandler.getVaccineDetailsByBasicVaccineName("DPT-HepB+Hib 1")
+        val basicVaccine3 = immunizationHandler.getVaccineDetailsByBasicVaccineName("Astrazeneca 1st Dose")
+        val basicVaccine4 = immunizationHandler.getVaccineDetailsByBasicVaccineName("Influenza")
+        if (basicVaccine1 != null) {
+            administeredList.addAll(Arrays.asList(basicVaccine1, basicVaccine2, basicVaccine3, basicVaccine4))
+        }
 
-        val (groupList, childList) = immunizationHandler.getEligibleRoutineVaccines(
-            administeredList, ageInWeeks)
-
-
-
+        val xxx = immunizationHandler.getAllVaccineList(administeredList)
 
 
         Handler().postDelayed({
