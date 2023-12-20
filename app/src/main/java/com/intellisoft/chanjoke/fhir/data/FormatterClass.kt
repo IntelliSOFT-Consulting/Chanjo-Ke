@@ -17,6 +17,9 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
+import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
+import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -130,10 +133,31 @@ class FormatterClass {
         val immunizationHandler = ImmunizationHandler()
         val baseVaccineDetails =
             immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
-        val routineVaccineDetails =
+        val vaccineDetails =
             immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
 
-        if (routineVaccineDetails != null && baseVaccineDetails != null) {
+        if (vaccineDetails != null && baseVaccineDetails != null) {
+
+            var seriesDoses = ""
+
+            seriesDoses = when(vaccineDetails){
+                is RoutineVaccine -> {
+                    "${vaccineDetails.seriesDoses}"
+                }
+
+                is NonRoutineVaccine -> {
+                    val nonRoutineVaccine = vaccineDetails.vaccineList.firstOrNull(){it.targetDisease == targetDisease}
+                    "${nonRoutineVaccine?.seriesDoses}"
+                }
+
+                is PregnancyVaccine -> {
+                    "${vaccineDetails.seriesDoses}"
+                }
+
+                else -> {
+                    ""
+                }
+            }
 
             stockList.addAll(
                 listOf(
@@ -142,7 +166,7 @@ class FormatterClass {
 
                     DbVaccineStockDetails(
                         "vaccinationSeriesDoses",
-                        routineVaccineDetails.seriesDoses.toString()
+                        seriesDoses
                     ),
 
                     DbVaccineStockDetails(

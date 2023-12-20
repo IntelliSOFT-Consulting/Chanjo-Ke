@@ -18,6 +18,9 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
+import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
+import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -97,14 +100,23 @@ class BottomSheetAdapter(
 
                     val immunizationHandler = ImmunizationHandler()
                     val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(valueText)
-                    val routineVaccineDetails = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(valueGroup)
+                    val vaccineDetails = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(valueGroup)
 
                     if (baseVaccineDetails != null){
                         val administeredProduct = baseVaccineDetails.vaccineName
                         FormatterClass().saveSharedPref("administeredProduct", administeredProduct, context)
                     }
-                    if (routineVaccineDetails != null){
-                        val targetDisease = routineVaccineDetails.targetDisease
+                    if (vaccineDetails != null){
+
+                        var targetDisease = ""
+
+                        targetDisease = when(vaccineDetails){
+                            is RoutineVaccine -> { vaccineDetails.targetDisease }
+                            is NonRoutineVaccine -> { vaccineDetails.targetDisease }
+                            is PregnancyVaccine -> { vaccineDetails.targetDisease }
+                            else -> { "" }
+                        }
+
                         FormatterClass().saveSharedPref("vaccinationTargetDisease", targetDisease, context)
                     }
 

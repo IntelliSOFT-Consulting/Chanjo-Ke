@@ -321,29 +321,29 @@ class AdministerVaccineViewModel(
                 val vaccineCode = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
                 if (vaccineCode != null) {
                     val immunizationHandler = ImmunizationHandler()
-                    val nextImmunizationPair = immunizationHandler.getNextDoseDetails(vaccineCode.vaccineCode, dobLocalDate)
-
-                    val nextDate = nextImmunizationPair.first
-                    val basicVaccine = nextImmunizationPair.second
-                    val routineVaccine = nextImmunizationPair.third
-
-                    if (nextDate != null && basicVaccine != null && routineVaccine != null){
-                        formatterClass.saveStockValue(
-                            basicVaccine.vaccineName,
-                            routineVaccine.targetDisease,
-                            getApplication<Application>().applicationContext)
-
-                        val dobNextDate = formatterClass.convertStringToDate(nextDate, "yyyy-MM-dd")
-                        if (dobNextDate != null){
-                            val recommendation = createImmunizationRecommendationResource(patientId,
-                                dobNextDate,
-                                "Due",
-                                "Recommend vaccination",
-                                null)
-                            saveResourceToDatabase(recommendation, "ImmRec")
-                        }
-
-                    }
+//                    val nextImmunizationPair = immunizationHandler.getNextDoseDetails(vaccineCode.vaccineCode, dobLocalDate)
+//
+//                    val nextDate = nextImmunizationPair.first
+//                    val basicVaccine = nextImmunizationPair.second
+//                    val routineVaccine = nextImmunizationPair.third
+//
+//                    if (nextDate != null && basicVaccine != null && routineVaccine != null){
+//                        formatterClass.saveStockValue(
+//                            basicVaccine.vaccineName,
+//                            routineVaccine.targetDisease,
+//                            getApplication<Application>().applicationContext)
+//
+//                        val dobNextDate = formatterClass.convertStringToDate(nextDate, "yyyy-MM-dd")
+//                        if (dobNextDate != null){
+//                            val recommendation = createImmunizationRecommendationResource(patientId,
+//                                dobNextDate,
+//                                "Due",
+//                                "Recommend vaccination",
+//                                null)
+//                            saveResourceToDatabase(recommendation, "ImmRec")
+//                        }
+//
+//                    }
 
 
                 }

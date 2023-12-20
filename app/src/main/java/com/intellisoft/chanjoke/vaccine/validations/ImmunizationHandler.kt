@@ -1,14 +1,6 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
-import android.app.ProgressDialog
-import android.content.Context
-import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import android.util.Log
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
@@ -63,6 +55,7 @@ data class RoutineVaccine(
     override val doseNumber: String
         get() = vaccineList.firstOrNull()?.doseNumber ?: "0"
 }
+
 //Pregnancy vaccines
 data class PregnancyVaccine(
     val diseaseCode: String,
@@ -91,7 +84,6 @@ data class PregnancyVaccine(
         get() = vaccineList.firstOrNull()?.doseNumber ?: "0"
 }
 
-
 //Non-routine vaccines
 data class NonRoutineVaccine(
     val diseaseCode: String,
@@ -119,12 +111,8 @@ data class NonRoutineVaccine(
         get() = vaccineList.firstOrNull()?.doseNumber ?: "0"
 }
 
-//Pregnancy vaccines
 
-
-
-
-fun createVaccines(): List<RoutineVaccine> {
+fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<PregnancyVaccine>> {
 
     /**
      * ROUTINE VACCINES
@@ -137,11 +125,11 @@ fun createVaccines(): List<RoutineVaccine> {
         "Polio",
         5,
         listOf(
-            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 0, arrayListOf(), "2 drops","1"),
+            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 2, arrayListOf(), "2 drops","1"),
             BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, arrayListOf(), "2 drops","2"),
-            BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, arrayListOf(), "2 drops","3"),
-            BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, arrayListOf(), "2 drops","4"),
-            BasicVaccine(polio+"IPV I", "IPV I", "Oral", 14, arrayListOf(), "2 drops","5")
+            BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, arrayListOf(10.0), "2 drops","3"),
+            BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, arrayListOf(14.0), "2 drops","4"),
+            BasicVaccine(polio+"IPV I", "IPV I", "Oral", 14, arrayListOf(14.0), "2 drops","5")
         )
     )
 
@@ -155,7 +143,7 @@ fun createVaccines(): List<RoutineVaccine> {
         "BCG",
         1,
         listOf(
-            BasicVaccine(bcg+"I", "BCG", "Intradermal", 0, arrayListOf(), "0.5ml","1")
+            BasicVaccine(bcg+"I", "BCG", "Intradermal", 257, arrayListOf(), "0.5ml","1")
         )
     )
 
@@ -194,7 +182,7 @@ fun createVaccines(): List<RoutineVaccine> {
         listOf(
             BasicVaccine(measles+"0", "Measles-Rubella", "Subcutaneous into the right upper arm (deltoid muscle)", 27, arrayListOf(), "0.5ml","0"),
             BasicVaccine(measles+"1", "Measles-Rubella 1st Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 40, arrayListOf(), "0.5ml","1"),
-            BasicVaccine(measles+"2", "Measles-Rubella 2nd Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 79, arrayListOf(), "0.5ml","2")
+            BasicVaccine(measles+"2", "Measles-Rubella 2nd Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 79, arrayListOf(78.21), "0.5ml","2")
         )
     )
 
@@ -219,15 +207,15 @@ fun createVaccines(): List<RoutineVaccine> {
         10,
         listOf(
            BasicVaccine(vitaminA+"1", "Vitamin A 1st Dose", "Oral", 26, arrayListOf(), "100,000OUI","1"),
-           BasicVaccine(vitaminA+"2", "Vitamin A 2nd Dose", "Oral", 52, arrayListOf(), "200,000OUI","2"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 3rd Dose", "Oral", 78, arrayListOf(), "1Capsule","3"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 4th Dose", "Oral", 104, arrayListOf(), "1Capsule","4"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 5th Dose", "Oral", 130, arrayListOf(), "1Capsule","5"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 6th Dose", "Oral", 156, arrayListOf(), "1Capsule","6"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 7th Dose", "Oral", 182, arrayListOf(), "1Capsule","7"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 8th Dose", "Oral", 208, arrayListOf(), "1Capsule","8"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 9th Dose", "Oral", 234, arrayListOf(), "1Capsule","9"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 10th Dose", "Oral", 260, arrayListOf(), "1Capsule","10"),
+           BasicVaccine(vitaminA+"2", "Vitamin A 2nd Dose", "Oral", 52, arrayListOf(26.07), "200,000OUI","2"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 3rd Dose", "Oral", 78, arrayListOf(26.07), "1Capsule","3"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 4th Dose", "Oral", 104, arrayListOf(26.07), "1Capsule","4"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 5th Dose", "Oral", 130, arrayListOf(26.07), "1Capsule","5"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 6th Dose", "Oral", 156, arrayListOf(26.07), "1Capsule","6"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 7th Dose", "Oral", 182, arrayListOf(26.07), "1Capsule","7"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 8th Dose", "Oral", 208, arrayListOf(26.07), "1Capsule","8"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 9th Dose", "Oral", 234, arrayListOf(26.07), "1Capsule","9"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 10th Dose", "Oral", 260, arrayListOf(26.07), "1Capsule","10"),
         )
     )
 
@@ -252,7 +240,7 @@ fun createVaccines(): List<RoutineVaccine> {
         2,
         listOf(
             BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, arrayListOf(), "0.5ml","1"),
-            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 842, arrayListOf(), "0.5ml","1")
+            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 842, arrayListOf(26.07), "0.5ml","1")
        )
     )
 
@@ -270,7 +258,7 @@ fun createVaccines(): List<RoutineVaccine> {
         listOf(
             RoutineVaccine(
                 covidMain+"ASTR",
-                "Astrazeneca",
+                "Covid",
                 2,
                 listOf(
                     BasicVaccine(covidMain+"ASTR-"+"1", "Astrazeneca 1st Dose", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -279,7 +267,7 @@ fun createVaccines(): List<RoutineVaccine> {
             ),
             RoutineVaccine(
                 covidMain+"JnJ",
-                "Johnson & Johnson",
+                "Covid",
                 1,
                 listOf(
                     BasicVaccine(covidMain+"JnJ-"+"0", "Johnson & Johnson", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -287,7 +275,7 @@ fun createVaccines(): List<RoutineVaccine> {
             ),
             RoutineVaccine(
                 covidMain+"MOD-",
-                "Moderna",
+                "Covid",
                 2,
                 listOf(
                     BasicVaccine(covidMain+"MOD-"+"1", "Moderna 1st Dose", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -296,7 +284,7 @@ fun createVaccines(): List<RoutineVaccine> {
             ),
             RoutineVaccine(
                 covidMain+"SINO-",
-                "Sinopharm",
+                "Covid",
                 2,
                 listOf(
                     BasicVaccine(covidMain+"SINO-"+"1", "Sinopharm 1st Dose", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -305,7 +293,7 @@ fun createVaccines(): List<RoutineVaccine> {
             ),
             RoutineVaccine(
                 covidMain+"PFIZER-",
-                "Pfizer",
+                "Covid",
                 2,
                 listOf(
                     BasicVaccine(covidMain+"PFIZER-"+"1", "Pfizer-BioNTech 1st Dose", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -316,14 +304,14 @@ fun createVaccines(): List<RoutineVaccine> {
     )
 
     //RABIES
-    val rabiesMain = "IMCOV-"
+    val rabiesMain = "IMRABIES-"
     val rabiesMainSeries = NonRoutineVaccine(
         rabiesMain,
         "Rabies Post Exposure",
         listOf(
             RoutineVaccine(
                 rabiesMain+"RABIES",
-                "Rabies",
+                "Rabies Post Exposure",
                 5,
                 listOf(
                     BasicVaccine(rabiesMain+"RABIES-"+"1", "Rabies 1st Dose", "Intramuscular Injection", 0, arrayListOf(), "0.5ml","1"),
@@ -382,173 +370,77 @@ fun createVaccines(): List<RoutineVaccine> {
         )
     )
 
+    val routineList = listOf(polioSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries,hpvSeries)
+    val nonRoutineList = listOf(covidMainSeries, rabiesMainSeries, yellowFeverSeries)
+    val pregnancyList = listOf(tetanusSeries, influenzaSeries)
 
-    return listOf(polioSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries,hpvSeries)
+    return Triple(routineList, nonRoutineList, pregnancyList)
 }
 
 class ImmunizationHandler() {
 
     val vaccines = createVaccines()
-    // Open-closed principle
+    val vaccineList = createVaccines().toList().flatten()
 
-    fun getVaccineDetailsByBasicVaccineName(vaccineName: String): DbVaccine? {
-
-        return vaccines
-            .asSequence()
-            .filterIsInstance<RoutineVaccine>()
-            .flatMap { it.vaccineList.asSequence() + it } // Flatten RoutineVaccine to include BasicVaccine
-            .find { it.vaccineName == vaccineName }
+    // Extension function for DbVaccine to check if the vaccine name matches
+    fun DbVaccine.matchesVaccineName(name: String): Boolean {
+        return this.vaccineName == name
     }
 
-    // Function to get series vaccine details by code
-    fun getRoutineVaccineDetailsBySeriesTargetName(targetDisease: String): RoutineVaccine? {
-        return vaccines
-            .filterIsInstance<RoutineVaccine>()
-            .find { it.targetDisease == targetDisease }
-    }
-
-    fun eligibleVaccineList(context: Context, patientDetailsViewModel: PatientDetailsViewModel)= runBlocking {
-        generateVaccineLists(context, patientDetailsViewModel)
-    }
-
-    private suspend fun generateVaccineLists(context: Context, patientDetailsViewModel: PatientDetailsViewModel):
-            Pair<List<String>, Map<String, List<String>>> {
-
-        val groupList = mutableListOf<String>()
-        val childList = mutableMapOf<String, List<String>>()
-
-        var progressDialog =  ProgressDialog(context)
-        progressDialog.setMessage("Loading Vaccines...")
-        progressDialog.setTitle("Please wait")
-        progressDialog.show()
-
-        val job = Job()
-        CoroutineScope(Dispatchers.IO + job).launch {
-            val patientDob = FormatterClass().getSharedPref("patientDob", context)
-            if (patientDob != null){
-                val dobDate = FormatterClass().convertStringToDate(patientDob,"yyyy-MM-dd")
-                if (dobDate != null){
-                    val dobLocalDate = FormatterClass().convertDateToLocalDate(dobDate)
-                    vaccines.forEach { vaccine ->
-                        val eligibleVaccines = vaccine.vaccineList.filter { basicVaccine ->
-                            checkEligibility(basicVaccine, dobLocalDate)
-                        }
-
-                        //Vaccinated List
-                        val vaccineList = patientDetailsViewModel.getVaccineList()
-
-                        // Filter out the vaccines that are already in the vaccineList
-                        val notVaccinated = eligibleVaccines.filter { eligibleVaccine ->
-                            vaccineList.none { it.vaccineName == eligibleVaccine.vaccineName }
-                        }
-
-                        if (notVaccinated.isNotEmpty()) {
-                            groupList.add(vaccine.targetDisease)
-                            childList[vaccine.targetDisease] = notVaccinated.map { it.vaccineName }
-                        }
-
-//                    if (eligibleVaccines.isNotEmpty()) {
-//                        groupList.add(vaccine.targetDisease)
-//                        childList[vaccine.targetDisease] = eligibleVaccines.map { it.vaccineName }
-//                    }
-                    }
-                }
-
+    // Extension function for List<DbVaccine> to find vaccine details by series target name
+    fun getRoutineVaccineDetailsBySeriesTargetName(targetDisease: String): Any? {
+        return vaccineList.firstOrNull {
+            when (it) {
+                is RoutineVaccine -> it.targetDisease == targetDisease
+                is NonRoutineVaccine -> it.targetDisease == targetDisease
+                is PregnancyVaccine -> it.targetDisease == targetDisease
+                else -> false
             }
-        }.join()
-
-        progressDialog.dismiss()
-
-        return Pair(groupList, childList)
+        }
     }
+
+    // Extension function for List<DbVaccine> to find vaccine details by vaccine name
+    fun getVaccineDetailsByBasicVaccineName(vaccineName: String): BasicVaccine? {
+
+        val (routineList, nonRoutineList, pregnancyList) = vaccines
+
+        return listOf(
+            routineList.flatMap { it.vaccineList },
+            nonRoutineList.flatMap { it.vaccineList.flatMap { it.vaccineList } },
+            pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
+            .firstOrNull { it.matchesVaccineName(vaccineName) }
+
+    }
+
+
 
 
 
     // Liskov substitution principle
 
-    private fun checkEligibility(basicVaccine: BasicVaccine, dob: LocalDate): Boolean {
-        val weeksSinceBirth = ChronoUnit.WEEKS.between(dob, LocalDate.now()).toInt()
-        val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
-        return abs(weeksSinceBirth - administrativeWeeksSinceDOB) <= 2
+
+    // Helper function to check if a vaccine is not present in the administered list
+    private fun administeredVaccineNotPresent(vaccine: BasicVaccine, administeredList: List<BasicVaccine>): Boolean {
+        return administeredList.none { it.vaccineCode == vaccine.vaccineCode }
     }
 
+    fun getRoutineSeriesByBasicVaccine(basicVaccine: BasicVaccine): RoutineVaccine? {
+        val (routineList, _, _) = vaccines
 
-
-
-
-    fun getNextDoseDetails(vaccineCode: String, dob: LocalDate): Triple<String?, BasicVaccine?, RoutineVaccine?> {
-        val RoutineVaccine = vaccines
-            .filterIsInstance<RoutineVaccine>()
-            .find { series -> series.vaccineList.any { it.vaccineCode == vaccineCode } }
-
-        RoutineVaccine?.let { series ->
-            val currentDoseIndex = series.vaccineList.indexOfFirst { it.vaccineCode == vaccineCode }
-
-            if (currentDoseIndex != -1 && currentDoseIndex < series.vaccineList.size - 1) {
-                val nextDoseNumber = currentDoseIndex + 1
-                val nextDose = series.vaccineList[nextDoseNumber]
-
-                // Calculate the next date based on the provided dob and administrativeWeeksSinceDOB
-                val nextDate = dob.plusWeeks(nextDose.administrativeWeeksSinceDOB.toLong())
-                if (nextDate.isAfter(LocalDate.now()) || nextDate.isEqual(LocalDate.now())){
-                    return Triple(nextDate.toString(), nextDose, RoutineVaccine)
-                }
-
-            }
+        return routineList.find { routineVaccine ->
+            routineVaccine.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode }
         }
+    }
 
-        return Triple(null, null, null)
+    fun getNextBasicVaccineInSeries(series: RoutineVaccine, doseNumber: String): BasicVaccine? {
+        return series.vaccineList.firstOrNull { it.doseNumber == doseNumber.toInt().plus(1).toString() }
     }
 
 
 
 
 
-    data class AvailableVaccine(val vaccine: RoutineVaccine, val isEligible: Boolean)
 
 
 }
 
-
-
-//fun main() {
-//    val vaccines = listOf(
-//        RoutineVaccine(
-//            "IMPO",
-//            "Polio",
-//            4,
-//            listOf(
-//                BasicVaccine("IMPO-OPV", "OPV", "Oral", 4, 0, "2 drops"),
-//                BasicVaccine("IMPO-OPV-I", "OPV I", "Oral", 6, 0, "2 drops"),
-//                BasicVaccine("IMPO-OPV-II", "OPV II", "Oral", 10, 0, "2 drops"),
-//                BasicVaccine("IMPO-OPV-III", "OPV III", "Oral", 14, 0, "2 drops")
-//            ),
-//            related = listOf("IM-YF-I")
-//        ),
-//        RoutineVaccine(
-//            "IM-YF",
-//            "YELLOW FEVER",
-//            1,
-//            listOf(
-//                BasicVaccine("IM-YF-I", "Yellow Fever", "Injection", 14, 0, "0.5ml")
-//            )
-//        )
-//    )
-//
-//    val immunizationHandler = ImmunizationHandler(vaccines)
-//
-//    // Get available vaccines
-//    val availableVaccines = immunizationHandler.getAvailableVaccines(LocalDate.now().minusWeeks(4))
-//    availableVaccines.forEach {
-//        println("DbVaccine: ${it?.vaccine?.vaccineName}, Eligible: ${it?.isEligible}")
-//    }
-//
-//    // Group related vaccines
-//    val groupedVaccines = immunizationHandler.groupRelatedVaccines()
-//    groupedVaccines.forEach { (vaccineCode, relatedVaccines) ->
-//        println("\nRelated Vaccines for $vaccineCode:")
-//        relatedVaccines.forEach { relatedVaccine ->
-//            println("  - ${relatedVaccine.vaccineName}")
-//        }
-//    }
-//}
