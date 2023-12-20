@@ -33,7 +33,7 @@ data class RoutineVaccine(
     val diseaseCode: String,
     val targetDisease: String,
     val seriesDoses: Int, // Recommended number of doses for immunity
-    val vaccineList: List<BasicVaccine>
+    var vaccineList: List<BasicVaccine>
 ) : DbVaccine {
     override val vaccineCode: String
         get() = vaccineList.firstOrNull()?.vaccineCode ?: ""
@@ -415,10 +415,13 @@ class ImmunizationHandler() {
 
 
     // Liskov substitution principle
-    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>){
+    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int){
 
         val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) = vaccines
 
+        /**
+         * STEP 1: Get the eligible Vaccines
+         */
         // Routine list
         val remainingRoutineList = routineList.map { routineVaccine ->
             routineVaccine.copy(vaccineList = routineVaccine.vaccineList.filter {
@@ -441,6 +444,29 @@ class ImmunizationHandler() {
                 })
             }.filter { it.vaccineList.isNotEmpty() })
         }.filter { it.vaccineList.isNotEmpty() }
+
+        /**
+         * Step 2: Perform vaccine specific issues
+         */
+        //Routine vaccines
+        if (ageInWeeks > 2) {
+            // Remove bOPV from the list
+            remainingRoutineList.forEach { routineVaccine ->
+                routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode == "IMPO-bOPV" }
+            }
+        }
+
+        if (ageInWeeks > 52) {
+            // Remove RotaVirus from the list
+            remainingRoutineList.forEach { routineVaccine ->
+                routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode.startsWith("IMROTA") }
+            }
+        }
+
+        //Non Routine Vaccines
+
+        //Pregnancy Vaccines
+
 
         Log.e("------->","<--------")
         println(remainingRoutineList)

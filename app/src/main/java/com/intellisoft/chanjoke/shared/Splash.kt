@@ -57,7 +57,7 @@ class Splash : AppCompatActivity() {
             administeredList.addAll(Arrays.asList(basicVaccine1, basicVaccine2, basicVaccine3, basicVaccine4))
         }
 
-        val xxx = immunizationHandler.getAllVaccineList(administeredList)
+        val xxx = immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
 
 
         Handler().postDelayed({
