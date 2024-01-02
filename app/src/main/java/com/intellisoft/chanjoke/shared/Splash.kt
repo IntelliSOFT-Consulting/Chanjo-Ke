@@ -59,6 +59,22 @@ class Splash : AppCompatActivity() {
 
 //        val xxx = immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
 
+        //Vaccine code
+
+        //Get info on the vaccine
+        val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(
+            "(TD) Tetanus toxoid 4th Dose")
+
+        val nextBasicVaccine = vaccineBasicVaccine?.let {
+            immunizationHandler.getNextDoseDetails(
+                it
+            )
+        }
+        Log.e("------->","<--------")
+        println("Current Vaccine ${vaccineBasicVaccine?.vaccineName}")
+        println("NextBasicVaccine ${nextBasicVaccine?.vaccineName}")
+        Log.e("------->","<--------")
+
 
         Handler().postDelayed({
             if (FormatterClass().getSharedPref("isLoggedIn", this@Splash) == "true") {

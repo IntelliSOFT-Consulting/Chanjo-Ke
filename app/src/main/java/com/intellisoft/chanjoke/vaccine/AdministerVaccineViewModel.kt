@@ -314,39 +314,13 @@ class AdministerVaccineViewModel(
             "patientId", getApplication<Application>().applicationContext)
         //Get info on the vaccine
         if (administeredProduct != null && patientDob != null && patientId != null) {
+            val immunizationHandler = ImmunizationHandler()
+            val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
 
-            val dobDate = formatterClass.convertStringToDate(patientDob,"yyyy-MM-dd")
-            if (dobDate != null){
-                val dobLocalDate = formatterClass.convertDateToLocalDate(dobDate)
-                val vaccineCode = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
-                if (vaccineCode != null) {
-                    val immunizationHandler = ImmunizationHandler()
-//                    val nextImmunizationPair = immunizationHandler.getNextDoseDetails(vaccineCode.vaccineCode, dobLocalDate)
-//
-//                    val nextDate = nextImmunizationPair.first
-//                    val basicVaccine = nextImmunizationPair.second
-//                    val routineVaccine = nextImmunizationPair.third
-//
-//                    if (nextDate != null && basicVaccine != null && routineVaccine != null){
-//                        formatterClass.saveStockValue(
-//                            basicVaccine.vaccineName,
-//                            routineVaccine.targetDisease,
-//                            getApplication<Application>().applicationContext)
-//
-//                        val dobNextDate = formatterClass.convertStringToDate(nextDate, "yyyy-MM-dd")
-//                        if (dobNextDate != null){
-//                            val recommendation = createImmunizationRecommendationResource(patientId,
-//                                dobNextDate,
-//                                "Due",
-//                                "Recommend vaccination",
-//                                null)
-//                            saveResourceToDatabase(recommendation, "ImmRec")
-//                        }
-//
-//                    }
-
-
-                }
+            val nextBasicVaccine = vaccineBasicVaccine?.let {
+                immunizationHandler.getNextDoseDetails(
+                    it
+                )
             }
 
 
@@ -482,7 +456,8 @@ class AdministerVaccineViewModel(
         patientId: String){
 
         //Check if request is for creating immunisation
-        val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
+        val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow",
+            getApplication<Application>().applicationContext)
         if (vaccinationFlow == "createVaccineDetails"){
             //Request is to create immunisation record
 
@@ -499,16 +474,6 @@ class AdministerVaccineViewModel(
                  */
                 val immunization = createImmunizationResource(encounterId,patientId, ImmunizationStatus.COMPLETED)
                 saveResourceToDatabase(immunization, "Imm")
-
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    //Check if its from a contraindication
-//                    val isContraindicated = FormatterClass().getSharedPref("isContraindicated", getApplication<Application>().applicationContext)
-//                    if (isContraindicated != null){
-//                        //Update Contraindicated status to Comple
-//                        updateRecommendation(isContraindicated, patientId, "Complete")
-//                    }
-//                }
-
 
                 //Generate the next immunization
                 createNextImmunization()
@@ -578,13 +543,13 @@ class AdministerVaccineViewModel(
                 encounterId)
             val targetDisease = disease.value.trim()
 
-            Log.e("++++++++++++","++++++++++")
-            println("vaccineType $vaccineType")
-            println("administeredProduct $administeredProduct")
-            println("-----------")
-            println("disease $disease")
-            println("targetDisease $targetDisease")
-            Log.e("++++++++++++","++++++++++")
+//            Log.e("++++++++++++","++++++++++")
+//            println("vaccineType $vaccineType")
+//            println("administeredProduct $administeredProduct")
+//            println("-----------")
+//            println("disease $disease")
+//            println("targetDisease $targetDisease")
+//            Log.e("++++++++++++","++++++++++")
 
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
@@ -600,9 +565,7 @@ class AdministerVaccineViewModel(
             //Generate the next immunization
             createNextImmunization()
 
-        }
-
-        else if (vaccinationFlow == "recommendVaccineDetails"){
+        } else if (vaccinationFlow == "recommendVaccineDetails"){
 
 //            /**
 //             * TODO: UPDATE THIS FLOW TO USE THE NEW FLOW

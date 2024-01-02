@@ -485,6 +485,49 @@ class ImmunizationHandler() {
         return administeredList.none { it.vaccineCode == vaccine.vaccineCode }
     }
 
+    // Function to get details of the next dose for a given BasicVaccine
+    fun getNextDoseDetails(basicVaccine: BasicVaccine): BasicVaccine? {
+        val (routineList, nonRoutineList, pregnancyList) = vaccines
+
+        // Helper function to find the next dose details in a list of vaccines
+        fun findNextDoseInList(vaccineList: List<DbVaccine>): BasicVaccine? {
+            val indexOfCurrentDose = vaccineList.indexOfFirst { it.vaccineCode == basicVaccine.vaccineCode }
+
+            // If the current dose is found and there is a next dose
+            if (indexOfCurrentDose != -1 && indexOfCurrentDose + 1 < vaccineList.size) {
+                // Get the details of the next dose
+                return vaccineList[indexOfCurrentDose + 1] as? BasicVaccine
+            }
+            return null
+        }
+
+        // Check if the basic vaccine belongs to a routine vaccine
+        val routineVaccineContainingDose = routineList.firstOrNull { it.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode } }
+
+        if (routineVaccineContainingDose != null) {
+            // If the routine vaccine is found, find the next dose in its vaccine list
+            return findNextDoseInList(routineVaccineContainingDose.vaccineList)
+        }
+
+        // Check if the basic vaccine belongs to a non-routine vaccine
+        val nonRoutineVaccineContainingDose = nonRoutineList.firstOrNull { it.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode } }
+
+        if (nonRoutineVaccineContainingDose != null) {
+            // If the non-routine vaccine is found, find the next dose in its vaccine list
+            return findNextDoseInList(nonRoutineVaccineContainingDose.vaccineList.flatMap { it.vaccineList })
+        }
+
+        // Check if the basic vaccine belongs to a pregnancy vaccine
+        val pregnancyVaccineContainingDose = pregnancyList.firstOrNull { it.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode } }
+
+        if (pregnancyVaccineContainingDose != null) {
+            // If the pregnancy vaccine is found, find the next dose in its vaccine list
+            return findNextDoseInList(pregnancyVaccineContainingDose.vaccineList)
+        }
+
+        return null // Return null if the next dose is not found or if the vaccine is not in any category
+    }
+
     fun getRoutineSeriesByBasicVaccine(basicVaccine: BasicVaccine): RoutineVaccine? {
         val (routineList, _, _) = vaccines
 
