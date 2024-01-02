@@ -25,6 +25,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Period
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -273,6 +274,15 @@ class FormatterClass {
         return (1..n)
             .map { chars[Random.nextInt(chars.length)] }
             .joinToString("")
+    }
+    fun calculateWeeksFromDate(dateString: String): Int? {
+        val currentDate = LocalDate.now()
+        val givenDate = LocalDate.parse(dateString)
+
+        // Calculate the difference in weeks
+        val weeksDifference = ChronoUnit.WEEKS.between(givenDate, currentDate)
+
+        return weeksDifference.toString().toIntOrNull()
     }
 
 

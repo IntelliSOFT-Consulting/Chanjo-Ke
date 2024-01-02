@@ -46,48 +46,51 @@ class VaccineSelection : AppCompatActivity() {
     }
 
     private fun getVaccines() {
-        val ageInWeeks = 6 // Assuming age is 18 weeks
 
-        val administeredList = ArrayList<BasicVaccine>()
-        val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
-            immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
+        val patientDob = formatterClass.getSharedPref("patientDob", this)
+        if (patientDob != null){
 
-        //Routine Vaccine
-        val routineGroupList = mutableListOf<String>()
-        val routineChildList = hashMapOf<String, List<String>>()
-        routineList.forEach { routineVaccine ->
-            routineGroupList.add(routineVaccine.targetDisease)
-            routineChildList[routineVaccine.targetDisease] = routineVaccine.vaccineList.map { it.vaccineName }
+            val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
+            if (ageInWeeks != null){
+                val administeredList = ArrayList<BasicVaccine>()
+                val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
+                    immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
+
+                //Routine Vaccine
+                val routineGroupList = mutableListOf<String>()
+                val routineChildList = hashMapOf<String, List<String>>()
+                routineList.forEach { routineVaccine ->
+                    routineGroupList.add(routineVaccine.targetDisease)
+                    routineChildList[routineVaccine.targetDisease] = routineVaccine.vaccineList.map { it.vaccineName }
+                }
+                val routineAdapter = BottomSheetAdapter(routineGroupList, routineChildList, this)
+                binding.expandableListViewRoutine.setAdapter(routineAdapter)
+
+                // Add Non-Routine Vaccines to the expandable list
+                val nonRoutineGroupList = mutableListOf<String>()
+                val nonRoutineChildList = hashMapOf<String, List<String>>()
+                nonRoutineVaccineList.forEach { nonRoutineVaccine ->
+                    nonRoutineGroupList.add(nonRoutineVaccine.targetDisease)
+                    nonRoutineChildList[nonRoutineVaccine.targetDisease] = nonRoutineVaccine.vaccineList
+                        .flatMap { it.vaccineList }
+                        .map { it.vaccineName }
+                }
+                val nonRoutineAdapter = BottomSheetAdapter(nonRoutineGroupList, nonRoutineChildList, this)
+                binding.expandableListViewNonRoutine.setAdapter(nonRoutineAdapter)
+
+
+                // Add Pregnancy Vaccines to the expandable list
+                val pregnancyGroupList = mutableListOf<String>()
+                val pregnancyChildList = hashMapOf<String, List<String>>()
+                pregnancyVaccineList.forEach { pregnancyVaccine ->
+                    pregnancyGroupList.add(pregnancyVaccine.targetDisease)
+                    pregnancyChildList[pregnancyVaccine.targetDisease] = pregnancyVaccine.vaccineList.map { it.vaccineName }
+                }
+                val pregnancyAdapter = BottomSheetAdapter(pregnancyGroupList, pregnancyChildList, this)
+                binding.expandableListViewPregnancy.setAdapter(pregnancyAdapter)
+
+            }
         }
-        val routineAdapter = BottomSheetAdapter(routineGroupList, routineChildList, this)
-        binding.expandableListViewRoutine.setAdapter(routineAdapter)
-
-        // Add Non-Routine Vaccines to the expandable list
-        val nonRoutineGroupList = mutableListOf<String>()
-        val nonRoutineChildList = hashMapOf<String, List<String>>()
-        nonRoutineVaccineList.forEach { nonRoutineVaccine ->
-            nonRoutineGroupList.add(nonRoutineVaccine.targetDisease)
-            nonRoutineChildList[nonRoutineVaccine.targetDisease] = nonRoutineVaccine.vaccineList
-                .flatMap { it.vaccineList }
-                .map { it.vaccineName }
-        }
-        val nonRoutineAdapter = BottomSheetAdapter(nonRoutineGroupList, nonRoutineChildList, this)
-        binding.expandableListViewNonRoutine.setAdapter(nonRoutineAdapter)
-
-
-        // Add Pregnancy Vaccines to the expandable list
-        val pregnancyGroupList = mutableListOf<String>()
-        val pregnancyChildList = hashMapOf<String, List<String>>()
-        pregnancyVaccineList.forEach { pregnancyVaccine ->
-            pregnancyGroupList.add(pregnancyVaccine.targetDisease)
-            pregnancyChildList[pregnancyVaccine.targetDisease] = pregnancyVaccine.vaccineList.map { it.vaccineName }
-        }
-        val pregnancyAdapter = BottomSheetAdapter(pregnancyGroupList, pregnancyChildList, this)
-        binding.expandableListViewPregnancy.setAdapter(pregnancyAdapter)
-
-
-
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

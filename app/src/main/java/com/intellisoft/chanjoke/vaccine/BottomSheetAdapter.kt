@@ -80,12 +80,17 @@ class BottomSheetAdapter(
         val textView: TextView = view.findViewById(R.id.childTextView)
 
         // Implement your child view here
-        val valueText = getChild(groupPosition, childPosition).toString()
-        textView.text = valueText
+        val administeredProductText = getChild(groupPosition, childPosition).toString()
+        textView.text = administeredProductText
 
-        val valueGroup = getGroup(groupPosition).toString()
+        val targetDisease = getGroup(groupPosition).toString()
 
         textView.setOnClickListener {
+
+            Log.e("------->","<--------")
+            println(administeredProductText)
+            println(targetDisease)
+            Log.e("------->","<--------")
 
             CoroutineScope(Dispatchers.Main).launch {
 
@@ -99,8 +104,8 @@ class BottomSheetAdapter(
                 CoroutineScope(Dispatchers.IO + job).launch {
 
                     val immunizationHandler = ImmunizationHandler()
-                    val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(valueText)
-                    val vaccineDetails = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(valueGroup)
+                    val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProductText)
+                    val vaccineDetails = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
 
                     if (baseVaccineDetails != null){
                         val administeredProduct = baseVaccineDetails.vaccineName
