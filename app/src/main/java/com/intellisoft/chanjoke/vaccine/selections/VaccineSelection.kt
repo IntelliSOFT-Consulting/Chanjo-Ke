@@ -1,27 +1,35 @@
 package com.intellisoft.chanjoke.vaccine.selections
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ExpandableListView
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityVaccineSelectionBinding
+import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.BottomSheetAdapter
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
 class VaccineSelection : AppCompatActivity() {
     private val formatterClass = FormatterClass()
     private lateinit var binding: ActivityVaccineSelectionBinding
-    private var patientId :String? = null
+    private var patientId :String = ""
 
     private var lastExpandedPositionRoutine = -1
     private var lastExpandedPositionNonRoutine = -1
     private var lastExpandedPositionPregnancyVaccine = -1
     private val immunizationHandler = ImmunizationHandler()
+    private lateinit var patientDetailsViewModel: PatientDetailsViewModel
+    private lateinit var fhirEngine: FhirEngine
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +40,17 @@ class VaccineSelection : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        patientId = formatterClass.getSharedPref("patientId",this)
+        patientId = formatterClass.getSharedPref("patientId",this).toString()
+        fhirEngine = FhirApplication.fhirEngine(this)
+
+        patientDetailsViewModel = ViewModelProvider(
+            this,
+            PatientDetailsViewModelFactory(
+                application,
+                fhirEngine,
+                patientId
+            )
+        )[PatientDetailsViewModel::class.java]
 
         setExpandableProperties()
 
@@ -53,6 +71,15 @@ class VaccineSelection : AppCompatActivity() {
             val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
             if (ageInWeeks != null){
                 val administeredList = ArrayList<BasicVaccine>()
+                val vaccineList = patientDetailsViewModel.getVaccineList()
+                vaccineList.forEach {
+                    val vaccineName = it.vaccineName
+                    val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+                    if (basicVaccine != null) {
+                        administeredList.add(basicVaccine)
+                    }
+                }
+
                 val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
                     immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
 
