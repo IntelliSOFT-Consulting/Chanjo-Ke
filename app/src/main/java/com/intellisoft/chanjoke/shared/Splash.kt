@@ -47,17 +47,17 @@ class Splash : AppCompatActivity() {
         val ageInWeeks = 6 // Assuming age is 18 weeks
 
 //        val vaccineList = patientDetailsViewModel.getVaccineList()
-        val administeredList = ArrayList<BasicVaccine>()
+//        val administeredList = ArrayList<BasicVaccine>()
+//
+//        val basicVaccine1 = immunizationHandler.getVaccineDetailsByBasicVaccineName("OPV I")
+//        val basicVaccine2 = immunizationHandler.getVaccineDetailsByBasicVaccineName("DPT-HepB+Hib 1")
+//        val basicVaccine3 = immunizationHandler.getVaccineDetailsByBasicVaccineName("Astrazeneca 1st Dose")
+//        val basicVaccine4 = immunizationHandler.getVaccineDetailsByBasicVaccineName("Influenza")
+//        if (basicVaccine1 != null) {
+//            administeredList.addAll(Arrays.asList(basicVaccine1, basicVaccine2, basicVaccine3, basicVaccine4))
+//        }
 
-        val basicVaccine1 = immunizationHandler.getVaccineDetailsByBasicVaccineName("OPV I")
-        val basicVaccine2 = immunizationHandler.getVaccineDetailsByBasicVaccineName("DPT-HepB+Hib 1")
-        val basicVaccine3 = immunizationHandler.getVaccineDetailsByBasicVaccineName("Astrazeneca 1st Dose")
-        val basicVaccine4 = immunizationHandler.getVaccineDetailsByBasicVaccineName("Influenza")
-        if (basicVaccine1 != null) {
-            administeredList.addAll(Arrays.asList(basicVaccine1, basicVaccine2, basicVaccine3, basicVaccine4))
-        }
-
-        val xxx = immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
+//        val xxx = immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
 
 
         Handler().postDelayed({

@@ -21,6 +21,7 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
+import com.intellisoft.chanjoke.vaccine.selections.VaccineSelection
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
@@ -94,9 +95,11 @@ class VaccinesFragment : Fragment() {
                 requireContext()
             )
 
-            val bottomSheetFragment = BottomSheetFragment()
-            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+//            val bottomSheetFragment = BottomSheetFragment()
+//            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
 
+            val intent = Intent(requireContext(), VaccineSelection::class.java)
+            startActivity(intent)
 
         }
 

@@ -415,7 +415,8 @@ class ImmunizationHandler() {
 
 
     // Liskov substitution principle
-    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int){
+    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int):
+            Triple<List<RoutineVaccine>, List<NonRoutineVaccine>, List<PregnancyVaccine>> {
 
         val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) = vaccines
 
@@ -430,7 +431,7 @@ class ImmunizationHandler() {
         }.filter { it.vaccineList.isNotEmpty() }
 
         //Pregnancy  list
-        val remainingPregnancyList = pregnancyVaccineList.map { pregnancyVaccine ->
+        var remainingPregnancyList = pregnancyVaccineList.map { pregnancyVaccine ->
             pregnancyVaccine.copy(vaccineList = pregnancyVaccine.vaccineList.filter {
                 administeredVaccineNotPresent(it, administeredList)
             })
@@ -466,15 +467,16 @@ class ImmunizationHandler() {
         //Non Routine Vaccines
 
         //Pregnancy Vaccines
+        /**
+         * Remove Pregnancy vaccines from people under 10 years
+         */
+        if (ageInWeeks < 522){
+            remainingPregnancyList = mutableListOf()
+        }
 
 
-        Log.e("------->","<--------")
-        println(remainingRoutineList)
-        println(remainingPregnancyList)
-        println(remainingNonRoutineList)
-        Log.e("------->","<--------")
 
-
+        return Triple(remainingRoutineList, remainingNonRoutineList, remainingPregnancyList)
 
     }
 

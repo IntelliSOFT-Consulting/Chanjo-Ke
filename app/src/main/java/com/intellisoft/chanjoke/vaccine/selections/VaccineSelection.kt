@@ -1,0 +1,142 @@
+package com.intellisoft.chanjoke.vaccine.selections
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.ExpandableListView
+import androidx.appcompat.widget.Toolbar
+import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.databinding.ActivityVaccineSelectionBinding
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+
+class VaccineSelection : AppCompatActivity() {
+    private val formatterClass = FormatterClass()
+    private lateinit var binding: ActivityVaccineSelectionBinding
+    private var patientId :String? = null
+
+    private var lastExpandedPositionRoutine = -1
+    private var lastExpandedPositionNonRoutine = -1
+    private var lastExpandedPositionPregnancyVaccine = -1
+    private val immunizationHandler = ImmunizationHandler()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityVaccineSelectionBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val toolbar =
+            findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        patientId = formatterClass.getSharedPref("patientId",this)
+
+        setExpandableProperties()
+
+        setExpandableVisibility(binding.expandableListViewRoutine)
+
+        setOnClick()
+
+        getVaccines()
+
+
+    }
+
+    private fun getVaccines() {
+        val ageInWeeks = 6 // Assuming age is 18 weeks
+
+        val administeredList = ArrayList<BasicVaccine>()
+        val xxx = immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
+
+        Log.e("------->","<--------")
+        println(xxx.first)
+        println(xxx.second)
+        println(xxx.third)
+        Log.e("------->","<--------")
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
+    }
+
+
+    private fun setOnClick() {
+        binding.tvRoutineVaccine.setOnClickListener { setExpandableVisibility(binding.expandableListViewRoutine) }
+        binding.tvNonRoutineVaccine.setOnClickListener { setExpandableVisibility(binding.expandableListViewNonRoutine) }
+        binding.tvPregnancyVaccine.setOnClickListener { setExpandableVisibility(binding.expandableListViewPregnancy) }
+
+    }
+
+    private fun setExpandableVisibility(expandableListView: ExpandableListView){
+        val listExpandableListView = mutableListOf(
+            binding.expandableListViewRoutine,
+            binding.expandableListViewNonRoutine,
+            binding.expandableListViewPregnancy )
+        listExpandableListView.remove(expandableListView)
+        listExpandableListView.forEach {
+            it.visibility = View.GONE
+        }
+
+        expandableListView.visibility = View.VISIBLE
+
+    }
+
+    private fun setExpandableProperties() {
+        //Routine Vaccines
+        binding.expandableListViewRoutine.setOnGroupClickListener { parent, view, groupPosition, id ->
+            // Handle group click here
+            if (lastExpandedPositionRoutine != -1 && lastExpandedPositionRoutine != groupPosition) {
+                binding.expandableListViewRoutine.collapseGroup(lastExpandedPositionRoutine)
+            }
+
+            if (binding.expandableListViewRoutine.isGroupExpanded(groupPosition)) {
+                binding.expandableListViewRoutine.collapseGroup(groupPosition)
+                lastExpandedPositionRoutine = -1
+            } else {
+                binding.expandableListViewRoutine.expandGroup(groupPosition)
+                lastExpandedPositionRoutine = groupPosition
+            }
+
+            true // Return true to consume the click event
+        }
+
+        //Non routine Vaccines
+        binding.expandableListViewNonRoutine.setOnGroupClickListener { parent, view, groupPosition, id ->
+            // Handle group click here
+            if (lastExpandedPositionNonRoutine != -1 && lastExpandedPositionNonRoutine != groupPosition) {
+                binding.expandableListViewNonRoutine.collapseGroup(lastExpandedPositionNonRoutine)
+            }
+
+            if (binding.expandableListViewNonRoutine.isGroupExpanded(groupPosition)) {
+                binding.expandableListViewNonRoutine.collapseGroup(groupPosition)
+                lastExpandedPositionNonRoutine = -1
+            } else {
+                binding.expandableListViewNonRoutine.expandGroup(groupPosition)
+                lastExpandedPositionNonRoutine = groupPosition
+            }
+            true // Return true to consume the click event
+        }
+
+        //Pregnancy Vaccines
+        binding.expandableListViewPregnancy.setOnGroupClickListener { parent, view, groupPosition, id ->
+            // Handle group click here
+            if (lastExpandedPositionPregnancyVaccine != -1 && lastExpandedPositionPregnancyVaccine != groupPosition) {
+                binding.expandableListViewPregnancy.collapseGroup(lastExpandedPositionPregnancyVaccine)
+            }
+
+            if (binding.expandableListViewPregnancy.isGroupExpanded(groupPosition)) {
+                binding.expandableListViewPregnancy.collapseGroup(groupPosition)
+                lastExpandedPositionPregnancyVaccine = -1
+            } else {
+                binding.expandableListViewPregnancy.expandGroup(groupPosition)
+                lastExpandedPositionPregnancyVaccine = groupPosition
+            }
+            true // Return true to consume the click event
+        }
+
+    }
+}
