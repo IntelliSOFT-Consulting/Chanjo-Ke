@@ -70,7 +70,7 @@ class PatientListFragment : Fragment() {
         isSearched = false
 
         val patientListAction = formatterClass.getSharedPref("patientListAction", requireContext())
-        if (patientListAction != null && patientListAction == NavigationDetails.ADMINISTER_VACCINE.name){
+        if (patientListAction != null && patientListAction == NavigationDetails.ADMINISTER_VACCINE.name) {
             binding.patientListContainer.linearVaccinationVenue.visibility = View.VISIBLE
             formatterClass.deleteSharedPref("patientListAction", requireContext())
 
@@ -105,7 +105,7 @@ class PatientListFragment : Fragment() {
             Timber.d("Submitting ${it.count()} patient records")
             val patientList = ArrayList(it)
 
-            if (patientList.isEmpty() && isSearched){
+            if (patientList.isEmpty() && isSearched) {
                 //Display client not found
                 val noPatientDialog = NoPatientDialog(requireContext())
                 noPatientDialog.show()
@@ -216,6 +216,11 @@ class PatientListFragment : Fragment() {
             }
         }
 
+//        val locations = patientListViewModel.retrieveLocations()
+//        Timber.e("Location::::::")
+//        locations.forEach {
+//            Timber.e("Location:::::: -> ${it.name}")
+//        }
 
     }
 

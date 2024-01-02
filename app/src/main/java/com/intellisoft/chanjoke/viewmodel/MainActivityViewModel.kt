@@ -79,7 +79,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
       Sync.getLastSyncTimestamp(getApplication())?.toLocalDateTime()?.format(formatter) ?: ""
   }
 
-  companion object {
+
+
+    companion object {
     private const val formatString24 = "yyyy-MM-dd HH:mm:ss"
     private const val formatString12 = "yyyy-MM-dd hh:mm:ss a"
   }

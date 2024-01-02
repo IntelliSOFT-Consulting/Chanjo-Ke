@@ -21,9 +21,10 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     DownloadWorkManager {
     private val resourceTypeList = ResourceType.values().map { it.name }
     private val urls = LinkedList(
-        listOf("Patient?address-city=NAIROBI&_sort=_lastUpdated", "Practitioner","RelatedPerson",
-            "Immunization","ImmunizationRecommendation"
-            )
+        listOf(
+            "Patient?address-city=NAIROBI&_sort=_lastUpdated", "Practitioner", "RelatedPerson",
+            "Immunization", "ImmunizationRecommendation", "Location"
+        )
     )
 
     override suspend fun getNextRequest(): Request? {
@@ -42,8 +43,7 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
             val resourceType = ResourceType.fromCode(url.substringBefore("?"))
             val summaryParam = if (resourceType == ResourceType.Patient) {
                 "&${SyncDataParams.SUMMARY_KEY}=${SyncDataParams.SUMMARY_COUNT_VALUE}"
-            }
-            else {
+            } else {
                 ""
             }
 
@@ -130,11 +130,14 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
     if (!downloadUrl.contains("\$everything") && !downloadUrl.contains("Practitioner")) {
         downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
     }
-  if (!downloadUrl.contains("\$everything") && downloadUrl.contains("Immunization")) {
+    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("Immunization")) {
         downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
     }
-  if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ImmunizationRecommendation")) {
+    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ImmunizationRecommendation")) {
         downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
+    }
+    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("Location")) {
+        downloadUrl = downloadUrl
     }
 
 

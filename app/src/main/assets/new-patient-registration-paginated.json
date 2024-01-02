@@ -960,7 +960,7 @@
               }
             }
           ],
-          "linkId": "PR-address-country",
+          "linkId": "PR-address-sub-county",
           "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.country",
           "type": "string",
           "required": true,
@@ -988,6 +988,16 @@
           ]
         },
         {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.country",
+                "name": "patientCity"
+              }
+            }
+          ],
           "linkId": "PR-address-ward",
           "type": "string",
           "item": [
