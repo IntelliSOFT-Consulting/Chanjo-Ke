@@ -155,8 +155,8 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         3,
         listOf(
             BasicVaccine(dpt+"1", "DPT-HepB+Hib 1", "Intramuscular into the upper outer aspect of left thigh", 6, arrayListOf(), "0.5ml","1"),
-            BasicVaccine(dpt+"2", "DPT-HepB+Hib 2", "Intramuscular into the upper outer aspect of left thigh", 10, arrayListOf(), "0.5ml","2"),
-            BasicVaccine(dpt+"3", "DPT-HepB+Hib 3", "Intramuscular into the upper outer aspect of left thigh", 14, arrayListOf(), "0.5ml","3")
+            BasicVaccine(dpt+"2", "DPT-HepB+Hib 2", "Intramuscular into the upper outer aspect of left thigh", 10, arrayListOf(4.0), "0.5ml","2"),
+            BasicVaccine(dpt+"3", "DPT-HepB+Hib 3", "Intramuscular into the upper outer aspect of left thigh", 14, arrayListOf(4.0), "0.5ml","3")
         )
     )
 
@@ -168,8 +168,8 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         3,
         listOf(
             BasicVaccine(pcv+"1", "PCV10 1", "Intramuscular into the upper outer aspect of right thigh", 6, arrayListOf(), "0.5ml","1"),
-            BasicVaccine(pcv+"2", "PCV10 2", "Intramuscular into the upper outer aspect of right thigh", 10, arrayListOf(), "0.5ml","2"),
-            BasicVaccine(pcv+"3", "PCV10 3", "Intramuscular into the upper outer aspect of right thigh", 14, arrayListOf(), "0.5ml","3")
+            BasicVaccine(pcv+"2", "PCV10 2", "Intramuscular into the upper outer aspect of right thigh", 10, arrayListOf(4.0), "0.5ml","2"),
+            BasicVaccine(pcv+"3", "PCV10 3", "Intramuscular into the upper outer aspect of right thigh", 14, arrayListOf(4.0), "0.5ml","3")
         )
     )
 
@@ -194,8 +194,8 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         3,
         listOf(
            BasicVaccine(rotaVirus+"1", "Rota Virus 1st Dose", "Oral", 6, arrayListOf(), "0.5ml","1"),
-           BasicVaccine(rotaVirus+"2", "Rota Virus 2nd Dose", "Oral", 10, arrayListOf(), "0.5ml","2"),
-           BasicVaccine(rotaVirus+"3", "Rota Virus 3rd Dose", "Oral", 14, arrayListOf(), "0.5ml","3"),
+           BasicVaccine(rotaVirus+"2", "Rota Virus 2nd Dose", "Oral", 10, arrayListOf(4.0), "0.5ml","2"),
+           BasicVaccine(rotaVirus+"3", "Rota Virus 3rd Dose", "Oral", 14, arrayListOf(4.0), "0.5ml","3"),
         )
     )
 

@@ -30,51 +30,6 @@ class Splash : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        val fhirEngine = FhirApplication.fhirEngine(this)
-        val patientId = FormatterClass().getSharedPref("patientId", this).toString()
-
-        val patientDetailsViewModel = ViewModelProvider(
-            this,
-            PatientDetailsViewModelFactory(
-                application,
-                fhirEngine,
-                patientId
-            )
-        )[PatientDetailsViewModel::class.java]
-
-        val immunizationHandler = ImmunizationHandler()
-
-        val ageInWeeks = 6 // Assuming age is 18 weeks
-
-//        val vaccineList = patientDetailsViewModel.getVaccineList()
-//        val administeredList = ArrayList<BasicVaccine>()
-//
-//        val basicVaccine1 = immunizationHandler.getVaccineDetailsByBasicVaccineName("OPV I")
-//        val basicVaccine2 = immunizationHandler.getVaccineDetailsByBasicVaccineName("DPT-HepB+Hib 1")
-//        val basicVaccine3 = immunizationHandler.getVaccineDetailsByBasicVaccineName("Astrazeneca 1st Dose")
-//        val basicVaccine4 = immunizationHandler.getVaccineDetailsByBasicVaccineName("Influenza")
-//        if (basicVaccine1 != null) {
-//            administeredList.addAll(Arrays.asList(basicVaccine1, basicVaccine2, basicVaccine3, basicVaccine4))
-//        }
-
-//        val xxx = immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
-
-        //Vaccine code
-
-        //Get info on the vaccine
-        val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(
-            "(TD) Tetanus toxoid 4th Dose")
-
-        val nextBasicVaccine = vaccineBasicVaccine?.let {
-            immunizationHandler.getNextDoseDetails(
-                it
-            )
-        }
-        Log.e("------->","<--------")
-        println("Current Vaccine ${vaccineBasicVaccine?.vaccineName}")
-        println("NextBasicVaccine ${nextBasicVaccine?.vaccineName}")
-        Log.e("------->","<--------")
-
 
         Handler().postDelayed({
             if (FormatterClass().getSharedPref("isLoggedIn", this@Splash) == "true") {

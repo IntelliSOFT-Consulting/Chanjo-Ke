@@ -2,20 +2,10 @@ package com.intellisoft.chanjoke.fhir.data
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.button.MaterialButton
-import com.intellisoft.chanjoke.MainActivity
+import android.util.Log
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.detail.PatientDetailActivity
-import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -283,6 +273,25 @@ class FormatterClass {
         val weeksDifference = ChronoUnit.WEEKS.between(givenDate, currentDate)
 
         return weeksDifference.toString().toIntOrNull()
+    }
+
+    fun getNextDate(date: Date, weeksToAdd: Double): Date {
+
+        // Create a Calendar instance and set it to the current date
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+        // Add the calculated milliseconds to the current date
+        calendar.add(Calendar.WEEK_OF_YEAR, weeksToAdd.toInt())
+
+        Log.e("------>","<--------")
+        println("date $date")
+        println("weeksToAdd $weeksToAdd")
+        println("calendar.time ${calendar.time}")
+        Log.e("------>","<--------")
+
+        // Get the new date after adding weeks
+        return calendar.time
     }
 
 

@@ -25,20 +25,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
-import ca.uhn.fhir.rest.gclient.TokenClientParam
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbCodeValue
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.google.android.fhir.FhirEngine
-import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
-import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
-import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -46,7 +42,6 @@ import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.CarePlan
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Condition
@@ -55,14 +50,12 @@ import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
-import org.hl7.fhir.r4.model.PositiveIntType
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.SimpleQuantity
 import org.hl7.fhir.r4.model.StringType
-import org.hl7.fhir.r4.model.Type
 import java.math.BigDecimal
 import java.util.Date
 
@@ -297,22 +290,26 @@ class AdministerVaccineViewModel(
 
     }
 
-    private suspend fun createNextImmunization() {
+    private suspend fun createNextImmunization(immunization: Immunization) {
 
         val formatterClass = FormatterClass()
-
+        val date = Date()
         /**
          * TODO: Check if the Vaccine exists
          */
 
         //Vaccine code
-        val administeredProduct = FormatterClass().getSharedPref(
+        val administeredProduct = formatterClass.getSharedPref(
             "administeredProduct", getApplication<Application>().applicationContext)
-        val patientDob = FormatterClass().getSharedPref(
+        val patientDob = formatterClass.getSharedPref(
             "patientDob", getApplication<Application>().applicationContext)
-        val patientId = FormatterClass().getSharedPref(
+        val patientId = formatterClass.getSharedPref(
             "patientId", getApplication<Application>().applicationContext)
-        //Get info on the vaccine
+        val currentDate = Date()
+
+        /**
+         * Get the current administered product and generate the next vaccine
+         */
         if (administeredProduct != null && patientDob != null && patientId != null) {
             val immunizationHandler = ImmunizationHandler()
             val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
@@ -321,6 +318,35 @@ class AdministerVaccineViewModel(
                 immunizationHandler.getNextDoseDetails(
                     it
                 )
+            }
+
+            //Generate the next immunisation recommendation
+            if (nextBasicVaccine != null){
+                val administrativeWeeksSincePreviousList = nextBasicVaccine.administrativeWeeksSincePrevious
+                val administrativeWeeksSinceDOB = nextBasicVaccine.administrativeWeeksSinceDOB
+                //Check if the above list is more than one.
+                if (administrativeWeeksSincePreviousList.isNotEmpty()){
+                    //This is not the first vaccine, check on administrative weeks after birth
+                    val weeksToAdd = administrativeWeeksSincePreviousList.firstOrNull()
+
+                    /**
+                     * Check for the ones that have multiple dates
+                     */
+                    val nextImmunizationDate = weeksToAdd?.let {
+                        formatterClass.getNextDate(date,
+                            it
+                        )
+                    }
+                    val recommendation = createImmunizationRecommendationResource(
+                        patientId,
+                        nextImmunizationDate,
+                        "Due",
+                        "Next Immunization date",
+                        immunization.id)
+                    saveResourceToDatabase(recommendation, "ImmRec")
+
+                }
+
             }
 
 
@@ -476,7 +502,7 @@ class AdministerVaccineViewModel(
                 saveResourceToDatabase(immunization, "Imm")
 
                 //Generate the next immunization
-                createNextImmunization()
+                createNextImmunization(immunization)
 
             }else{
                 /**
@@ -563,7 +589,7 @@ class AdministerVaccineViewModel(
             saveResourceToDatabase(immunization, "update")
 
             //Generate the next immunization
-            createNextImmunization()
+            createNextImmunization(immunization)
 
         } else if (vaccinationFlow == "recommendVaccineDetails"){
 
