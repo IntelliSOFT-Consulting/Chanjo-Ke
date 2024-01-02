@@ -18,6 +18,7 @@ package com.intellisoft.chanjoke.vaccine
 
 import android.app.Application
 import android.content.res.Resources
+import android.graphics.Paint.FontMetrics
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -167,7 +168,9 @@ class AdministerVaccineViewModel(
     private fun createImmunizationResource(
         encounterId: String,
         patientId: String,
-        immunisationStatus: ImmunizationStatus): Immunization{
+        immunisationStatus: ImmunizationStatus,
+        date: Date
+    ): Immunization{
 
         val immunization = Immunization()
         val immunizationId = generateUuid()
@@ -186,8 +189,7 @@ class AdministerVaccineViewModel(
          * TODO: Set to pick the saved data not the current date
          */
 
-        val currentDate = Date()
-        immunization.occurrenceDateTimeType.value = currentDate
+        immunization.occurrenceDateTimeType.value = date
 
         //Target Disease
         val targetDisease = FormatterClass().getSharedPref(
@@ -481,6 +483,8 @@ class AdministerVaccineViewModel(
         encounterId: String,
         patientId: String){
 
+        val fomatterClass = FormatterClass()
+
         //Check if request is for creating immunisation
         val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow",
             getApplication<Application>().applicationContext)
@@ -498,7 +502,8 @@ class AdministerVaccineViewModel(
                  * Generate immunization resource
                  * No need to create a Recommendation. It's only created for the next vaccine in the series
                  */
-                val immunization = createImmunizationResource(encounterId,patientId, ImmunizationStatus.COMPLETED)
+                val date = Date()
+                val immunization = createImmunizationResource(encounterId,patientId, ImmunizationStatus.COMPLETED,date)
                 saveResourceToDatabase(immunization, "Imm")
 
                 //Generate the next immunization
@@ -569,27 +574,49 @@ class AdministerVaccineViewModel(
                 encounterId)
             val targetDisease = disease.value.trim()
 
-//            Log.e("++++++++++++","++++++++++")
-//            println("vaccineType $vaccineType")
-//            println("administeredProduct $administeredProduct")
-//            println("-----------")
-//            println("disease $disease")
-//            println("targetDisease $targetDisease")
-//            Log.e("++++++++++++","++++++++++")
-
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
                 //Save resources to Shared preference
                 FormatterClass().saveStockValue(administeredProduct, targetDisease, getApplication<Application>().applicationContext)
             }.join()
 
+            //Date of last dose
+            val lastDoseDate = observationFromCode(
+                "111-8",
+                patientId,
+                encounterId)
+            val lastDateDose = lastDoseDate.dateTime
+            if(lastDateDose != null){
+                val convertedDate = fomatterClass.convertDateFormat(lastDateDose)
+                if (convertedDate != null){
+                    val date = FormatterClass().convertStringToDate(convertedDate, "MMM d yyyy")
 
-            //Vaccine details have been saved
-            val immunization = createImmunizationResource(encounterId, patientId, ImmunizationStatus.COMPLETED)
-            saveResourceToDatabase(immunization, "update")
+                    //Vaccine details have been saved
+                    val immunization = date?.let {
+                        createImmunizationResource(
+                            encounterId,
+                            patientId,
+                            ImmunizationStatus.COMPLETED,
+                            it
+                        )
+                    }
+                    if (immunization != null) {
+                        saveResourceToDatabase(immunization, "update")
+                    }
+                }
 
-            //Generate the next immunization
-            createNextImmunization(immunization)
+
+            }
+
+
+
+
+            /**
+             * TODO: Check if you should create recommendations from the historical data
+             */
+
+//            //Generate the next immunization
+//            createNextImmunization(immunization)
 
         } else if (vaccinationFlow == "recommendVaccineDetails"){
 
