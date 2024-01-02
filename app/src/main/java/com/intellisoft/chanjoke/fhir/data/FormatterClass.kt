@@ -284,12 +284,6 @@ class FormatterClass {
         // Add the calculated milliseconds to the current date
         calendar.add(Calendar.WEEK_OF_YEAR, weeksToAdd.toInt())
 
-        Log.e("------>","<--------")
-        println("date $date")
-        println("weeksToAdd $weeksToAdd")
-        println("calendar.time ${calendar.time}")
-        Log.e("------>","<--------")
-
         // Get the new date after adding weeks
         return calendar.time
     }

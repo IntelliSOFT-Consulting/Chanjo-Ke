@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.material.tabs.TabLayout
@@ -26,12 +27,16 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
+import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.ArrayList
 
 class PatientDetailActivity : AppCompatActivity() {
     private lateinit var fhirEngine: FhirEngine
@@ -42,9 +47,8 @@ class PatientDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPatientDetailBinding
     private var formatterClass = FormatterClass()
 
-    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
-    val livePatientData: MutableLiveData<PatientDetailsViewModel.PatientData> = MutableLiveData()
 
+    private val immunizationHandler = ImmunizationHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,8 +165,38 @@ class PatientDetailActivity : AppCompatActivity() {
                 }
             }
 
+            val vaccineList = patientDetailsViewModel.getVaccineList()
+            generateMissedVaccines(vaccineList)
         }
     }
+    private fun generateMissedVaccines(vaccineList: ArrayList<DbVaccineData>) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val patientDob = formatterClass.getSharedPref("patientDob", this@PatientDetailActivity)
+            if (patientDob != null) {
+
+                val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
+                val basicVaccineList = ArrayList<BasicVaccine>()
+                vaccineList.forEach{
+                    val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(it.vaccineName)
+                    basicVaccine?.let { it1 -> basicVaccineList.add(it1) }
+                }
+
+                val missedVaccinesList =
+                    ageInWeeks?.let { immunizationHandler.getMissedRoutineVaccines(basicVaccineList, it) }
+
+                binding.tvMissingVaccines.text = missedVaccinesList?.joinToString(separator = ","){it.vaccineName}
+
+
+            }
+
+
+
+        }
+
+    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

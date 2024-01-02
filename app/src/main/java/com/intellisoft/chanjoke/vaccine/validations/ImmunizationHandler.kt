@@ -1,10 +1,5 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
-import android.util.Log
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
-import kotlin.math.abs
-
 // Interface segregation principle
 
 //Routine Vaccine
@@ -538,6 +533,32 @@ class ImmunizationHandler() {
 
     fun getNextBasicVaccineInSeries(series: RoutineVaccine, doseNumber: String): BasicVaccine? {
         return series.vaccineList.firstOrNull { it.doseNumber == doseNumber.toInt().plus(1).toString() }
+    }
+
+    fun getMissedRoutineVaccines(
+        administeredList: List<BasicVaccine>,
+        ageInWeeks: Int
+    ): List<BasicVaccine> {
+        val immunizationHandler = ImmunizationHandler()
+        val (remainingRoutineList, _, remainingPregnancyList) =
+            immunizationHandler.getAllVaccineList(ArrayList(administeredList), ageInWeeks)
+
+        // Collect missed vaccines from routine list
+        val missedRoutineVaccines = remainingRoutineList.flatMap { routineVaccine ->
+            routineVaccine.vaccineList.firstOrNull {
+                administeredVaccineNotPresent(it, administeredList)
+            }?.let { listOf(it) } ?: emptyList()
+        }
+
+        // Collect missed vaccines from pregnancy list
+        val missedPregnancyVaccines = remainingPregnancyList.flatMap { it.vaccineList }
+
+        // Combine all missed routine and pregnancy vaccines
+        val allMissedVaccines = missedRoutineVaccines + missedPregnancyVaccines
+
+        // Sort missed vaccines based on administrativeWeeksSinceDOB
+
+        return allMissedVaccines.sortedBy { it.administrativeWeeksSinceDOB }
     }
 
 
