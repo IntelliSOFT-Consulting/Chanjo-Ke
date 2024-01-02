@@ -475,7 +475,6 @@ class ImmunizationHandler() {
         }
 
 
-
         return Triple(remainingRoutineList, remainingNonRoutineList, remainingPregnancyList)
 
     }
