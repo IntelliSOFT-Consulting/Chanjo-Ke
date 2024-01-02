@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
@@ -42,6 +43,11 @@ class AddAppointment : AppCompatActivity() {
         setContentView(binding.root)
         patientId = FormatterClass().getSharedPref("patientId", this).toString()
 
+        val toolbar =
+            findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         fhirEngine = FhirApplication.fhirEngine(this)
         patientDetailsViewModel =
             ViewModelProvider(
@@ -53,6 +59,10 @@ class AddAppointment : AppCompatActivity() {
         createSpinner()
 
         binding.tvDatePicker.setOnClickListener { showDatePickerDialog() }
+
+        binding.btnCancel.setOnClickListener {
+            onBackPressed()
+        }
 
         binding.btnPreview.setOnClickListener {
 
@@ -110,6 +120,11 @@ class AddAppointment : AppCompatActivity() {
 
         // Show the DatePickerDialog
         datePickerDialog.show()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 
     private fun createSpinner() {
