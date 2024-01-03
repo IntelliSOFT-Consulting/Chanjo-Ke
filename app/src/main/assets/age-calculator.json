@@ -1,0 +1,69 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "client-registration",
+  "language": "en",
+  "status": "active",
+  "date": "2023-12-19T07:44:47.111Z",
+  "subjectType": [
+    "Patient"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+      "valueExpression": {
+        "language": "application/x-fhir-query",
+        "expression": "Patient",
+        "name": "patient"
+      }
+    }
+  ],
+  "item": [
+    {
+      "linkId": "a-birthdate",
+      "text": "Birth Date",
+      "type": "date",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "%resource.repeat(item).where(linkId='a-age-years' and answer.empty().not()).select(today() - answer.value)"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "a-age-years",
+      "text": "Age years",
+      "type": "quantity",
+      "initial": [
+        {
+          "valueQuantity": {
+            "unit": "years",
+            "system": "http://unitsofmeasure.org",
+            "code": "years"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "my-birthdate",
+      "text": "Select Birth Date",
+      "type": "date"
+    },
+    {
+      "linkId": "my-age-years",
+      "text": "Age years",
+      "type": "string",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+          "valueExpression": {
+            "language": "text/fhirpath",
+            "expression": "toString(%resource.repeat(item).where(linkId='my-birthdate').answer.value)"
+          }
+        }
+      ]
+    }
+  ]
+}
