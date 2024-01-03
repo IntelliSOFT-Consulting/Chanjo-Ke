@@ -67,15 +67,15 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         val immunizationHandler = ImmunizationHandler()
-        val (groupList, childList) = immunizationHandler.eligibleVaccineList(requireContext(), patientDetailsViewModel)
+//        val (groupList, childList) = immunizationHandler.eligibleVaccineList(requireContext(), patientDetailsViewModel)
+//
+//        if (groupList.isEmpty()){
+//            val text = "Client Not eligible for any vaccines"
+//            tvTitle.text = text
+//        }
 
-        if (groupList.isEmpty()){
-            val text = "Client Not eligible for any vaccines"
-            tvTitle.text = text
-        }
-
-        val adapter = BottomSheetAdapter(groupList, childList, requireContext())
-        expandableListView.setAdapter(adapter)
+//        val adapter = BottomSheetAdapter(groupList, childList, requireContext())
+//        expandableListView.setAdapter(adapter)
 
         return view
     }

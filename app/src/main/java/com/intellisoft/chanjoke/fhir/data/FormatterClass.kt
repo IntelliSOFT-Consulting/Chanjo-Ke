@@ -2,26 +2,20 @@ package com.intellisoft.chanjoke.fhir.data
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.button.MaterialButton
-import com.intellisoft.chanjoke.MainActivity
+import android.util.Log
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.detail.PatientDetailActivity
-import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
+import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
+import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Period
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -130,10 +124,31 @@ class FormatterClass {
         val immunizationHandler = ImmunizationHandler()
         val baseVaccineDetails =
             immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
-        val seriesVaccineDetails =
-            immunizationHandler.getSeriesVaccineDetailsBySeriesTargetName(targetDisease)
+        val vaccineDetails =
+            immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
 
-        if (seriesVaccineDetails != null && baseVaccineDetails != null) {
+        if (vaccineDetails != null && baseVaccineDetails != null) {
+
+            var seriesDoses = ""
+
+            seriesDoses = when(vaccineDetails){
+                is RoutineVaccine -> {
+                    "${vaccineDetails.seriesDoses}"
+                }
+
+                is NonRoutineVaccine -> {
+                    val nonRoutineVaccine = vaccineDetails.vaccineList.firstOrNull(){it.targetDisease == targetDisease}
+                    "${nonRoutineVaccine?.seriesDoses}"
+                }
+
+                is PregnancyVaccine -> {
+                    "${vaccineDetails.seriesDoses}"
+                }
+
+                else -> {
+                    ""
+                }
+            }
 
             stockList.addAll(
                 listOf(
@@ -142,7 +157,7 @@ class FormatterClass {
 
                     DbVaccineStockDetails(
                         "vaccinationSeriesDoses",
-                        seriesVaccineDetails.seriesDoses.toString()
+                        seriesDoses
                     ),
 
                     DbVaccineStockDetails(
@@ -249,6 +264,28 @@ class FormatterClass {
         return (1..n)
             .map { chars[Random.nextInt(chars.length)] }
             .joinToString("")
+    }
+    fun calculateWeeksFromDate(dateString: String): Int? {
+        val currentDate = LocalDate.now()
+        val givenDate = LocalDate.parse(dateString)
+
+        // Calculate the difference in weeks
+        val weeksDifference = ChronoUnit.WEEKS.between(givenDate, currentDate)
+
+        return weeksDifference.toString().toIntOrNull()
+    }
+
+    fun getNextDate(date: Date, weeksToAdd: Double): Date {
+
+        // Create a Calendar instance and set it to the current date
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+        // Add the calculated milliseconds to the current date
+        calendar.add(Calendar.WEEK_OF_YEAR, weeksToAdd.toInt())
+
+        // Get the new date after adding weeks
+        return calendar.time
     }
 
 
