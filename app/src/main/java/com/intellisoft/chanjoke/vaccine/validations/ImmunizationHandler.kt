@@ -474,10 +474,11 @@ class ImmunizationHandler() {
             }
         }
 
-        if (ageInWeeks > 52) {
+        if (ageInWeeks > 51) {
             // Remove RotaVirus from the list
             eligibleRoutineList.forEach { routineVaccine ->
-                routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode.startsWith("IMROTA") }
+                routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
+                    it.vaccineCode.startsWith("IMROTA") }
             }
         }
 
@@ -492,9 +493,7 @@ class ImmunizationHandler() {
             eligibleRoutineList + seriesVaccine
         }
         if (ageInWeeks > 250){
-            // Remove RotaVirus from the list
-            // Remove RotaVirus and bOPV from the list
-            eligibleRoutineList.forEach { routineVaccine ->
+           eligibleRoutineList.forEach { routineVaccine ->
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
                             it.vaccineCode.startsWith("IMPO-") ||
                             it.vaccineCode.startsWith("IMDPT-") ||
