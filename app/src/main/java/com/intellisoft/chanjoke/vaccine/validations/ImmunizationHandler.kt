@@ -1,5 +1,7 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.util.Log
+
 // Interface segregation principle
 
 //Routine Vaccine
@@ -120,7 +122,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         "Polio",
         5,
         listOf(
-            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 2, arrayListOf(), "2 drops","1"),
+            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 0, arrayListOf(), "2 drops","1"),
             BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, arrayListOf(), "2 drops","2"),
             BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, arrayListOf(10.0), "2 drops","3"),
             BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, arrayListOf(14.0), "2 drops","4"),
@@ -445,6 +447,30 @@ class ImmunizationHandler() {
          * Step 2: Perform vaccine specific issues
          */
         //Routine vaccines
+
+        val eligibleRoutineList = ArrayList<RoutineVaccine>()
+        routineList.forEach { routineVaccine ->
+
+            val newVaccineList = ArrayList<BasicVaccine>()
+            val vaccineList = routineVaccine.vaccineList
+            vaccineList.forEach { basicVaccine ->
+
+                val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
+                if (ageInWeeks >= administrativeWeeksSinceDOB){
+                    newVaccineList.add(basicVaccine)
+                }
+
+            }
+            val newRoutineVaccine = RoutineVaccine(
+                routineVaccine.diseaseCode,
+                routineVaccine.targetDisease,
+                routineVaccine.seriesDoses,
+                newVaccineList
+            )
+            eligibleRoutineList.add(newRoutineVaccine)
+        }
+
+
         if (ageInWeeks > 2) {
             // Remove bOPV from the list
             remainingRoutineList.forEach { routineVaccine ->
@@ -458,6 +484,7 @@ class ImmunizationHandler() {
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode.startsWith("IMROTA") }
             }
         }
+
 
         if (!administeredList.any { it.vaccineCode == "IMBCG-I" } &&
             !remainingRoutineList.any { it.vaccineList.any { it.vaccineCode == "IMBCG-I" } } &&
@@ -480,7 +507,7 @@ class ImmunizationHandler() {
         }
 
 
-        return Triple(remainingRoutineList, remainingNonRoutineList, remainingPregnancyList)
+        return Triple(eligibleRoutineList, remainingNonRoutineList, remainingPregnancyList)
 
     }
 
