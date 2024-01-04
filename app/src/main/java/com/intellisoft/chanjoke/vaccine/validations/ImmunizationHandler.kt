@@ -423,7 +423,7 @@ class ImmunizationHandler() {
             routineVaccine.copy(vaccineList = routineVaccine.vaccineList.filter {
                 administeredVaccineNotPresent(it, administeredList)
             })
-        }.filter { it.vaccineList.isNotEmpty() }
+        }.filter { it.vaccineList.isNotEmpty() }.toMutableList()
 
         //Pregnancy  list
         var remainingPregnancyList = pregnancyVaccineList.map { pregnancyVaccine ->
@@ -457,6 +457,16 @@ class ImmunizationHandler() {
             remainingRoutineList.forEach { routineVaccine ->
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode.startsWith("IMROTA") }
             }
+        }
+
+        if (!administeredList.any { it.vaccineCode == "IMBCG-I" } &&
+            !remainingRoutineList.any { it.vaccineList.any { it.vaccineCode == "IMBCG-I" } } &&
+            ageInWeeks < 257) {
+            // BCG has not been administered and is not present and age is below 257 weeks, add it to the list
+            val basicVaccine = getVaccineDetailsByBasicVaccineName("BCG")
+            val seriesVaccine = basicVaccine?.let { getRoutineSeriesByBasicVaccine(it) }
+
+            remainingRoutineList + seriesVaccine
         }
 
         //Non Routine Vaccines
