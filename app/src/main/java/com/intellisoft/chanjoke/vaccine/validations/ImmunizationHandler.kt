@@ -449,26 +449,22 @@ class ImmunizationHandler() {
         //Routine vaccines
 
         val eligibleRoutineList = ArrayList<RoutineVaccine>()
-        routineList.forEach { routineVaccine ->
-
-            val newVaccineList = ArrayList<BasicVaccine>()
-            val vaccineList = routineVaccine.vaccineList
-            vaccineList.forEach { basicVaccine ->
-
-                val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
-                if (ageInWeeks >= administrativeWeeksSinceDOB){
-                    newVaccineList.add(basicVaccine)
-                }
-
+        remainingRoutineList.forEach { routineVaccine ->
+            val newVaccineList = routineVaccine.vaccineList.filter { basicVaccine ->
+                ageInWeeks >= basicVaccine.administrativeWeeksSinceDOB
             }
-            val newRoutineVaccine = RoutineVaccine(
-                routineVaccine.diseaseCode,
-                routineVaccine.targetDisease,
-                routineVaccine.seriesDoses,
-                newVaccineList
-            )
-            eligibleRoutineList.add(newRoutineVaccine)
+
+            if (newVaccineList.isNotEmpty()) {
+                val newRoutineVaccine = RoutineVaccine(
+                    routineVaccine.diseaseCode,
+                    routineVaccine.targetDisease,
+                    routineVaccine.seriesDoses,
+                    newVaccineList
+                )
+                eligibleRoutineList.add(newRoutineVaccine)
+            }
         }
+
 
 
         if (ageInWeeks > 2) {
@@ -494,6 +490,18 @@ class ImmunizationHandler() {
             val seriesVaccine = basicVaccine?.let { getRoutineSeriesByBasicVaccine(it) }
 
             eligibleRoutineList + seriesVaccine
+        }
+        if (ageInWeeks > 250){
+            // Remove RotaVirus from the list
+            // Remove RotaVirus and bOPV from the list
+            eligibleRoutineList.forEach { routineVaccine ->
+                routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
+                            it.vaccineCode.startsWith("IMPO-") ||
+                            it.vaccineCode.startsWith("IMDPT-") ||
+                            it.vaccineCode.startsWith("IMPCV10-") ||
+                            it.vaccineCode.startsWith("IMROTA-")
+                }
+            }
         }
 
         //Non Routine Vaccines
