@@ -41,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import java.util.UUID
 import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.CodeableConcept
@@ -142,16 +143,21 @@ class AdministerVaccineViewModel(
                     /**
                      * Check for AEFIs should be partOf
                      * */
-                    if (FormatterClass().getSharedPref("vaccinationFlow",getApplication<Application>().applicationContext)=="addAefi"){
-                        val ref=FormatterClass().getSharedPref(
+                    if (FormatterClass().getSharedPref("vaccinationFlow",
+                            getApplication<Application>().applicationContext)=="addAefi"){
+                        val ref = FormatterClass().getSharedPref(
                             "encounter_logical_id",
                             getApplication<Application>().applicationContext
                         )
                         val parentReference = Reference("Encounter/$ref")
                         resource.partOf=parentReference
+
+                        //Create Adverse effects
+                        createAdverseEffects(encounterId, patientId)
                     }
 
                     saveResourceToDatabase(resource, "enc " + encounterId)
+
                     val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
                     if (
                         vaccinationFlow == "createVaccineDetails" ||
@@ -162,6 +168,25 @@ class AdministerVaccineViewModel(
                 }
             }
         }
+    }
+
+    private suspend fun createAdverseEffects(encounterId: String, patientId: String) {
+
+        val encounterReference = Reference("Encounter/$encounterId")
+        val patientReference = Reference("Patient/$patientId")
+
+        val allergyIntolerance = AllergyIntolerance()
+        allergyIntolerance.id = generateUuid()
+        allergyIntolerance.encounter = encounterReference
+        allergyIntolerance.patient = patientReference
+
+        /**
+         * TODO: Add more details for the allergy intolerance
+         */
+
+        saveResourceToDatabase(allergyIntolerance, "intolerance ")
+
+
     }
 
     //Create an immunization resource
