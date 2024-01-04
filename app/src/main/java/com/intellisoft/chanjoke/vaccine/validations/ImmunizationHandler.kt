@@ -473,27 +473,27 @@ class ImmunizationHandler() {
 
         if (ageInWeeks > 2) {
             // Remove bOPV from the list
-            remainingRoutineList.forEach { routineVaccine ->
+            eligibleRoutineList.forEach { routineVaccine ->
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode == "IMPO-bOPV" }
             }
         }
 
         if (ageInWeeks > 52) {
             // Remove RotaVirus from the list
-            remainingRoutineList.forEach { routineVaccine ->
+            eligibleRoutineList.forEach { routineVaccine ->
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode.startsWith("IMROTA") }
             }
         }
 
 
         if (!administeredList.any { it.vaccineCode == "IMBCG-I" } &&
-            !remainingRoutineList.any { it.vaccineList.any { it.vaccineCode == "IMBCG-I" } } &&
+            !eligibleRoutineList.any { it.vaccineList.any { it.vaccineCode == "IMBCG-I" } } &&
             ageInWeeks < 257) {
             // BCG has not been administered and is not present and age is below 257 weeks, add it to the list
             val basicVaccine = getVaccineDetailsByBasicVaccineName("BCG")
             val seriesVaccine = basicVaccine?.let { getRoutineSeriesByBasicVaccine(it) }
 
-            remainingRoutineList + seriesVaccine
+            eligibleRoutineList + seriesVaccine
         }
 
         //Non Routine Vaccines
