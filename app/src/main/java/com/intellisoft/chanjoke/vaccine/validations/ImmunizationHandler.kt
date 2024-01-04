@@ -435,7 +435,7 @@ class ImmunizationHandler() {
         }.filter { it.vaccineList.isNotEmpty() }
 
         //Non-routine list
-        val remainingNonRoutineList = nonRoutineVaccineList.map { nonRoutineVaccine ->
+        var remainingNonRoutineList = nonRoutineVaccineList.map { nonRoutineVaccine ->
             nonRoutineVaccine.copy(vaccineList = nonRoutineVaccine.vaccineList.map { routineVaccine ->
                 routineVaccine.copy(vaccineList = routineVaccine.vaccineList.filter {
                     administeredVaccineNotPresent(it, administeredList)
@@ -505,6 +505,21 @@ class ImmunizationHandler() {
         }
 
         //Non Routine Vaccines
+
+        if (ageInWeeks < 939) {
+            remainingNonRoutineList.forEach { nonRoutine ->
+                nonRoutine.vaccineList.forEach { routineVaccine ->
+                    routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
+                        it.vaccineCode.startsWith("IMCOV-")
+                    }
+                }
+            }
+
+
+            remainingNonRoutineList = remainingNonRoutineList.filter { nonRoutineVaccine -> nonRoutineVaccine.vaccineList.isNotEmpty() }
+        }
+
+
 
         //Pregnancy Vaccines
         /**
