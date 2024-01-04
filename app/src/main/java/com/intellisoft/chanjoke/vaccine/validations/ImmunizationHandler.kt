@@ -518,8 +518,6 @@ class ImmunizationHandler() {
             remainingNonRoutineList = remainingNonRoutineList.filter { nonRoutineVaccine -> nonRoutineVaccine.vaccineList.isNotEmpty() }
         }
 
-
-
         //Pregnancy Vaccines
         /**
          * Remove Pregnancy vaccines from people under 10 years
