@@ -262,31 +262,132 @@
                       "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
                       "valueExpression": {
                         "language": "application/x-fhir-query",
-                        "expression": "Location?partof=Location/0a"
+                        "expression": "Location?partof=Location/0"
                       }
                     },
                     {
-                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
-                      "valueCodeableConcept": {
-                        "coding": [
-                          {
-                            "system": "http://hl7.org/fhir/questionnaire-item-control",
-                            "code": "drop-down",
-                            "display": "Drop down"
-                          }
-                        ],
-                        "text": "Drop down"
-                      }
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+                      "extension": [
+                        {
+                          "url": "path",
+                          "valueString": "name"
+                        },
+                        {
+                          "url": "forDisplay",
+                          "valueBoolean": true
+                        }
+                      ]
                     }
                   ],
                   "linkId": "PR-address-city",
-                  "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.address.city",
-                  "type": "string",
+                  "type": "reference",
                   "required": true,
+                  "text": "County *"
+                },
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                      "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "Patient.address.country",
+                        "name": "patientSubCounty"
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
+                      "valueExpression": {
+                        "language": "application/x-fhir-query",
+                        "expression": "Location?partof=Location/%resource.where(linkid=PR-address-city)"
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+                      "extension": [
+                        {
+                          "url": "path",
+                          "valueString": "name"
+                        },
+                        {
+                          "url": "forDisplay",
+                          "valueBoolean": true
+                        }
+                      ]
+                    }
+                  ],
+                  "linkId": "PR-address-sub-county",
+                  "type": "reference",
+                  "required": true,
+                  "text": "Sub County *"
+                },
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                      "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "Patient.address.country",
+                        "name": "patientCity"
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression",
+                      "valueExpression": {
+                        "language": "application/x-fhir-query",
+                        "expression": "Location?partof=Location/29"
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn",
+                      "extension": [
+                        {
+                          "url": "path",
+                          "valueString": "name"
+                        },
+                        {
+                          "url": "forDisplay",
+                          "valueBoolean": true
+                        }
+                      ]
+                    }
+                  ],
+                  "linkId": "PR-address-ward",
+                  "type": "reference",
+                  "text": "Ward"
+                },
+                {
+                  "linkId": "PR-address-town",
+                  "type": "string",
                   "item": [
                     {
-                      "linkId": "county",
-                      "text": "County *",
+                      "linkId": "trading-center",
+                      "text": "Town/Trading centre",
+                      "type": "display",
+                      "extension": [
+                        {
+                          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                          "valueCodeableConcept": {
+                            "coding": [
+                              {
+                                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                "code": "flyover",
+                                "display": "Fly-over"
+                              }
+                            ],
+                            "text": "Flyover"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "linkId": "PR-address-estate",
+                  "type": "string",
+                  "item": [
+                    {
+                      "linkId": "estate",
+                      "text": "Estate & House No./Village",
                       "type": "display",
                       "extension": [
                         {

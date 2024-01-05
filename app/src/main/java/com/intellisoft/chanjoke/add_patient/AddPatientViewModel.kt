@@ -44,6 +44,8 @@ import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.RelatedPerson
 import org.hl7.fhir.r4.model.ResourceType
+import org.json.JSONObject
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -95,8 +97,15 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             if (entry.resource !is Patient) {
                 return@launch
             }
+
             val patientId = generateUuid()
             val patient = entry.resource as Patient
+            val cc = FhirContext.forR4()
+            val questionnaire = cc.newJsonParser().encodeResourceToString(questionnaireResponse)
+            patient.addressFirstRep.city = generatePatientAddress(questionnaire, "PR-address-city")
+            patient.addressFirstRep.district =
+                generatePatientAddress(questionnaire, "PR-address-sub-county")
+            patient.addressFirstRep.state = generatePatientAddress(questionnaire, "PR-address-ward")
             patient.id = patientId
 
             /**
@@ -109,8 +118,9 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val codingList = ArrayList<Coding>()
             val coding = Coding()
             coding.system = "http://hl7.org/fhir/administrative-identifier"
-            coding.code = Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-","")
-            coding.display = Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-"," ").uppercase()
+            coding.code = Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-", "")
+            coding.display =
+                Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-", " ").uppercase()
             codingList.add(coding)
             typeCodeableConcept.coding = codingList
             typeCodeableConcept.text = Identifiers.SYSTEM_GENERATED.name
@@ -134,6 +144,57 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         }
     }
 
+    private fun generatePatientAddress(questionnaire: String?, linkId: String): String? {
+        var city = ""
+        if (questionnaire != null) {
+            city = ""
+            val jsonObject = JSONObject(questionnaire)
+            // Retrieve County value dynamically using the linkId
+            val county = getValueFromJson(jsonObject, linkId)
+
+            println("County: $county")
+            if (county != null) {
+                city = county
+            }
+        }
+
+        return city
+    }
+
+    private fun getValueFromJson(json: JSONObject, targetLinkId: String): String? {
+        val stack = mutableListOf<JSONObject>()
+        stack.add(json)
+
+        while (stack.isNotEmpty()) {
+            val currentObject = stack.removeAt(stack.size - 1)
+
+            if (currentObject.has("linkId") && currentObject.getString("linkId") == targetLinkId) {
+
+                Timber.e("Patient Resource is Here  Answer $currentObject")
+                val answerArray = currentObject.optJSONArray("answer")
+                if (answerArray != null && answerArray.length() > 0) {
+                    val answerObject = answerArray.getJSONObject(0)
+                    val valueReferenceObject = answerObject.optJSONObject("valueReference")
+                    if (valueReferenceObject != null) {
+                        val answer = valueReferenceObject.optString("display", null)
+
+                        Timber.e("Patient Resource is Here  Answer Actual $answer")
+                        return answer
+                    }
+                }
+            }
+
+            val items = currentObject.optJSONArray("item")
+            if (items != null) {
+                for (i in 0 until items.length()) {
+                    val item = items.getJSONObject(i)
+                    stack.add(item)
+                }
+            }
+        }
+
+        return null
+    }
     private fun fetchQuestionnaireJson(): String {
         _questionnaireJson?.let {
             return it
