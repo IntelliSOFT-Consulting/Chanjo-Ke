@@ -158,7 +158,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
                     val dob = formatterClass.convertDateFormat(patientDetail.dob)
                     val age = formatterClass.getFormattedAge(patientDetail.dob,tvAge.context.resources)
-                    val dobAge = "$dob ($age)"
+                    val dobAge = "$dob ($age old)"
 
                     tvDob.text = dobAge
 

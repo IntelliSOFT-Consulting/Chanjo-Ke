@@ -201,33 +201,45 @@ class FormatterClass {
         resources: Resources,
     ): String {
         if (dob == null) return ""
+
         val dobFormat = convertDateFormat(dob)
         if (dobFormat != null) {
             val dobDate = convertStringToDate(dobFormat, "MMM d yyyy")
             if (dobDate != null) {
                 val finalDate = convertDateToLocalDate(dobDate)
-                return Period.between(finalDate, LocalDate.now()).let {
-                    when {
-                        it.years > 0 -> resources.getQuantityString(
-                            R.plurals.ageYear,
-                            it.years,
-                            it.years
-                        )
+                val period = Period.between(finalDate, LocalDate.now())
 
-                        it.months > 0 -> resources.getQuantityString(
-                            R.plurals.ageMonth,
-                            it.months,
-                            it.months
-                        )
+                val years = period.years
+                val months = period.months
+                val days = period.days
 
-                        else -> resources.getQuantityString(R.plurals.ageDay, it.days, it.days)
+                val ageStringBuilder = StringBuilder()
+
+                if (years > 0) {
+                    ageStringBuilder.append(resources.getQuantityString(R.plurals.ageYear, years, years))
+                    if (months > 0 || days > 0) {
+                        ageStringBuilder.append(", ")
                     }
                 }
+
+                if (months > 0) {
+                    ageStringBuilder.append(resources.getQuantityString(R.plurals.ageMonth, months, months))
+                    if (days > 0) {
+                        ageStringBuilder.append(", ")
+                    }
+                }
+
+                if (days > 0) {
+                    ageStringBuilder.append(resources.getQuantityString(R.plurals.ageDay, days, days))
+                }
+
+                return ageStringBuilder.toString()
             }
         }
-        return ""
 
+        return ""
     }
+
 
     fun generateRandomCode(): String {
         // Get current date
