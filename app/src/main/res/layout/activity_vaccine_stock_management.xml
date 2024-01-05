@@ -63,7 +63,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:text="Next"
+            android:text="Submit"
             android:textColor="#ffffff"
             app:backgroundTint="@color/colorPrimary"
             app:iconGravity="textStart"

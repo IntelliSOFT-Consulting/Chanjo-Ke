@@ -542,6 +542,12 @@ class AdministerVaccineViewModel(
                 //Generate the next immunization
                 createNextImmunization(immunization)
 
+                //Navigate to Stock Management
+                FormatterClass().saveSharedPref(
+                    "isVaccineAdministered",
+                    "stockManagement",
+                    getApplication<Application>().applicationContext)
+
             }else{
                 /**
                  * User did not select Yes administer vaccine

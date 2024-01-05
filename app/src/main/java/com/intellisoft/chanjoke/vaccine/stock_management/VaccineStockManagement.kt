@@ -50,9 +50,7 @@ class VaccineStockManagement : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
 
         findViewById<MaterialButton>(R.id.btnNext).setOnClickListener {
-
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            val intent = Intent(this, PatientDetailActivity::class.java)
             intent.putExtra("patientId", patientId)
             startActivity(intent)
         }

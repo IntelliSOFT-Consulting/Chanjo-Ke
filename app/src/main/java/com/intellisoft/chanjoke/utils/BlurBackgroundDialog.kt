@@ -13,6 +13,8 @@ import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 
 class BlurBackgroundDialog(
     private val fragment: Fragment, context: Context
@@ -76,9 +78,19 @@ class BlurBackgroundDialog(
                     FormatterClass().deleteSharedPref("isRegistration", context)
                 }
             } else {
-                val intent = Intent(context, PatientDetailActivity::class.java)
-                intent.putExtra("patientId", patientId)
-                context.startActivity(intent)
+                val vaccinationFlow = FormatterClass().getSharedPref("isVaccineAdministered",context)
+                if (vaccinationFlow == "stockManagement"){
+                    val intent = Intent(context, VaccineStockManagement::class.java)
+                    intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+                    intent.putExtra("patientId", patientId)
+                    context.startActivity(intent)
+                    FormatterClass().deleteSharedPref("isVaccineAdministered", context)
+                }else{
+                    val intent = Intent(context, PatientDetailActivity::class.java)
+                    intent.putExtra("patientId", patientId)
+                    context.startActivity(intent)
+                }
+
             }
         }
     }
