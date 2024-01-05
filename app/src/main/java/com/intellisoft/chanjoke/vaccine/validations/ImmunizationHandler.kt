@@ -1,5 +1,7 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.util.Log
+
 // Interface segregation principle
 
 //Routine Vaccine
@@ -120,7 +122,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         "Polio",
         5,
         listOf(
-            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 2, arrayListOf(), "2 drops","1"),
+            BasicVaccine(polio+"bOPV", "bOPV", "Oral", 0, arrayListOf(), "2 drops","1"),
             BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, arrayListOf(), "2 drops","2"),
             BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, arrayListOf(10.0), "2 drops","3"),
             BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, arrayListOf(14.0), "2 drops","4"),
@@ -423,7 +425,7 @@ class ImmunizationHandler() {
             routineVaccine.copy(vaccineList = routineVaccine.vaccineList.filter {
                 administeredVaccineNotPresent(it, administeredList)
             })
-        }.filter { it.vaccineList.isNotEmpty() }
+        }.filter { it.vaccineList.isNotEmpty() }.toMutableList()
 
         //Pregnancy  list
         var remainingPregnancyList = pregnancyVaccineList.map { pregnancyVaccine ->
@@ -433,7 +435,7 @@ class ImmunizationHandler() {
         }.filter { it.vaccineList.isNotEmpty() }
 
         //Non-routine list
-        val remainingNonRoutineList = nonRoutineVaccineList.map { nonRoutineVaccine ->
+        var remainingNonRoutineList = nonRoutineVaccineList.map { nonRoutineVaccine ->
             nonRoutineVaccine.copy(vaccineList = nonRoutineVaccine.vaccineList.map { routineVaccine ->
                 routineVaccine.copy(vaccineList = routineVaccine.vaccineList.filter {
                     administeredVaccineNotPresent(it, administeredList)
@@ -445,21 +447,82 @@ class ImmunizationHandler() {
          * Step 2: Perform vaccine specific issues
          */
         //Routine vaccines
+
+        val eligibleRoutineList = ArrayList<RoutineVaccine>()
+        remainingRoutineList.forEach { routineVaccine ->
+            val newVaccineList = routineVaccine.vaccineList.filter { basicVaccine ->
+                ageInWeeks >= basicVaccine.administrativeWeeksSinceDOB
+            }
+
+            if (newVaccineList.isNotEmpty()) {
+                val newRoutineVaccine = RoutineVaccine(
+                    routineVaccine.diseaseCode,
+                    routineVaccine.targetDisease,
+                    routineVaccine.seriesDoses,
+                    newVaccineList
+                )
+                eligibleRoutineList.add(newRoutineVaccine)
+            }
+        }
+
+
+
         if (ageInWeeks > 2) {
             // Remove bOPV from the list
-            remainingRoutineList.forEach { routineVaccine ->
+            eligibleRoutineList.forEach { routineVaccine ->
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode == "IMPO-bOPV" }
             }
         }
 
-        if (ageInWeeks > 52) {
+        if (ageInWeeks > 51) {
             // Remove RotaVirus from the list
-            remainingRoutineList.forEach { routineVaccine ->
-                routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot { it.vaccineCode.startsWith("IMROTA") }
+            eligibleRoutineList.forEach { routineVaccine ->
+                routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
+                    it.vaccineCode.startsWith("IMROTA") }
+            }
+        }
+
+
+        if (ageInWeeks < 257 &&
+            !administeredList.any(){it.vaccineCode == "IMBCG-I"} &&
+            !eligibleRoutineList.any { it.vaccineList.any { basicVaccine -> basicVaccine.vaccineName == "BCG" } }
+            ){
+            // BCG has not been administered and is not present and age is below 257 weeks, add it to the list
+            val basicVaccine = getVaccineDetailsByBasicVaccineName("BCG")
+            val seriesVaccine = basicVaccine?.let { getRoutineSeriesByBasicVaccine(it) }
+
+            if (seriesVaccine != null) {
+                eligibleRoutineList.add(seriesVaccine)
+            }
+        }
+
+
+
+        if (ageInWeeks > 250){
+           eligibleRoutineList.forEach { routineVaccine ->
+                routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
+                            it.vaccineCode.startsWith("IMPO-") ||
+                            it.vaccineCode.startsWith("IMDPT-") ||
+                            it.vaccineCode.startsWith("IMPCV10-") ||
+                            it.vaccineCode.startsWith("IMROTA-")
+                }
             }
         }
 
         //Non Routine Vaccines
+
+        if (ageInWeeks < 939) {
+            remainingNonRoutineList.forEach { nonRoutine ->
+                nonRoutine.vaccineList.forEach { routineVaccine ->
+                    routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
+                        it.vaccineCode.startsWith("IMCOV-")
+                    }
+                }
+            }
+
+
+            remainingNonRoutineList = remainingNonRoutineList.filter { nonRoutineVaccine -> nonRoutineVaccine.vaccineList.isNotEmpty() }
+        }
 
         //Pregnancy Vaccines
         /**
@@ -470,7 +533,7 @@ class ImmunizationHandler() {
         }
 
 
-        return Triple(remainingRoutineList, remainingNonRoutineList, remainingPregnancyList)
+        return Triple(eligibleRoutineList, remainingNonRoutineList, remainingPregnancyList)
 
     }
 

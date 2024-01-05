@@ -41,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import java.util.UUID
 import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.CodeableConcept
@@ -142,16 +143,21 @@ class AdministerVaccineViewModel(
                     /**
                      * Check for AEFIs should be partOf
                      * */
-                    if (FormatterClass().getSharedPref("vaccinationFlow",getApplication<Application>().applicationContext)=="addAefi"){
-                        val ref=FormatterClass().getSharedPref(
+                    if (FormatterClass().getSharedPref("vaccinationFlow",
+                            getApplication<Application>().applicationContext)=="addAefi"){
+                        val ref = FormatterClass().getSharedPref(
                             "encounter_logical_id",
                             getApplication<Application>().applicationContext
                         )
                         val parentReference = Reference("Encounter/$ref")
                         resource.partOf=parentReference
+
+                        //Create Adverse effects
+                        createAdverseEffects(encounterId, patientId)
                     }
 
                     saveResourceToDatabase(resource, "enc " + encounterId)
+
                     val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
                     if (
                         vaccinationFlow == "createVaccineDetails" ||
@@ -162,6 +168,25 @@ class AdministerVaccineViewModel(
                 }
             }
         }
+    }
+
+    private suspend fun createAdverseEffects(encounterId: String, patientId: String) {
+
+        val encounterReference = Reference("Encounter/$encounterId")
+        val patientReference = Reference("Patient/$patientId")
+
+        val allergyIntolerance = AllergyIntolerance()
+        allergyIntolerance.id = generateUuid()
+        allergyIntolerance.encounter = encounterReference
+        allergyIntolerance.patient = patientReference
+
+        /**
+         * TODO: Add more details for the allergy intolerance
+         */
+
+        saveResourceToDatabase(allergyIntolerance, "intolerance ")
+
+
     }
 
     //Create an immunization resource
@@ -303,8 +328,6 @@ class AdministerVaccineViewModel(
         //Vaccine code
         val administeredProduct = formatterClass.getSharedPref(
             "administeredProduct", getApplication<Application>().applicationContext)
-        val patientDob = formatterClass.getSharedPref(
-            "patientDob", getApplication<Application>().applicationContext)
         val patientId = formatterClass.getSharedPref(
             "patientId", getApplication<Application>().applicationContext)
         val currentDate = Date()
@@ -312,7 +335,7 @@ class AdministerVaccineViewModel(
         /**
          * Get the current administered product and generate the next vaccine
          */
-        if (administeredProduct != null && patientDob != null && patientId != null) {
+        if (administeredProduct != null && patientId != null) {
             val immunizationHandler = ImmunizationHandler()
             val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
 
@@ -322,23 +345,33 @@ class AdministerVaccineViewModel(
                 )
             }
 
+            val seriesVaccine = vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
+
+            val targetDisease = seriesVaccine?.targetDisease
+            val vaccineName = nextBasicVaccine?.vaccineName
+
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+                //Save resources to Shared preference
+                if (vaccineName != null && targetDisease != null) {
+                    FormatterClass().saveStockValue(vaccineName, targetDisease, getApplication<Application>().applicationContext)
+                }
+            }.join()
+
             //Generate the next immunisation recommendation
             if (nextBasicVaccine != null){
                 val administrativeWeeksSincePreviousList = nextBasicVaccine.administrativeWeeksSincePrevious
-                val administrativeWeeksSinceDOB = nextBasicVaccine.administrativeWeeksSinceDOB
+
                 //Check if the above list is more than one.
                 if (administrativeWeeksSincePreviousList.isNotEmpty()){
                     //This is not the first vaccine, check on administrative weeks after birth
-                    val weeksToAdd = administrativeWeeksSincePreviousList.firstOrNull()
+                    val weeksToAdd = administrativeWeeksSincePreviousList[0]
 
                     /**
                      * Check for the ones that have multiple dates
                      */
-                    val nextImmunizationDate = weeksToAdd?.let {
-                        formatterClass.getNextDate(date,
-                            it
-                        )
-                    }
+                    val nextImmunizationDate = formatterClass.getNextDate(date, weeksToAdd)
+
                     val recommendation = createImmunizationRecommendationResource(
                         patientId,
                         nextImmunizationDate,
@@ -508,6 +541,12 @@ class AdministerVaccineViewModel(
 
                 //Generate the next immunization
                 createNextImmunization(immunization)
+
+                //Navigate to Stock Management
+                FormatterClass().saveSharedPref(
+                    "isVaccineAdministered",
+                    "stockManagement",
+                    getApplication<Application>().applicationContext)
 
             }else{
                 /**

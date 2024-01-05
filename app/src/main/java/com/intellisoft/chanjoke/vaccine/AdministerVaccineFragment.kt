@@ -159,7 +159,7 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
                 R.id.administerVaccine,
                 QuestionnaireFragment.builder()
                     .setQuestionnaire(viewModel.questionnaire)
-                    .showReviewPageBeforeSubmit(true)
+                    .showReviewPageBeforeSubmit(true) //Show preview page
                     .build(),
                 QUESTIONNAIRE_FRAGMENT_TAG,
             )

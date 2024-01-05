@@ -128,10 +128,16 @@ class BottomSheetAdapter(
                 }.join()
                 val patientId = FormatterClass().getSharedPref("patientId", context)
 
-                val intent = Intent(context, VaccineStockManagement::class.java)
+                //Send to contraindications
+                val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
                 intent.putExtra("patientId", patientId)
                 context.startActivity(intent)
+
+//                val intent = Intent(context, VaccineStockManagement::class.java)
+//                intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+//                intent.putExtra("patientId", patientId)
+//                context.startActivity(intent)
 
                 progressDialog.dismiss()
             }

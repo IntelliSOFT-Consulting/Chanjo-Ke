@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -78,7 +79,8 @@ class RecommendationAdapter(
 //                }
 
 
-                val intent = Intent(context, VaccineStockManagement::class.java)
+                //Send to contraindications
+                val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
                 intent.putExtra("patientId", patientId)
                 context.startActivity(intent)
