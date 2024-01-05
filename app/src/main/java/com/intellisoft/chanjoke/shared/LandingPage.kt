@@ -75,6 +75,10 @@ class LandingPage : Fragment() {
             "AEFI" -> {
                 findNavController().navigate(R.id.patient_list)
             }
+
+            "Appointments" -> {
+                findNavController().navigate(R.id.patient_list)
+            }
         }
 
     }
