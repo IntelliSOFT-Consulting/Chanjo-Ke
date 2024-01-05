@@ -483,15 +483,21 @@ class ImmunizationHandler() {
         }
 
 
-        if (!administeredList.any { it.vaccineCode == "IMBCG-I" } &&
-            !eligibleRoutineList.any { it.vaccineList.any { it.vaccineCode == "IMBCG-I" } } &&
-            ageInWeeks < 257) {
+        if (ageInWeeks < 257 &&
+            !administeredList.any(){it.vaccineCode == "IMBCG-I"} &&
+            !eligibleRoutineList.any { it.vaccineList.any { basicVaccine -> basicVaccine.vaccineName == "BCG" } }
+            ){
             // BCG has not been administered and is not present and age is below 257 weeks, add it to the list
             val basicVaccine = getVaccineDetailsByBasicVaccineName("BCG")
             val seriesVaccine = basicVaccine?.let { getRoutineSeriesByBasicVaccine(it) }
 
-            eligibleRoutineList + seriesVaccine
+            if (seriesVaccine != null) {
+                eligibleRoutineList.add(seriesVaccine)
+            }
         }
+
+
+
         if (ageInWeeks > 250){
            eligibleRoutineList.forEach { routineVaccine ->
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
