@@ -512,16 +512,7 @@ class ImmunizationHandler() {
         //Non Routine Vaccines
 
         if (ageInWeeks < 939) {
-            remainingNonRoutineList.forEach { nonRoutine ->
-                nonRoutine.vaccineList.forEach { routineVaccine ->
-                    routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
-                        it.vaccineCode.startsWith("IMCOV-")
-                    }
-                }
-            }
-
-
-            remainingNonRoutineList = remainingNonRoutineList.filter { nonRoutineVaccine -> nonRoutineVaccine.vaccineList.isNotEmpty() }
+            remainingNonRoutineList = remainingNonRoutineList.filterNot { it.diseaseCode.startsWith("IMCOV-") }
         }
 
         //Pregnancy Vaccines
