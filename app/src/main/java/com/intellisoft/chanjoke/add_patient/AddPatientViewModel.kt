@@ -100,12 +100,12 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
             val patientId = generateUuid()
             val patient = entry.resource as Patient
-            val cc = FhirContext.forR4()
-            val questionnaire = cc.newJsonParser().encodeResourceToString(questionnaireResponse)
-            patient.addressFirstRep.city = generatePatientAddress(questionnaire, "PR-address-city")
-            patient.addressFirstRep.district =
-                generatePatientAddress(questionnaire, "PR-address-sub-county")
-            patient.addressFirstRep.state = generatePatientAddress(questionnaire, "PR-address-ward")
+//            val cc = FhirContext.forR4()
+//            val questionnaire = cc.newJsonParser().encodeResourceToString(questionnaireResponse)
+//            Timber.e("Data **** $questionnaire")
+//            patient.addressFirstRep.city = generatePatientAddress(questionnaire, "PR-address-city")
+//            patient.addressFirstRep.district =                generatePatientAddress(questionnaire, "PR-address-sub-county")
+//            patient.addressFirstRep.state = generatePatientAddress(questionnaire, "PR-address-ward")
             patient.id = patientId
 
             /**
@@ -195,6 +195,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
         return null
     }
+
     private fun fetchQuestionnaireJson(): String {
         _questionnaireJson?.let {
             return it
