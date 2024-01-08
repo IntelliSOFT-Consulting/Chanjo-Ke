@@ -1710,8 +1710,8 @@
             },
             {
               "valueCoding": {
-                "code": "GAOLOLE",
-                "display": "GAOLOLE",
+                "code": "GALOLE",
+                "display": "GALOLE",
                 "system": "https://locationlist.com/counties"
               }
             },
@@ -8076,15 +8076,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "GARSEN",
+                "display": "GARSEN",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-tana-river",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-garsen",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8111,6 +8111,48 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "KIPINI-EAST",
+                "display": "KIPINI EAST",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GARSEN-SOUTH",
+                "display": "GARSEN SOUTH",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KIPINI-WEST",
+                "display": "KIPINI WEST",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GARSEN-CENTRAL",
+                "display": "GARSEN CENTRAL",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GARSEN-WEST",
+                "display": "GARSEN WEST",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GARSEN-NORTH",
+                "display": "GARSEN NORTH",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -8140,15 +8182,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "GALOLE",
+                "display": "GALOLE",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-tana-river",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-galole",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8175,6 +8217,34 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "KINAKOMBA",
+                "display": "KINAKOMBA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MIKINDUNI",
+                "display": "MIKINDUNI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "CHEWANI",
+                "display": "CHEWANI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "WAYU",
+                "display": "WAYU",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -8204,15 +8274,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "BURA",
+                "display": "BURA",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-tana-river",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-bura",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8239,6 +8309,41 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "CHEWELE",
+                "display": "CHEWELE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BURA",
+                "display": "BURA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BANGALE",
+                "display": "BANGALE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SALA",
+                "display": "SALA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MADOGO",
+                "display": "MADOGO",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
