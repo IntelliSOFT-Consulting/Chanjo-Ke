@@ -960,6 +960,15 @@
               ]
             }
           ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "1",
+                "display": "MOMBASA",
+                "system": "https://locationlist.com/counties"
+              }
+            }
+          ],
           "answerOption": [
             {
               "valueCoding": {
@@ -1353,6 +1362,15 @@
               ]
             }
           ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "CHANGAMWE",
+                "display": "CHANGAMWE",
+                "system": "https://locationlist.com/counties"
+              }
+            }
+          ],
           "answerOption": [
             {
               "valueCoding": {
@@ -1457,6 +1475,15 @@
                   }
                 }
               ]
+            }
+          ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "MSAMBWENI",
+                "display": "MSAMBWENI",
+                "system": "https://locationlist.com/counties"
+              }
             }
           ],
           "answerOption": [
@@ -1662,6 +1689,15 @@
                   }
                 }
               ]
+            }
+          ],
+          "initial": [
+            {
+              "valueCoding": {
+                "code": "GARSEN",
+                "display": "GARSEN",
+                "system": "https://locationlist.com/counties"
+              }
             }
           ],
           "answerOption": [
@@ -7014,6 +7050,198 @@
                 "system": "https://locationlist.com/areas"
               }
             }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "LUNGALUNGA",
+                "display": "LUNGALUNGA",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-kwale",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-lungalunga",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "MATUGA",
+                "display": "MATUGA",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-kwale",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-matuga",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "KINANGO",
+                "display": "KINANGO",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-kwale",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-kinango",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
           ]
         },
         {
