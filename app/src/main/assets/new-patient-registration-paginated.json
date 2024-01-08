@@ -1788,14 +1788,14 @@
           "answerOption": [
             {
               "valueCoding": {
-                "code": "LAMU EAST",
+                "code": "LAMU-EAST",
                 "display": "LAMU EAST",
                 "system": "https://locationlist.com/counties"
               }
             },
             {
               "valueCoding": {
-                "code": "LAMU WEST",
+                "code": "LAMU-WEST",
                 "display": "LAMU WEST",
                 "system": "https://locationlist.com/counties"
               }
@@ -8373,15 +8373,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "LAMU-EAST",
+                "display": "LAMU EAST",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-lamu",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-lamu-east",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8408,6 +8408,27 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "FAZA",
+                "display": "FAZA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KIUNGA",
+                "display": "KIUNGA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BASUBA",
+                "display": "BASUBA",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -8437,15 +8458,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "LAMU-WEST",
+                "display": "LAMU WEST",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-lamu",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-lamu-west",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8472,6 +8493,55 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "SHELLA",
+                "display": "SHELLA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MKOMANI",
+                "display": "MKOMANI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "HINDI",
+                "display": "HINDI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MKUNUMBI",
+                "display": "MKUNUMBI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "HONGWE",
+                "display": "HONGWE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "WITU",
+                "display": "WITU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BAHARI",
+                "display": "BAHARI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
