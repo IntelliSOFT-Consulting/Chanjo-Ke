@@ -6408,7 +6408,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -6507,7 +6507,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -6592,7 +6592,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -6705,7 +6705,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -6804,7 +6804,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -6903,7 +6903,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -7002,7 +7002,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -7094,7 +7094,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -7114,6 +7114,34 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "PONGWEKIKONENI",
+                "display": "PONGWEKIKONENI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "DZOMBO",
+                "display": "DZOMBO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MWERENI",
+                "display": "MWERENI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "VANGA",
+                "display": "VANGA",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -7158,7 +7186,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -7178,6 +7206,41 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "TSIMBA-GOLINI",
+                "display": "TSIMBA GOLINI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "WAA",
+                "display": "WAA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "TIWI",
+                "display": "TIWI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KUBO-SOUTH",
+                "display": "KUBO SOUTH",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MKONGANI",
+                "display": "MKONGANI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -7222,7 +7285,7 @@
           "item": [
             {
               "linkId": "sub-county",
-              "text": "Sub County *",
+              "text": "Ward *",
               "type": "display",
               "extension": [
                 {
@@ -7242,6 +7305,55 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "NADAVAYA",
+                "display": "NADAVAYA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "PUMA",
+                "display": "PUMA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KINANGO",
+                "display": "KINANGO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MACKINNON-ROAD",
+                "display": "MACKINNON ROAD",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "CHENGONI-SAMBURU",
+                "display": "CHENGONI SAMBURU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MWAVUMBO",
+                "display": "MWAVUMBO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KASEMENI",
+                "display": "KASEMENI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
