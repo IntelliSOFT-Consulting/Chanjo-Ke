@@ -2283,7 +2283,7 @@
             },
             {
               "valueCoding": {
-                "code": "NORTH HORR",
+                "code": "NORTH-HORR",
                 "display": "NORTH HORR",
                 "system": "https://locationlist.com/counties"
               }
@@ -10717,6 +10717,402 @@
               "valueCoding": {
                 "code": "ALUNGO GOF",
                 "display": "ALUNGO GOF",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "MOYALE",
+                "display": "MOYALE",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-marsabit",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-moyale",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "BUTIYE",
+                "display": "BUTIYE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SOLOLO",
+                "display": "SOLOLO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "HEILU-MANYATTA",
+                "display": "HEILU-MANYATTA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GOLBO",
+                "display": "GOLBO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MOYALE TOWNSHIP",
+                "display": "MOYALE TOWNSHIP",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "URAN",
+                "display": "URAN",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "OBBU",
+                "display": "OBBU",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "NORTH-HORR",
+                "display": "NORTH HORR",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-marsabit",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-north-horr",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "ILLERET",
+                "display": "ILLERET",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "NORTH HORR",
+                "display": "NORTH HORR",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "DUKANA",
+                "display": "DUKANA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MAIKONA",
+                "display": "MAIKONA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "TURBI",
+                "display": "TURBI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "SAKU",
+                "display": "SAKU",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-marsabit",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-saku",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "SAGANTE JALDESA",
+                "display": "SAGANTE JALDESA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KARARE",
+                "display": "KARARE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MARSABIT CENTRAL",
+                "display": "MARSABIT CENTRAL",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "LAISAMIS",
+                "display": "LAISAMIS",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-marsabit",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-laisamis",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "LOIYANGALANI",
+                "display": "LOIYANGALANI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KARGI SOUTH HORR",
+                "display": "KARGI SOUTH HORR",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KORR NGURUNIT",
+                "display": "KORR NGURUNIT",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "LOG LOGO",
+                "display": "LOG LOGO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "LAISAMIS",
+                "display": "LAISAMIS",
                 "system": "https://locationlist.com/areas"
               }
             }
