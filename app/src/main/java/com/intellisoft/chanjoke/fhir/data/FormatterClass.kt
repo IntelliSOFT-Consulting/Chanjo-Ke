@@ -343,5 +343,11 @@ class FormatterClass {
         )
     }
 
+    fun generateWardCounties(): List<String> {
+        return listOf(
+            "PR-address-ward-changamwe"
+        )
+    }
+
 
 }

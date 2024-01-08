@@ -104,8 +104,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val questionnaire = cc.newJsonParser().encodeResourceToString(questionnaireResponse)
             Timber.e("Data **** $questionnaire")
             patient.addressFirstRep.city = generatePatientAddress(questionnaire, "PR-address-city")
-            patient.addressFirstRep.district = generateSubCounty(questionnaire)
-//            patient.addressFirstRep.state = generatePatientAddress(questionnaire, "PR-address-ward")
+            patient.addressFirstRep.district = generateSubCounty(questionnaire, true)
+            patient.addressFirstRep.state = generateSubCounty(questionnaire, false)
             patient.id = patientId
 
             /**
@@ -144,14 +144,22 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         }
     }
 
-    private fun generateSubCounty(questionnaire: String?): String? {
+    private fun generateSubCounty(questionnaire: String?, isSubCounty: Boolean): String? {
         var city = ""
         if (questionnaire != null) {
             city = ""
             val jsonObject = JSONObject(questionnaire)
             // Retrieve County value dynamically using the linkId
+
             val county =
-                getValueFromJsonWithList(jsonObject, FormatterClass().generateSubCounties())
+                if (isSubCounty) getValueFromJsonWithList(
+                    jsonObject,
+                    FormatterClass().generateSubCounties()
+                ) else getValueFromJsonWithList(
+                    jsonObject,
+                    FormatterClass().generateWardCounties()
+                )
+
 
             println("County: $county")
             if (county != null) {

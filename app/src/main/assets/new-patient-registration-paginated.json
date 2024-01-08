@@ -6337,7 +6337,7 @@
               "valueExpression": {
                 "language": "text/fhirpath",
                 "expression": "Patient.address.state",
-                "name": "patientCity"
+                "name": "patientDistrict"
               }
             },
             {
@@ -6354,12 +6354,25 @@
               }
             }
           ],
-          "linkId": "PR-address-ward",
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "CHANGAMWE",
+                "display": "CHANGAMWE",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mombasa",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-changamwe",
           "type": "choice",
+          "required": true,
+          "text": "Ward *",
           "item": [
             {
-              "linkId": "ward",
-              "text": "Ward *",
+              "linkId": "sub-county",
+              "text": "Sub County *",
               "type": "display",
               "extension": [
                 {
@@ -6376,6 +6389,630 @@
                   }
                 }
               ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "PORT REITZ",
+                "display": "PORT REITZ",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KIPEVU",
+                "display": "KIPEVU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "AIRPORT",
+                "display": "AIRPORT",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "CHANGAMWE",
+                "display": "CHANGAMWE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "CHAANI",
+                "display": "CHAANI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "JOMVU",
+                "display": "JOMVU",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mombasa",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-jomvu",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "JOMVU KUU",
+                "display": "JOMVU KUU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MIRITINI",
+                "display": "MIRITINI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MIKINDANI",
+                "display": "MIKINDANI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "KISAUNI",
+                "display": "KISAUNI",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mombasa",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-kisauni",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "MJAMBERE",
+                "display": "MJAMBERE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "JUNDA",
+                "display": "JUNDA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BAMBURI",
+                "display": "BAMBURI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MWAKIRUNGE",
+                "display": "MWAKIRUNGE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MTOPANGA",
+                "display": "MTOPANGA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MAGOGONI",
+                "display": "MAGOGONI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SHANZU",
+                "display": "SHANZU",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "NYALI",
+                "display": "NYALI",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mombasa",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-nyali",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "FRERE-town",
+                "display": "FRERE TOWN",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "ZIWA-la-NG'OMBE",
+                "display": "ZIWA LA NG'OMBE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MKOMANI",
+                "display": "MKOMANI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KONGOWEA",
+                "display": "KONGOWEA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KADZANDANI",
+                "display": "KADZANDANI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "LIKONI",
+                "display": "LIKONI",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mombasa",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-likoni",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "MTONGWE",
+                "display": "MTONGWE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SHIKA-ADABU",
+                "display": "SHIKA ADABU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BOFU",
+                "display": "BOFU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "LIKONI",
+                "display": "LIKONI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "TIMBWANI",
+                "display": "TIMBWANI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "MVITA",
+                "display": "MVITA",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mombasa",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-mvita",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "MJI-WA-KALE-MAKADARA",
+                "display": "MJI WA KALE MAKADARA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "TUDOR",
+                "display": "TUDOR",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "TONONOKA",
+                "display": "TONONOKA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SHIMANZI-GANJONI",
+                "display": "SHIMANZI GANJONI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MAJENGO",
+                "display": "MAJENGO",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "MSAMBWENI",
+                "display": "MSABWENI",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-kwale",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-msambweni",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "GOMBATOBONGWE",
+                "display": "GOMBATOBONGWE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "UKUNDA",
+                "display": "UKUNDA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KINONDO",
+                "display": "KINONDO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "RAMISI",
+                "display": "RAMISI",
+                "system": "https://locationlist.com/areas"
+              }
             }
           ]
         },
