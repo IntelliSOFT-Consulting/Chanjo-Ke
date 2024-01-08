@@ -1958,7 +1958,7 @@
           "answerOption": [
             {
               "valueCoding": {
-                "code": "GARISSA TOWNSHIP",
+                "code": "GARISSA-TOWNSHIP",
                 "display": "GARISSA TOWNSHIP",
                 "system": "https://locationlist.com/counties"
               }
@@ -8967,15 +8967,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "GARISSA-TOWNSHIP",
+                "display": "GARISSA TOWNSHIP",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-garissa",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-garissa-township",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -9002,6 +9002,34 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "WABERI",
+                "display": "WABERI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GALBET",
+                "display": "GALBET",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "TOWNSHIP",
+                "display": "TOWNSHIP",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "IFTIN",
+                "display": "IFTIN",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -9031,15 +9059,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "BALAMBALA",
+                "display": "BALAMBALA",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-garissa",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-balambala",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -9066,6 +9094,41 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "BALAMBALA",
+                "display": "BALAMBALA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "DANYERE",
+                "display": "DANYERE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "JARA-JARA",
+                "display": "JARA JARA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SAKA",
+                "display": "SAKA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SANKURI",
+                "display": "SANKURI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -9095,15 +9158,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "LAGDERA",
+                "display": "LAGDERA",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-garissa",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-lagdera",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -9130,6 +9193,48 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "MODOGASHE",
+                "display": "MODOGASHE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BENANE",
+                "display": "BENANE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GOREALE",
+                "display": "GOREALE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MAALIMIN",
+                "display": "MAALIMIN",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SABENA",
+                "display": "SABENA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BARAKI",
+                "display": "BARAKI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -9159,15 +9264,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "DADAAB",
+                "display": "DADAAB",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-garissa",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-dadaab",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -9194,6 +9299,48 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "DERTU",
+                "display": "DERTU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "DADAAB",
+                "display": "DADAAB",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "LABASIGALE",
+                "display": "LABASIGALE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "DAMAJALE",
+                "display": "DAMAJALE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "LIBOI",
+                "display": "LIBOI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "ABAKAILE",
+                "display": "ABAKAILE",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -9223,15 +9370,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "FAFI",
+                "display": "FAFI",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-garissa",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-fafi",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -9258,6 +9405,41 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "BURA",
+                "display": "BURA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "DEKAHARIA",
+                "display": "DEKAHARIA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "JARAJILA",
+                "display": "JARAJILA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "FAFI",
+                "display": "FAFI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "NANIGHI",
+                "display": "NANIGHI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -9287,15 +9469,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "IJARA",
+                "display": "IJARA",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-garissa",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-ijara",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -9322,6 +9504,34 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "HULUGHO",
+                "display": "HULUGHO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SANGAILU",
+                "display": "SANGAILU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "IJARA",
+                "display": "IJARA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MASALANI",
+                "display": "MASALANI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
