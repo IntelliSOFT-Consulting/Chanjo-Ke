@@ -8571,15 +8571,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "TAVETA",
+                "display": "TAVETA",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-taita-taveta",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-taveta",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8606,6 +8606,41 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "CHALA",
+                "display": "CHALA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MAHOO",
+                "display": "MAHOO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BOMENI",
+                "display": "BOMENI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MBOGHONI",
+                "display": "MBOGHONI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MATA",
+                "display": "MATA",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -8635,15 +8670,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "WUNDANYI",
+                "display": "WUNDANYI",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-taita-taveta",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-wundanyi",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8670,6 +8705,34 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "WUNDANYI-MBALE",
+                "display": "WUNDANYI MBALE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "WERUGHA",
+                "display": "WERUGHA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "WUMINGU-KISHUSHE",
+                "display": "WUMINGU KISHUSHE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MWANDA-MGANGE",
+                "display": "MWANDA MGANGE",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -8699,15 +8762,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "MWATATE",
+                "display": "MWATATE",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-taita-taveta",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-mwatate",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8734,6 +8797,41 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "RONG'E",
+                "display": "RONG'E",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MWATATE",
+                "display": "MWATATE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BURA",
+                "display": "BURA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "CHAWIA",
+                "display": "CHAWIA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "WUSI-KISHAMBA",
+                "display": "WUSI KISHAMBA",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
@@ -8763,15 +8861,15 @@
           "enableWhen": [
             {
               "answerCoding": {
-                "code": "RABAI",
-                "display": "RABAI",
+                "code": "VOI",
+                "display": "VOI",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-kilifi",
+              "question": "PR-address-sub-county-taita-taveta",
               "operator": "="
             }
           ],
-          "linkId": "PR-address-ward-kilifi-rabai",
+          "linkId": "PR-address-ward-voi",
           "type": "choice",
           "required": true,
           "text": "Ward *",
@@ -8798,6 +8896,48 @@
             }
           ],
           "answerOption": [
+            {
+              "valueCoding": {
+                "code": "MBOLOLO",
+                "display": "MBOLOLO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SAGALLA",
+                "display": "SAGALLA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KALOLENI",
+                "display": "KALOLENI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MARUNGU",
+                "display": "MARUNGU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KASIGAU",
+                "display": "KASIGAU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "NOLIA",
+                "display": "NOLIA",
+                "system": "https://locationlist.com/areas"
+              }
+            }
           ]
         },
         {
