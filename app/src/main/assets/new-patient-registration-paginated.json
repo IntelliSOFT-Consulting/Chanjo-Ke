@@ -19069,7 +19069,7 @@
                 "display": "KAPENGURIA",
                 "system": "https://locationlist.com/counties"
               },
-              "question": "PR-address-sub-county-west pokot",
+              "question": "PR-address-sub-county-west-pokot",
               "operator": "="
             }
           ],
