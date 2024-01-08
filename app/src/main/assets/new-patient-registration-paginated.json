@@ -2170,7 +2170,7 @@
           "answerOption": [
             {
               "valueCoding": {
-                "code": "MANDERA WEST",
+                "code": "MANDERA-WEST",
                 "display": "MANDERA WEST",
                 "system": "https://locationlist.com/counties"
               }
@@ -2184,21 +2184,21 @@
             },
             {
               "valueCoding": {
-                "code": "MANDERA NORTH",
+                "code": "MANDERA-NORTH",
                 "display": "MANDERA NORTH",
                 "system": "https://locationlist.com/counties"
               }
             },
             {
               "valueCoding": {
-                "code": "MANDERA SOUTH",
+                "code": "MANDERA-SOUTH",
                 "display": "MANDERA SOUTH",
                 "system": "https://locationlist.com/counties"
               }
             },
             {
               "valueCoding": {
-                "code": "MANDERA EAST",
+                "code": "MANDERA-EAST",
                 "display": "MANDERA EAST",
                 "system": "https://locationlist.com/counties"
               }
@@ -10123,6 +10123,600 @@
               "valueCoding": {
                 "code": "DIIF",
                 "display": "DIIF",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "MANDERA-WEST",
+                "display": "MANDERA WEST",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mandera",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-mandera-west",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "TAKABA SOUTH",
+                "display": "TAKABA SOUTH",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "TAKABA",
+                "display": "TAKABA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "LAG SURE",
+                "display": "LAG SURE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "DANDU",
+                "display": "DANDU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GITHER",
+                "display": "GITHER",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "BANISSA",
+                "display": "BANISSA",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mandera",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-banissa",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "BANISSA",
+                "display": "BANISSA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "DERKHALE",
+                "display": "DERKHALE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GUBA",
+                "display": "GUBA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MALKAMARI",
+                "display": "MALKAMARI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KILIWEHIRI",
+                "display": "KILIWEHIRI",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "MANDERA-NORTH",
+                "display": "MANDERA NORTH",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mandera",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-mandera-north",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "ASHABITO",
+                "display": "ASHABITO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "GUTICHA",
+                "display": "GUTICHA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "MOROTHILE",
+                "display": "MOROTHILE",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "RHAMU",
+                "display": "RHAMU",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "RHAMU-DIMTU",
+                "display": "RHAMU-DIMTU",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "MANDERA-SOUTH",
+                "display": "MANDERA SOUTH",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mandera",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-mandera-south",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "WARGUDUD",
+                "display": "WARGUDUD",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KUTULO",
+                "display": "KUTULO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "ELWAK SOUTH",
+                "display": "ELWAK SOUTH",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "ELWAK NORTH",
+                "display": "ELWAK NORTH",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "SHIMBIR FATUMA",
+                "display": "SHIMBIR FATUMA",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "MANDERA-EAST",
+                "display": "MANDERA EAST",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mandera",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-mandera-east",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "ARABIA",
+                "display": "ARABIA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "BULLA MPYA",
+                "display": "BULLA MPYA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "KHALALIO",
+                "display": "KHALALIO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "NEBOI",
+                "display": "NEBOI",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "TOWNSHIP",
+                "display": "TOWNSHIP",
+                "system": "https://locationlist.com/areas"
+              }
+            }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "answerCoding": {
+                "code": "LAFEY",
+                "display": "LAFEY",
+                "system": "https://locationlist.com/counties"
+              },
+              "question": "PR-address-sub-county-mandera",
+              "operator": "="
+            }
+          ],
+          "linkId": "PR-address-ward-lafey",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "LIBEHIA",
+                "display": "LIBEHIA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "FINO",
+                "display": "FINO",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "LAFEY",
+                "display": "LAFEY",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "WARANKARA",
+                "display": "WARANKARA",
+                "system": "https://locationlist.com/areas"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "ALUNGO GOF",
+                "display": "ALUNGO GOF",
                 "system": "https://locationlist.com/areas"
               }
             }
