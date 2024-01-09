@@ -1,10 +1,6 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 
 // Interface segregation principle
 
@@ -490,7 +486,6 @@ class ImmunizationHandler() {
             val newVaccineList = routineVaccine.vaccineList.filter { basicVaccine ->
                 ageInWeeks >= basicVaccine.administrativeWeeksSinceDOB
             }
-
             if (newVaccineList.isNotEmpty()) {
                 val newRoutineVaccine = RoutineVaccine(
                     routineVaccine.diseaseCode,
@@ -501,8 +496,6 @@ class ImmunizationHandler() {
                 eligibleRoutineList.add(newRoutineVaccine)
             }
         }
-
-
 
         if (ageInWeeks > 2) {
             // Remove bOPV from the list
@@ -546,10 +539,27 @@ class ImmunizationHandler() {
             }
         }
 
+        val eligibleNewRoutineList = ArrayList<RoutineVaccine>()
+        eligibleRoutineList.forEach {routineVaccine->
+            val newVaccineList = routineVaccine.vaccineList
+            if (newVaccineList.isNotEmpty()){
+                val newRoutineVaccine = RoutineVaccine(
+                    routineVaccine.diseaseCode,
+                    routineVaccine.targetDisease,
+                    routineVaccine.seriesDoses,
+                    newVaccineList
+                )
+                eligibleNewRoutineList.add(newRoutineVaccine)
+            }
+        }
+
         //Non Routine Vaccines
 
         if (ageInWeeks < 939) {
             remainingNonRoutineList = remainingNonRoutineList.filterNot { it.diseaseCode.startsWith("IMCOV-") }
+        }else{
+
+
         }
 
         //Pregnancy Vaccines
@@ -561,8 +571,15 @@ class ImmunizationHandler() {
         }
 
 
-        return Triple(eligibleRoutineList, remainingNonRoutineList, remainingPregnancyList)
+        return Triple(eligibleNewRoutineList, remainingNonRoutineList, remainingPregnancyList)
 
+    }
+
+    private fun checkBasicVaccine(
+        basicVaccineList: List<BasicVaccine>,
+        administeredList: ArrayList<BasicVaccine>
+    ): Boolean {
+        return administeredList.containsAll(basicVaccineList)
     }
 
 
