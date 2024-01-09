@@ -102,10 +102,10 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val patient = entry.resource as Patient
             val cc = FhirContext.forR4()
             val questionnaire = cc.newJsonParser().encodeResourceToString(questionnaireResponse)
+            Timber.e("Data **** $questionnaire")
             patient.addressFirstRep.city = generatePatientAddress(questionnaire, "PR-address-city")
-            patient.addressFirstRep.district =
-                generatePatientAddress(questionnaire, "PR-address-sub-county")
-            patient.addressFirstRep.state = generatePatientAddress(questionnaire, "PR-address-ward")
+            patient.addressFirstRep.district = generateSubCounty(questionnaire, true)
+            patient.addressFirstRep.state = generateSubCounty(questionnaire, false)
             patient.id = patientId
 
             /**
@@ -144,6 +144,77 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         }
     }
 
+    private fun generateSubCounty(questionnaire: String?, isSubCounty: Boolean): String? {
+        var city = ""
+        if (questionnaire != null) {
+            city = ""
+            val jsonObject = JSONObject(questionnaire)
+            // Retrieve County value dynamically using the linkId
+
+            val county =
+                if (isSubCounty) getValueFromJsonWithList(
+                    jsonObject,
+                    FormatterClass().generateSubCounties()
+                ) else getValueFromJsonWithList(
+                    jsonObject,
+                    FormatterClass().generateWardCounties()
+                )
+
+
+            println("County: $county")
+            if (county != null) {
+                city = county
+            }
+        }
+
+        return city
+    }
+
+    private fun getValueFromJsonWithList(
+        json: JSONObject,
+        generateSubCounties: List<String>
+    ): String? {
+        val stack = mutableListOf<JSONObject>()
+        stack.add(json)
+
+        while (stack.isNotEmpty()) {
+            val currentObject = stack.removeAt(stack.size - 1)
+
+            // Check if the "linkId" matches any item in the generateSubCounties list
+            val linkId = currentObject.optString("linkId", null)
+            if (linkId != null && generateSubCounties.contains(linkId)) {
+                Timber.e("Patient Resource is Here  Answer $currentObject")
+
+                // Extract relevant information from the current object
+                val answerArray = currentObject.optJSONArray("answer")
+                if (answerArray != null && answerArray.length() > 0) {
+                    val answerObject = answerArray.getJSONObject(0)
+                    val valueReferenceObject = answerObject.optJSONObject("valueCoding")
+                    if (valueReferenceObject != null) {
+                        // Extract the "display" value from the "valueCoding" object
+                        val answer = valueReferenceObject.optString("display", null)
+
+                        Timber.e("Patient Resource is Here  Answer Actual $answer")
+                        return answer
+                    }
+                }
+            }
+
+            // If the current object doesn't match the condition, explore its "item" array
+            val items = currentObject.optJSONArray("item")
+            if (items != null) {
+                for (i in 0 until items.length()) {
+                    val item = items.getJSONObject(i)
+                    stack.add(item)
+                }
+            }
+        }
+
+        // Return null if the target value is not found
+        return null
+    }
+
+
     private fun generatePatientAddress(questionnaire: String?, linkId: String): String? {
         var city = ""
         if (questionnaire != null) {
@@ -174,7 +245,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 val answerArray = currentObject.optJSONArray("answer")
                 if (answerArray != null && answerArray.length() > 0) {
                     val answerObject = answerArray.getJSONObject(0)
-                    val valueReferenceObject = answerObject.optJSONObject("valueReference")
+                    val valueReferenceObject = answerObject.optJSONObject("valueCoding")
                     if (valueReferenceObject != null) {
                         val answer = valueReferenceObject.optString("display", null)
 
@@ -195,6 +266,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
         return null
     }
+
     private fun fetchQuestionnaireJson(): String {
         _questionnaireJson?.let {
             return it
