@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
@@ -41,13 +42,12 @@ class Login : AppCompatActivity() {
                     startActivity(intent)
                     this@Login.finish()
                 } else {
-                    etUsername.error = "Field cannot be empty1.."
-                    etPassword.error = "Field cannot be empty1.."
+                    Toast.makeText(this, "Incorrect Username or Password. Try again", Toast.LENGTH_SHORT).show()
                 }
 
             } else {
-                etUsername.error = "Field cannot be empty.."
-                etPassword.error = "Field cannot be empty.."
+                etUsername.error = "Please Enter Username"
+                etPassword.error = "Please Enter Password"
             }
 
 

@@ -529,14 +529,22 @@ class AdministerVaccineViewModel(
                 "11-1122",
                 patientId,
                 encounterId)
-            if (status.value.replace(" ","") == "Yes"){
+            val value = status.value.replace(" ","")
+            if (value == "Yes" || value == "No"){
                 /**
                  * User choose to administer vaccine, send immunisation status as Completed
                  * Generate immunization resource
                  * No need to create a Recommendation. It's only created for the next vaccine in the series
                  */
                 val date = Date()
-                val immunization = createImmunizationResource(encounterId,patientId, ImmunizationStatus.COMPLETED,date)
+
+                var immunizationStatus = ImmunizationStatus.COMPLETED
+                if (value == "No") immunizationStatus = ImmunizationStatus.NOTDONE
+
+                val immunization = createImmunizationResource(encounterId,
+                    patientId,
+                    immunizationStatus,date)
+
                 saveResourceToDatabase(immunization, "Imm")
 
                 //Generate the next immunization

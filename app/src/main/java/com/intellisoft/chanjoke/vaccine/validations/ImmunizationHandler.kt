@@ -1,6 +1,10 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 
 // Interface segregation principle
 
@@ -409,13 +413,46 @@ class ImmunizationHandler() {
 
     }
 
-
+    data class VaccineInfo(
+        val vaccineCode: String,
+        val vaccineName: String
+    )
 
     // Liskov substitution principle
     fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int):
             Triple<List<RoutineVaccine>, List<NonRoutineVaccine>, List<PregnancyVaccine>> {
 
         val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) = vaccines
+
+//        val allVaccines = mutableListOf<VaccineInfo>()
+//
+//        // Extract routine vaccines
+//        routineList.flatMap { it.vaccineList }.forEach {
+//            allVaccines.add(VaccineInfo(it.vaccineCode, it.vaccineName))
+//        }
+//
+//        // Extract non-routine vaccines
+//        nonRoutineVaccineList.flatMap { it.vaccineList.flatMap { it.vaccineList } }.forEach {
+//            allVaccines.add(VaccineInfo(it.vaccineCode, it.vaccineName))
+//        }
+//
+//        // Extract pregnancy vaccines
+//        pregnancyVaccineList.flatMap { it.vaccineList }.forEach {
+//            allVaccines.add(VaccineInfo(it.vaccineCode, it.vaccineName))
+//        }
+//
+//        // Convert to JSON
+//        // Create Gson instance
+//        val gson: Gson = Gson()
+//
+////        val gson: Gson = GsonBuilder().setPrettyPrinting().create()
+//
+//        // Convert to JSON
+//        val jsonString: String = gson.toJson(allVaccines)
+//
+//        Log.e(">>>>>","<<<<<")
+//        println("jsonString ${jsonString}")
+//        Log.e(">>>>>","<<<<<")
 
         /**
          * STEP 1: Get the eligible Vaccines
