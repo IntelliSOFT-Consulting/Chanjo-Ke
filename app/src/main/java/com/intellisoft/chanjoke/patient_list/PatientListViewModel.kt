@@ -86,14 +86,13 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
     }
 
     private suspend fun getSearchResults(nameQuery: String = ""): List<PatientItem> {
-        val patients: MutableList<PatientItem> = mutableListOf()
+        var patients: MutableList<PatientItem> = mutableListOf()
         fhirEngine
             .search<Patient> {
 
                 if (nameQuery.isNotEmpty()) {
                     filter(
-                        Patient.NAME,
-                        {
+                        Patient.NAME, {
                             modifier = StringFilterModifier.CONTAINS
                             value = nameQuery
                         },
@@ -107,7 +106,48 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
             .let { patients.addAll(it) }
 
+        /**
+         * TODO: Check on the best way to filter by the id or phone number
+         */
+        if (patients.isEmpty()){
+            patients = searchPatientsByPhoneOrIdentification(nameQuery)
+        }
+
         return patients
+    }
+
+    private suspend fun searchPatientsByPhoneOrIdentification(searchString: String): MutableList<PatientItem> {
+        val matchingPatients = mutableListOf<PatientItem>()
+        val patients: MutableList<PatientItem> = mutableListOf()
+
+        fhirEngine
+            .search<Patient> {
+                sort(Patient.BIRTHDATE, Order.DESCENDING)
+                count = 100
+                from = 0
+            }
+            .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
+            .let { patients.addAll(it) }
+
+
+        for (patient in patients) {
+            // Check if the phone matches or is close
+            if (patient.phone.contains(searchString) || isCloseMatch(patient.phone, searchString)) {
+                matchingPatients.add(patient)
+            }
+
+            // Check if the identification matches or is close
+            if (patient.identification.contains(searchString) || isCloseMatch(patient.identification, searchString)) {
+                matchingPatients.add(patient)
+            }
+        }
+        val newList = matchingPatients.distinctBy { it.id }
+
+        return newList.toMutableList()
+    }
+
+    fun isCloseMatch(original: String, search: String): Boolean {
+        return original.toLowerCase().contains(search.toLowerCase())
     }
 
     fun retrieveLocations() = runBlocking {

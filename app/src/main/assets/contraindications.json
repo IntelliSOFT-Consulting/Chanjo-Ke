@@ -237,8 +237,7 @@
                 {
                   "linkId": "event-date-time",
                   "type": "dateTime",
-                  "required": true,
-                  "text": "Next Vaccination dates *",
+                  "text": "Next Vaccination dates",
                   "definition": "https://hl7.org/fhir/R4/observation.html#Observation.valueDateTime"
                 },
                 {
@@ -414,7 +413,6 @@
                     }
                   ],
                   "type": "decimal",
-                  "required": true,
                   "linkId": "current-body-weight-decimal",
                   "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.value",
                   "extension": [
@@ -431,7 +429,6 @@
                 {
                   "linkId": "current-body-weight-quantity-code",
                   "type": "choice",
-                  "required": true,
                   "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueQuantity.code",
                   "extension": [
                     {

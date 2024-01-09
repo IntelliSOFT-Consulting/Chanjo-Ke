@@ -631,7 +631,7 @@ class ImmunizationHandler() {
         ageInWeeks: Int
     ): List<BasicVaccine> {
         val immunizationHandler = ImmunizationHandler()
-        val (remainingRoutineList, _, remainingPregnancyList) =
+        val (remainingRoutineList, _, _) =
             immunizationHandler.getAllVaccineList(ArrayList(administeredList), ageInWeeks)
 
         // Collect missed vaccines from routine list
@@ -642,10 +642,10 @@ class ImmunizationHandler() {
         }
 
         // Collect missed vaccines from pregnancy list
-        val missedPregnancyVaccines = remainingPregnancyList.flatMap { it.vaccineList }
+//        val missedPregnancyVaccines = remainingPregnancyList.flatMap { it.vaccineList }
 
         // Combine all missed routine and pregnancy vaccines
-        val allMissedVaccines = missedRoutineVaccines + missedPregnancyVaccines
+        val allMissedVaccines = missedRoutineVaccines
 
         // Sort missed vaccines based on administrativeWeeksSinceDOB
 

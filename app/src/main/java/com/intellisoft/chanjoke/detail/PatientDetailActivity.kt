@@ -83,8 +83,8 @@ class PatientDetailActivity : AppCompatActivity() {
         val appointment = AppointmentsFragment()
         appointment.arguments = bundle
 
-        adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(apn, getString(R.string.tab_text_2))
+        adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(appointment, getString(R.string.tab_text_4))
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
