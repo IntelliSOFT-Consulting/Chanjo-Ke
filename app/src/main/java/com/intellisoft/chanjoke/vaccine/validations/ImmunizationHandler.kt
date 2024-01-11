@@ -591,7 +591,6 @@ class ImmunizationHandler() {
             }
 
         }
-        //2. Add the other non routine vaccines
 
 
         //Pregnancy Vaccines

@@ -149,6 +149,15 @@ class PatientDetailActivity : AppCompatActivity() {
     private fun getPatientDetails() {
 
         CoroutineScope(Dispatchers.IO).launch {
+
+            formatterClass.saveSharedPref("isPaged","false", this@PatientDetailActivity)
+
+            val observationDateValue = patientDetailsViewModel.getObservationByCode(patientId, null, "861-122")
+            val isPaged = observationDateValue.value.replace(" ","")
+            if (isPaged != "" && isPaged == "Yes"){
+                formatterClass.saveSharedPref("isPaged","true", this@PatientDetailActivity)
+            }
+
             val patientDetail = patientDetailsViewModel.getPatientInfo()
             CoroutineScope(Dispatchers.Main).launch {
                 binding.apply {

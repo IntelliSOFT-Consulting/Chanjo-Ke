@@ -61,6 +61,8 @@ class PatientDetailsViewModel(
         viewModelScope.launch { livePatientData.value = getPatientDetailDataModel() }
     }
 
+
+
     fun getPatientInfo() = runBlocking {
         getPatientDetailDataModel()
     }
@@ -461,7 +463,7 @@ class PatientDetailsViewModel(
 
     fun getObservationByCode(
         patientId: String,
-        encounterId: String,
+        encounterId: String?,
         code: String
     ) = runBlocking {
         getObservationDataByCode(patientId, encounterId, code)
@@ -470,7 +472,7 @@ class PatientDetailsViewModel(
 
     private suspend fun getObservationDataByCode(
         patientId: String,
-        encounterId: String,
+        encounterId: String?,
         codeValue: String
     ): ObservationDateValue {
         var date = ""
@@ -478,7 +480,7 @@ class PatientDetailsViewModel(
         fhirEngine
             .search<Observation> {
                 filter(Observation.SUBJECT, { value = "Patient/$patientId" })
-                filter(Observation.ENCOUNTER, { value = "Encounter/$encounterId" })
+                if (encounterId != null) filter(Observation.ENCOUNTER, { value = "Encounter/$encounterId" })
                 filter(
                     Observation.CODE,
                     {
