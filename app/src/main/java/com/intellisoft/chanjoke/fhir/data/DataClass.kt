@@ -7,7 +7,8 @@ data class DbVaccineData(
     val logicalId: String,
     val vaccineName: String,
     val doseNumber: String,
-    val dateAdministered: String
+    val dateAdministered: String,
+    val status: String,
 )
 
 data class AdverseEventData(

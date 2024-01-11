@@ -365,7 +365,11 @@ class PatientDetailsViewModel(
             .map { createVaccineItem(it) }
             .let { vaccineList.addAll(it) }
 
-        return vaccineList
+        val newVaccineList = vaccineList.filterNot {
+            it.status.startsWith("not-done")
+        }
+
+        return ArrayList(newVaccineList)
     }
 
     private fun createVaccineItem(immunization: Immunization): DbVaccineData {
@@ -374,6 +378,7 @@ class PatientDetailsViewModel(
         var doseNumberValue = ""
         val logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
         var dateScheduled = ""
+        var status = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
 
@@ -392,12 +397,16 @@ class PatientDetailsViewModel(
             if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue =
                 immunization.protocolApplied[0].seriesDoses.asStringValue()
         }
+        if (immunization.hasStatus()){
+            status = immunization.status.name
+        }
 
         return DbVaccineData(
             ref,
             vaccineName,
             doseNumberValue,
-            dateScheduled
+            dateScheduled,
+            status
         )
     }
 
