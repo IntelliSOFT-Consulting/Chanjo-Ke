@@ -42,11 +42,11 @@ class BlurBackgroundDialog(
         window?.setBackgroundDrawableResource(R.color.colorPrimary)
         var valueText = when (FormatterClass().getSharedPref("vaccinationFlow", context)) {
             "addAefi" -> {
-                "AEFI Saved successfully!"
+                "The AEFI details have been recorded successfully."
             }
 
             "createVaccineDetails" -> {
-                "Vaccine details captured successfully!"
+                "The vaccine details have been recorded successfully."
             }
 
             "updateVaccineDetails" -> {
@@ -58,7 +58,7 @@ class BlurBackgroundDialog(
             }
         }
         if (FormatterClass().getSharedPref("isRegistration", context) == "true") {
-            valueText = "Client added successfully!"
+            valueText = "The client has been registered successfully"
         }
 
         findViewById<TextView>(R.id.info_textview).apply {
