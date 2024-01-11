@@ -176,6 +176,24 @@ class PatientDetailActivity : AppCompatActivity() {
 
             val vaccineList = patientDetailsViewModel.getVaccineList()
             generateMissedVaccines(vaccineList)
+
+            //Clear the vaccines
+            val vaccinationListToClear = listOf(
+                "vaccinationBrand",
+                "vaccinationDoseNumber",
+                "vaccinationDoseNumber",
+                "questionnaireJson" ,
+                "vaccinationSite" ,
+                "vaccinationTargetDisease" ,
+                "vaccinationExpirationDate" ,
+                "vaccinationDoseQuantity" ,
+                "vaccinationFlow" ,
+                "vaccinationSeriesDoses" ,
+                "vaccinationManufacturer" ,
+                "administeredProduct")
+            vaccinationListToClear.forEach {
+                formatterClass.deleteSharedPref(it, this@PatientDetailActivity)
+            }
         }
     }
     private fun generateMissedVaccines(vaccineList: ArrayList<DbVaccineData>) {
