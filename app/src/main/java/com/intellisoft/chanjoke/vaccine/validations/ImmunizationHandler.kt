@@ -1,6 +1,8 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.content.Context
 import android.util.Log
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 // Interface segregation principle
 
@@ -237,7 +239,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         2,
         listOf(
             BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, arrayListOf(), "0.5ml","1"),
-            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 842, arrayListOf(26.07), "0.5ml","1")
+            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 842, arrayListOf(26.07), "0.5ml","2")
        )
     )
 
@@ -409,13 +411,46 @@ class ImmunizationHandler() {
 
     }
 
-
+    data class VaccineInfo(
+        val vaccineCode: String,
+        val vaccineName: String
+    )
 
     // Liskov substitution principle
-    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int):
+    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int, context: Context?):
             Triple<List<RoutineVaccine>, List<NonRoutineVaccine>, List<PregnancyVaccine>> {
 
         val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) = vaccines
+
+//        val allVaccines = mutableListOf<VaccineInfo>()
+//
+//        // Extract routine vaccines
+//        routineList.flatMap { it.vaccineList }.forEach {
+//            allVaccines.add(VaccineInfo(it.vaccineCode, it.vaccineName))
+//        }
+//
+//        // Extract non-routine vaccines
+//        nonRoutineVaccineList.flatMap { it.vaccineList.flatMap { it.vaccineList } }.forEach {
+//            allVaccines.add(VaccineInfo(it.vaccineCode, it.vaccineName))
+//        }
+//
+//        // Extract pregnancy vaccines
+//        pregnancyVaccineList.flatMap { it.vaccineList }.forEach {
+//            allVaccines.add(VaccineInfo(it.vaccineCode, it.vaccineName))
+//        }
+//
+//        // Convert to JSON
+//        // Create Gson instance
+//        val gson: Gson = Gson()
+//
+////        val gson: Gson = GsonBuilder().setPrettyPrinting().create()
+//
+//        // Convert to JSON
+//        val jsonString: String = gson.toJson(allVaccines)
+//
+//        Log.e(">>>>>","<<<<<")
+//        println("jsonString ${jsonString}")
+//        Log.e(">>>>>","<<<<<")
 
         /**
          * STEP 1: Get the eligible Vaccines
@@ -453,7 +488,6 @@ class ImmunizationHandler() {
             val newVaccineList = routineVaccine.vaccineList.filter { basicVaccine ->
                 ageInWeeks >= basicVaccine.administrativeWeeksSinceDOB
             }
-
             if (newVaccineList.isNotEmpty()) {
                 val newRoutineVaccine = RoutineVaccine(
                     routineVaccine.diseaseCode,
@@ -464,8 +498,6 @@ class ImmunizationHandler() {
                 eligibleRoutineList.add(newRoutineVaccine)
             }
         }
-
-
 
         if (ageInWeeks > 2) {
             // Remove bOPV from the list
@@ -496,45 +528,96 @@ class ImmunizationHandler() {
             }
         }
 
-
-
-        if (ageInWeeks > 250){
+        //Remove the vaccines eligible for age 5 years and below
+        if (ageInWeeks > 257){
            eligibleRoutineList.forEach { routineVaccine ->
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
                             it.vaccineCode.startsWith("IMPO-") ||
+                            it.vaccineCode.startsWith("IMBCG-") ||
                             it.vaccineCode.startsWith("IMDPT-") ||
                             it.vaccineCode.startsWith("IMPCV10-") ||
-                            it.vaccineCode.startsWith("IMROTA-")
-                }
+                            it.vaccineCode.startsWith("IMROTA-")||
+                            it.vaccineCode.startsWith("IMVIT-") ||
+                            it.vaccineCode.startsWith("IMMALA-") ||
+                            it.vaccineCode.startsWith("IMMEAS-") }
+            }
+        }
+
+
+        val eligibleNewRoutineList = ArrayList<RoutineVaccine>()
+        eligibleRoutineList.forEach {routineVaccine->
+            val newVaccineList = routineVaccine.vaccineList
+            if (newVaccineList.isNotEmpty()){
+                val newRoutineVaccine = RoutineVaccine(
+                    routineVaccine.diseaseCode,
+                    routineVaccine.targetDisease,
+                    routineVaccine.seriesDoses,
+                    newVaccineList
+                )
+                eligibleNewRoutineList.add(newRoutineVaccine)
             }
         }
 
         //Non Routine Vaccines
 
-        if (ageInWeeks < 939) {
-            remainingNonRoutineList.forEach { nonRoutine ->
-                nonRoutine.vaccineList.forEach { routineVaccine ->
-                    routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
-                        it.vaccineCode.startsWith("IMCOV-")
+        val newRemainingNonRoutineVaccineList = ArrayList<NonRoutineVaccine>()
+        //1. Display the only covid vaccine that can be given above 12 years i.e. Pfizer/BioNTech
+        if (ageInWeeks in 626..937){
+            //This only works for Covid vaccines
+
+            remainingNonRoutineList.forEach { nonRoutineVaccine ->
+
+                val newRoutineList = ArrayList<RoutineVaccine>()
+                val vaccineList = nonRoutineVaccine.vaccineList
+
+                vaccineList.forEach { routineVaccine ->
+                    val diseaseCode = routineVaccine.diseaseCode
+                    if (diseaseCode.startsWith("IMCOV-PFIZER-") ||
+                        diseaseCode.startsWith("IMRABIES-") ||
+                        diseaseCode.startsWith("IMYF-")){
+                        newRoutineList.add(routineVaccine)
                     }
                 }
+
+                if (newRoutineList.isNotEmpty()){
+                    val newRoutineVaccine = NonRoutineVaccine(
+                        nonRoutineVaccine.diseaseCode,
+                        nonRoutineVaccine.targetDisease,
+                        newRoutineList
+                    )
+                    newRemainingNonRoutineVaccineList.add(newRoutineVaccine)
+                }
+
             }
 
-
-            remainingNonRoutineList = remainingNonRoutineList.filter { nonRoutineVaccine -> nonRoutineVaccine.vaccineList.isNotEmpty() }
         }
+
 
         //Pregnancy Vaccines
         /**
-         * Remove Pregnancy vaccines from people under 10 years
+         * Remove Pregnancy vaccines from people under 10 years and if their status is not pregnant
          */
-        if (ageInWeeks < 522){
-            remainingPregnancyList = mutableListOf()
+        if (context != null){
+            val isPaged = FormatterClass().getSharedPref("isPaged", context )
+            remainingPregnancyList = if (isPaged != null && isPaged == "true" && ageInWeeks > 522){
+                remainingPregnancyList
+            }else{
+                mutableListOf()
+            }
+
         }
 
 
-        return Triple(eligibleRoutineList, remainingNonRoutineList, remainingPregnancyList)
 
+        return Triple(eligibleNewRoutineList, newRemainingNonRoutineVaccineList, remainingPregnancyList)
+
+    }
+
+    private fun checkBasicVaccine(
+        basicVaccineList: List<BasicVaccine>,
+        administeredList: ArrayList<BasicVaccine>
+    ): Boolean {
+        return administeredList.containsAll(basicVaccineList)
     }
 
 
@@ -603,8 +686,8 @@ class ImmunizationHandler() {
         ageInWeeks: Int
     ): List<BasicVaccine> {
         val immunizationHandler = ImmunizationHandler()
-        val (remainingRoutineList, _, remainingPregnancyList) =
-            immunizationHandler.getAllVaccineList(ArrayList(administeredList), ageInWeeks)
+        val (remainingRoutineList, _, _) =
+            immunizationHandler.getAllVaccineList(ArrayList(administeredList), ageInWeeks, null)
 
         // Collect missed vaccines from routine list
         val missedRoutineVaccines = remainingRoutineList.flatMap { routineVaccine ->
@@ -614,10 +697,10 @@ class ImmunizationHandler() {
         }
 
         // Collect missed vaccines from pregnancy list
-        val missedPregnancyVaccines = remainingPregnancyList.flatMap { it.vaccineList }
+//        val missedPregnancyVaccines = remainingPregnancyList.flatMap { it.vaccineList }
 
         // Combine all missed routine and pregnancy vaccines
-        val allMissedVaccines = missedRoutineVaccines + missedPregnancyVaccines
+        val allMissedVaccines = missedRoutineVaccines
 
         // Sort missed vaccines based on administrativeWeeksSinceDOB
 

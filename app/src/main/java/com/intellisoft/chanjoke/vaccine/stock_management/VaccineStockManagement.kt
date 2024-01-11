@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.DbVaccineStockDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,6 +29,7 @@ class VaccineStockManagement : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var patientId = ""
     private var formatterClass = FormatterClass()
+    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +53,9 @@ class VaccineStockManagement : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
 
         findViewById<MaterialButton>(R.id.btnNext).setOnClickListener {
+
+            createImmunizationRecommendation()
+
             val intent = Intent(this, PatientDetailActivity::class.java)
             intent.putExtra("patientId", patientId)
             startActivity(intent)
@@ -62,6 +68,12 @@ class VaccineStockManagement : AppCompatActivity() {
         }
 
         getStockManagement()
+
+    }
+
+    private fun createImmunizationRecommendation() {
+
+        administerVaccineViewModel.createImmunizationRecommendation(this)
 
     }
 

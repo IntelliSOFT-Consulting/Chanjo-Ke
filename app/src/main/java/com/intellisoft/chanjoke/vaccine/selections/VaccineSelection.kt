@@ -81,7 +81,11 @@ class VaccineSelection : AppCompatActivity() {
                 }
 
                 val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
-                    immunizationHandler.getAllVaccineList(administeredList, ageInWeeks)
+                    immunizationHandler.getAllVaccineList(administeredList, ageInWeeks, this)
+
+                if(routineList.isEmpty()) binding.linearRoutine.visibility = View.GONE
+                if(nonRoutineVaccineList.isEmpty()) binding.linearNonRoutine.visibility = View.GONE
+                if(pregnancyVaccineList.isEmpty()) binding.linearPregnancy.visibility = View.GONE
 
                 //Routine Vaccine
                 val routineGroupList = mutableListOf<String>()

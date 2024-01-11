@@ -76,6 +76,8 @@ class PatientListFragment : Fragment() {
 
         }
 
+        clearSharedPref()
+
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
 //            title = resources.getString(R.string.title_patient_list)
@@ -222,6 +224,11 @@ class PatientListFragment : Fragment() {
 //            Timber.e("Location:::::: -> ${it.name}")
 //        }
 
+    }
+
+    private fun clearSharedPref() {
+        //Clear the vaccines
+        formatterClass.clearVaccineShared(requireContext())
     }
 
     override fun onDestroyView() {

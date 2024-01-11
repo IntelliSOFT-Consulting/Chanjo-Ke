@@ -83,8 +83,8 @@ class PatientDetailActivity : AppCompatActivity() {
         val appointment = AppointmentsFragment()
         appointment.arguments = bundle
 
-        adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(apn, getString(R.string.tab_text_2))
+        adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(appointment, getString(R.string.tab_text_4))
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -149,6 +149,18 @@ class PatientDetailActivity : AppCompatActivity() {
     private fun getPatientDetails() {
 
         CoroutineScope(Dispatchers.IO).launch {
+
+            formatterClass.clearVaccineShared(this@PatientDetailActivity)
+
+
+            formatterClass.saveSharedPref("isPaged","false", this@PatientDetailActivity)
+
+            val observationDateValue = patientDetailsViewModel.getObservationByCode(patientId, null, "861-122")
+            val isPaged = observationDateValue.value.replace(" ","")
+            if (isPaged != "" && isPaged == "Yes"){
+                formatterClass.saveSharedPref("isPaged","true", this@PatientDetailActivity)
+            }
+
             val patientDetail = patientDetailsViewModel.getPatientInfo()
             CoroutineScope(Dispatchers.Main).launch {
                 binding.apply {
@@ -158,7 +170,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
                     val dob = formatterClass.convertDateFormat(patientDetail.dob)
                     val age = formatterClass.getFormattedAge(patientDetail.dob,tvAge.context.resources)
-                    val dobAge = "$dob ($age)"
+                    val dobAge = "$dob ($age old)"
 
                     tvDob.text = dobAge
 
@@ -167,6 +179,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
             val vaccineList = patientDetailsViewModel.getVaccineList()
             generateMissedVaccines(vaccineList)
+
         }
     }
     private fun generateMissedVaccines(vaccineList: ArrayList<DbVaccineData>) {

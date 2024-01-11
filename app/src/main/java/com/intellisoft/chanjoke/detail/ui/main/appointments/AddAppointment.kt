@@ -106,6 +106,9 @@ class AddAppointment : AppCompatActivity() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
+        val maxCalendar = Calendar.getInstance()
+//        maxCalendar.add(Calendar.DAY_OF_MONTH, -7)
+
         val datePickerDialog = DatePickerDialog(
             this,
             { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
@@ -117,6 +120,7 @@ class AddAppointment : AppCompatActivity() {
             month,
             day
         )
+        datePickerDialog.datePicker.minDate = System.currentTimeMillis() // Set the limit for the last date
 
         // Show the DatePickerDialog
         datePickerDialog.show()

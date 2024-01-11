@@ -61,6 +61,8 @@ class PatientDetailsViewModel(
         viewModelScope.launch { livePatientData.value = getPatientDetailDataModel() }
     }
 
+
+
     fun getPatientInfo() = runBlocking {
         getPatientDetailDataModel()
     }
@@ -98,7 +100,11 @@ class PatientDetailsViewModel(
 
             if (it.hasContact()) {
                 if (it.contactFirstRep.hasName()) contact_name =
-                    if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
+                    if (it.hasContact()) {
+                        if (it.contactFirstRep.hasName()){
+                            it.contactFirstRep.name.nameAsSingleString
+                        }else ""
+                    } else ""
                 if (it.contactFirstRep.hasTelecom()) contact_phone =
                     if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
                 if (it.contactFirstRep.hasGenderElement()) contact_gender =
@@ -359,7 +365,11 @@ class PatientDetailsViewModel(
             .map { createVaccineItem(it) }
             .let { vaccineList.addAll(it) }
 
-        return vaccineList
+        val newVaccineList = vaccineList.filterNot {
+            it.status == "NOTDONE"
+        }
+
+        return ArrayList(newVaccineList)
     }
 
     private fun createVaccineItem(immunization: Immunization): DbVaccineData {
@@ -368,6 +378,7 @@ class PatientDetailsViewModel(
         var doseNumberValue = ""
         val logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
         var dateScheduled = ""
+        var status = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
 
@@ -386,12 +397,16 @@ class PatientDetailsViewModel(
             if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue =
                 immunization.protocolApplied[0].seriesDoses.asStringValue()
         }
+        if (immunization.hasStatus()){
+            status = immunization.statusElement.value.name
+        }
 
         return DbVaccineData(
             ref,
             vaccineName,
             doseNumberValue,
-            dateScheduled
+            dateScheduled,
+            status
         )
     }
 
@@ -461,7 +476,7 @@ class PatientDetailsViewModel(
 
     fun getObservationByCode(
         patientId: String,
-        encounterId: String,
+        encounterId: String?,
         code: String
     ) = runBlocking {
         getObservationDataByCode(patientId, encounterId, code)
@@ -470,7 +485,7 @@ class PatientDetailsViewModel(
 
     private suspend fun getObservationDataByCode(
         patientId: String,
-        encounterId: String,
+        encounterId: String?,
         codeValue: String
     ): ObservationDateValue {
         var date = ""
@@ -478,7 +493,7 @@ class PatientDetailsViewModel(
         fhirEngine
             .search<Observation> {
                 filter(Observation.SUBJECT, { value = "Patient/$patientId" })
-                filter(Observation.ENCOUNTER, { value = "Encounter/$encounterId" })
+                if (encounterId != null) filter(Observation.ENCOUNTER, { value = "Encounter/$encounterId" })
                 filter(
                     Observation.CODE,
                     {

@@ -17,6 +17,7 @@
 package com.intellisoft.chanjoke.vaccine
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Paint.FontMetrics
 import android.util.Log
@@ -206,6 +207,8 @@ class AdministerVaccineViewModel(
         immunization.patient = patientReference
         immunization.id = immunizationId
 
+        FormatterClass().saveSharedPref("immunizationId",immunizationId,getApplication<Application>().applicationContext)
+
         immunization.status = immunisationStatus
 
         //Date administered
@@ -317,7 +320,14 @@ class AdministerVaccineViewModel(
 
     }
 
-    private suspend fun createNextImmunization(immunization: Immunization) {
+    fun createImmunizationRecommendation(context: Context){
+        CoroutineScope(Dispatchers.IO).launch {
+            val immunizationId = FormatterClass().getSharedPref("immunizationId", context)
+            createNextImmunization(immunizationId)
+        }
+    }
+
+    private suspend fun createNextImmunization(immunizationId: String?) {
 
         val formatterClass = FormatterClass()
         val date = Date()
@@ -361,26 +371,26 @@ class AdministerVaccineViewModel(
             //Generate the next immunisation recommendation
             if (nextBasicVaccine != null){
                 val administrativeWeeksSincePreviousList = nextBasicVaccine.administrativeWeeksSincePrevious
-
+                val administrativeWeeksSinceDob = nextBasicVaccine.administrativeWeeksSinceDOB
                 //Check if the above list is more than one.
-                if (administrativeWeeksSincePreviousList.isNotEmpty()){
+                val nextImmunizationDate = if (administrativeWeeksSincePreviousList.isNotEmpty()){
                     //This is not the first vaccine, check on administrative weeks after birth
                     val weeksToAdd = administrativeWeeksSincePreviousList[0]
-
-                    /**
-                     * Check for the ones that have multiple dates
-                     */
-                    val nextImmunizationDate = formatterClass.getNextDate(date, weeksToAdd)
-
-                    val recommendation = createImmunizationRecommendationResource(
-                        patientId,
-                        nextImmunizationDate,
-                        "Due",
-                        "Next Immunization date",
-                        immunization.id)
-                    saveResourceToDatabase(recommendation, "ImmRec")
-
+                    formatterClass.getNextDate(date, weeksToAdd)
+                }else{
+                    formatterClass.getNextDate(date, administrativeWeeksSinceDob.toDouble())
                 }
+
+                /**
+                 * Check for the ones that have multiple dates
+                 */
+                val recommendation = createImmunizationRecommendationResource(
+                    patientId,
+                    nextImmunizationDate,
+                    "Due",
+                    "Next Immunization date",
+                    immunizationId)
+                saveResourceToDatabase(recommendation, "ImmRec")
 
             }
 
@@ -407,6 +417,8 @@ class AdministerVaccineViewModel(
         immunizationRecommendation.patient = patientReference
         immunizationRecommendation.id = id
         immunizationRecommendation.date = Date()
+
+        Log.e("----->","------5")
 
         //Recommendation
         val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
@@ -507,7 +519,7 @@ class AdministerVaccineViewModel(
 
         recommendationList.add(immunizationRequest)
         immunizationRecommendation.recommendation = recommendationList
-
+        Log.e("----->","------6")
         return immunizationRecommendation
     }
 
@@ -517,6 +529,7 @@ class AdministerVaccineViewModel(
         patientId: String){
 
         val fomatterClass = FormatterClass()
+        val immunizationHandler = ImmunizationHandler()
 
         //Check if request is for creating immunisation
         val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow",
@@ -524,69 +537,97 @@ class AdministerVaccineViewModel(
         if (vaccinationFlow == "createVaccineDetails"){
             //Request is to create immunisation record
 
-            //Check answer to If user wants to administer vaccine
-            val status = observationFromCode(
-                "11-1122",
-                patientId,
-                encounterId)
-            if (status.value.replace(" ","") == "Yes"){
-                /**
-                 * User choose to administer vaccine, send immunisation status as Completed
-                 * Generate immunization resource
-                 * No need to create a Recommendation. It's only created for the next vaccine in the series
-                 */
-                val date = Date()
-                val immunization = createImmunizationResource(encounterId,patientId, ImmunizationStatus.COMPLETED,date)
-                saveResourceToDatabase(immunization, "Imm")
+            //Get the vaccines informations
+            val vaccinationTargetDisease = fomatterClass.getSharedPref("vaccinationTargetDisease",
+                getApplication<Application>().applicationContext)
+            val administeredProduct = fomatterClass.getSharedPref("administeredProduct",
+                getApplication<Application>().applicationContext)
 
-                //Generate the next immunization
-                createNextImmunization(immunization)
+            if (administeredProduct != null && vaccinationTargetDisease != null){
 
-                //Navigate to Stock Management
-                FormatterClass().saveSharedPref(
-                    "isVaccineAdministered",
-                    "stockManagement",
-                    getApplication<Application>().applicationContext)
+                val job = Job()
+                CoroutineScope(Dispatchers.IO + job).launch {
+                    //Save resources to Shared preference
+                    FormatterClass().saveStockValue(administeredProduct, vaccinationTargetDisease, getApplication<Application>().applicationContext)
+                }.join()
 
-            }else{
-                /**
-                 * User did not select Yes administer vaccine
-                 * This could be contraindications
-                 * No need to create an immunization
-                 * Generate Recommendation
-                 */
-
-                //If it was a contraindication
-
-                //Get Next Date
-                val dateTime = observationFromCode(
-                    "833-23",
+                //Check answer to If user wants to administer vaccine
+                val status = observationFromCode(
+                    "11-1122",
                     patientId,
                     encounterId)
-                val nextDateStr = dateTime.dateTime
+                val value = status.value.replace(" ","")
+                if (value == "Yes" || value == "No"){
+                    /**
+                     * User choose to administer vaccine, send immunisation status as Completed
+                     * Generate immunization resource
+                     * No need to create a Recommendation. It's only created for the next vaccine in the series
+                     */
+                    val date = Date()
 
-                if (nextDateStr != null){
-                    val nextDate = FormatterClass().convertStringToDate(nextDateStr, "yyyy-MM-dd'T'HH:mm:ssXXX")
+                    var immunizationStatus = ImmunizationStatus.COMPLETED
+                    if (value == "No") immunizationStatus = ImmunizationStatus.NOTDONE
 
-                    //Contraindication reasons
-                    val statusReason = observationFromCode(
-                        "321-12",
+                    val immunization = createImmunizationResource(encounterId,
+                        patientId,
+                        immunizationStatus,date)
+
+                    saveResourceToDatabase(immunization, "Imm")
+
+//                    //Generate the next immunization
+//                    createNextImmunization(immunization)
+
+                    if (value == "Yes"){
+                        //Navigate to Stock Management
+                        FormatterClass().saveSharedPref(
+                            "isVaccineAdministered",
+                            "stockManagement",
+                            getApplication<Application>().applicationContext)
+                    }
+
+
+
+                }else{
+                    /**
+                     * User did not select Yes administer vaccine
+                     * This could be contraindications
+                     * No need to create an immunization
+                     * Generate Recommendation
+                     */
+
+                    //If it was a contraindication
+
+                    //Get Next Date
+                    val dateTime = observationFromCode(
+                        "833-23",
                         patientId,
                         encounterId)
-                    val statusReasonStr = statusReason.value
+                    val nextDateStr = dateTime.dateTime
 
-                    val recommendation = createImmunizationRecommendationResource(patientId,
-                        nextDate,
-                        "Contraindicated",
-                        statusReasonStr,
-                        null)
+                    if (nextDateStr != null){
+                        val nextDate = FormatterClass().convertStringToDate(nextDateStr, "yyyy-MM-dd'T'HH:mm:ssXXX")
 
-                    saveResourceToDatabase(recommendation, "ImmRec")
+                        //Contraindication reasons
+                        val statusReason = observationFromCode(
+                            "321-12",
+                            patientId,
+                            encounterId)
+                        val statusReasonStr = statusReason.value
+
+                        val recommendation = createImmunizationRecommendationResource(patientId,
+                            nextDate,
+                            "Contraindicated",
+                            statusReasonStr,
+                            null)
+
+                        saveResourceToDatabase(recommendation, "ImmRec")
+                    }
+
+
+
                 }
-
-
-
             }
+
 
 
         }else if (vaccinationFlow == "updateVaccineDetails"){

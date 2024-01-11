@@ -191,6 +191,7 @@ class VaccinesFragment : Fragment() {
             startActivity(intent)
             customDialog.dismiss() // Close the dialog
         }
+
         clientDetails.setOnClickListener {
             formatterClass.saveSharedPref(
                 "questionnaireJson",

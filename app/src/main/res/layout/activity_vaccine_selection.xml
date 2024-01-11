@@ -30,6 +30,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/linearRoutine"
             android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -61,6 +62,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearNonRoutine"
             android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -92,6 +94,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearPregnancy"
             android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
