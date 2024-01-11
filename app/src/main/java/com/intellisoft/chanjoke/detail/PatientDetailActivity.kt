@@ -150,6 +150,9 @@ class PatientDetailActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
+            formatterClass.clearVaccineShared(this@PatientDetailActivity)
+
+
             formatterClass.saveSharedPref("isPaged","false", this@PatientDetailActivity)
 
             val observationDateValue = patientDetailsViewModel.getObservationByCode(patientId, null, "861-122")
@@ -177,23 +180,6 @@ class PatientDetailActivity : AppCompatActivity() {
             val vaccineList = patientDetailsViewModel.getVaccineList()
             generateMissedVaccines(vaccineList)
 
-            //Clear the vaccines
-            val vaccinationListToClear = listOf(
-                "vaccinationBrand",
-                "vaccinationDoseNumber",
-                "vaccinationDoseNumber",
-                "questionnaireJson" ,
-                "vaccinationSite" ,
-                "vaccinationTargetDisease" ,
-                "vaccinationExpirationDate" ,
-                "vaccinationDoseQuantity" ,
-                "vaccinationFlow" ,
-                "vaccinationSeriesDoses" ,
-                "vaccinationManufacturer" ,
-                "administeredProduct")
-            vaccinationListToClear.forEach {
-                formatterClass.deleteSharedPref(it, this@PatientDetailActivity)
-            }
         }
     }
     private fun generateMissedVaccines(vaccineList: ArrayList<DbVaccineData>) {

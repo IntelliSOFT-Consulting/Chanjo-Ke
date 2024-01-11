@@ -115,6 +115,28 @@ class FormatterClass {
         return calculatedDate.toString()
     }
 
+    fun clearVaccineShared(context: Context){
+
+        //Clear the vaccines
+        val vaccinationListToClear = listOf(
+            "vaccinationBrand",
+            "vaccinationDoseNumber",
+            "vaccinationBatchNumber",
+            "questionnaireJson" ,
+            "vaccinationSite" ,
+            "vaccinationTargetDisease" ,
+            "vaccinationExpirationDate" ,
+            "vaccinationDoseQuantity" ,
+            "vaccinationFlow" ,
+            "vaccinationSeriesDoses" ,
+            "vaccinationManufacturer" ,
+            "administeredProduct")
+        vaccinationListToClear.forEach {
+            deleteSharedPref(it, context)
+        }
+    }
+
+
 
     fun saveStockValue(
         administeredProduct: String,

@@ -366,7 +366,7 @@ class PatientDetailsViewModel(
             .let { vaccineList.addAll(it) }
 
         val newVaccineList = vaccineList.filterNot {
-            it.status.startsWith("not-done")
+            it.status == "NOTDONE"
         }
 
         return ArrayList(newVaccineList)
@@ -398,7 +398,7 @@ class PatientDetailsViewModel(
                 immunization.protocolApplied[0].seriesDoses.asStringValue()
         }
         if (immunization.hasStatus()){
-            status = immunization.status.name
+            status = immunization.statusElement.value.name
         }
 
         return DbVaccineData(
