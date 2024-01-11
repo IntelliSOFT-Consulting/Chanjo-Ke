@@ -55,23 +55,6 @@
           "linkId": "PR",
           "type": "group",
           "text": "Client Details",
-          "_text": {
-            "extension": [
-              {
-                "extension": [
-                  {
-                    "url": "lang",
-                    "valueCode": "sw"
-                  },
-                  {
-                    "url": "content",
-                    "valueString": "Maelezo ya mteja"
-                  }
-                ],
-                "url": "http://hl7.org/fhir/StructureDefinition/translation"
-              }
-            ]
-          },
           "item": [
             {
               "linkId": "PR-name",
@@ -204,24 +187,6 @@
                   }
                 },
                 {
-                  "url": "http://ehelse.no/fhir/StructureDefinition/validationtext",
-                  "valueString": "Cannot be a date in the future"
-                },
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/minValue",
-                  "valueDate": {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
-                        "valueExpression": {
-                          "language": "text/fhirpath",
-                          "expression": "today() - 26000 days"
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
                   "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
                   "valueDate": {
                     "extension": [
@@ -241,6 +206,22 @@
               "type": "date",
               "required": true,
               "text": "Date of Birth *"
+            },
+            {
+              "linkId": "selected-birth-year",
+              "text": "Age in Years",
+              "type": "integer",
+              "readOnly": true,
+
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "2024 - %resource.descendants().where(linkId='patient-0-birth-date').answer.value.substring(0, 4).toInteger()"
+                  }
+                }
+              ]
             },
             {
               "linkId": "patient-0-gender",
@@ -364,6 +345,13 @@
                     }
                   ]
                 }
+              ],
+              "enableWhen": [
+                {
+                  "question": "selected-birth-year",
+                  "operator": ">",
+                  "answerInteger": 18
+                }
               ]
             },
             {
@@ -375,7 +363,6 @@
                   "linkId": "patient-identify-type",
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.type",
                   "type": "choice",
-                  "text": "",
                   "item": [
                     {
                       "linkId": "identification-type",
@@ -522,18 +509,41 @@
       ]
     },
     {
-      "text": "Caregivers",
       "linkId": "PR-caregivers",
       "type": "group",
       "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact",
       "item": [
+        {
+          "linkId": "1-select-one",
+          "text": "Caregiver (s)",
+          "type": "display",
+          "enableWhen": [
+            {
+              "question": "selected-birth-year",
+              "operator": "<",
+              "answerInteger": 18
+            }
+          ]
+        },
+        {
+          "linkId": "1-select-two",
+          "text": "Next of Kin (s)",
+          "type": "display",
+          "enableWhen": [
+            {
+              "question": "selected-birth-year",
+              "operator": ">",
+              "answerInteger": 17
+            }
+          ]
+        },
         {
           "linkId": "patient-rshp",
           "type": "choice",
           "item": [
             {
               "linkId": "caregiver-type",
-              "text": "Caregiver Type ",
+              "text": "Type",
               "type": "display",
               "extension": [
                 {

@@ -15,53 +15,90 @@
         "expression": "Patient",
         "name": "patient"
       }
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/questionnaire-item-control",
+            "code": "page",
+            "display": "Page"
+          }
+        ],
+        "text": "Page"
+      }
     }
   ],
   "item": [
     {
-      "linkId": "a-birthdate",
-      "text": "Birth Date",
-      "type": "date",
-      "extension": [
+      "type": "group",
+      "linkId": "1.0.0",
+      "item": [
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
-          "valueExpression": {
-            "language": "text/fhirpath",
-            "expression": "%resource.repeat(item).where(linkId='a-age-years' and answer.empty().not()).select(today() - answer.value)"
-          }
-        }
-      ]
-    },
-    {
-      "linkId": "a-age-years",
-      "text": "Age years",
-      "type": "quantity",
-      "initial": [
-        {
-          "valueQuantity": {
-            "unit": "years",
-            "system": "http://unitsofmeasure.org",
-            "code": "years"
-          }
-        }
-      ]
-    },
-    {
-      "linkId": "my-birthdate",
-      "text": "Select Birth Date",
-      "type": "date"
-    },
-    {
-      "linkId": "my-age-years",
-      "text": "Age years",
-      "type": "string",
-      "extension": [
-        {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
-          "valueExpression": {
-            "language": "text/fhirpath",
-            "expression": "toString(%resource.repeat(item).where(linkId='my-birthdate').answer.value)"
-          }
+          "linkId": "PR",
+          "type": "group",
+          "text": "Client Details",
+          "item": [
+            {
+              "linkId": "a-birthdate",
+              "text": "Birth Date",
+              "type": "date",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "Patient.birthDate",
+                    "name": "patientBirthDate"
+                  }
+                },
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+                  "valueDate": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
+                        "valueExpression": {
+                          "language": "text/fhirpath",
+                          "expression": "today() - 26000 days"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+                  "valueDate": {
+                    "extension": [
+                      {
+                        "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
+                        "valueExpression": {
+                          "language": "text/fhirpath",
+                          "expression": "today()"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "a-selected-birthyear",
+              "text": "Age in Years",
+              "type": "integer",
+              "readOnly": true,
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "2024 - %resource.descendants().where(linkId='a-birthdate').answer.value.substring(0, 4).toInteger()"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     }
