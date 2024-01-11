@@ -1,6 +1,8 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
+import android.content.Context
 import android.util.Log
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 // Interface segregation principle
 
@@ -415,7 +417,7 @@ class ImmunizationHandler() {
     )
 
     // Liskov substitution principle
-    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int):
+    fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int, context: Context?):
             Triple<List<RoutineVaccine>, List<NonRoutineVaccine>, List<PregnancyVaccine>> {
 
         val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) = vaccines
@@ -594,11 +596,18 @@ class ImmunizationHandler() {
 
         //Pregnancy Vaccines
         /**
-         * Remove Pregnancy vaccines from people under 10 years
+         * Remove Pregnancy vaccines from people under 10 years and if their status is not pregnant
          */
-        if (ageInWeeks < 522){
-            remainingPregnancyList = mutableListOf()
+        if (context != null){
+            val isPaged = FormatterClass().getSharedPref("isPaged", context )
+            remainingPregnancyList = if (isPaged != null && isPaged == "true" && ageInWeeks > 522){
+                remainingPregnancyList
+            }else{
+                mutableListOf()
+            }
+
         }
+
 
 
         return Triple(eligibleNewRoutineList, newRemainingNonRoutineVaccineList, remainingPregnancyList)
@@ -679,7 +688,7 @@ class ImmunizationHandler() {
     ): List<BasicVaccine> {
         val immunizationHandler = ImmunizationHandler()
         val (remainingRoutineList, _, _) =
-            immunizationHandler.getAllVaccineList(ArrayList(administeredList), ageInWeeks)
+            immunizationHandler.getAllVaccineList(ArrayList(administeredList), ageInWeeks, null)
 
         // Collect missed vaccines from routine list
         val missedRoutineVaccines = remainingRoutineList.flatMap { routineVaccine ->
