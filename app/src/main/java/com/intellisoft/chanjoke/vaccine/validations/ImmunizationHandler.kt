@@ -534,7 +534,10 @@ class ImmunizationHandler() {
                             it.vaccineCode.startsWith("IMPO-") ||
                             it.vaccineCode.startsWith("IMDPT-") ||
                             it.vaccineCode.startsWith("IMPCV10-") ||
-                            it.vaccineCode.startsWith("IMROTA-")
+                            it.vaccineCode.startsWith("IMROTA-")||
+                            it.vaccineCode.startsWith("IMVIT-") ||
+                            it.vaccineCode.startsWith("IMMALA-") ||
+                            it.vaccineCode.startsWith("IMHPV-")
                 }
             }
         }
@@ -555,12 +558,39 @@ class ImmunizationHandler() {
 
         //Non Routine Vaccines
 
-        if (ageInWeeks < 939) {
-            remainingNonRoutineList = remainingNonRoutineList.filterNot { it.diseaseCode.startsWith("IMCOV-") }
-        }else{
+        val newRemainingNonRoutineVaccineList = ArrayList<NonRoutineVaccine>()
+        //1. Display the only covid vaccine that can be given above 12 years i.e. Pfizer/BioNTech
+        if (ageInWeeks in 626..937){
+            //This only works for Covid vaccines
 
+            remainingNonRoutineList.forEach { nonRoutineVaccine ->
+
+                val newRoutineList = ArrayList<RoutineVaccine>()
+                val vaccineList = nonRoutineVaccine.vaccineList
+
+                vaccineList.forEach { routineVaccine ->
+                    val diseaseCode = routineVaccine.diseaseCode
+                    if (diseaseCode.startsWith("IMCOV-PFIZER-") ||
+                        diseaseCode.startsWith("IMRABIES-") ||
+                        diseaseCode.startsWith("IMYF-")){
+                        newRoutineList.add(routineVaccine)
+                    }
+                }
+
+                if (newRoutineList.isNotEmpty()){
+                    val newRoutineVaccine = NonRoutineVaccine(
+                        nonRoutineVaccine.diseaseCode,
+                        nonRoutineVaccine.targetDisease,
+                        newRoutineList
+                    )
+                    newRemainingNonRoutineVaccineList.add(newRoutineVaccine)
+                }
+
+            }
 
         }
+        //2. Add the other non routine vaccines
+
 
         //Pregnancy Vaccines
         /**
@@ -571,7 +601,7 @@ class ImmunizationHandler() {
         }
 
 
-        return Triple(eligibleNewRoutineList, remainingNonRoutineList, remainingPregnancyList)
+        return Triple(eligibleNewRoutineList, newRemainingNonRoutineVaccineList, remainingPregnancyList)
 
     }
 
