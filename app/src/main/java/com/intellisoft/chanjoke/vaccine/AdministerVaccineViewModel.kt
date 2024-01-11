@@ -550,11 +550,15 @@ class AdministerVaccineViewModel(
                 //Generate the next immunization
                 createNextImmunization(immunization)
 
-                //Navigate to Stock Management
-                FormatterClass().saveSharedPref(
-                    "isVaccineAdministered",
-                    "stockManagement",
-                    getApplication<Application>().applicationContext)
+                if (value == "Yes"){
+                    //Navigate to Stock Management
+                    FormatterClass().saveSharedPref(
+                        "isVaccineAdministered",
+                        "stockManagement",
+                        getApplication<Application>().applicationContext)
+                }
+
+
 
             }else{
                 /**

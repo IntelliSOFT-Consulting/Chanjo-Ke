@@ -100,7 +100,11 @@ class PatientDetailsViewModel(
 
             if (it.hasContact()) {
                 if (it.contactFirstRep.hasName()) contact_name =
-                    if (it.hasContact()) it.contactFirstRep.name.nameAsSingleString else ""
+                    if (it.hasContact()) {
+                        if (it.contactFirstRep.hasName()){
+                            it.contactFirstRep.name.nameAsSingleString
+                        }else ""
+                    } else ""
                 if (it.contactFirstRep.hasTelecom()) contact_phone =
                     if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
                 if (it.contactFirstRep.hasGenderElement()) contact_gender =
