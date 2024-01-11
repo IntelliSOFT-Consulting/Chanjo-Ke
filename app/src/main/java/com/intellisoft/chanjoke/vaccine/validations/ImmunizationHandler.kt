@@ -528,21 +528,21 @@ class ImmunizationHandler() {
             }
         }
 
-
-
-        if (ageInWeeks > 250){
+        //Remove the vaccines eligible for age 5 years and below
+        if (ageInWeeks > 257){
            eligibleRoutineList.forEach { routineVaccine ->
                 routineVaccine.vaccineList = routineVaccine.vaccineList.filterNot {
                             it.vaccineCode.startsWith("IMPO-") ||
+                            it.vaccineCode.startsWith("IMBCG-") ||
                             it.vaccineCode.startsWith("IMDPT-") ||
                             it.vaccineCode.startsWith("IMPCV10-") ||
                             it.vaccineCode.startsWith("IMROTA-")||
                             it.vaccineCode.startsWith("IMVIT-") ||
                             it.vaccineCode.startsWith("IMMALA-") ||
-                            it.vaccineCode.startsWith("IMHPV-")
-                }
+                            it.vaccineCode.startsWith("IMMEAS-") }
             }
         }
+
 
         val eligibleNewRoutineList = ArrayList<RoutineVaccine>()
         eligibleRoutineList.forEach {routineVaccine->
