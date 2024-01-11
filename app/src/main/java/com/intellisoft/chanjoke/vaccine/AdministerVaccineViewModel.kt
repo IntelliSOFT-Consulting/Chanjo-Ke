@@ -17,6 +17,7 @@
 package com.intellisoft.chanjoke.vaccine
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Paint.FontMetrics
 import android.util.Log
@@ -206,6 +207,8 @@ class AdministerVaccineViewModel(
         immunization.patient = patientReference
         immunization.id = immunizationId
 
+        FormatterClass().saveSharedPref("immunizationId",immunizationId,getApplication<Application>().applicationContext)
+
         immunization.status = immunisationStatus
 
         //Date administered
@@ -317,7 +320,14 @@ class AdministerVaccineViewModel(
 
     }
 
-    private suspend fun createNextImmunization(immunization: Immunization) {
+    fun createImmunizationRecommendation(context: Context){
+        CoroutineScope(Dispatchers.IO).launch {
+            val immunizationId = FormatterClass().getSharedPref("immunizationId", context)
+            createNextImmunization(immunizationId)
+        }
+    }
+
+    private suspend fun createNextImmunization(immunizationId: String?) {
 
         val formatterClass = FormatterClass()
         val date = Date()
@@ -361,26 +371,26 @@ class AdministerVaccineViewModel(
             //Generate the next immunisation recommendation
             if (nextBasicVaccine != null){
                 val administrativeWeeksSincePreviousList = nextBasicVaccine.administrativeWeeksSincePrevious
-
+                val administrativeWeeksSinceDob = nextBasicVaccine.administrativeWeeksSinceDOB
                 //Check if the above list is more than one.
-                if (administrativeWeeksSincePreviousList.isNotEmpty()){
+                val nextImmunizationDate = if (administrativeWeeksSincePreviousList.isNotEmpty()){
                     //This is not the first vaccine, check on administrative weeks after birth
                     val weeksToAdd = administrativeWeeksSincePreviousList[0]
-
-                    /**
-                     * Check for the ones that have multiple dates
-                     */
-                    val nextImmunizationDate = formatterClass.getNextDate(date, weeksToAdd)
-
-                    val recommendation = createImmunizationRecommendationResource(
-                        patientId,
-                        nextImmunizationDate,
-                        "Due",
-                        "Next Immunization date",
-                        immunization.id)
-                    saveResourceToDatabase(recommendation, "ImmRec")
-
+                    formatterClass.getNextDate(date, weeksToAdd)
+                }else{
+                    formatterClass.getNextDate(date, administrativeWeeksSinceDob.toDouble())
                 }
+
+                /**
+                 * Check for the ones that have multiple dates
+                 */
+                val recommendation = createImmunizationRecommendationResource(
+                    patientId,
+                    nextImmunizationDate,
+                    "Due",
+                    "Next Immunization date",
+                    immunizationId)
+                saveResourceToDatabase(recommendation, "ImmRec")
 
             }
 
@@ -407,6 +417,8 @@ class AdministerVaccineViewModel(
         immunizationRecommendation.patient = patientReference
         immunizationRecommendation.id = id
         immunizationRecommendation.date = Date()
+
+        Log.e("----->","------5")
 
         //Recommendation
         val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
@@ -507,7 +519,7 @@ class AdministerVaccineViewModel(
 
         recommendationList.add(immunizationRequest)
         immunizationRecommendation.recommendation = recommendationList
-
+        Log.e("----->","------6")
         return immunizationRecommendation
     }
 
