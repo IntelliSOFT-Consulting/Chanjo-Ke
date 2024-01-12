@@ -20,8 +20,11 @@ import com.intellisoft.chanjoke.databinding.ActivityAddAppointmentBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import java.util.Calendar
@@ -31,11 +34,13 @@ class AddAppointment : AppCompatActivity() {
     private lateinit var binding: ActivityAddAppointmentBinding
     private lateinit var patientId: String
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
-    private var selectedItemId = ""
+    private var selectedVaccineName = ""
     private lateinit var fhirEngine: FhirEngine
 
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
+    private val formatterClass = FormatterClass()
+    private val immunizationHandler = ImmunizationHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,16 +76,16 @@ class AddAppointment : AppCompatActivity() {
             val dateScheduled = binding.tvDatePicker.text.toString()
             if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description) && !TextUtils.isEmpty(dateScheduled)){
 
-                var vaccineId = ""
-                if (selectedItemId != "") {
-                    vaccineId = selectedItemId
+                var vaccineName = ""
+                if (selectedVaccineName != "") {
+                    vaccineName = selectedVaccineName
                 }
 
                 val dbAppointmentData = DbAppointmentData(
                     null,
                     title,
                     description,
-                    vaccineId,
+                    vaccineName,
                     dateScheduled
                 )
                 administerVaccineViewModel.createAppointment(dbAppointmentData)
@@ -132,8 +137,65 @@ class AddAppointment : AppCompatActivity() {
     }
 
     private fun createSpinner() {
+        var recommendationList = ArrayList<BasicVaccine>()
+
+        val patientDob = formatterClass.getSharedPref("patientDob", this)
+        if (patientDob != null){
+
+            val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
+            if (ageInWeeks != null){
+
+                val administeredList = ArrayList<BasicVaccine>()
+                val vaccineList = patientDetailsViewModel.getVaccineList()
+                vaccineList.forEach {
+                    val vaccineName = it.vaccineName
+                    val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+                    if (basicVaccine != null) {
+                        administeredList.add(basicVaccine)
+                    }
+                }
+
+                val weeksList = ArrayList<Double>()
+
+                recommendationList.add(
+                    BasicVaccine(
+                        "",
+                        "",
+                        "",
+                        0,
+                        weeksList,
+                        "",
+                        "",
+                        )
+                )
+                val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
+                    immunizationHandler.getAllVaccineList(administeredList, ageInWeeks, this)
+
+                routineList.forEach { routineVaccine ->
+                    val basicVaccineList = routineVaccine.vaccineList
+                    recommendationList = ArrayList(basicVaccineList)
+                }
+                nonRoutineVaccineList.forEach {nonRoutineVaccine ->
+                    val routineVaccineList = nonRoutineVaccine.vaccineList
+                    routineVaccineList.forEach {routineVaccine ->
+                        val basicVaccineList = routineVaccine.vaccineList
+                        recommendationList = ArrayList(basicVaccineList)
+                    }
+                }
+                pregnancyVaccineList.forEach {pregnancyVaccine ->
+                    val basicVaccineList = pregnancyVaccine.vaccineList
+                    recommendationList = ArrayList(basicVaccineList)
+                }
+
+
+            }
+
+        }
+
+
+
         val itemList = ArrayList<String>()
-        val recommendationList = patientDetailsViewModel.recommendationList()
+
         recommendationList.forEach {
             itemList.add(it.vaccineName)
         }
@@ -152,8 +214,8 @@ class AddAppointment : AppCompatActivity() {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item
                 val selectedItem = itemList[position]
-                val selectedRecommendation = recommendationList.find { it.vaccineName == selectedItem }
-                if (selectedRecommendation != null) selectedItemId = selectedRecommendation.appointmentId
+                val selectedVaccine = recommendationList.find { it.vaccineName == selectedItem }
+                if (selectedVaccine != null) selectedVaccineName = selectedVaccine.vaccineName
 
             }
 

@@ -386,17 +386,7 @@ class ImmunizationHandler() {
         return this.vaccineName == name
     }
 
-    // Extension function for List<DbVaccine> to find vaccine details by series target name
-    fun getRoutineVaccineDetailsBySeriesTargetName(targetDisease: String): Any? {
-        return vaccineList.firstOrNull {
-            when (it) {
-                is RoutineVaccine -> it.targetDisease == targetDisease
-                is NonRoutineVaccine -> it.targetDisease == targetDisease
-                is PregnancyVaccine -> it.targetDisease == targetDisease
-                else -> false
-            }
-        }
-    }
+
 
     // Extension function for List<DbVaccine> to find vaccine details by vaccine name
     fun getVaccineDetailsByBasicVaccineName(vaccineName: String): BasicVaccine? {
@@ -669,6 +659,18 @@ class ImmunizationHandler() {
         return null // Return null if the next dose is not found or if the vaccine is not in any category
     }
 
+    // Extension function for List<DbVaccine> to find vaccine details by series target name
+    fun getRoutineVaccineDetailsBySeriesTargetName(targetDisease: String): Any? {
+        return vaccineList.firstOrNull {
+            when (it) {
+                is RoutineVaccine -> it.targetDisease == targetDisease
+                is NonRoutineVaccine -> it.targetDisease == targetDisease
+                is PregnancyVaccine -> it.targetDisease == targetDisease
+                else -> false
+            }
+        }
+    }
+
     fun getRoutineSeriesByBasicVaccine(basicVaccine: BasicVaccine): RoutineVaccine? {
         val (routineList, _, _) = vaccines
 
@@ -676,6 +678,38 @@ class ImmunizationHandler() {
             routineVaccine.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode }
         }
     }
+
+    fun getSeriesByBasicVaccine(basicVaccine: BasicVaccine): RoutineVaccine? {
+        val (routineList, nonRoutineList, pregnancyList) = vaccines
+
+        // Helper function to find the routine series containing the basic vaccine
+        fun findRoutineSeriesInList(vaccineList: List<RoutineVaccine>): RoutineVaccine? {
+            return vaccineList.firstOrNull { it.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode } }
+        }
+
+        // Check if the basic vaccine belongs to a routine vaccine
+        val routineSeriesContainingDose = findRoutineSeriesInList(routineList)
+
+        if (routineSeriesContainingDose != null) {
+            return routineSeriesContainingDose
+        }
+
+        // Check if the basic vaccine belongs to a non-routine vaccine
+        val nonRoutineSeriesContainingDose = findRoutineSeriesInList(nonRoutineList.flatMap { it.vaccineList })
+
+        if (nonRoutineSeriesContainingDose != null) {
+            return nonRoutineSeriesContainingDose
+        }
+
+        return null
+
+        // Check if the basic vaccine belongs to a pregnancy vaccine
+//        val pregnancySeriesContainingDose = findRoutineSeriesInList(pregnancyList.flatMap { it.vaccineList })
+
+//        return pregnancySeriesContainingDose
+    }
+
+
 
     fun getNextBasicVaccineInSeries(series: RoutineVaccine, doseNumber: String): BasicVaccine? {
         return series.vaccineList.firstOrNull { it.doseNumber == doseNumber.toInt().plus(1).toString() }

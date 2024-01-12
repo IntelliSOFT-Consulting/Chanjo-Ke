@@ -13,9 +13,12 @@ android {
     defaultConfig {
         applicationId = "com.intellisoft.chanjoke"
         minSdk = 24
+        targetSdk = 34
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["appAuthRedirectScheme"] = applicationId!!
         buildFeatures.buildConfig = true
+        versionCode = 2
+        versionName = "1.0"
     }
     buildTypes {
         release {
