@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.random.Random
 
 class FormatterClass {
@@ -326,6 +327,34 @@ class FormatterClass {
 
         // Get the new date after adding weeks
         return calendar.time
+    }
+
+    fun daysBetweenTodayAndGivenDate(inputDate: String): Long? {
+        try {
+            val dobFormat = FormatterClass().convertDateFormat(inputDate)
+
+            // Parse the input date
+            if (dobFormat != null){
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+                val parsedDate = dateFormat.parse(dobFormat)
+
+                // Get the current date
+                val currentDate = Calendar.getInstance().time
+
+                // Calculate the difference in days
+                if (parsedDate != null) {
+                    val diffInMillis = abs(parsedDate.time - currentDate.time)
+                    return diffInMillis / (24 * 60 * 60 * 1000)
+                }
+            }
+
+        } catch (e: Exception) {
+            // Handle parsing errors or other exceptions
+            e.printStackTrace()
+        }
+
+        // Return null if there's an error
+        return null
     }
 
     fun generateSubCounties(): List<String> {
