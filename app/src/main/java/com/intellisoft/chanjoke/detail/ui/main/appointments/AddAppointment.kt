@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -77,7 +78,7 @@ class AddAppointment : AppCompatActivity() {
             if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description) && !TextUtils.isEmpty(dateScheduled)){
 
                 var vaccineName = ""
-                if (selectedVaccineName != "") {
+                if (selectedVaccineName != "" && selectedVaccineName.isNotEmpty()) {
                     vaccineName = selectedVaccineName
                 }
 
@@ -173,18 +174,18 @@ class AddAppointment : AppCompatActivity() {
 
                 routineList.forEach { routineVaccine ->
                     val basicVaccineList = routineVaccine.vaccineList
-                    recommendationList = ArrayList(basicVaccineList)
+                    recommendationList += ArrayList(basicVaccineList)
                 }
                 nonRoutineVaccineList.forEach {nonRoutineVaccine ->
                     val routineVaccineList = nonRoutineVaccine.vaccineList
                     routineVaccineList.forEach {routineVaccine ->
                         val basicVaccineList = routineVaccine.vaccineList
-                        recommendationList = ArrayList(basicVaccineList)
+                        recommendationList += ArrayList(basicVaccineList)
                     }
                 }
                 pregnancyVaccineList.forEach {pregnancyVaccine ->
                     val basicVaccineList = pregnancyVaccine.vaccineList
-                    recommendationList = ArrayList(basicVaccineList)
+                    recommendationList += ArrayList(basicVaccineList)
                 }
 
 
@@ -195,13 +196,31 @@ class AddAppointment : AppCompatActivity() {
 
 
         val itemList = ArrayList<String>()
+        //Remove the vaccines in an appointment
+        val givenRecommendationList = ArrayList<String>()
+        val appointmentList = patientDetailsViewModel.getAppointmentList()
+        appointmentList.forEach {
+            it.recommendationList?.forEach {dbAppointmentDetails ->
+                val vaccineName = dbAppointmentDetails.vaccineName
+                givenRecommendationList.add(vaccineName)
+            }
+        }
 
         recommendationList.forEach {
             itemList.add(it.vaccineName)
         }
 
+        // Convert strings to lowercase and remove extra whitespaces
+        val recommendationListLower = givenRecommendationList.map { it.trim() }
+        val itemListLower = itemList.map { it.trim() }
+
+        // Remove common elements
+        val uniqueRecommendations = givenRecommendationList.filter { it.trim() !in itemListLower }
+        val uniqueItemsList = itemList.filter { it.trim() !in recommendationListLower }
+
+
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, itemList)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, uniqueItemsList)
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -213,7 +232,7 @@ class AddAppointment : AppCompatActivity() {
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item
-                val selectedItem = itemList[position]
+                val selectedItem = uniqueItemsList[position]
                 val selectedVaccine = recommendationList.find { it.vaccineName == selectedItem }
                 if (selectedVaccine != null) selectedVaccineName = selectedVaccine.vaccineName
 

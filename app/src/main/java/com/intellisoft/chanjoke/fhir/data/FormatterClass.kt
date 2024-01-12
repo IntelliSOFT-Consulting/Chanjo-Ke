@@ -91,11 +91,12 @@ class FormatterClass {
             // Add more formats as needed
         )
 
-
         // Try parsing the input date with each format
         for (format in inputDateFormats) {
             try {
-                val parsedDate = SimpleDateFormat(format, Locale.getDefault()).parse(inputDate)
+                val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+                dateFormat.isLenient = false // Set lenient to false
+                val parsedDate = dateFormat.parse(inputDate)
 
                 // If parsing succeeds, format and return the date in the desired format
                 parsedDate?.let {
@@ -109,6 +110,7 @@ class FormatterClass {
         // If none of the formats match, return an error message or handle it as needed
         return null
     }
+
 
     fun calculateDateAfterWeeksAsString(dob: LocalDate, weeksAfterDob: Long): String {
         val calculatedDate = dob.plusWeeks(weeksAfterDob)

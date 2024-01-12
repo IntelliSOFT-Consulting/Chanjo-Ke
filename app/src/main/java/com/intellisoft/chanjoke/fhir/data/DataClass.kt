@@ -49,6 +49,8 @@ data class DbAppointmentData(
     val description:String,
     val vaccineName: String?,
     val dateScheduled: String,
+
+    val recommendationList: ArrayList<DbAppointmentDetails>? = null,
     val status:String = ""
 )
 

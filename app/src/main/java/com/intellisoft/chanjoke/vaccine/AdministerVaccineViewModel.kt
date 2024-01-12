@@ -855,47 +855,49 @@ class AdministerVaccineViewModel(
             null
         }
 
+        Log.e("----->","<------")
+        println("dateScheduled $dateScheduled")
+        println("dobFormat $dobFormat")
+        println("selectedDate $selectedDate")
+        Log.e("----->","<------")
         /**
          * TODO: Create a recommendation
          */
 
         var recommendationId = ""
         //1. Get the basic vaccine from the vaccineName
-        val basicVaccine = vaccineName?.let {
-            immunizationHandler.getVaccineDetailsByBasicVaccineName(
-                it
-            )
-        }
-        if (basicVaccine != null){
 
-            //This works for Routine and non-routine alone
-            val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(basicVaccine)
-            if (seriesVaccine != null && patientId != null && selectedDate != null){
-                val targetDisease = seriesVaccine.targetDisease
-                val administeredProduct = basicVaccine.vaccineName
+        if (vaccineName != null && vaccineName != ""){
+            val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+            if (basicVaccine != null){
 
-                val job = Job()
-                CoroutineScope(Dispatchers.IO + job).launch {
-                    //Save resources to Shared preference
-                    FormatterClass().saveStockValue(administeredProduct, targetDisease, getApplication<Application>().applicationContext)
+                //This works for Routine and non-routine alone
+                val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(basicVaccine)
+                if (seriesVaccine != null && patientId != null && selectedDate != null){
+                    val targetDisease = seriesVaccine.targetDisease
+                    val administeredProduct = basicVaccine.vaccineName
 
-                    val recommendation = createImmunizationRecommendationResource(
-                        patientId,
-                        selectedDate,
-                        "Due",
-                        "Next Immunization date",
-                        null)
+                    val job = Job()
+                    CoroutineScope(Dispatchers.IO + job).launch {
+                        //Save resources to Shared preference
+                        FormatterClass().saveStockValue(administeredProduct, targetDisease, getApplication<Application>().applicationContext)
 
-                    recommendationId = recommendation.id
-                    saveResourceToDatabase(recommendation, "ImmRec")
-                }.join()
+                        val recommendation = createImmunizationRecommendationResource(
+                            patientId,
+                            selectedDate,
+                            "Due",
+                            "Next Immunization date",
+                            null)
+
+                        recommendationId = recommendation.id
+                        saveResourceToDatabase(recommendation, "ImmRec")
+                    }.join()
+
+                }
+
 
             }
-
-
         }
-
-        //2. Get the series vaccine from the basic vaccine
 
         val patientReference = Reference("Patient/$patientId")
 
