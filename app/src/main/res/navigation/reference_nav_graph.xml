@@ -92,6 +92,11 @@
         android:name="com.intellisoft.chanjoke.detail.ui.main.VaccineDetailsFragment"
         android:label="Vaccine Details"
         tools:layout="@layout/fragment_vaccine_details" />
+    <fragment
+        android:id="@+id/practionerDetails"
+        android:name="com.intellisoft.chanjoke.PractionerDetails"
+        android:label="fragment_practioner_details"
+        tools:layout="@layout/fragment_practioner_details" />
 
 
 </navigation>

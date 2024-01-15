@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:versionCode="3"
-    android:versionName="1.0"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:versionName="1.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
+        <activity
+            android:name=".shared.PractitionerDetails"
+            android:exported="false" />
         <activity
             android:name=".vaccine.selections.VaccineSelection"
             android:exported="false" />
@@ -63,6 +66,5 @@
             </intent-filter>
         </activity>
     </application>
-
 
 </manifest>

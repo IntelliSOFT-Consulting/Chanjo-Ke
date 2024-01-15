@@ -4,12 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
@@ -21,9 +15,7 @@ import com.intellisoft.chanjoke.databinding.ActivityMainBinding
 import com.intellisoft.chanjoke.detail.ui.main.UpdateFragment
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.shared.Login
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
@@ -67,13 +59,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.navigation_profile -> {
-                    viewModel.triggerOneTimeSync()
-
-                    val intent = Intent(this, Login::class.java)
-                    FormatterClass().saveSharedPref("isLoggedIn", "false", this)
-                    startActivity(intent)
-                    finish()
-
+                    navController.navigate(R.id.practionerDetails)
                     true
                 }
 
