@@ -18,7 +18,7 @@ interface Interface {
 
     @GET("provider/me")
     suspend fun getUserInfo(
-        @Header("Bearer") token: String, // Add this line to pass the Bearer Token
+        @Header("Authorization") token: String, // Add this line to pass the Bearer Token
     ): Response<DbUserInfoResponse>
 
 

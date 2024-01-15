@@ -145,7 +145,7 @@ class RetrofitCallsAuthentication {
 
                 val token = formatter.getSharedPref("access_token", context)
                 if (token != null){
-                    val apiInterface = apiService.getUserInfo(token)
+                    val apiInterface = apiService.getUserInfo("Bearer $token")
                     if (apiInterface.isSuccessful){
 
                         val statusCode = apiInterface.code()
