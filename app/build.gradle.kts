@@ -84,7 +84,14 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
 
     // Add the dependencies for the Crashlytics and Analytics libraries
-    // When using the BoM, you don't specify versions in Firebase library dependencies
+    // When using the BoM, you don"t specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
+
+    //Network
+    implementation("com.squareup.retrofit2:retrofit:2.6.3")
+    implementation("com.squareup.retrofit2:converter-gson:2.6.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation("com.android.volley:volley:1.2.1")
+    implementation("com.squareup.retrofit2:converter-moshi:2.6.0")
 }
