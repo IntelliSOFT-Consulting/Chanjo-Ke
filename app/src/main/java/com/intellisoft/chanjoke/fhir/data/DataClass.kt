@@ -1,8 +1,11 @@
 package com.intellisoft.chanjoke.fhir.data
 
+import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
-
+enum class UrlData(var message: Int) {
+    BASE_URL(R.string.base_url),
+}
 data class DbVaccineData(
     val logicalId: String,
     val vaccineName: String,
@@ -47,7 +50,7 @@ data class DbAppointmentData(
     val id: String? = null,
     val title:String,
     val description:String,
-    val recommendationId: String?,
+    val vaccineName: String?,
     val dateScheduled: String,
 
     val recommendationList: ArrayList<DbAppointmentDetails>? = null,
@@ -71,4 +74,24 @@ data class DbAppointmentDetails(
     val targetDisease: String,
     val vaccineName: String,
     val appointmentStatus: String
+)
+data class DbSignIn(
+    val idNumber: String,
+    val password: String
+)
+data class DbSignInResponse(
+    val access_token:String,
+    val expires_in:String,
+    val refresh_expires_in:String,
+    val refresh_token:String,
+)
+data class DbUserInfoResponse(
+    val user:DbUser?,
+)
+data class DbUser(
+    val fullNames:String,
+    val idNumber:String,
+    val practitionerRole:String,
+    val fhirPractitionerId:String,
+    val id:String,
 )

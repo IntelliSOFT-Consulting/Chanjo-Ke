@@ -11,12 +11,16 @@ import android.widget.Toast
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.DbSignIn
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.network_request.RetrofitCallsAuthentication
 
 class Login : AppCompatActivity() {
 
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
+    private var retrofitCallsAuthentication = RetrofitCallsAuthentication()
+    private var formatterClass = FormatterClass()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +28,8 @@ class Login : AppCompatActivity() {
 
         etUsername = findViewById(R.id.etUsername)
         etPassword = findViewById(R.id.etPassword)
+
+        formatterClass.practionerInfoShared(this)
 
         /**
          * TODO: This is dummy login workflow
@@ -35,15 +41,9 @@ class Login : AppCompatActivity() {
             val password = etPassword.text.toString()
 
             if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-                if (username == "admin" && password == "admin") {
 
-                    FormatterClass().saveSharedPref("isLoggedIn", "true", this@Login)
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    this@Login.finish()
-                } else {
-                    Toast.makeText(this, "Incorrect Username or Password. Try again", Toast.LENGTH_SHORT).show()
-                }
+                val dbSignIn = DbSignIn(username, password)
+                retrofitCallsAuthentication.loginUser(this, dbSignIn)
 
             } else {
                 etUsername.error = "Please Enter Username"

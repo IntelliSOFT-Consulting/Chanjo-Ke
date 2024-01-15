@@ -314,11 +314,14 @@ class PatientDetailsViewModel(
         var dateScheduled = ""
         var recommendationSavedList = ArrayList<DbAppointmentDetails>()
 
-        val titleMatch = Regex("Title: (.+?) ").find(input)
-        val descriptionMatch = Regex("Description:(.+)").find(input)
+        val pattern = Regex("Title: (.*?) Description:(.*)")
+        // Match the pattern in the input text
+        val matchResult = pattern.find(input)
+        matchResult?.let {
+            title = it.groupValues[1].trim()
+            description = it.groupValues[2].trim()
+        }
 
-        title = titleMatch?.groupValues?.get(1).toString()
-        description = descriptionMatch?.groupValues?.get(1).toString()
 
         val startDate = FormatterClass().convertDateFormat(start.toString())
         if (startDate != null) {

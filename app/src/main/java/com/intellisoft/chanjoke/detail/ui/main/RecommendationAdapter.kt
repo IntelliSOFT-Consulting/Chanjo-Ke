@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -45,31 +46,35 @@ class RecommendationAdapter(
                 val administeredProduct = entryList[pos].vaccineName
                 val appointmentStatus = entryList[pos].appointmentStatus.trim()
                 val appointmentId = entryList[pos].appointmentId.trim()
+                val dateScheduled = entryList[pos].dateScheduled
 
-                formatterClass.saveSharedPref(
-                    "questionnaireJson",
-                    "contraindications.json",
-                    context)
+                val daysTo = formatterClass.daysBetweenTodayAndGivenDate(dateScheduled)
+                if (daysTo != null) {
+                    if (daysTo < 14){
+                        formatterClass.saveSharedPref(
+                            "questionnaireJson",
+                            "contraindications.json",
+                            context)
 
-                formatterClass.saveSharedPref(
-                    "vaccinationFlow",
-                    "createVaccineDetails",
-                    context
-                )
+                        formatterClass.saveSharedPref(
+                            "vaccinationFlow",
+                            "createVaccineDetails",
+                            context
+                        )
 
 
-                formatterClass.saveSharedPref(
-                    "vaccinationTargetDisease",
-                    targetDisease,
-                    context
-                )
-                formatterClass.saveSharedPref(
-                    "administeredProduct",
-                    administeredProduct,
-                    context
-                )
+                        formatterClass.saveSharedPref(
+                            "vaccinationTargetDisease",
+                            targetDisease,
+                            context
+                        )
+                        formatterClass.saveSharedPref(
+                            "administeredProduct",
+                            administeredProduct,
+                            context
+                        )
 
-                formatterClass.deleteSharedPref("title", context)
+                        formatterClass.deleteSharedPref("title", context)
 //                if (appointmentStatus == "Contraindicated" && appointmentId != ""){
 //                    formatterClass.saveSharedPref(
 //                        "isContraindicated",
@@ -79,11 +84,18 @@ class RecommendationAdapter(
 //                }
 
 
-                //Send to contraindications
-                val intent = Intent(context, MainActivity::class.java)
-                intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
-                intent.putExtra("patientId", patientId)
-                context.startActivity(intent)
+                        //Send to contraindications
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+                        intent.putExtra("patientId", patientId)
+                        context.startActivity(intent)
+                    }else{
+                        Toast.makeText(context, "Choose a date within the next 14 days from today.", Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    Toast.makeText(context, "There was an issue try again", Toast.LENGTH_SHORT).show()
+                }
+
 
             }
 

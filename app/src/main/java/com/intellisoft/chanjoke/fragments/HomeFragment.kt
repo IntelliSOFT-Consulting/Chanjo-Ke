@@ -12,7 +12,7 @@ import com.intellisoft.chanjoke.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
-    private lateinit var _binding:FragmentHomeBinding
+    private lateinit var _binding: FragmentHomeBinding
     private val binding get() = _binding
 
     override fun onCreateView(

@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.random.Random
 
 class FormatterClass {
@@ -91,11 +92,12 @@ class FormatterClass {
             // Add more formats as needed
         )
 
-
         // Try parsing the input date with each format
         for (format in inputDateFormats) {
             try {
-                val parsedDate = SimpleDateFormat(format, Locale.getDefault()).parse(inputDate)
+                val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+                dateFormat.isLenient = false // Set lenient to false
+                val parsedDate = dateFormat.parse(inputDate)
 
                 // If parsing succeeds, format and return the date in the desired format
                 parsedDate?.let {
@@ -109,6 +111,7 @@ class FormatterClass {
         // If none of the formats match, return an error message or handle it as needed
         return null
     }
+
 
     fun calculateDateAfterWeeksAsString(dob: LocalDate, weeksAfterDob: Long): String {
         val calculatedDate = dob.plusWeeks(weeksAfterDob)
@@ -132,6 +135,31 @@ class FormatterClass {
             "vaccinationManufacturer" ,
             "immunizationId" ,
             "administeredProduct")
+        vaccinationListToClear.forEach {
+            deleteSharedPref(it, context)
+        }
+    }
+
+    fun clientInfoShared(context: Context){
+        val vaccinationListToClear = listOf(
+            "patientId",
+            "patientDob" ,
+            "appointmentId")
+        vaccinationListToClear.forEach {
+            deleteSharedPref(it, context)
+        }
+    }
+    fun practionerInfoShared(context: Context){
+        val vaccinationListToClear = listOf(
+            "practitionerFullNames",
+            "practitionerIdNumber" ,
+            "practitionerRole" ,
+            "fhirPractitionerId" ,
+            "practitionerId" ,
+            "access_token" ,
+            "refresh_token" ,
+            "refresh_expires_in" ,
+            "expires_in")
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
         }
@@ -324,6 +352,34 @@ class FormatterClass {
 
         // Get the new date after adding weeks
         return calendar.time
+    }
+
+    fun daysBetweenTodayAndGivenDate(inputDate: String): Long? {
+        try {
+            val dobFormat = FormatterClass().convertDateFormat(inputDate)
+
+            // Parse the input date
+            if (dobFormat != null){
+                val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+                val parsedDate = dateFormat.parse(dobFormat)
+
+                // Get the current date
+                val currentDate = Calendar.getInstance().time
+
+                // Calculate the difference in days
+                if (parsedDate != null) {
+                    val diffInMillis = abs(parsedDate.time - currentDate.time)
+                    return diffInMillis / (24 * 60 * 60 * 1000)
+                }
+            }
+
+        } catch (e: Exception) {
+            // Handle parsing errors or other exceptions
+            e.printStackTrace()
+        }
+
+        // Return null if there's an error
+        return null
     }
 
     fun generateSubCounties(): List<String> {
