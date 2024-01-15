@@ -140,6 +140,31 @@ class FormatterClass {
         }
     }
 
+    fun clientInfoShared(context: Context){
+        val vaccinationListToClear = listOf(
+            "patientId",
+            "patientDob" ,
+            "appointmentId")
+        vaccinationListToClear.forEach {
+            deleteSharedPref(it, context)
+        }
+    }
+    fun practionerInfoShared(context: Context){
+        val vaccinationListToClear = listOf(
+            "practitionerFullNames",
+            "practitionerIdNumber" ,
+            "practitionerRole" ,
+            "fhirPractitionerId" ,
+            "practitionerId" ,
+            "access_token" ,
+            "refresh_token" ,
+            "refresh_expires_in" ,
+            "expires_in")
+        vaccinationListToClear.forEach {
+            deleteSharedPref(it, context)
+        }
+    }
+
 
 
     fun saveStockValue(

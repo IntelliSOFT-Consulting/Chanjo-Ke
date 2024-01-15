@@ -20,6 +20,7 @@ class Login : AppCompatActivity() {
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
     private var retrofitCallsAuthentication = RetrofitCallsAuthentication()
+    private var formatterClass = FormatterClass()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +28,8 @@ class Login : AppCompatActivity() {
 
         etUsername = findViewById(R.id.etUsername)
         etPassword = findViewById(R.id.etPassword)
+
+        formatterClass.practionerInfoShared(this)
 
         /**
          * TODO: This is dummy login workflow
