@@ -62,7 +62,6 @@ class PatientDetailsViewModel(
     }
 
 
-
     fun getPatientInfo() = runBlocking {
         getPatientDetailDataModel()
     }
@@ -101,23 +100,32 @@ class PatientDetailsViewModel(
             if (it.hasContact()) {
                 if (it.contactFirstRep.hasName()) contact_name =
                     if (it.hasContact()) {
-                        if (it.contactFirstRep.hasName()){
+                        if (it.contactFirstRep.hasName()) {
                             it.contactFirstRep.name.nameAsSingleString
-                        }else ""
+                        } else ""
                     } else ""
                 if (it.contactFirstRep.hasTelecom()) contact_phone =
-                    if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
+                    if (it.hasContact()) {
+                        if (it.contactFirstRep.hasTelecom()) {
+                            if (it.contactFirstRep.telecomFirstRep.hasValue()) {
+                                it.contactFirstRep.telecomFirstRep.value
+                            } else ""
+                        } else ""
+                    } else ""
                 if (it.contactFirstRep.hasGenderElement()) contact_gender =
                     if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
             }
 
             if (it.hasGenderElement()) gender = it.genderElement.valueAsString
 
-            if (it.hasIdentifier()){
-                it.identifier.forEach {identifier ->
+            if (it.hasIdentifier()) {
+                it.identifier.forEach { identifier ->
                     val codeableConceptType = identifier.type
-                    if (codeableConceptType.hasText() && codeableConceptType.text.contains(Identifiers.SYSTEM_GENERATED.name)){
-                        if (identifier.hasValue()){
+                    if (codeableConceptType.hasText() && codeableConceptType.text.contains(
+                            Identifiers.SYSTEM_GENERATED.name
+                        )
+                    ) {
+                        if (identifier.hasValue()) {
                             systemId = identifier.value
                         }
                     }
@@ -271,7 +279,14 @@ class PatientDetailsViewModel(
 
 
 
-        return DbAppointmentDetails(appointmentId, date, doseNumber, targetDisease, vaccineName, appointmentStatus)
+        return DbAppointmentDetails(
+            appointmentId,
+            date,
+            doseNumber,
+            targetDisease,
+            vaccineName,
+            appointmentStatus
+        )
 
 
     }
@@ -296,7 +311,7 @@ class PatientDetailsViewModel(
         return appointmentList
     }
 
-    private suspend fun createAppointment(it: Appointment):DbAppointmentData {
+    private suspend fun createAppointment(it: Appointment): DbAppointmentData {
 
         val recommendationList = getRecommendationList()
 
@@ -397,7 +412,7 @@ class PatientDetailsViewModel(
             if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue =
                 immunization.protocolApplied[0].seriesDoses.asStringValue()
         }
-        if (immunization.hasStatus()){
+        if (immunization.hasStatus()) {
             status = immunization.statusElement.value.name
         }
 
@@ -493,7 +508,9 @@ class PatientDetailsViewModel(
         fhirEngine
             .search<Observation> {
                 filter(Observation.SUBJECT, { value = "Patient/$patientId" })
-                if (encounterId != null) filter(Observation.ENCOUNTER, { value = "Encounter/$encounterId" })
+                if (encounterId != null) filter(
+                    Observation.ENCOUNTER,
+                    { value = "Encounter/$encounterId" })
                 filter(
                     Observation.CODE,
                     {
