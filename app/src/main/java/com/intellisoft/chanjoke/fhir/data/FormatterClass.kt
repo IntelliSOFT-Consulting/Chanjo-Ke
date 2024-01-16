@@ -134,6 +134,8 @@ class FormatterClass {
             "vaccinationSeriesDoses" ,
             "vaccinationManufacturer" ,
             "immunizationId" ,
+//            "selectedVaccinationVenue" ,
+//            "isSelectedVaccinationVenue" ,
             "administeredProduct")
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)

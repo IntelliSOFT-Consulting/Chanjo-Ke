@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RadioButton
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -72,6 +73,7 @@ class PatientListFragment : Fragment() {
         val patientListAction = formatterClass.getSharedPref("patientListAction", requireContext())
         if (patientListAction != null && patientListAction == NavigationDetails.ADMINISTER_VACCINE.name) {
             binding.patientListContainer.linearVaccinationVenue.visibility = View.VISIBLE
+            formatterClass.saveSharedPref("isSelectedVaccinationVenue", "true", requireContext())
             formatterClass.deleteSharedPref("patientListAction", requireContext())
 
         }
@@ -121,6 +123,18 @@ class PatientListFragment : Fragment() {
 
         patientListViewModel.patientCount.observe(viewLifecycleOwner) {
             binding.patientListContainer.patientCount.text = "$it Patient(s)"
+        }
+        binding.patientListContainer.radioGrpVenue.setOnCheckedChangeListener { group, checkedId ->
+            // checkedId is the RadioButton ID that is checked
+            if (checkedId != -1) {
+                val selectedRadioButton = view.findViewById<RadioButton>(checkedId)
+                val selectedText: String = selectedRadioButton.text.toString()
+                formatterClass.saveSharedPref("selectedVaccinationVenue", selectedText, requireContext())
+                // Do something with the selectedRadioButton or selectedText
+            } else {
+                // No radio button is selected
+                // Handle this case as needed
+            }
         }
 
 
@@ -233,6 +247,10 @@ class PatientListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        formatterClass.deleteSharedPref("selectedVaccinationVenue", requireContext())
+        formatterClass.deleteSharedPref("isSelectedVaccinationVenue", requireContext())
+
         _binding = null
     }
 
