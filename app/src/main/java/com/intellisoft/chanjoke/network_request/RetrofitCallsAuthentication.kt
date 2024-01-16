@@ -161,6 +161,8 @@ class RetrofitCallsAuthentication {
                                     val idNumber = user.idNumber
                                     val practitionerRole = user.practitionerRole
                                     val fhirPractitionerId = user.fhirPractitionerId
+                                    val email = user.email
+                                    val phone = user.phone
                                     val id = user.id
 
                                     formatter.saveSharedPref("practitionerFullNames", fullNames, context)
@@ -168,6 +170,8 @@ class RetrofitCallsAuthentication {
                                     formatter.saveSharedPref("practitionerRole", practitionerRole, context)
                                     formatter.saveSharedPref("fhirPractitionerId", fhirPractitionerId, context)
                                     formatter.saveSharedPref("practitionerId", id, context)
+                                    formatter.saveSharedPref("practitionerEmail", email, context)
+                                    formatter.saveSharedPref("practitionerPhone", phone ?: "", context)
 
                                 }
                             }

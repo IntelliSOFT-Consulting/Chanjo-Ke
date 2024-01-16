@@ -93,5 +93,7 @@ data class DbUser(
     val idNumber:String,
     val practitionerRole:String,
     val fhirPractitionerId:String,
+    val email:String,
+    val phone:String?,
     val id:String,
 )

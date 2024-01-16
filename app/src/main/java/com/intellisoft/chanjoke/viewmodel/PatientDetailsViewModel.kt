@@ -105,13 +105,28 @@ class PatientDetailsViewModel(
                             it.contactFirstRep.name.nameAsSingleString
                         }else ""
                     } else ""
-                if (it.contactFirstRep.hasTelecom()) contact_phone =
-                    if (it.hasContact()) it.contactFirstRep.telecomFirstRep.value else ""
+                if (it.contactFirstRep.hasTelecom()){
+                    contact_phone = if (it.hasContact()) {
+                        if (it.contactFirstRep.telecomFirstRep.hasValue()){
+                            it.contactFirstRep.telecomFirstRep.value
+                        }else ""
+                    } else ""
+                }
                 if (it.contactFirstRep.hasGenderElement()) contact_gender =
-                    if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+                    if (it.hasContact()) {
+                        if (it.contactFirstRep.hasGenderElement()){
+                            if (it.contactFirstRep.genderElement.hasValue()){
+                                AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString)
+                            }else ""
+                        }else ""
+                    } else ""
             }
-
-            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
+            if (it.hasGenderElement()) gender =
+                if (it.hasGenderElement()){
+                    if (it.genderElement.hasValue()){
+                        it.genderElement.valueAsString
+                    }else ""
+                }else ""
 
             if (it.hasIdentifier()){
                 it.identifier.forEach {identifier ->
