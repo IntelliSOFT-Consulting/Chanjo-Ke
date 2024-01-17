@@ -212,7 +212,6 @@
               "text": "Age in Years",
               "type": "integer",
               "readOnly": true,
-
               "extension": [
                 {
                   "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
@@ -636,7 +635,7 @@
               "item": [
                 {
                   "linkId": "caregiver-name",
-                  "text": "Care Giver Name *",
+                  "text": "Name *",
                   "type": "display",
                   "extension": [
                     {
@@ -735,7 +734,7 @@
               "item": [
                 {
                   "linkId": "care-giver-type",
-                  "text": "Caregiver Type",
+                  "text": "Type",
                   "type": "display",
                   "extension": [
                     {
@@ -828,7 +827,7 @@
                   "item": [
                     {
                       "linkId": "care-giver-name",
-                      "text": "Care Giver Name *",
+                      "text": "Name *",
                       "type": "display",
                       "extension": [
                         {
@@ -968,15 +967,6 @@
                   }
                 }
               ]
-            }
-          ],
-          "initial": [
-            {
-              "valueCoding": {
-                "code": "1",
-                "display": "MOMBASA",
-                "system": "https://locationlist.com/counties"
-              }
             }
           ],
           "answerOption": [
@@ -1309,6 +1299,66 @@
                 "system": "https://locationlist.com/counties"
               }
             }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.district",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "PR-address-city",
+              "operator": "exists",
+              "answerBoolean": false
+            }
+          ],
+          "linkId": "PR-address-sub-county-all",
+          "type": "choice",
+          "required": true,
+          "text": "Sub County *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
           ]
         },
         {
@@ -6473,6 +6523,66 @@
                 "system": "https://locationlist.com/areas"
               }
             }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "PR-address-city",
+              "operator": "exists",
+              "answerBoolean": false
+            }
+          ],
+          "linkId": "PR-address-ward-all",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
           ]
         },
         {
