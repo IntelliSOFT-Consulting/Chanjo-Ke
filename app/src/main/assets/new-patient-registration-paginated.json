@@ -55,23 +55,6 @@
           "linkId": "PR",
           "type": "group",
           "text": "Client Details",
-          "_text": {
-            "extension": [
-              {
-                "extension": [
-                  {
-                    "url": "lang",
-                    "valueCode": "sw"
-                  },
-                  {
-                    "url": "content",
-                    "valueString": "Maelezo ya mteja"
-                  }
-                ],
-                "url": "http://hl7.org/fhir/StructureDefinition/translation"
-              }
-            ]
-          },
           "item": [
             {
               "linkId": "PR-name",
@@ -204,24 +187,6 @@
                   }
                 },
                 {
-                  "url": "http://ehelse.no/fhir/StructureDefinition/validationtext",
-                  "valueString": "Cannot be a date in the future"
-                },
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/minValue",
-                  "valueDate": {
-                    "extension": [
-                      {
-                        "url": "http://hl7.org/fhir/StructureDefinition/cqf-calculatedValue",
-                        "valueExpression": {
-                          "language": "text/fhirpath",
-                          "expression": "today() - 26000 days"
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
                   "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
                   "valueDate": {
                     "extension": [
@@ -241,6 +206,21 @@
               "type": "date",
               "required": true,
               "text": "Date of Birth *"
+            },
+            {
+              "linkId": "selected-birth-year",
+              "text": "Age in Years",
+              "type": "integer",
+              "readOnly": true,
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+                  "valueExpression": {
+                    "language": "text/fhirpath",
+                    "expression": "2024 - %resource.descendants().where(linkId='patient-0-birth-date').answer.value.substring(0, 4).toInteger()"
+                  }
+                }
+              ]
             },
             {
               "linkId": "patient-0-gender",
@@ -364,6 +344,13 @@
                     }
                   ]
                 }
+              ],
+              "enableWhen": [
+                {
+                  "question": "selected-birth-year",
+                  "operator": ">",
+                  "answerInteger": 18
+                }
               ]
             },
             {
@@ -375,7 +362,6 @@
                   "linkId": "patient-identify-type",
                   "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.identifier.type",
                   "type": "choice",
-                  "text": "",
                   "item": [
                     {
                       "linkId": "identification-type",
@@ -522,18 +508,41 @@
       ]
     },
     {
-      "text": "Caregivers",
       "linkId": "PR-caregivers",
       "type": "group",
       "definition": "http://hl7.org/fhir/StructureDefinition/Patient#Patient.contact",
       "item": [
+        {
+          "linkId": "1-select-one",
+          "text": "Caregiver (s)",
+          "type": "display",
+          "enableWhen": [
+            {
+              "question": "selected-birth-year",
+              "operator": "<",
+              "answerInteger": 18
+            }
+          ]
+        },
+        {
+          "linkId": "1-select-two",
+          "text": "Next of Kin (s)",
+          "type": "display",
+          "enableWhen": [
+            {
+              "question": "selected-birth-year",
+              "operator": ">",
+              "answerInteger": 17
+            }
+          ]
+        },
         {
           "linkId": "patient-rshp",
           "type": "choice",
           "item": [
             {
               "linkId": "caregiver-type",
-              "text": "Caregiver Type ",
+              "text": "Type",
               "type": "display",
               "extension": [
                 {
@@ -626,7 +635,7 @@
               "item": [
                 {
                   "linkId": "caregiver-name",
-                  "text": "Care Giver Name *",
+                  "text": "Name *",
                   "type": "display",
                   "extension": [
                     {
@@ -725,7 +734,7 @@
               "item": [
                 {
                   "linkId": "care-giver-type",
-                  "text": "Caregiver Type",
+                  "text": "Type",
                   "type": "display",
                   "extension": [
                     {
@@ -818,7 +827,7 @@
                   "item": [
                     {
                       "linkId": "care-giver-name",
-                      "text": "Care Giver Name *",
+                      "text": "Name *",
                       "type": "display",
                       "extension": [
                         {
@@ -958,15 +967,6 @@
                   }
                 }
               ]
-            }
-          ],
-          "initial": [
-            {
-              "valueCoding": {
-                "code": "1",
-                "display": "MOMBASA",
-                "system": "https://locationlist.com/counties"
-              }
             }
           ],
           "answerOption": [
@@ -1299,6 +1299,66 @@
                 "system": "https://locationlist.com/counties"
               }
             }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.district",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "PR-address-city",
+              "operator": "exists",
+              "answerBoolean": false
+            }
+          ],
+          "linkId": "PR-address-sub-county-all",
+          "type": "choice",
+          "required": true,
+          "text": "Sub County *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Sub County *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
           ]
         },
         {
@@ -6463,6 +6523,66 @@
                 "system": "https://locationlist.com/areas"
               }
             }
+          ]
+        },
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression": {
+                "language": "text/fhirpath",
+                "expression": "Patient.address.state",
+                "name": "patientDistrict"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "PR-address-city",
+              "operator": "exists",
+              "answerBoolean": false
+            }
+          ],
+          "linkId": "PR-address-ward-all",
+          "type": "choice",
+          "required": true,
+          "text": "Ward *",
+          "item": [
+            {
+              "linkId": "sub-county",
+              "text": "Ward *",
+              "type": "display",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                        "code": "flyover",
+                        "display": "Fly-over"
+                      }
+                    ],
+                    "text": "Flyover"
+                  }
+                }
+              ]
+            }
+          ],
+          "answerOption": [
           ]
         },
         {
