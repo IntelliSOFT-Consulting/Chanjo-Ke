@@ -16,6 +16,7 @@
 
 package com.intellisoft.chanjoke.add_patient
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -31,6 +32,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.intellisoft.chanjoke.R
 import com.google.android.fhir.datacapture.QuestionnaireFragment
 import com.intellisoft.chanjoke.MainActivity
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import org.hl7.fhir.r4.model.QuestionnaireResponse
@@ -143,14 +145,33 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
                 Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
                 return@observe
             }
+
+//            NavHostFragment.findNavController(this@AddPatientFragment).navigateUp()
+            val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+//            Toast.makeText(requireContext(),patientId,Toast.LENGTH_LONG).show()
+//            val intent = Intent(requireContext(), PatientDetailActivity::class.java)
+//            intent.putExtra("patientId", patientId)
+//            startActivity(intent)
             val blurBackgroundDialog =
                 BlurBackgroundDialog(this@AddPatientFragment, requireContext())
             blurBackgroundDialog.show()
+
 //            FormatterClass().customDialog(
 //                requireContext(),
 //                "Client added successfully!",
 //                this
 //            )
+//            val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+//
+//            val isRegistration = FormatterClass().getSharedPref("isRegistration", requireContext())
+//            if (isRegistration != null) {
+//                if (isRegistration == "true") {
+//                    val intent = Intent(context, PatientDetailActivity::class.java)
+//                    intent.putExtra("patientId", patientId)
+//                    startActivity(intent)
+//                    FormatterClass().deleteSharedPref("isRegistration", requireContext())
+//                }
+//            }
 
 
         }

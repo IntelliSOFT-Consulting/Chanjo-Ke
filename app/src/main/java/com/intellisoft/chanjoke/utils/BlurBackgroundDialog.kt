@@ -72,20 +72,22 @@ class BlurBackgroundDialog(
             val isRegistration = FormatterClass().getSharedPref("isRegistration", context)
             if (isRegistration != null) {
                 if (isRegistration == "true") {
-                    val intent = Intent(context, PatientDetailActivity::class.java)
-                    intent.putExtra("patientId", patientId)
-                    context.startActivity(intent)
+//                    val intent = Intent(context, PatientDetailActivity::class.java)
+//                    intent.putExtra("patientId", patientId)
+//                    context.startActivity(intent)
                     FormatterClass().deleteSharedPref("isRegistration", context)
+                    NavHostFragment.findNavController(fragment).navigateUp()
                 }
             } else {
-                val vaccinationFlow = FormatterClass().getSharedPref("isVaccineAdministered",context)
-                if (vaccinationFlow == "stockManagement"){
+                val vaccinationFlow =
+                    FormatterClass().getSharedPref("isVaccineAdministered", context)
+                if (vaccinationFlow == "stockManagement") {
                     val intent = Intent(context, VaccineStockManagement::class.java)
                     intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
                     intent.putExtra("patientId", patientId)
                     context.startActivity(intent)
                     FormatterClass().deleteSharedPref("isVaccineAdministered", context)
-                }else{
+                } else {
                     val intent = Intent(context, PatientDetailActivity::class.java)
                     intent.putExtra("patientId", patientId)
                     context.startActivity(intent)
