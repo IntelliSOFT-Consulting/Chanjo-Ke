@@ -138,7 +138,7 @@ class AddAppointment : AppCompatActivity() {
     }
 
     private fun createSpinner() {
-        var recommendationList = ArrayList<BasicVaccine>()
+        val recommendationList = ArrayList<BasicVaccine>()
 
         val patientDob = formatterClass.getSharedPref("patientDob", this)
         if (patientDob != null){
@@ -172,6 +172,8 @@ class AddAppointment : AppCompatActivity() {
                 val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
                     immunizationHandler.getAllVaccineList(administeredList, ageInWeeks, this)
 
+
+
                 routineList.forEach { routineVaccine ->
                     val basicVaccineList = routineVaccine.vaccineList
                     recommendationList += ArrayList(basicVaccineList)
@@ -187,7 +189,6 @@ class AddAppointment : AppCompatActivity() {
                     val basicVaccineList = pregnancyVaccine.vaccineList
                     recommendationList += ArrayList(basicVaccineList)
                 }
-
 
             }
 
@@ -210,17 +211,17 @@ class AddAppointment : AppCompatActivity() {
             itemList.add(it.vaccineName)
         }
 
-        // Convert strings to lowercase and remove extra whitespaces
+        // Convert strings and remove extra whitespaces
         val recommendationListLower = givenRecommendationList.map { it.trim() }
         val itemListLower = itemList.map { it.trim() }
 
         // Remove common elements
-        val uniqueRecommendations = givenRecommendationList.filter { it.trim() !in itemListLower }
-        val uniqueItemsList = itemList.filter { it.trim() !in recommendationListLower }
+//        val uniqueRecommendations = givenRecommendationList.filter { it.trim() !in itemListLower }
+//        val uniqueItemsList = itemList.filter { it.trim() !in recommendationListLower }
 
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, uniqueItemsList)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, itemListLower)
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -232,7 +233,7 @@ class AddAppointment : AppCompatActivity() {
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item
-                val selectedItem = uniqueItemsList[position]
+                val selectedItem = itemListLower[position]
                 val selectedVaccine = recommendationList.find { it.vaccineName == selectedItem }
                 if (selectedVaccine != null) selectedVaccineName = selectedVaccine.vaccineName
 

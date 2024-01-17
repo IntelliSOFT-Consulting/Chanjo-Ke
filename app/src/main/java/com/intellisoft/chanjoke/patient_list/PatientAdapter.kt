@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
@@ -42,10 +43,24 @@ class PatientAdapter(
             val id = dbPatientList[pos].resourceId
 
             FormatterClass().saveSharedPref("patientId", id, context)
+            val selectedVaccinationVenue = FormatterClass().getSharedPref("selectedVaccinationVenue", context)
+            val isSelectedVaccinationVenue = FormatterClass().getSharedPref("isSelectedVaccinationVenue", context)
 
-            val intent = Intent(context, PatientDetailActivity::class.java)
-            intent.putExtra("patientId", id)
-            context.startActivity(intent)
+            if (isSelectedVaccinationVenue == null){
+                val intent = Intent(context, PatientDetailActivity::class.java)
+                intent.putExtra("patientId", id)
+                context.startActivity(intent)
+            }else{
+                if (selectedVaccinationVenue != null){
+                    val intent = Intent(context, PatientDetailActivity::class.java)
+                    intent.putExtra("patientId", id)
+                    context.startActivity(intent)
+                }else{
+                    Toast.makeText(context, "Please select a vaccination venue", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
 
         }
 

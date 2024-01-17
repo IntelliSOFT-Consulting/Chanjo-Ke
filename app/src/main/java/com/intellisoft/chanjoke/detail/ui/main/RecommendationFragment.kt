@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.detail.ui.main
 
 import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,10 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
-import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
 import com.intellisoft.chanjoke.databinding.FragmentRecommendationBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.selections.VaccineSelection
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
@@ -71,6 +72,26 @@ class RecommendationFragment : Fragment() {
         )[PatientDetailsViewModel::class.java]
 
         getImmunisationRecommendations()
+
+        binding.administerVaccine.setOnClickListener {
+
+            formatterClass.deleteSharedPref("title", requireContext())
+            formatterClass.saveSharedPref(
+                "questionnaireJson",
+                "contraindications.json",
+                requireContext()
+            )
+
+            formatterClass.saveSharedPref(
+                "vaccinationFlow",
+                "createVaccineDetails",
+                requireContext()
+            )
+
+            val intent = Intent(requireContext(), VaccineSelection::class.java)
+            startActivity(intent)
+
+        }
 
         return binding.root
     }

@@ -2,16 +2,14 @@ package com.intellisoft.chanjoke
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.intellisoft.chanjoke.add_patient.AddPatientFragment
-import com.intellisoft.chanjoke.databinding.FragmentHomeBinding
+import androidx.fragment.app.Fragment
 import com.intellisoft.chanjoke.databinding.FragmentPractionerDetailsBinding
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.shared.Login
 
 class PractionerDetails : Fragment() {
 
@@ -38,8 +36,14 @@ class PractionerDetails : Fragment() {
         }
         getUserDetails()
 
-        binding.bottomNavigationView
+        binding.btnSignOut.setOnClickListener {
 
+            formatterClass.saveSharedPref("isLoggedIn", "false", requireContext())
+            val intent = Intent(requireContext(),  Login::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+
+        }
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -80,9 +84,11 @@ class PractionerDetails : Fragment() {
         val practitionerRole = formatterClass.getSharedPref("practitionerRole", requireContext())
         val fhirPractitionerId = formatterClass.getSharedPref("fhirPractitionerId", requireContext())
         val practitionerId = formatterClass.getSharedPref("practitionerId", requireContext())
+        val practitionerEmail = formatterClass.getSharedPref("practitionerEmail", requireContext())
+        val practitionerPhone = formatterClass.getSharedPref("practitionerPhone", requireContext())
 
-        binding.tvEmailAddress.text = ""
-        binding.tvPhoneNumber.text = ""
+        binding.tvEmailAddress.text = practitionerEmail
+        binding.tvPhoneNumber.text = practitionerPhone
         binding.tvIdNumber.text = practitionerIdNumber
         binding.tvFullName.text = practitionerFullNames
 
