@@ -42,6 +42,7 @@ data class ObservationDateValue(
 
 enum class NavigationDetails {
     ADMINISTER_VACCINE,
+    UPDATE_CLIENT_HISTORY,
     LIST_VACCINE_DETAILS,
     CLIENT_LIST,
     EDIT_CLIENT

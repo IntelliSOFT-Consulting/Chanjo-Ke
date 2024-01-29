@@ -64,6 +64,8 @@ class LandingPage : Fragment() {
 
             "Update Client History" -> {
                 findNavController().navigate(R.id.patient_list)
+                formatterClass.saveSharedPref("patientListAction",
+                    NavigationDetails.UPDATE_CLIENT_HISTORY.name, requireContext())
             }
 
             "Administer vaccine" -> {
