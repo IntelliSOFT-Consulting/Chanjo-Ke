@@ -3,9 +3,11 @@ package com.intellisoft.chanjoke.fhir.data
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
+
 enum class UrlData(var message: Int) {
     BASE_URL(R.string.base_url),
 }
+
 data class DbVaccineData(
     val logicalId: String,
     val vaccineName: String,
@@ -33,8 +35,9 @@ data class EncounterItem(
 data class DbCodeValue(
     val code: String,
     val value: String,
-    val dateTime:String? = null
+    val dateTime: String? = null
 )
+
 data class ObservationDateValue(
     val date: String,
     val value: String,
@@ -44,20 +47,22 @@ enum class NavigationDetails {
     ADMINISTER_VACCINE,
     LIST_VACCINE_DETAILS,
     CLIENT_LIST,
-    EDIT_CLIENT
+    EDIT_CLIENT,
+    LIST_AEFI
 }
+
 data class DbAppointmentData(
     val id: String? = null,
-    val title:String,
-    val description:String,
+    val title: String,
+    val description: String,
     val vaccineName: String?,
     val dateScheduled: String,
 
     val recommendationList: ArrayList<DbAppointmentDetails>? = null,
-    val status:String = ""
+    val status: String = ""
 )
 
-enum class Identifiers{
+enum class Identifiers {
     SYSTEM_GENERATED
 }
 
@@ -68,32 +73,36 @@ data class DbVaccineStockDetails(
 
 //This is the recommendation
 data class DbAppointmentDetails(
-    val appointmentId:String,
+    val appointmentId: String,
     val dateScheduled: String,
     val doseNumber: String?,
     val targetDisease: String,
     val vaccineName: String,
     val appointmentStatus: String
 )
+
 data class DbSignIn(
     val idNumber: String,
     val password: String
 )
+
 data class DbSignInResponse(
-    val access_token:String,
-    val expires_in:String,
-    val refresh_expires_in:String,
-    val refresh_token:String,
+    val access_token: String,
+    val expires_in: String,
+    val refresh_expires_in: String,
+    val refresh_token: String,
 )
+
 data class DbUserInfoResponse(
-    val user:DbUser?,
+    val user: DbUser?,
 )
+
 data class DbUser(
-    val fullNames:String,
-    val idNumber:String,
-    val practitionerRole:String,
-    val fhirPractitionerId:String,
-    val email:String,
-    val phone:String?,
-    val id:String,
+    val fullNames: String,
+    val idNumber: String,
+    val practitionerRole: String,
+    val fhirPractitionerId: String,
+    val email: String,
+    val phone: String?,
+    val id: String,
 )
