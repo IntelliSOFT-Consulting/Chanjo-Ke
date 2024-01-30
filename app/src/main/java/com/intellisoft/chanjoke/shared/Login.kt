@@ -40,15 +40,18 @@ class Login : AppCompatActivity() {
             val username = etUsername.text.toString()
             val password = etPassword.text.toString()
 
-            if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
 
-                val dbSignIn = DbSignIn(username, password)
-                retrofitCallsAuthentication.loginUser(this, dbSignIn)
-
-            } else {
-                etUsername.error = "Please Enter Username"
-                etPassword.error = "Please Enter Password"
-            }
+//            if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+//
+//                val dbSignIn = DbSignIn(username, password)
+//                retrofitCallsAuthentication.loginUser(this, dbSignIn)
+//
+//            } else {
+//                etUsername.error = "Please Enter Username"
+//                etPassword.error = "Please Enter Password"
+//            }
 
 
         }

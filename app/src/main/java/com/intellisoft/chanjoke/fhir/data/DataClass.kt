@@ -98,3 +98,14 @@ data class DbUser(
     val phone:String?,
     val id:String,
 )
+
+data class DbVaccinationSchedule(
+    val scheduleTime: String,
+    val scheduleStatus: String,
+    val scheduleVaccinationList: ArrayList<DbScheduleVaccination>
+)
+data class DbScheduleVaccination(
+    val vaccineName: String,
+    val vaccineDate:String,
+    val vaccineStatus:String
+)
