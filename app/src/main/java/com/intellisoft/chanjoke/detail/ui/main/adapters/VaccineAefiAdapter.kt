@@ -10,8 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 
 class VaccineAefiAdapter(
+    private val patientDetailsViewModel: PatientDetailsViewModel,
     private var entryList: ArrayList<DbVaccineData>,
     private val context: Context
 ) : RecyclerView.Adapter<VaccineAefiAdapter.Pager2ViewHolder>() {
@@ -19,6 +22,7 @@ class VaccineAefiAdapter(
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
+        val aefiList: RecyclerView = itemView.findViewById(R.id.aefi_list)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tv_vaccine_name)
 
         init {
@@ -51,6 +55,16 @@ class VaccineAefiAdapter(
 
         val vaccineName = entryList[position].vaccineName
         holder.tvVaccineName.text = vaccineName
+
+        val logicalId = FormatterClass().getSharedPref("current_immunization", context)
+
+        if (logicalId != null) {
+            val adverseEvents = patientDetailsViewModel.loadImmunizationAefis(logicalId)
+
+            val vaccineAdapter = EventsAdapter(adverseEvents, context)
+            holder.aefiList.adapter = vaccineAdapter
+        }
+
 
     }
 

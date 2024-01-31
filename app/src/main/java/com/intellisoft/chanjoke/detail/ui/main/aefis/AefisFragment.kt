@@ -18,9 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.databinding.ActivityAdministerVaccineBinding
 import com.intellisoft.chanjoke.databinding.FragmentAefisBinding
-import com.intellisoft.chanjoke.detail.ui.main.VaccineAdapter
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineAefiAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -118,7 +116,7 @@ class AefisFragment : Fragment() {
 //                    "encounter_logical_id", logicalId.text.toString(), context
 //                )
                 val intent = Intent(context, MainActivity::class.java)
-                intent.putExtra("functionToCall", NavigationDetails.LIST_VACCINE_DETAILS.name)
+                intent.putExtra("functionToCall", NavigationDetails.ADD_AEFI.name)
                 intent.putExtra("patientId", patientId)
                 context.startActivity(intent)
             }
@@ -127,7 +125,7 @@ class AefisFragment : Fragment() {
 
     private fun pullVaccinesWithAefis() {
         val vaccineList = patientDetailsViewModel.getVaccineList()
-        val vaccineAdapter = VaccineAefiAdapter(vaccineList, requireContext())
+        val vaccineAdapter = VaccineAefiAdapter(patientDetailsViewModel,vaccineList, requireContext())
         binding.aefiParentList.adapter = vaccineAdapter
     }
 

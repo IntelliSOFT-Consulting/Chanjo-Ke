@@ -125,6 +125,12 @@ class MainActivity : AppCompatActivity() {
                     administerVaccine(patientId, R.id.patient_list)
                 }
             }
+            NavigationDetails.ADD_AEFI.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    administerVaccine(patientId, R.id.administerVaccine)
+                }
+            }
             NavigationDetails.EDIT_CLIENT.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
