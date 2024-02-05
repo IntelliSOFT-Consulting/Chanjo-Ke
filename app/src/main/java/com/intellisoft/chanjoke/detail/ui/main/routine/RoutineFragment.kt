@@ -2,23 +2,19 @@ package com.intellisoft.chanjoke.detail.ui.main.routine
 
 import android.app.Application
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
-import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.databinding.FragmentRecommendationBinding
 import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
+import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
-import com.intellisoft.chanjoke.fhir.data.DbScheduleVaccination
-import com.intellisoft.chanjoke.fhir.data.DbVaccinationSchedule
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,7 +35,6 @@ class RoutineFragment : Fragment() {
     private lateinit var patientId: String
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
-    private lateinit var layoutManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,14 +55,6 @@ class RoutineFragment : Fragment() {
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
 
-        layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-        binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.setHasFixedSize(true)
-
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
@@ -80,31 +67,39 @@ class RoutineFragment : Fragment() {
 
     private fun getRoutine() {
 
-        val dbVaccinationScheduleList = ArrayList<DbVaccinationSchedule>()
 
-        for (i in 1..10){
+        val expandableListDetail = HashMap<String, List<String>>()
 
-            val scheduleVaccinationList =  ArrayList<DbScheduleVaccination>()
+        val cricket: MutableList<String> = ArrayList()
+        cricket.add("India")
+        cricket.add("Pakistan")
+        cricket.add("Australia")
+        cricket.add("England")
+        cricket.add("South Africa")
 
-            for (j in 1..1){
-                val dbScheduleVaccination = DbScheduleVaccination(
-                    "Vac $j",
-                    "vac $j",
-                    "vac $j")
-                scheduleVaccinationList.add(dbScheduleVaccination)
-            }
+        val football: MutableList<String> = ArrayList()
+        football.add("Brazil")
+        football.add("Spain")
+        football.add("Germany")
+        football.add("Netherlands")
+        football.add("Italy")
 
-            val dbVaccinationSchedule = DbVaccinationSchedule(
-                "$i weeks",
-                "Missed",
-                scheduleVaccinationList
-            )
-            dbVaccinationScheduleList.add(dbVaccinationSchedule)
-        }
+        val basketball: MutableList<String> = ArrayList()
+        basketball.add("United States")
+        basketball.add("Spain")
+        basketball.add("Argentina")
+        basketball.add("France")
+        basketball.add("Russia")
+
+        expandableListDetail["CRICKET TEAMS"] = cricket
+        expandableListDetail["FOOTBALL TEAMS"] = football
+        expandableListDetail["BASKETBALL TEAMS"] = basketball
+
+        val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
 
-        val scheduleAdapter = ScheduleAdapter(dbVaccinationScheduleList, requireContext())
-        binding.recyclerView.adapter = scheduleAdapter
+        val vaccineScheduleAdapter = VaccineScheduleAdapter(requireContext(), expandableListTitle, expandableListDetail)
+        binding.expandableListView.setAdapter(vaccineScheduleAdapter)
     }
 
     companion object {
