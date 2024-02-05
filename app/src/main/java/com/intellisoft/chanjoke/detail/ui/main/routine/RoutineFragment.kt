@@ -67,7 +67,6 @@ class RoutineFragment : Fragment() {
 
     private fun getRoutine() {
 
-
         val expandableListDetail = HashMap<String, List<String>>()
 
         val cricket: MutableList<String> = ArrayList()

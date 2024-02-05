@@ -74,8 +74,9 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.5dp" />
+            android:divider="@android:color/transparent"
+            android:dividerHeight="5dp"
+            />
 
     </LinearLayout>
 
