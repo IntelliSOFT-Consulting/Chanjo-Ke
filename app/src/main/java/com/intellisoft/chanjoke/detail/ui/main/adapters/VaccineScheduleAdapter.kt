@@ -21,6 +21,10 @@ class VaccineScheduleAdapter(
     // Maintain a map to store the checked state of each checkbox
     private val checkedStates = HashMap<Pair<Int, Int>, Boolean>()
 
+    init {
+        updateAdministerVaccineText()
+    }
+
     override fun getChild(listPosition: Int, expandedListPosition: Int): Any {
         return expandableListDetail[expandableListTitle[listPosition]]!![expandedListPosition]
     }
@@ -29,6 +33,7 @@ class VaccineScheduleAdapter(
         return expandedListPosition.toLong()
     }
 
+    // Modify getChildView to handle checkbox state
     override fun getChildView(
         listPosition: Int,
         expandedListPosition: Int,
@@ -43,7 +48,7 @@ class VaccineScheduleAdapter(
             convertView = layoutInflater.inflate(R.layout.vaccination_schedule_vaccines, null)
         }
         val expandedListTextView = convertView!!.findViewById<TextView>(R.id.tvVaccineName)
-        val checkBox = convertView!!.findViewById<CheckBox>(R.id.checkbox)
+        val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
 
         expandedListTextView.text = expandedListText.vaccineName
 
@@ -54,11 +59,33 @@ class VaccineScheduleAdapter(
         // Update checked state when checkbox state changes
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             checkedStates[key] = isChecked
+            updateAdministerVaccineText()
         }
 
-
-
         return convertView
+    }
+
+    // Method to update the tvAdministerVaccine TextView with the number of selected checkboxes
+    private fun updateAdministerVaccineText() {
+        val selectedCount = checkedStates.count { it.value }
+        val value = "Administer Vaccine ($selectedCount)"
+        tvAdministerVaccine.text = value
+    }
+
+    // Method to get the checked states
+    // Method to get the list of selected BasicVaccine items
+    fun getCheckedStates(): List<BasicVaccine> {
+        val selectedVaccines = mutableListOf<BasicVaccine>()
+        for ((positionPair, isChecked) in checkedStates) {
+            if (isChecked) {
+                val (groupPosition, childPosition) = positionPair
+                val vaccine = expandableListDetail[expandableListTitle[groupPosition]]?.get(childPosition)
+                vaccine?.let {
+                    selectedVaccines.add(it)
+                }
+            }
+        }
+        return selectedVaccines
     }
 
     override fun getChildrenCount(listPosition: Int): Int {

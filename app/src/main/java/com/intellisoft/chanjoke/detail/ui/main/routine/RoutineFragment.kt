@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main.routine
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,8 +73,18 @@ class RoutineFragment : Fragment() {
         val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
         val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
-        val vaccineScheduleAdapter = VaccineScheduleAdapter(requireContext(), expandableListTitle, expandableListDetail, binding.tvAdministerVaccine)
+        val vaccineScheduleAdapter = VaccineScheduleAdapter(requireContext(),
+            expandableListTitle,
+            expandableListDetail,
+            binding.tvAdministerVaccine)
         binding.expandableListView.setAdapter(vaccineScheduleAdapter)
+
+        binding.tvAdministerVaccine.setOnClickListener {
+            val checkedStates = vaccineScheduleAdapter.getCheckedStates()
+            Log.e("--->","<----")
+            println(checkedStates)
+            Log.e("--->","<----")
+        }
     }
 
     companion object {
