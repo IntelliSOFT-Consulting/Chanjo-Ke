@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -81,9 +83,11 @@ class RoutineFragment : Fragment() {
 
         binding.tvAdministerVaccine.setOnClickListener {
             val checkedStates = vaccineScheduleAdapter.getCheckedStates()
-            Log.e("--->","<----")
-            println(checkedStates)
-            Log.e("--->","<----")
+
+            val bottomSheet = BottomSheetDialog()
+            fragmentManager?.let { it1 -> bottomSheet.show(it1, "ModalBottomSheet") }
+
+
         }
     }
 

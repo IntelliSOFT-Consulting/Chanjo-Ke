@@ -1,4 +1,4 @@
-package com.intellisoft.chanjoke.vaccine
+package com.intellisoft.chanjoke.vaccine.selections
 
 import android.app.Application
 import android.os.Bundle
