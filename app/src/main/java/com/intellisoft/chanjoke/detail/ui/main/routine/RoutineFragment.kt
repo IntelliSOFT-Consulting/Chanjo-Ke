@@ -12,6 +12,8 @@ import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
@@ -67,33 +69,7 @@ class RoutineFragment : Fragment() {
 
     private fun getRoutine() {
 
-        val expandableListDetail = HashMap<String, List<String>>()
-
-        val cricket: MutableList<String> = ArrayList()
-        cricket.add("India")
-        cricket.add("Pakistan")
-        cricket.add("Australia")
-        cricket.add("England")
-        cricket.add("South Africa")
-
-        val football: MutableList<String> = ArrayList()
-        football.add("Brazil")
-        football.add("Spain")
-        football.add("Germany")
-        football.add("Netherlands")
-        football.add("Italy")
-
-        val basketball: MutableList<String> = ArrayList()
-        basketball.add("United States")
-        basketball.add("Spain")
-        basketball.add("Argentina")
-        basketball.add("France")
-        basketball.add("Russia")
-
-        expandableListDetail["CRICKET TEAMS"] = cricket
-        expandableListDetail["FOOTBALL TEAMS"] = football
-        expandableListDetail["BASKETBALL TEAMS"] = basketball
-
+        val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
         val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
 

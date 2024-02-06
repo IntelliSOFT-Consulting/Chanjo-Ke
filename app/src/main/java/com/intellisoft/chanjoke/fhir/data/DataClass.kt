@@ -109,3 +109,8 @@ data class DbScheduleVaccination(
     val vaccineDate:String,
     val vaccineStatus:String
 )
+data class DbVaccineSchedule(
+    val scheduleTime: String,
+    val scheduleStatus: String?,
+    val scheduleVaccinationList: List<BasicVaccine>
+)

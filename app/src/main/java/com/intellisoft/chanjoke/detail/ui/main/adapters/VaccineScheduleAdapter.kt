@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 
 class VaccineScheduleAdapter(
     private val context: Context,
     private val expandableListTitle: List<String>,
-    private val expandableListDetail: HashMap<String, List<String>>
+    private val expandableListDetail: HashMap<String, List<BasicVaccine>>
 ) : BaseExpandableListAdapter() {
 
     override fun getChild(listPosition: Int, expandedListPosition: Int): Any {
@@ -31,13 +32,13 @@ class VaccineScheduleAdapter(
         parent: ViewGroup?
     ): View {
         var convertView = convertView
-        val expandedListText = getChild(listPosition, expandedListPosition) as String
+        val expandedListText = getChild(listPosition, expandedListPosition) as BasicVaccine
         if (convertView == null) {
             val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = layoutInflater.inflate(R.layout.vaccination_schedule_vaccines, null)
         }
         val expandedListTextView = convertView!!.findViewById<TextView>(R.id.tvVaccineName)
-        expandedListTextView.text = expandedListText
+        expandedListTextView.text = expandedListText.vaccineName
         return convertView
     }
 
@@ -72,7 +73,12 @@ class VaccineScheduleAdapter(
         }
         val listTitleTextView = convertView!!.findViewById<TextView>(R.id.tvScheduleTime)
         listTitleTextView.setTypeface(null, Typeface.BOLD)
-        listTitleTextView.text = listTitle
+        val weekNo: String = if (listTitle == "0"){
+            "At Birth"
+        }else{
+            "$listTitle weeks"
+        }
+        listTitleTextView.text = weekNo
         return convertView
     }
 
