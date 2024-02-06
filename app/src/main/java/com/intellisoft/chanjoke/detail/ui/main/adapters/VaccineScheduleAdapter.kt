@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
+import android.widget.CheckBox
 import android.widget.TextView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
@@ -13,8 +14,12 @@ import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 class VaccineScheduleAdapter(
     private val context: Context,
     private val expandableListTitle: List<String>,
-    private val expandableListDetail: HashMap<String, List<BasicVaccine>>
+    private val expandableListDetail: HashMap<String, List<BasicVaccine>>,
+    private val tvAdministerVaccine: TextView
 ) : BaseExpandableListAdapter() {
+
+    // Maintain a map to store the checked state of each checkbox
+    private val checkedStates = HashMap<Pair<Int, Int>, Boolean>()
 
     override fun getChild(listPosition: Int, expandedListPosition: Int): Any {
         return expandableListDetail[expandableListTitle[listPosition]]!![expandedListPosition]
@@ -38,7 +43,21 @@ class VaccineScheduleAdapter(
             convertView = layoutInflater.inflate(R.layout.vaccination_schedule_vaccines, null)
         }
         val expandedListTextView = convertView!!.findViewById<TextView>(R.id.tvVaccineName)
+        val checkBox = convertView!!.findViewById<CheckBox>(R.id.checkbox)
+
         expandedListTextView.text = expandedListText.vaccineName
+
+        // Set checkbox state based on stored checked state
+        val key = Pair(listPosition, expandedListPosition)
+        checkBox.isChecked = checkedStates[key] ?: false
+
+        // Update checked state when checkbox state changes
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            checkedStates[key] = isChecked
+        }
+
+
+
         return convertView
     }
 

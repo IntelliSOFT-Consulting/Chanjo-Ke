@@ -14,13 +14,12 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_weight="1"
             android:layout_marginStart="25dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:id="@+id/tvScheduleTime"
             android:textStyle="bold"
-            android:text="At Birth"
-            android:layout_width="wrap_content"
+            android:text="842 weeks"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"/>
 
         <ImageView
@@ -33,6 +32,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
+            android:layout_weight="1"
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"
             android:id="@+id/tvAefi"

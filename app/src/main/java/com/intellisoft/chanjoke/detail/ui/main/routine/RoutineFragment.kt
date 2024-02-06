@@ -72,8 +72,7 @@ class RoutineFragment : Fragment() {
         val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
         val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
-
-        val vaccineScheduleAdapter = VaccineScheduleAdapter(requireContext(), expandableListTitle, expandableListDetail)
+        val vaccineScheduleAdapter = VaccineScheduleAdapter(requireContext(), expandableListTitle, expandableListDetail, binding.tvAdministerVaccine)
         binding.expandableListView.setAdapter(vaccineScheduleAdapter)
     }
 
