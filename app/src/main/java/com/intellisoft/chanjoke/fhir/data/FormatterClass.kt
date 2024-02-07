@@ -134,6 +134,7 @@ class FormatterClass {
             "vaccinationSeriesDoses" ,
             "vaccinationManufacturer" ,
             "immunizationId" ,
+            "selectedVaccineName" ,
 //            "selectedVaccinationVenue" ,
 //            "isSelectedVaccinationVenue" ,
             "administeredProduct")

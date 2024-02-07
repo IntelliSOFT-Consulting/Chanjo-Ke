@@ -97,6 +97,16 @@
         android:name="com.intellisoft.chanjoke.PractionerDetails"
         android:label="fragment_practioner_details"
         tools:layout="@layout/fragment_practioner_details" />
+    <fragment
+        android:id="@+id/contraindicationsFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsFragment"
+        android:label="fragment_contraindications"
+        tools:layout="@layout/fragment_contraindications" />
+    <fragment
+        android:id="@+id/administerNewFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.contraindications.AdministerNewFragment"
+        android:label="fragment_administer_new"
+        tools:layout="@layout/fragment_administer_new" />
 
 
 </navigation>

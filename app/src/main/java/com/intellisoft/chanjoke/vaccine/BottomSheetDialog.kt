@@ -1,13 +1,20 @@
 package com.intellisoft.chanjoke.vaccine
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.detail.ui.main.administration.VaccineAdministration
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
 class BottomSheetDialog : BottomSheetDialogFragment() {
 
@@ -21,12 +28,16 @@ class BottomSheetDialog : BottomSheetDialogFragment() {
         val btnContraindications = view.findViewById<Button>(R.id.btnContraindications)
 
         btnContraindications.setOnClickListener {
-            Toast.makeText(activity, "Contra Shared", Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, VaccineAdministration::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.CONTRAINDICATIONS.name)
+            context?.startActivity(intent)
             dismiss()
         }
 
         btnAdministerVaccine.setOnClickListener {
-            Toast.makeText(activity, "Administer Shared", Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, VaccineAdministration::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            context?.startActivity(intent)
             dismiss()
         }
 
