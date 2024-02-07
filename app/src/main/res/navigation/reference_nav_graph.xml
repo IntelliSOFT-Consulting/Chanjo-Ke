@@ -107,6 +107,15 @@
         android:name="com.intellisoft.chanjoke.detail.ui.main.contraindications.AdministerNewFragment"
         android:label="fragment_administer_new"
         tools:layout="@layout/fragment_administer_new" />
+    <fragment
+        android:id="@+id/aefisFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.aefis.AefisFragment"
+        android:label="AEFI"
+        tools:layout="@layout/fragment_aefis">
+    <argument
+        android:name="patient_id"
+        app:argType="string" />
+    </fragment>
 
 
 </navigation>
