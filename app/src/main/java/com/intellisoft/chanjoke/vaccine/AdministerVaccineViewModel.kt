@@ -401,6 +401,50 @@ class AdministerVaccineViewModel(
 
     }
 
+    fun createManualContraindication(immunizationList:List<String>, patientId: String, nextImmunizationDate: Date?, immunizationId: String?){
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val immunizationHandler = ImmunizationHandler()
+
+            for (vaccineNameValue in immunizationList){
+
+                val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
+
+                val nextBasicVaccine = vaccineBasicVaccine?.let {
+                    immunizationHandler.getNextDoseDetails(
+                        it
+                    )
+                }
+
+                val seriesVaccine = vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
+
+                val targetDisease = seriesVaccine?.targetDisease
+                val vaccineName = nextBasicVaccine?.vaccineName
+
+                val job = Job()
+                CoroutineScope(Dispatchers.IO + job).launch {
+                    //Save resources to Shared preference
+                    if (vaccineName != null && targetDisease != null) {
+                        FormatterClass().saveStockValue(
+                            vaccineName,
+                            targetDisease,
+                            getApplication<Application>().applicationContext)
+                    }
+                }.join()
+                val recommendation = createImmunizationRecommendationResource(
+                    patientId,
+                    nextImmunizationDate,
+                    "Due",
+                    "Next Immunization date",
+                    immunizationId)
+                saveResourceToDatabase(recommendation, "ImmRec")
+
+            }
+
+
+        }
+    }
+
     //Create an immunizationRecommendation resource
     private fun createImmunizationRecommendationResource(
         patientId: String,
