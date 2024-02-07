@@ -1,22 +1,5 @@
 {
   "resourceType": "Questionnaire",
-  "id": "client-registration",
-  "language": "en",
-  "status": "active",
-  "date": "2023-12-19T07:44:47.111Z",
-  "subjectType": [
-    "Patient"
-  ],
-  "extension": [
-    {
-      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
-      "valueExpression": {
-        "language": "application/x-fhir-query",
-        "expression": "Patient",
-        "name": "patient"
-      }
-    }
-  ],
   "item": [
     {
       "linkId": "a-birthdate",
@@ -24,10 +7,10 @@
       "type": "date",
       "extension": [
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
           "valueExpression": {
             "language": "text/fhirpath",
-            "expression": "%resource.linkId='a-age-years' and answer.empty().not() ? today() - answer.value : null"
+            "expression": "today() - %resource.item.where(linkId='a-birthdate').answer.value"
           }
         }
       ]
@@ -35,16 +18,19 @@
     {
       "linkId": "a-age-years",
       "text": "Age years",
-      "type": "quantity",
-      "extension": [
+      "type": "decimal",
+      "enableWhen": [
         {
-          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
-          "valueExpression": {
-            "language": "text/fhirpath",
-            "expression": "%resource.linkId='a-birthdate' and answer.empty().not() ? today() - answer.value : null"
-          }
+          "question": "a-birthdate",
+          "operator": "exists",
+          "answerBoolean": true
         }
-      ]
+      ],
+      "readonly": true,
+      "display": {
+        "language": "text/fhirpath",
+        "expression": "%resource.item.where(linkId='a-age-years').enableWhen[0].answerBoolean ? %resource.item.where(linkId='a-birthdate').extension[0].valueExpression.expression : 'N/A'"
+      }
     }
   ]
 }

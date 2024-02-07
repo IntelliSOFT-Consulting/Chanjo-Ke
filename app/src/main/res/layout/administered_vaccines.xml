@@ -48,7 +48,7 @@
                 android:padding="10dp"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
-                android:text="ADD AEFI" />
+                android:text="AEFIs" />
 
         </LinearLayout>
 
