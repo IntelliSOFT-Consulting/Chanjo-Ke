@@ -23,6 +23,7 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
+import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
@@ -69,7 +70,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
         val adapter = SectionsPagerAdapter(supportFragmentManager)
 
-        val vaccine = VaccinesFragment()
+        val vaccine = RoutineFragment()
         vaccine.arguments = bundle
 
         val apn = RecommendationFragment()
@@ -78,9 +79,9 @@ class PatientDetailActivity : AppCompatActivity() {
         val appointment = AppointmentsFragment()
         appointment.arguments = bundle
 
-        adapter.addFragment(apn, getString(R.string.tab_text_2))
         adapter.addFragment(vaccine, getString(R.string.tab_text_1))
-        adapter.addFragment(appointment, getString(R.string.tab_text_4))
+        adapter.addFragment(apn, getString(R.string.tab_text_2))
+//        adapter.addFragment(appointment, getString(R.string.tab_text_4))
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -167,9 +168,10 @@ class PatientDetailActivity : AppCompatActivity() {
 
                     val dob = formatterClass.convertDateFormat(patientDetail.dob)
                     val age = formatterClass.getFormattedAge(patientDetail.dob,tvAge.context.resources)
-                    val dobAge = "$dob ($age old)"
+//                    val dobAge = "$dob ($age old)"
 
-                    tvDob.text = dobAge
+                    tvDob.text = dob
+                    tvAge.text = "$age old"
 
                 }
             }
@@ -196,7 +198,6 @@ class PatientDetailActivity : AppCompatActivity() {
                 val missedVaccinesList =
                     ageInWeeks?.let { immunizationHandler.getMissedRoutineVaccines(basicVaccineList, it) }
 
-                binding.tvMissingVaccines.text = missedVaccinesList?.joinToString(separator = ","){it.vaccineName}
 
 
             }

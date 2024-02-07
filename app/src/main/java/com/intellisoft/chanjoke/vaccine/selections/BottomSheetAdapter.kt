@@ -1,4 +1,4 @@
-package com.intellisoft.chanjoke.vaccine
+package com.intellisoft.chanjoke.vaccine.selections
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -8,15 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
-import android.widget.ExpandableListView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -25,7 +21,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 class BottomSheetAdapter(
     private val groupList: List<String>,

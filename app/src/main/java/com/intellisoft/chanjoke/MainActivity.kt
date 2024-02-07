@@ -104,6 +104,9 @@ class MainActivity : AppCompatActivity() {
                     administerVaccine(patientId, R.id.administerVaccine)
                 }
             }
+            NavigationDetails.CONTRAINDICATIONS.name -> {
+                contraindicationFunction()
+            }
 
             NavigationDetails.LIST_VACCINE_DETAILS.name -> {
                 val patientId = intent.getStringExtra("patientId")
@@ -195,6 +198,12 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
             R.id.updateFragment,
             bundle
+        )
+    }
+    private fun contraindicationFunction() {
+
+        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
+            R.id.contraindicationsFragment
         )
     }
     private fun registerFunction() {

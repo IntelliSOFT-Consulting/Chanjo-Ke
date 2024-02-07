@@ -59,8 +59,7 @@ class AddAppointment : AppCompatActivity() {
             ViewModelProvider(
                 this,
                 PatientDetailsViewModelFactory(this.application, fhirEngine, patientId),
-            )
-                .get(PatientDetailsViewModel::class.java)
+            ).get(PatientDetailsViewModel::class.java)
 
         createSpinner()
 

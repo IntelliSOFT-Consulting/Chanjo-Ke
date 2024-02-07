@@ -47,52 +47,75 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textStyle="bold" />
 
-                <TableLayout
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_height="wrap_content">
 
-                    <TableRow>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="DOB"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textStyle="bold" />
-
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                        <LinearLayout
                             android:layout_weight="1"
-                            android:text=":"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-
-                        <TextView
-                            android:id="@+id/tvDob"
+                            android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                            android:layout_height="wrap_content">
 
-                    </TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="DOB:"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textStyle="bold" />
+
+
+                            <TextView
+                                android:id="@+id/tvDob"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Gender:"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textStyle="bold" />
+
+
+                            <TextView
+                                android:id="@+id/tvGender"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <View
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="5dp"
                         android:background="@android:color/darker_gray" />
 
-                    <TableRow
-                        android:visibility="gone"
-                        >
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Age"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -100,65 +123,28 @@
 
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_weight="1"
                             android:text=":"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
                         <TextView
+                            android:text="1"
                             android:id="@+id/tvAge"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    </TableRow>
 
-                    <View
+                    </LinearLayout>
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@android:color/darker_gray" />
-
-
-                    <TableRow>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Gender"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textStyle="bold" />
-
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1"
-                            android:text=":"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-
-                        <TextView
-                            android:id="@+id/tvGender"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    </TableRow>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@android:color/darker_gray" />
-
-                    <TableRow>
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -184,49 +170,8 @@
                             android:layout_weight="1"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    </TableRow>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@android:color/darker_gray" />
-
-
-                </TableLayout>
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Missed Vaccines:"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textStyle="bold" />
-
-                    <HorizontalScrollView
-                        android:layout_margin="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/tvMissingVaccines"
-                            android:textColor="@android:color/holo_red_dark"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="OPV I"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textStyle="bold" />
-
-                    </HorizontalScrollView>
-
-
-
-
+                    </LinearLayout>
 
                 </LinearLayout>
 

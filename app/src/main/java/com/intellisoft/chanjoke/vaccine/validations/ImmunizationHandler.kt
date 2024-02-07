@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.vaccine.validations
 
 import android.content.Context
 import android.util.Log
+import com.intellisoft.chanjoke.fhir.data.DbVaccineSchedule
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 // Interface segregation principle
@@ -142,7 +143,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         "BCG",
         1,
         listOf(
-            BasicVaccine(bcg+"I", "BCG", "Intradermal", 257, arrayListOf(), "0.5ml","1")
+            BasicVaccine(bcg+"I", "BCG", "Intradermal", 0, arrayListOf(), "0.5ml","1")
         )
     )
 
@@ -203,18 +204,11 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val vitaminASeries = RoutineVaccine(
         vitaminA,
         "Vitamin A",
-        10,
+        3,
         listOf(
-           BasicVaccine(vitaminA+"1", "Vitamin A 1st Dose", "Oral", 26, arrayListOf(), "100,000OUI","1"),
+           BasicVaccine(vitaminA+"1", "Vitamin A 1st Dose", "Oral", 27, arrayListOf(), "100,000OUI","1"),
            BasicVaccine(vitaminA+"2", "Vitamin A 2nd Dose", "Oral", 52, arrayListOf(26.07), "200,000OUI","2"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 3rd Dose", "Oral", 78, arrayListOf(26.07), "1Capsule","3"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 4th Dose", "Oral", 104, arrayListOf(26.07), "1Capsule","4"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 5th Dose", "Oral", 130, arrayListOf(26.07), "1Capsule","5"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 6th Dose", "Oral", 156, arrayListOf(26.07), "1Capsule","6"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 7th Dose", "Oral", 182, arrayListOf(26.07), "1Capsule","7"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 8th Dose", "Oral", 208, arrayListOf(26.07), "1Capsule","8"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 9th Dose", "Oral", 234, arrayListOf(26.07), "1Capsule","9"),
-           BasicVaccine(vitaminA+"3", "Vitamin A 10th Dose", "Oral", 260, arrayListOf(26.07), "1Capsule","10"),
+           BasicVaccine(vitaminA+"3", "Vitamin A 3rd Dose", "Oral", 79, arrayListOf(26.07), "1Capsule","3")
         )
     )
 
@@ -388,18 +382,7 @@ class ImmunizationHandler() {
 
 
 
-    // Extension function for List<DbVaccine> to find vaccine details by vaccine name
-    fun getVaccineDetailsByBasicVaccineName(vaccineName: String): BasicVaccine? {
 
-        val (routineList, nonRoutineList, pregnancyList) = vaccines
-
-        return listOf(
-            routineList.flatMap { it.vaccineList },
-            nonRoutineList.flatMap { it.vaccineList.flatMap { it.vaccineList } },
-            pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
-            .firstOrNull { it.matchesVaccineName(vaccineName) }
-
-    }
 
     data class VaccineInfo(
         val vaccineCode: String,
@@ -740,6 +723,44 @@ class ImmunizationHandler() {
 
         return allMissedVaccines.sortedBy { it.administrativeWeeksSinceDOB }
     }
+
+    // Extension function for List<DbVaccine> to find vaccine details by vaccine name
+    fun getVaccineDetailsByBasicVaccineName(vaccineName: String): BasicVaccine? {
+
+        val (routineList, nonRoutineList, pregnancyList) = vaccines
+
+        return listOf(
+            routineList.flatMap { it.vaccineList },
+            nonRoutineList.flatMap { it.vaccineList.flatMap { it.vaccineList } },
+            pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
+            .firstOrNull { it.matchesVaccineName(vaccineName) }
+
+    }
+
+    fun generateDbVaccineSchedule(): HashMap<String, List<BasicVaccine>> {
+
+        val (routineList, _, _) = vaccines
+        val vaccineList = routineList.flatMap { it.vaccineList }
+        val groupedVaccines = vaccineList.groupBy { it.administrativeWeeksSinceDOB }
+
+        val expandableListDetail = HashMap<Int, List<BasicVaccine>>()
+
+        groupedVaccines.forEach { (weeks, vaccines) ->
+            expandableListDetail[weeks] = vaccines
+        }
+
+        // Sort the keys alphabetically
+        val sortedKeys = expandableListDetail.keys.sorted()
+
+        // Create a new LinkedHashMap with sorted entries
+        val sortedExpandableListDetail = LinkedHashMap<String, List<BasicVaccine>>()
+        sortedKeys.forEach { key ->
+            sortedExpandableListDetail[key.toString()] = expandableListDetail[key]!!
+        }
+
+        return sortedExpandableListDetail
+    }
+
 
 
 

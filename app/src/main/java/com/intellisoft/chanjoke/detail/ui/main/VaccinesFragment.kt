@@ -3,7 +3,6 @@ package com.intellisoft.chanjoke.detail.ui.main
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,19 +18,12 @@ import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentVaccinesBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
-import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.BottomSheetFragment
 import com.intellisoft.chanjoke.vaccine.selections.VaccineSelection
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.ArrayList
 
 
 /**
