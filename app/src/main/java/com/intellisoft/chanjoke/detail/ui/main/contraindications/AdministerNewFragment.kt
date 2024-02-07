@@ -15,6 +15,7 @@ import com.intellisoft.chanjoke.databinding.FragmentAdministerNewBinding
 import com.intellisoft.chanjoke.databinding.FragmentContraindicationsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
@@ -69,7 +70,27 @@ class AdministerNewFragment : Fragment() {
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.setHasFixedSize(true)
 
+        binding.btnAdministerVaccine.setOnClickListener {
+            val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
+            blurBackgroundDialog.show()
+        }
+
+        getBatchNumbers()
+
         return binding.root
+    }
+
+    private fun getBatchNumbers() {
+
+        val selectedUnContraindicatedVaccine = formatterClass.getSharedPref("selectedUnContraindicatedVaccine", requireContext())
+        if (selectedUnContraindicatedVaccine != null) {
+            val resultList = selectedUnContraindicatedVaccine.split(",").toList().toMutableList()
+            val vaccineAdapter = AdministerNewAdapter(resultList,requireContext())
+            binding.recyclerView.adapter = vaccineAdapter
+
+        }
+
+
     }
 
     companion object {

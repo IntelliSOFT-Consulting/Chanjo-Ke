@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"/>
 
         <Button
-            android:id="@+id/btnPreview"
+            android:id="@+id/btnAdministerVaccine"
             android:layout_weight="1"
             android:layout_marginStart="20dp"
             android:text="Administer"

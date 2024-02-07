@@ -3,6 +3,7 @@ package com.intellisoft.chanjoke.detail.ui.main.contraindications
 import android.app.Application
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,10 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
@@ -38,6 +42,7 @@ class ContraindicationsFragment : Fragment() {
     private val formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private val selectedItemList = ArrayList<String>()
+    private var selectedVaccineName:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +80,35 @@ class ContraindicationsFragment : Fragment() {
 
         binding.tvDatePicker.setOnClickListener { showDatePickerDialog() }
 
+        binding.btnNext.setOnClickListener {
+            /**
+             * Get the list of items,
+             * perform a contraindication,
+             * remove them from the shared preference
+             * save the new list to the shared pref
+             */
+            if (selectedVaccineName != null){
+                val resultList = selectedVaccineName!!.split(",").toList()
+                val newList = resultList.subtract(selectedItemList.toSet())
+
+                if (newList.isEmpty()){
+                    Toast.makeText(requireContext(), "There's no vaccine available", Toast.LENGTH_SHORT).show()
+                }else{
+                    formatterClass.saveSharedPref(
+                        "selectedUnContraindicatedVaccine",
+                        newList.joinToString(","),
+                        requireContext())
+
+                    findNavController().navigate(R.id.administerNewFragment)
+                }
+
+
+            }else{
+                Toast.makeText(requireContext(), "There's no vaccine available", Toast.LENGTH_SHORT).show()
+            }
+
+
+        }
 
 
         return binding.root
@@ -113,9 +147,9 @@ class ContraindicationsFragment : Fragment() {
 
     private fun createSpinner() {
 
-        val selectedVaccineName = formatterClass.getSharedPref("selectedVaccineName", requireContext())
+        selectedVaccineName = formatterClass.getSharedPref("selectedVaccineName", requireContext())
         if (selectedVaccineName != null){
-            val resultList = selectedVaccineName.split(",").toList()
+            val resultList = selectedVaccineName!!.split(",").toList()
 
             // Create an ArrayAdapter using the string array and a default spinner layout
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)

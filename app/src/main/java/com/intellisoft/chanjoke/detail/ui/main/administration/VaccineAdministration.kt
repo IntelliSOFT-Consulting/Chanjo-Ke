@@ -8,6 +8,7 @@ import com.intellisoft.chanjoke.detail.ui.main.contraindications.Contraindicatio
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
 class VaccineAdministration : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vaccine_administration)
@@ -20,13 +21,10 @@ class VaccineAdministration : AppCompatActivity() {
 //            .commit()
 
         when(intent.getStringExtra("functionToCall")){
-            NavigationDetails.CONTRAINDICATIONS.name -> {
-                contraindicationFunction()
-            }
-            NavigationDetails.ADMINISTER_VACCINE.name -> {
-                administerFunction()
-            }
+            NavigationDetails.CONTRAINDICATIONS.name -> { contraindicationFunction() }
+            NavigationDetails.ADMINISTER_VACCINE.name -> { administerFunction() }
         }
+
     }
     private fun administerFunction() {
 

@@ -135,6 +135,7 @@ class FormatterClass {
             "vaccinationManufacturer" ,
             "immunizationId" ,
             "selectedVaccineName" ,
+            "selectedUnContraindicatedVaccine" ,
 //            "selectedVaccinationVenue" ,
 //            "isSelectedVaccinationVenue" ,
             "administeredProduct")
