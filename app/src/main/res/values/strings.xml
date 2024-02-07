@@ -54,6 +54,7 @@
     <string name="success">Success</string>
     <string name="healthcare_worker_designation">Designation</string>
     <string name="at_birth">At Birth</string>
+    <string name="previous_aefi">Previous AEFI</string>
 
 
 </resources>

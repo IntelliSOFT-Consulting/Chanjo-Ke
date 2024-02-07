@@ -27,19 +27,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/administerVaccine"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:clickable="true"
-        android:text="Previous AEFI"
-        android:textAllCaps="true"
-        android:textColor="#ffffff"
-        app:backgroundTint="@color/darker_gray"
-        app:iconGravity="textStart"
-        app:iconTint="#ffffff" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/aefi_list"
