@@ -171,6 +171,8 @@ class ContraindicationsFragment : Fragment() {
 
     private fun createSpinner() {
 
+        formatterClass.deleteSharedPref("selectedUnContraindicatedVaccine", requireContext())
+
         selectedVaccineName = formatterClass.getSharedPref("selectedVaccineName", requireContext())
         if (selectedVaccineName != null){
             val resultList = selectedVaccineName!!.split(",").toList()

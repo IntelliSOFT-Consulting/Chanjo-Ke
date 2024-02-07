@@ -14,6 +14,6 @@
     <color name="green">#4CAF50</color>
     <color name="unselectedTab">#899CC8</color>
     <color name="bac_trans_color">#34899CC8</color>
-    <color name="darker_gray">#aaa</color>
+    <color name="darker_gray">#ADAAAAAA</color>
 
 </resources>

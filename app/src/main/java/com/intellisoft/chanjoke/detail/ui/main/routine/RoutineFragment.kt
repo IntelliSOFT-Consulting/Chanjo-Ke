@@ -93,6 +93,10 @@ class RoutineFragment : Fragment() {
                 "selectedVaccineName",
                 vaccineNameList.joinToString(","),
                 requireContext())
+            formatterClass.saveSharedPref(
+                "selectedUnContraindicatedVaccine",
+                vaccineNameList.joinToString(","),
+                requireContext())
 
             val bottomSheet = BottomSheetDialog()
             fragmentManager?.let { it1 ->
