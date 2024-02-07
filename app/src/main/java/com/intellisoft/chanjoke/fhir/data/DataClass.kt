@@ -44,7 +44,9 @@ data class ObservationDateValue(
 )
 
 enum class NavigationDetails {
+    CONTRAINDICATIONS,
     ADMINISTER_VACCINE,
+    UPDATE_CLIENT_HISTORY,
     LIST_VACCINE_DETAILS,
     CLIENT_LIST,
     EDIT_CLIENT,
@@ -105,4 +107,20 @@ data class DbUser(
     val email: String,
     val phone: String?,
     val id: String,
+)
+
+data class DbVaccinationSchedule(
+    val scheduleTime: String,
+    val scheduleStatus: String,
+    val scheduleVaccinationList: ArrayList<DbScheduleVaccination>
+)
+data class DbScheduleVaccination(
+    val vaccineName: String,
+    val vaccineDate:String,
+    val vaccineStatus:String
+)
+data class DbVaccineSchedule(
+    val scheduleTime: String,
+    val scheduleStatus: String?,
+    val scheduleVaccinationList: List<BasicVaccine>
 )

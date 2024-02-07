@@ -1,9 +1,7 @@
 package com.intellisoft.chanjoke.vaccine.selections
 
-import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ExpandableListView
 import androidx.appcompat.widget.Toolbar
@@ -13,7 +11,6 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityVaccineSelectionBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.vaccine.BottomSheetAdapter
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
