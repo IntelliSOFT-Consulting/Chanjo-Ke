@@ -85,7 +85,9 @@ class RoutineFragment : Fragment() {
             val checkedStates = vaccineScheduleAdapter.getCheckedStates()
 
             val bottomSheet = BottomSheetDialog()
-            fragmentManager?.let { it1 -> bottomSheet.show(it1, "ModalBottomSheet") }
+            fragmentManager?.let { it1 ->
+                bottomSheet.show(it1,
+                "ModalBottomSheet") }
 
 
         }

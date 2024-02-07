@@ -81,7 +81,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
         adapter.addFragment(vaccine, getString(R.string.tab_text_1))
         adapter.addFragment(apn, getString(R.string.tab_text_2))
-        adapter.addFragment(appointment, getString(R.string.tab_text_4))
+//        adapter.addFragment(appointment, getString(R.string.tab_text_4))
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
