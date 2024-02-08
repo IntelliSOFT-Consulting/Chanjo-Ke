@@ -11,7 +11,6 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
@@ -21,7 +20,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
-import org.hl7.fhir.r4.model.Immunization
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 
 class VaccineScheduleAdapter(
     private val context: Context,
@@ -29,6 +28,7 @@ class VaccineScheduleAdapter(
     private val dbStatusColorList: ArrayList<DbStatusColor>,
     private val expandableListTitle: List<String>,
     private val expandableListDetail: Map<String, List<BasicVaccine>>,
+    private val patientDetailsViewModel: PatientDetailsViewModel,
     private val tvAdministerVaccine: TextView
 ) : BaseExpandableListAdapter() {
 
@@ -185,12 +185,19 @@ class VaccineScheduleAdapter(
         } else {
             weekNo = listTitle
         }
+        val patientId = FormatterClass().getSharedPref("patientId", context)
+        val counter = patientDetailsViewModel.generateCurrentCount(
+            weekNo,
+            patientId.toString()
+        )
 
+        aefiTextview.text =
+            "AEFIs ($counter)"
         aefiTextview.setOnClickListener {
             FormatterClass().saveSharedPref(
                 "current_age", weekNo, context
             )
-            val patientId = FormatterClass().getSharedPref("patientId", context)
+
             val intent = Intent(context, MainActivity::class.java)
             intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
             intent.putExtra("patientId", patientId)

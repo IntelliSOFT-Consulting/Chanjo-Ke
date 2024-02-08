@@ -23,7 +23,7 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     private val urls = LinkedList(
         listOf(
             "Patient?_sort=_lastUpdated", "Practitioner", "RelatedPerson",
-            "Immunization", "ImmunizationRecommendation",
+            "Immunization", "ImmunizationRecommendation","AllergyIntolerance"
         )
     )
 

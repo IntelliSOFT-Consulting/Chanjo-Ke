@@ -18,6 +18,8 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
+import com.google.android.fhir.search.StringFilterModifier
+import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
@@ -545,7 +547,7 @@ class PatientDetailsViewModel(
                     getApplication<Application>().resources
                 )
             }
-            .forEach {j->
+            .forEach { j ->
                 if (list.any { it.logicalId == j.logicalId }) {
                     encounterList.add(j)
                 }
@@ -677,6 +679,30 @@ class PatientDetailsViewModel(
             e.printStackTrace()
             Timber.tag("TAG").e("Created an Encounter with Exception %s", e.message)
         }
+    }
+
+      fun generateCurrentCount(weekNo: String, patientId: String)= runBlocking{
+            counterAllergies(weekNo, patientId)
+    }
+
+
+
+    private suspend fun counterAllergies(weekNo: String, patientId: String): String {
+        var counter = 0
+        fhirEngine
+            .search<AllergyIntolerance> {
+                filter(AllergyIntolerance.PATIENT, { value = "Patient/$patientId" })
+                sort(AllergyIntolerance.DATE, Order.DESCENDING)
+            }
+            .map { createAllergyIntoleranceItem(it) }
+            .forEach { q ->
+                if (q.status.contains(weekNo)) {
+                    counter++
+                }
+            }
+
+        Log.e("TAG", "Counter **** Final $weekNo Current Counter $counter")
+        return "$counter"
     }
 }
 
