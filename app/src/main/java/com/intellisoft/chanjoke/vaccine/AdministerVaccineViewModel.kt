@@ -43,6 +43,7 @@ import kotlinx.coroutines.Job
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.AllergyIntolerance
+import org.hl7.fhir.r4.model.Annotation
 import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.CodeableConcept
@@ -187,7 +188,47 @@ class AdministerVaccineViewModel(
 
         saveResourceToDatabase(allergyIntolerance, "intolerance ")
 
+    }
 
+    fun createManualImmunizationResource(immunizationList: List<String>, encounterId: String, patientId: String){
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val immunizationHandler = ImmunizationHandler()
+
+            for (vaccineNameValue in immunizationList){
+
+                val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
+
+                if (vaccineBasicVaccine != null){
+                    val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
+                    val targetDisease = seriesVaccine?.targetDisease
+
+                    val job = Job()
+                    CoroutineScope(Dispatchers.IO + job).launch {
+                        //Save resources to Shared preference
+                        if (targetDisease != null) {
+                            FormatterClass().saveStockValue(
+                                vaccineNameValue,
+                                targetDisease,
+                                getApplication<Application>().applicationContext)
+                        }
+                    }.join()
+                    val immunization = createImmunizationResource(
+                        encounterId,
+                        patientId,
+                        ImmunizationStatus.COMPLETED,
+                        Date())
+
+                    saveResourceToDatabase(immunization, "immunization")
+                }
+
+
+
+
+            }
+
+
+        }
     }
 
     //Create an immunization resource
@@ -210,6 +251,17 @@ class AdministerVaccineViewModel(
         FormatterClass().saveSharedPref("immunizationId",immunizationId,getApplication<Application>().applicationContext)
 
         immunization.status = immunisationStatus
+
+        //Include a location
+        val location = FormatterClass().getSharedPref("selectedFacility",getApplication<Application>().applicationContext)
+        if (location != null){
+            val annotationList = ArrayList<Annotation>()
+            val annotation = Annotation()
+            annotation.text = location
+            annotationList.add(annotation)
+            immunization.note = annotationList
+        }
+
 
         //Date administered
 
@@ -399,6 +451,49 @@ class AdministerVaccineViewModel(
 
 
 
+    }
+
+    fun createManualContraindication(immunizationList:List<String>, patientId: String, nextImmunizationDate: Date?, immunizationId: String?){
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val immunizationHandler = ImmunizationHandler()
+
+            for (vaccineNameValue in immunizationList){
+
+                val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
+
+                if (vaccineBasicVaccine != null) {
+                    val seriesVaccine = immunizationHandler.getRoutineSeriesByBasicVaccine(vaccineBasicVaccine)
+                    val targetDisease = seriesVaccine?.targetDisease
+
+                    val job = Job()
+                    CoroutineScope(Dispatchers.IO + job).launch {
+                        //Save resources to Shared preference
+                        if (targetDisease != null) {
+                            FormatterClass().saveStockValue(
+                                vaccineNameValue,
+                                targetDisease,
+                                getApplication<Application>().applicationContext
+                            )
+                        }
+                    }.join()
+
+                    val recommendation = createImmunizationRecommendationResource(
+                        patientId,
+                        nextImmunizationDate,
+                        "Due",
+                        "Next Immunization date",
+                        immunizationId)
+                    saveResourceToDatabase(recommendation, "ImmRec")
+
+                }
+
+
+
+            }
+
+
+        }
     }
 
     //Create an immunizationRecommendation resource

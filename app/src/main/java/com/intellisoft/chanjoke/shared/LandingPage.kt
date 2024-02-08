@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -40,9 +42,38 @@ class LandingPage : Fragment() {
             setHomeAsUpIndicator(null)
         }
 
+        createSpinner()
         formatterClass.deleteSharedPref("patientListAction", requireContext())
 
         return _binding.root
+
+    }
+
+    private fun createSpinner() {
+
+        val resultList= listOf("Facility", "Outreach")
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Apply the adapter to the spinner
+        binding.spinnerLocation.adapter = adapter
+
+        // Set a listener to handle the item selection
+        binding.spinnerLocation.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
+                // Get the selected item
+                val selectedItem = parentView.getItemAtPosition(position).toString()
+                formatterClass.saveSharedPref("selectedFacility",selectedItem, requireContext())
+
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {
+                // Do nothing here
+            }
+        }
 
     }
 
@@ -74,13 +105,13 @@ class LandingPage : Fragment() {
                     NavigationDetails.ADMINISTER_VACCINE.name, requireContext())
             }
 
-            "AEFI" -> {
-                findNavController().navigate(R.id.patient_list)
-            }
-
-            "Appointments" -> {
-                findNavController().navigate(R.id.patient_list)
-            }
+//            "AEFI" -> {
+//                findNavController().navigate(R.id.patient_list)
+//            }
+//
+//            "Appointments" -> {
+//                findNavController().navigate(R.id.patient_list)
+//            }
         }
 
     }
