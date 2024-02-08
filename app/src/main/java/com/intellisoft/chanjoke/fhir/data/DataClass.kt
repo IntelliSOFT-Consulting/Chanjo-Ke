@@ -8,6 +8,21 @@ enum class UrlData(var message: Int) {
     BASE_URL(R.string.base_url),
 }
 
+data class DbStatusColor(
+    val keyTitle:String,
+    val statusColor: String
+)
+data class DbVaccineListData(
+    val keyTitle:String,
+    val statusColor: String,
+)
+enum class StatusColors {
+    GREEN, //All administered
+    AMBER, //Some administered
+    RED, //All missed
+    NORMAL, //Nothing
+}
+
 data class DbVaccineData(
     val logicalId: String,
     val vaccineName: String,

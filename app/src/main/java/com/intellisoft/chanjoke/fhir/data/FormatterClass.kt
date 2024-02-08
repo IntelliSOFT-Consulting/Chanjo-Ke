@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -731,6 +732,9 @@ class FormatterClass {
             "PR-address-ward-starehe",
             "PR-address-ward-mathare"
         )
+    }
+    fun generateUuid(): String {
+        return UUID.randomUUID().toString()
     }
 
 

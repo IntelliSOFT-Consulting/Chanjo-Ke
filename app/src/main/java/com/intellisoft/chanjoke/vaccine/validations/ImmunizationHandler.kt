@@ -655,7 +655,7 @@ class ImmunizationHandler() {
     }
 
     fun getRoutineSeriesByBasicVaccine(basicVaccine: BasicVaccine): RoutineVaccine? {
-        val (routineList, _, _) = vaccines
+        val (routineList, nonRoutineList, _) = vaccines
 
         return routineList.find { routineVaccine ->
             routineVaccine.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode }
@@ -759,6 +759,35 @@ class ImmunizationHandler() {
         }
 
         return sortedExpandableListDetail
+    }
+
+    fun generateNonRoutineVaccineSchedule(): Map<String, List<BasicVaccine>>{
+        
+        val (_, nonRoutineList, _) = createVaccines()
+
+        val expandableListDetail = HashMap<String, MutableList<BasicVaccine>>()
+
+        // Iterate through the nonRoutineVaccines list
+        nonRoutineList.forEach { nonRoutine ->
+            // Iterate through the RoutineVaccine list in each nonRoutineVaccine
+            nonRoutine.vaccineList.forEach { routine ->
+                // Get the targetDisease of the RoutineVaccine
+                val targetDisease = routine.targetDisease
+
+                // Get the list of BasicVaccines for the current targetDisease
+                val basicVaccines = routine.vaccineList
+
+                // If the targetDisease already exists in the HashMap, append the basicVaccines
+                // Otherwise, create a new entry in the HashMap
+                if (expandableListDetail.containsKey(targetDisease)) {
+                    expandableListDetail[targetDisease]!!.addAll(basicVaccines)
+                } else {
+                    expandableListDetail[targetDisease] = basicVaccines.toMutableList()
+                }
+            }
+        }
+
+        return expandableListDetail.mapValues { it.value.toList() }
     }
 
 

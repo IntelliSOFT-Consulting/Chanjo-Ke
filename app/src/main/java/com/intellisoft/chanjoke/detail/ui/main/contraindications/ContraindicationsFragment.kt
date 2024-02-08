@@ -3,6 +3,7 @@ package com.intellisoft.chanjoke.detail.ui.main.contraindications
 import android.app.Application
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +13,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -24,6 +27,7 @@ import com.intellisoft.chanjoke.detail.ui.main.RecommendationAdapter
 
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import java.util.Calendar
@@ -43,6 +47,7 @@ class ContraindicationsFragment : Fragment() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private val selectedItemList = ArrayList<String>()
     private var selectedVaccineName:String? = null
+    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +104,26 @@ class ContraindicationsFragment : Fragment() {
                         newList.joinToString(","),
                         requireContext())
 
-                    findNavController().navigate(R.id.administerNewFragment)
+                    val datePicker =  binding.tvDatePicker.text.toString()
+                    if (!TextUtils.isEmpty(datePicker)){
+
+                        val dobFormat = formatterClass.convertDateFormat(datePicker)
+                        if (dobFormat != null) {
+                            val dobDate = formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")
+                            if (dobDate != null) {
+                                administerVaccineViewModel.createManualContraindication(
+                                    newList.toList(),
+                                    patientId,
+                                    dobDate,
+                                    null)
+                                findNavController().navigate(R.id.administerNewFragment)
+                            }
+                        }
+
+
+                    }
+
+
                 }
 
 
@@ -146,6 +170,8 @@ class ContraindicationsFragment : Fragment() {
     }
 
     private fun createSpinner() {
+
+        formatterClass.deleteSharedPref("selectedUnContraindicatedVaccine", requireContext())
 
         selectedVaccineName = formatterClass.getSharedPref("selectedVaccineName", requireContext())
         if (selectedVaccineName != null){

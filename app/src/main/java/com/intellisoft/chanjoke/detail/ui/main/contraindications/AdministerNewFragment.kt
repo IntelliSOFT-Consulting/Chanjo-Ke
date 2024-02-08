@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.intellisoft.chanjoke.databinding.FragmentContraindicationsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
@@ -28,6 +30,8 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class AdministerNewFragment : Fragment() {
+    private lateinit var resultList: MutableList<String>
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -37,6 +41,7 @@ class AdministerNewFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
+    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,8 +76,12 @@ class AdministerNewFragment : Fragment() {
         binding.recyclerView.setHasFixedSize(true)
 
         binding.btnAdministerVaccine.setOnClickListener {
-            val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
-            blurBackgroundDialog.show()
+            if (resultList.isNotEmpty()){
+                administerVaccineViewModel.createManualImmunizationResource(resultList, formatterClass.generateUuid(), patientId)
+                val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
+                blurBackgroundDialog.show()
+            }
+
         }
 
         getBatchNumbers()
@@ -84,7 +93,7 @@ class AdministerNewFragment : Fragment() {
 
         val selectedUnContraindicatedVaccine = formatterClass.getSharedPref("selectedUnContraindicatedVaccine", requireContext())
         if (selectedUnContraindicatedVaccine != null) {
-            val resultList = selectedUnContraindicatedVaccine.split(",").toList().toMutableList()
+            resultList = selectedUnContraindicatedVaccine.split(",").toList().toMutableList()
             val vaccineAdapter = AdministerNewAdapter(resultList,requireContext())
             binding.recyclerView.adapter = vaccineAdapter
 

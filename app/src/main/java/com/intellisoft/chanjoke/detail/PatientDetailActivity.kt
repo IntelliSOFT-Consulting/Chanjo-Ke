@@ -23,6 +23,7 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
+import com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment
 import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -70,17 +71,17 @@ class PatientDetailActivity : AppCompatActivity() {
 
         val adapter = SectionsPagerAdapter(supportFragmentManager)
 
-        val vaccine = RoutineFragment()
-        vaccine.arguments = bundle
+        val routineFragment = RoutineFragment()
+        routineFragment.arguments = bundle
 
-        val apn = RecommendationFragment()
-        apn.arguments = bundle
+        val nonRoutineFragment = NonRoutineFragment()
+        nonRoutineFragment.arguments = bundle
 
         val appointment = AppointmentsFragment()
         appointment.arguments = bundle
 
-        adapter.addFragment(vaccine, getString(R.string.tab_text_1))
-        adapter.addFragment(apn, getString(R.string.tab_text_2))
+        adapter.addFragment(routineFragment, getString(R.string.tab_text_1))
+        adapter.addFragment(nonRoutineFragment, getString(R.string.tab_text_2))
 //        adapter.addFragment(appointment, getString(R.string.tab_text_4))
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

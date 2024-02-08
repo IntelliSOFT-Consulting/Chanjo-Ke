@@ -2,19 +2,28 @@ package com.intellisoft.chanjoke.detail.ui.main.adapters
 
 import android.content.Context
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.DbStatusColor
+import com.intellisoft.chanjoke.fhir.data.DbVaccineData
+import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import org.hl7.fhir.r4.model.Immunization
 
 class VaccineScheduleAdapter(
     private val context: Context,
+    private val administeredList: ArrayList<DbVaccineData>,
+    private val dbStatusColorList: ArrayList<DbStatusColor>,
     private val expandableListTitle: List<String>,
-    private val expandableListDetail: HashMap<String, List<BasicVaccine>>,
+    private val expandableListDetail: Map<String, List<BasicVaccine>>,
     private val tvAdministerVaccine: TextView
 ) : BaseExpandableListAdapter() {
 
@@ -48,9 +57,12 @@ class VaccineScheduleAdapter(
             convertView = layoutInflater.inflate(R.layout.vaccination_schedule_vaccines, null)
         }
         val expandedListTextView = convertView!!.findViewById<TextView>(R.id.tvVaccineName)
+        val tvVaccineDate = convertView!!.findViewById<TextView>(R.id.tvVaccineDate)
+        val tvScheduleStatus = convertView!!.findViewById<TextView>(R.id.tvScheduleStatus)
         val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
 
-        expandedListTextView.text = expandedListText.vaccineName
+        val vaccineName = expandedListText.vaccineName
+        expandedListTextView.text = vaccineName
 
         // Set checkbox state based on stored checked state
         val key = Pair(listPosition, expandedListPosition)
@@ -61,6 +73,33 @@ class VaccineScheduleAdapter(
             checkedStates[key] = isChecked
             updateAdministerVaccineText()
         }
+
+        //Check vaccine status
+        for (administeredVaccine in administeredList){
+
+            if (vaccineName == administeredVaccine.vaccineName){
+                val dateAdministered = administeredVaccine.dateAdministered
+                val status = administeredVaccine.status
+
+                var vaccineStatus = ""
+                if ("COMPLETED" == status){
+                    vaccineStatus = "administered"
+                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
+                    checkBox.visibility = View.INVISIBLE
+                }else if ("NOTDONE" == status){
+                    vaccineStatus = "contraindicated"
+                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
+                }else{
+                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.darker_gray))
+                }
+
+                tvVaccineDate.text = dateAdministered
+                tvScheduleStatus.text = vaccineStatus
+
+            }
+
+        }
+
 
         return convertView
     }
@@ -118,15 +157,46 @@ class VaccineScheduleAdapter(
             convertView = layoutInflater.inflate(R.layout.vaccination_schedule, null)
         }
         val listTitleTextView = convertView!!.findViewById<TextView>(R.id.tvScheduleTime)
+        val imageViewSchedule = convertView!!.findViewById<ImageView>(R.id.imageViewSchedule)
         listTitleTextView.setTypeface(null, Typeface.BOLD)
-        val weekNo: String = if (listTitle == "0"){
-            "At Birth"
+
+        var weekNo = ""
+        if (listTitle.toIntOrNull() != null){
+            weekNo = if (listTitle == "0"){
+                "At Birth"
+            }else{
+                "$listTitle weeks"
+            }
         }else{
-            "$listTitle weeks"
+            weekNo = listTitle
         }
+
+
         listTitleTextView.text = weekNo
+        //Check if its immunised
+
+        var statusColorValue = StatusColors.NORMAL.name
+        for (dbStatusColor in dbStatusColorList){
+            if (dbStatusColor.keyTitle == listTitle){
+                statusColorValue = dbStatusColor.statusColor
+            }
+        }
+
+        if (statusColorValue == StatusColors.GREEN.name){
+            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
+        }else if (statusColorValue == StatusColors.AMBER.name){
+            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
+        }else if (statusColorValue == StatusColors.RED.name){
+            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
+        }else{
+            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal)
+        }
+
+
         return convertView
     }
+
+
 
     override fun hasStableIds(): Boolean {
         return false

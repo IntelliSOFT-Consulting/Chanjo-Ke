@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main.administration
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsFragment
@@ -12,6 +13,11 @@ class VaccineAdministration : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vaccine_administration)
+
+        val toolbar =
+            findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val contraindicationsFragment = ContraindicationsFragment()
 
@@ -25,6 +31,10 @@ class VaccineAdministration : AppCompatActivity() {
             NavigationDetails.ADMINISTER_VACCINE.name -> { administerFunction() }
         }
 
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
     private fun administerFunction() {
 

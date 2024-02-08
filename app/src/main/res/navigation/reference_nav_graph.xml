@@ -106,7 +106,12 @@
         android:id="@+id/administerNewFragment"
         android:name="com.intellisoft.chanjoke.detail.ui.main.contraindications.AdministerNewFragment"
         android:label="fragment_administer_new"
-        tools:layout="@layout/fragment_administer_new" />
+        tools:layout="@layout/fragment_administer_new" >
+        <action
+            android:id="@+id/administerNewFragmentAction"
+            app:destination="@id/action_patient_list_to_patientDetailActivity"
+            app:popUpToSaveState="true" />
+    </fragment>
     <fragment
         android:id="@+id/aefisFragment"
         android:name="com.intellisoft.chanjoke.detail.ui.main.aefis.AefisFragment"
@@ -116,6 +121,11 @@
         android:name="patient_id"
         app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/nonRoutineFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment"
+        android:label="fragment_non_routine"
+        tools:layout="@layout/fragment_non_routine" />
 
 
 </navigation>
