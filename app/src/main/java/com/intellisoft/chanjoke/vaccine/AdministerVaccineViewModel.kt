@@ -43,6 +43,7 @@ import kotlinx.coroutines.Job
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.AllergyIntolerance
+import org.hl7.fhir.r4.model.Annotation
 import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.CodeableConcept
@@ -250,6 +251,17 @@ class AdministerVaccineViewModel(
         FormatterClass().saveSharedPref("immunizationId",immunizationId,getApplication<Application>().applicationContext)
 
         immunization.status = immunisationStatus
+
+        //Include a location
+        val location = FormatterClass().getSharedPref("selectedFacility",getApplication<Application>().applicationContext)
+        if (location != null){
+            val annotationList = ArrayList<Annotation>()
+            val annotation = Annotation()
+            annotation.text = location
+            annotationList.add(annotation)
+            immunization.note = annotationList
+        }
+
 
         //Date administered
 
