@@ -23,7 +23,7 @@ class VaccineScheduleAdapter(
     private val administeredList: ArrayList<DbVaccineData>,
     private val dbStatusColorList: ArrayList<DbStatusColor>,
     private val expandableListTitle: List<String>,
-    private val expandableListDetail: HashMap<String, List<BasicVaccine>>,
+    private val expandableListDetail: Map<String, List<BasicVaccine>>,
     private val tvAdministerVaccine: TextView
 ) : BaseExpandableListAdapter() {
 
@@ -159,11 +159,19 @@ class VaccineScheduleAdapter(
         val listTitleTextView = convertView!!.findViewById<TextView>(R.id.tvScheduleTime)
         val imageViewSchedule = convertView!!.findViewById<ImageView>(R.id.imageViewSchedule)
         listTitleTextView.setTypeface(null, Typeface.BOLD)
-        val weekNo: String = if (listTitle == "0"){
-            "At Birth"
+
+        var weekNo = ""
+        if (listTitle.toIntOrNull() != null){
+            weekNo = if (listTitle == "0"){
+                "At Birth"
+            }else{
+                "$listTitle weeks"
+            }
         }else{
-            "$listTitle weeks"
+            weekNo = listTitle
         }
+
+
         listTitleTextView.text = weekNo
         //Check if its immunised
 
