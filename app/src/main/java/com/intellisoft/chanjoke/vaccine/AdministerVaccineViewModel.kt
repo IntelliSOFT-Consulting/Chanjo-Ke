@@ -199,7 +199,7 @@ class AdministerVaccineViewModel(
                 val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
 
                 if (vaccineBasicVaccine != null){
-                    val seriesVaccine = immunizationHandler.getRoutineSeriesByBasicVaccine(vaccineBasicVaccine)
+                    val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
                     val targetDisease = seriesVaccine?.targetDisease
 
                     val job = Job()

@@ -655,7 +655,7 @@ class ImmunizationHandler() {
     }
 
     fun getRoutineSeriesByBasicVaccine(basicVaccine: BasicVaccine): RoutineVaccine? {
-        val (routineList, _, _) = vaccines
+        val (routineList, nonRoutineList, _) = vaccines
 
         return routineList.find { routineVaccine ->
             routineVaccine.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode }
