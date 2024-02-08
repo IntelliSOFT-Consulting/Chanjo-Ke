@@ -119,57 +119,60 @@ class FormatterClass {
         return calculatedDate.toString()
     }
 
-    fun clearVaccineShared(context: Context){
+    fun clearVaccineShared(context: Context) {
 
         //Clear the vaccines
         val vaccinationListToClear = listOf(
             "vaccinationBrand",
             "vaccinationDoseNumber",
             "vaccinationBatchNumber",
-            "questionnaireJson" ,
-            "vaccinationSite" ,
-            "vaccinationTargetDisease" ,
-            "vaccinationExpirationDate" ,
-            "vaccinationDoseQuantity" ,
-            "vaccinationFlow" ,
-            "vaccinationSeriesDoses" ,
-            "vaccinationManufacturer" ,
-            "immunizationId" ,
-            "selectedVaccineName" ,
-            "selectedUnContraindicatedVaccine" ,
+            "questionnaireJson",
+            "vaccinationSite",
+            "vaccinationTargetDisease",
+            "vaccinationExpirationDate",
+            "vaccinationDoseQuantity",
+            "vaccinationFlow",
+            "vaccinationSeriesDoses",
+            "vaccinationManufacturer",
+            "immunizationId",
+            "selectedVaccineName",
+            "selectedUnContraindicatedVaccine",
 //            "selectedVaccinationVenue" ,
 //            "isSelectedVaccinationVenue" ,
-            "administeredProduct")
+            "administeredProduct"
+        )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
         }
     }
 
-    fun clientInfoShared(context: Context){
+    fun clientInfoShared(context: Context) {
         val vaccinationListToClear = listOf(
             "patientId",
-            "patientDob" ,
-            "appointmentId")
-        vaccinationListToClear.forEach {
-            deleteSharedPref(it, context)
-        }
-    }
-    fun practionerInfoShared(context: Context){
-        val vaccinationListToClear = listOf(
-            "practitionerFullNames",
-            "practitionerIdNumber" ,
-            "practitionerRole" ,
-            "fhirPractitionerId" ,
-            "practitionerId" ,
-            "access_token" ,
-            "refresh_token" ,
-            "refresh_expires_in" ,
-            "expires_in")
+            "patientDob",
+            "appointmentId"
+        )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
         }
     }
 
+    fun practionerInfoShared(context: Context) {
+        val vaccinationListToClear = listOf(
+            "practitionerFullNames",
+            "practitionerIdNumber",
+            "practitionerRole",
+            "fhirPractitionerId",
+            "practitionerId",
+            "access_token",
+            "refresh_token",
+            "refresh_expires_in",
+            "expires_in"
+        )
+        vaccinationListToClear.forEach {
+            deleteSharedPref(it, context)
+        }
+    }
 
 
     fun saveStockValue(
@@ -274,21 +277,39 @@ class FormatterClass {
                 val ageStringBuilder = StringBuilder()
 
                 if (years > 0) {
-                    ageStringBuilder.append(resources.getQuantityString(R.plurals.ageYear, years, years))
+                    ageStringBuilder.append(
+                        resources.getQuantityString(
+                            R.plurals.ageYear,
+                            years,
+                            years
+                        )
+                    )
                     if (months > 0 || days > 0) {
                         ageStringBuilder.append(", ")
                     }
                 }
 
                 if (months > 0) {
-                    ageStringBuilder.append(resources.getQuantityString(R.plurals.ageMonth, months, months))
+                    ageStringBuilder.append(
+                        resources.getQuantityString(
+                            R.plurals.ageMonth,
+                            months,
+                            months
+                        )
+                    )
                     if (days > 0) {
                         ageStringBuilder.append(", ")
                     }
                 }
 
                 if (days > 0) {
-                    ageStringBuilder.append(resources.getQuantityString(R.plurals.ageDay, days, days))
+                    ageStringBuilder.append(
+                        resources.getQuantityString(
+                            R.plurals.ageDay,
+                            days,
+                            days
+                        )
+                    )
                 }
 
                 return ageStringBuilder.toString()
@@ -364,7 +385,7 @@ class FormatterClass {
             val dobFormat = FormatterClass().convertDateFormat(inputDate)
 
             // Parse the input date
-            if (dobFormat != null){
+            if (dobFormat != null) {
                 val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
                 val parsedDate = dateFormat.parse(dobFormat)
 
@@ -733,9 +754,28 @@ class FormatterClass {
             "PR-address-ward-mathare"
         )
     }
+
     fun generateUuid(): String {
         return UUID.randomUUID().toString()
     }
 
+    fun orderedDurations(): List<String> {
+        return listOf(
+            "At Birth",
+            "6 weeks",
+            "10 weeks",
+            "14 weeks",
+            "26 weeks",
+            "27 weeks",
+            "30 weeks",
+            "39 weeks",
+            "40 weeks",
+            "52 weeks",
+            "79 weeks",
+            "104 weeks",
+            "521 weeks",
+            "842 weeks"
+        )
+    }
 
 }

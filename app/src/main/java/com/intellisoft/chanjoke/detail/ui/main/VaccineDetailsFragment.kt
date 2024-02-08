@@ -8,15 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ContentInfoCompat.Flags
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
 import com.intellisoft.chanjoke.databinding.FragmentVaccineDetailsBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.adapters.EventsAdapter
@@ -24,9 +20,6 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import timber.log.Timber
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
@@ -164,10 +157,10 @@ class VaccineDetailsFragment : Fragment() {
         val logicalId = FormatterClass().getSharedPref("current_immunization", requireContext())
 
         if (logicalId != null) {
-            val adverseEvents = patientDetailsViewModel.loadImmunizationAefis(logicalId)
-
-            val vaccineAdapter = EventsAdapter(adverseEvents, requireContext())
-            binding.recyclerView.adapter = vaccineAdapter
+//            val adverseEvents = patientDetailsViewModel.loadImmunizationAefis(logicalId)
+//
+//            val vaccineAdapter = EventsAdapter(adverseEvents, requireContext())
+//            binding.recyclerView.adapter = vaccineAdapter
         }
 
     }

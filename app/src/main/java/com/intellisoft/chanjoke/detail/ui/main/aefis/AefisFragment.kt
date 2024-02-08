@@ -19,8 +19,12 @@ import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentAefisBinding
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineAefiAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.AllergicReaction
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
+import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -125,7 +129,31 @@ class AefisFragment : Fragment() {
 
     private fun pullVaccinesWithAefis() {
         val vaccineList = patientDetailsViewModel.getVaccineList()
-        val vaccineAdapter = VaccineAefiAdapter(patientDetailsViewModel,vaccineList, requireContext())
+
+        val groupedByStatus = vaccineList.groupBy { it.status }
+
+        val allergicReactions = groupedByStatus
+            .toList()
+            .sortedWith(compareBy { entry ->
+                val status = entry.first
+                FormatterClass().orderedDurations().indexOf(status)
+            })
+            .map { (status, vaccines) ->
+                val reactions = ArrayList<DbVaccineData>(vaccines)
+                AllergicReaction(
+                    status,
+                    "",
+                    reactions = reactions
+                )
+            }
+
+        val vaccineAdapter =
+            VaccineAefiAdapter(
+                patientDetailsViewModel,
+                allergicReactions,
+                requireContext()
+            )
+
         binding.aefiParentList.adapter = vaccineAdapter
     }
 
@@ -136,10 +164,16 @@ class AefisFragment : Fragment() {
                 .navigateUp()
         }
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                NavHostFragment.findNavController(this@AefisFragment).navigateUp()
+                val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+                val intent = Intent(context, PatientDetailActivity::class.java)
+                intent.putExtra("patientId", patientId)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                requireContext().startActivity(intent)
+
                 true
             }
 
