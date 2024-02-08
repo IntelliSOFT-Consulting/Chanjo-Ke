@@ -129,20 +129,46 @@ class AefisFragment : Fragment() {
 
     private fun pullVaccinesWithAefis() {
         val vaccineList = patientDetailsViewModel.getVaccineList()
+        val customStatusOrder = listOf(
+            "At Birth",
+            "6 Weeks",
+            "10 Weeks",
+            "14 Weeks",
+            "26 Weeks",
+            "27 Weeks",
+            "30 Weeks",
+            "39 Weeks",
+            "40 Weeks",
+            "52 Weeks",
+            "79 Weeks",
+            "104 Weeks",
+            "521 Weeks",
+            "842 Weeks"
+        )  // Adjust this list based on your custom order
 
         val groupedByStatus = vaccineList.groupBy { it.status }
 
-        val allergicReactions = groupedByStatus.map { (status, vaccines) ->
-            val reactions = ArrayList<DbVaccineData>(vaccines)
-            AllergicReaction(
-                status,
-                "",
-                reactions = reactions
-            )
-        }
+        val allergicReactions = groupedByStatus
+            .toList()
+            .sortedWith(compareBy { entry ->
+                val status = entry.first
+                customStatusOrder.indexOf(status)
+            })
+            .map { (status, vaccines) ->
+                val reactions = ArrayList<DbVaccineData>(vaccines)
+                AllergicReaction(
+                    status,
+                    "",
+                    reactions = reactions
+                )
+            }
 
         val vaccineAdapter =
-            VaccineAefiAdapter(patientDetailsViewModel, allergicReactions, requireContext())
+            VaccineAefiAdapter(
+                patientDetailsViewModel,
+                allergicReactions.reversed(),
+                requireContext()
+            )
 
         binding.aefiParentList.adapter = vaccineAdapter
     }
