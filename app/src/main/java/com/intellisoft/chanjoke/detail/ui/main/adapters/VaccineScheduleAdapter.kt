@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.detail.ui.main.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,10 +11,14 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbStatusColor
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import org.hl7.fhir.r4.model.Immunization
@@ -53,7 +58,8 @@ class VaccineScheduleAdapter(
         var convertView = convertView
         val expandedListText = getChild(listPosition, expandedListPosition) as BasicVaccine
         if (convertView == null) {
-            val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val layoutInflater =
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = layoutInflater.inflate(R.layout.vaccination_schedule_vaccines, null)
         }
         val expandedListTextView = convertView!!.findViewById<TextView>(R.id.tvVaccineName)
@@ -75,22 +81,27 @@ class VaccineScheduleAdapter(
         }
 
         //Check vaccine status
-        for (administeredVaccine in administeredList){
+        for (administeredVaccine in administeredList) {
 
-            if (vaccineName == administeredVaccine.vaccineName){
+            if (vaccineName == administeredVaccine.vaccineName) {
                 val dateAdministered = administeredVaccine.dateAdministered
                 val status = administeredVaccine.status
 
                 var vaccineStatus = ""
-                if ("COMPLETED" == status){
+                if ("COMPLETED" == status) {
                     vaccineStatus = "administered"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
                     checkBox.visibility = View.INVISIBLE
-                }else if ("NOTDONE" == status){
+                } else if ("NOTDONE" == status) {
                     vaccineStatus = "contraindicated"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
-                }else{
-                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.darker_gray))
+                } else {
+                    tvScheduleStatus.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.darker_gray
+                        )
+                    )
                 }
 
                 tvVaccineDate.text = dateAdministered
@@ -118,7 +129,8 @@ class VaccineScheduleAdapter(
         for ((positionPair, isChecked) in checkedStates) {
             if (isChecked) {
                 val (groupPosition, childPosition) = positionPair
-                val vaccine = expandableListDetail[expandableListTitle[groupPosition]]?.get(childPosition)
+                val vaccine =
+                    expandableListDetail[expandableListTitle[groupPosition]]?.get(childPosition)
                 vaccine?.let {
                     selectedVaccines.add(it)
                 }
@@ -158,44 +170,55 @@ class VaccineScheduleAdapter(
         }
         val listTitleTextView = convertView!!.findViewById<TextView>(R.id.tvScheduleTime)
         val imageViewSchedule = convertView!!.findViewById<ImageView>(R.id.imageViewSchedule)
+        val aefiTextview = convertView!!.findViewById<TextView>(R.id.tvAefi)
+
+
         listTitleTextView.setTypeface(null, Typeface.BOLD)
 
         var weekNo = ""
-        if (listTitle.toIntOrNull() != null){
-            weekNo = if (listTitle == "0"){
+        if (listTitle.toIntOrNull() != null) {
+            weekNo = if (listTitle == "0") {
                 "At Birth"
-            }else{
+            } else {
                 "$listTitle weeks"
             }
-        }else{
+        } else {
             weekNo = listTitle
         }
 
-
+        aefiTextview.setOnClickListener {
+            FormatterClass().saveSharedPref(
+                "current_age", weekNo, context
+            )
+            val patientId = FormatterClass().getSharedPref("patientId", context)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
+            intent.putExtra("patientId", patientId)
+            context.startActivity(intent)
+        }
         listTitleTextView.text = weekNo
         //Check if its immunised
 
         var statusColorValue = StatusColors.NORMAL.name
-        for (dbStatusColor in dbStatusColorList){
-            if (dbStatusColor.keyTitle == listTitle){
+        for (dbStatusColor in dbStatusColorList) {
+            if (dbStatusColor.keyTitle == listTitle) {
                 statusColorValue = dbStatusColor.statusColor
             }
         }
 
-        if (statusColorValue == StatusColors.GREEN.name){
+        if (statusColorValue == StatusColors.GREEN.name) {
             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
-        }else if (statusColorValue == StatusColors.AMBER.name){
+        } else if (statusColorValue == StatusColors.AMBER.name) {
             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
-        }else if (statusColorValue == StatusColors.RED.name){
+        } else if (statusColorValue == StatusColors.RED.name) {
             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
-        }else{
+        } else {
             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal)
         }
 
 
         return convertView
     }
-
 
 
     override fun hasStableIds(): Boolean {

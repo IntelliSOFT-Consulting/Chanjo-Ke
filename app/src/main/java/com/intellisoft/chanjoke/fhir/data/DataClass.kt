@@ -9,13 +9,15 @@ enum class UrlData(var message: Int) {
 }
 
 data class DbStatusColor(
-    val keyTitle:String,
+    val keyTitle: String,
     val statusColor: String
 )
+
 data class DbVaccineListData(
-    val keyTitle:String,
+    val keyTitle: String,
     val statusColor: String,
 )
+
 enum class StatusColors {
     GREEN, //All administered
     AMBER, //Some administered
@@ -29,6 +31,12 @@ data class DbVaccineData(
     val doseNumber: String,
     val dateAdministered: String,
     val status: String,
+)
+
+data class AllergicReaction(
+    val period: String,
+    val vaccines: String,
+    val reactions: List<DbVaccineData>
 )
 
 data class AdverseEventData(
@@ -65,7 +73,7 @@ enum class NavigationDetails {
     LIST_VACCINE_DETAILS,
     CLIENT_LIST,
     EDIT_CLIENT,
-    LIST_AEFI,ADD_AEFI
+    LIST_AEFI, ADD_AEFI
 }
 
 data class DbAppointmentData(
@@ -129,11 +137,13 @@ data class DbVaccinationSchedule(
     val scheduleStatus: String,
     val scheduleVaccinationList: ArrayList<DbScheduleVaccination>
 )
+
 data class DbScheduleVaccination(
     val vaccineName: String,
-    val vaccineDate:String,
-    val vaccineStatus:String
+    val vaccineDate: String,
+    val vaccineStatus: String
 )
+
 data class DbVaccineSchedule(
     val scheduleTime: String,
     val scheduleStatus: String?,

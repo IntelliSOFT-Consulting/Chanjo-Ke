@@ -145,26 +145,37 @@ class AdministerVaccineViewModel(
                     /**
                      * Check for AEFIs should be partOf
                      * */
-                    if (FormatterClass().getSharedPref("vaccinationFlow",
-                            getApplication<Application>().applicationContext)=="addAefi"){
+                    if (FormatterClass().getSharedPref(
+                            "vaccinationFlow",
+                            getApplication<Application>().applicationContext
+                        ) == "addAefi"
+                    ) {
                         val ref = FormatterClass().getSharedPref(
                             "encounter_logical_id",
                             getApplication<Application>().applicationContext
                         )
-                        val parentReference = Reference("Encounter/$ref")
-                        resource.partOf=parentReference
+                        val age = FormatterClass().getSharedPref(
+                            "current_age",
+                            getApplication<Application>().applicationContext
+                        )
+//                        val parentReference = Reference("Encounter/$ref")
+//                        resource.partOf = parentReference
 
                         //Create Adverse effects
-                        createAdverseEffects(encounterId, patientId)
+                        createAdverseEffects(encounterId, patientId, age.toString())
                     }
 
                     saveResourceToDatabase(resource, "enc " + encounterId)
 
-                    val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow", getApplication<Application>().applicationContext)
+                    val vaccinationFlow = FormatterClass().getSharedPref(
+                        "vaccinationFlow",
+                        getApplication<Application>().applicationContext
+                    )
                     if (
                         vaccinationFlow == "createVaccineDetails" ||
                         vaccinationFlow == "updateVaccineDetails" ||
-                        vaccinationFlow == "recommendVaccineDetails"){
+                        vaccinationFlow == "recommendVaccineDetails"
+                    ) {
                         generateImmunizationRecord(encounterId, patientId)
                     }
                 }
@@ -172,7 +183,7 @@ class AdministerVaccineViewModel(
         }
     }
 
-    private suspend fun createAdverseEffects(encounterId: String, patientId: String) {
+    private suspend fun createAdverseEffects(encounterId: String, patientId: String, age: String) {
 
         val encounterReference = Reference("Encounter/$encounterId")
         val patientReference = Reference("Patient/$patientId")
@@ -181,6 +192,7 @@ class AdministerVaccineViewModel(
         allergyIntolerance.id = generateUuid()
         allergyIntolerance.encounter = encounterReference
         allergyIntolerance.patient = patientReference
+        allergyIntolerance.noteFirstRep.text = age
 
         /**
          * TODO: Add more details for the allergy intolerance
@@ -190,17 +202,23 @@ class AdministerVaccineViewModel(
 
     }
 
-    fun createManualImmunizationResource(immunizationList: List<String>, encounterId: String, patientId: String){
+    fun createManualImmunizationResource(
+        immunizationList: List<String>,
+        encounterId: String,
+        patientId: String
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
 
             val immunizationHandler = ImmunizationHandler()
 
-            for (vaccineNameValue in immunizationList){
+            for (vaccineNameValue in immunizationList) {
 
-                val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
+                val vaccineBasicVaccine =
+                    ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
 
-                if (vaccineBasicVaccine != null){
-                    val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
+                if (vaccineBasicVaccine != null) {
+                    val seriesVaccine =
+                        immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
                     val targetDisease = seriesVaccine?.targetDisease
 
                     val job = Job()
@@ -210,19 +228,19 @@ class AdministerVaccineViewModel(
                             FormatterClass().saveStockValue(
                                 vaccineNameValue,
                                 targetDisease,
-                                getApplication<Application>().applicationContext)
+                                getApplication<Application>().applicationContext
+                            )
                         }
                     }.join()
                     val immunization = createImmunizationResource(
                         encounterId,
                         patientId,
                         ImmunizationStatus.COMPLETED,
-                        Date())
+                        Date()
+                    )
 
                     saveResourceToDatabase(immunization, "immunization")
                 }
-
-
 
 
             }
@@ -237,7 +255,7 @@ class AdministerVaccineViewModel(
         patientId: String,
         immunisationStatus: ImmunizationStatus,
         date: Date
-    ): Immunization{
+    ): Immunization {
 
         val immunization = Immunization()
         val immunizationId = generateUuid()
@@ -248,13 +266,20 @@ class AdministerVaccineViewModel(
         immunization.patient = patientReference
         immunization.id = immunizationId
 
-        FormatterClass().saveSharedPref("immunizationId",immunizationId,getApplication<Application>().applicationContext)
+        FormatterClass().saveSharedPref(
+            "immunizationId",
+            immunizationId,
+            getApplication<Application>().applicationContext
+        )
 
         immunization.status = immunisationStatus
 
         //Include a location
-        val location = FormatterClass().getSharedPref("selectedFacility",getApplication<Application>().applicationContext)
-        if (location != null){
+        val location = FormatterClass().getSharedPref(
+            "selectedFacility",
+            getApplication<Application>().applicationContext
+        )
+        if (location != null) {
             val annotationList = ArrayList<Annotation>()
             val annotation = Annotation()
             annotation.text = location
@@ -274,9 +299,11 @@ class AdministerVaccineViewModel(
         //Target Disease
         val targetDisease = FormatterClass().getSharedPref(
             "vaccinationTargetDisease",
-            getApplication<Application>().applicationContext)
+            getApplication<Application>().applicationContext
+        )
         val protocolList = Immunization().protocolApplied
-        val immunizationProtocolAppliedComponent = Immunization.ImmunizationProtocolAppliedComponent()
+        val immunizationProtocolAppliedComponent =
+            Immunization.ImmunizationProtocolAppliedComponent()
 
         val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
         val diseaseTargetCodeableConcept = CodeableConcept()
@@ -287,7 +314,8 @@ class AdministerVaccineViewModel(
         //Series - Name of vaccine series
         val vaccinationSeries = FormatterClass().getSharedPref(
             "vaccinationSeriesDoses",
-            getApplication<Application>().applicationContext)
+            getApplication<Application>().applicationContext
+        )
         if (vaccinationSeries != null) {
             immunizationProtocolAppliedComponent.series = vaccinationSeries
         }
@@ -295,8 +323,9 @@ class AdministerVaccineViewModel(
         //Dose number - Recommended number of doses for immunity
         val vaccinationDoseNumber = FormatterClass().getSharedPref(
             "vaccinationDoseNumber",
-            getApplication<Application>().applicationContext)
-        if (vaccinationDoseNumber != null){
+            getApplication<Application>().applicationContext
+        )
+        if (vaccinationDoseNumber != null) {
             val stringType = StringType()
             stringType.value = vaccinationDoseNumber
             immunizationProtocolAppliedComponent.seriesDoses = stringType
@@ -307,9 +336,11 @@ class AdministerVaccineViewModel(
         immunization.protocolApplied = protocolList
 
         //Dose Quantity is the amount of vaccine administered
-        val dosage = FormatterClass().getSharedPref("vaccinationDoseQuantity",
-            getApplication<Application>().applicationContext)
-        if (dosage != null){
+        val dosage = FormatterClass().getSharedPref(
+            "vaccinationDoseQuantity",
+            getApplication<Application>().applicationContext
+        )
+        if (dosage != null) {
             val nonDosage = FormatterClass().removeNonNumeric(dosage)
             val bigDecimalValue = BigDecimal(nonDosage)
             val simpleQuantity = SimpleQuantity()
@@ -319,7 +350,8 @@ class AdministerVaccineViewModel(
 
         //Administration Method
         val vaccinationAdministrationMethod = FormatterClass().getSharedPref(
-            "vaccinationAdministrationMethod", getApplication<Application>().applicationContext)
+            "vaccinationAdministrationMethod", getApplication<Application>().applicationContext
+        )
         if (vaccinationAdministrationMethod != null) {
             val codeableConcept = CodeableConcept()
             codeableConcept.text = vaccinationAdministrationMethod
@@ -330,17 +362,20 @@ class AdministerVaccineViewModel(
 
         //Batch number
         val vaccinationBatchNumber = FormatterClass().getSharedPref(
-            "vaccinationBatchNumber", getApplication<Application>().applicationContext)
+            "vaccinationBatchNumber", getApplication<Application>().applicationContext
+        )
         if (vaccinationBatchNumber != null) {
             immunization.lotNumber = vaccinationBatchNumber
         }
 
         //Expiration date
         val vaccinationExpirationDate = FormatterClass().getSharedPref(
-            "vaccinationExpirationDate", getApplication<Application>().applicationContext)
+            "vaccinationExpirationDate", getApplication<Application>().applicationContext
+        )
         if (vaccinationExpirationDate != null) {
             val dateExp = FormatterClass().convertStringToDate(
-                vaccinationExpirationDate, "YYYY-MM-DD")
+                vaccinationExpirationDate, "YYYY-MM-DD"
+            )
             if (dateExp != null) {
                 immunization.expirationDate = dateExp
             }
@@ -348,11 +383,13 @@ class AdministerVaccineViewModel(
         }
         //Vaccine code
         val administeredProduct = FormatterClass().getSharedPref(
-            "administeredProduct", getApplication<Application>().applicationContext)
+            "administeredProduct", getApplication<Application>().applicationContext
+        )
         //Get info on the vaccine
-        if (administeredProduct != null){
-            val vaccineCode = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
-            if (vaccineCode != null){
+        if (administeredProduct != null) {
+            val vaccineCode =
+                ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
+            if (vaccineCode != null) {
                 val vaccineCodeConcept = CodeableConcept()
                 vaccineCodeConcept.text = vaccineCode.vaccineName
 
@@ -372,7 +409,7 @@ class AdministerVaccineViewModel(
 
     }
 
-    fun createImmunizationRecommendation(context: Context){
+    fun createImmunizationRecommendation(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             val immunizationId = FormatterClass().getSharedPref("immunizationId", context)
             createNextImmunization(immunizationId)
@@ -383,15 +420,18 @@ class AdministerVaccineViewModel(
 
         val formatterClass = FormatterClass()
         val date = Date()
+
         /**
          * TODO: Check if the Vaccine exists
          */
 
         //Vaccine code
         val administeredProduct = formatterClass.getSharedPref(
-            "administeredProduct", getApplication<Application>().applicationContext)
+            "administeredProduct", getApplication<Application>().applicationContext
+        )
         val patientId = formatterClass.getSharedPref(
-            "patientId", getApplication<Application>().applicationContext)
+            "patientId", getApplication<Application>().applicationContext
+        )
         val currentDate = Date()
 
         /**
@@ -399,7 +439,8 @@ class AdministerVaccineViewModel(
          */
         if (administeredProduct != null && patientId != null) {
             val immunizationHandler = ImmunizationHandler()
-            val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
+            val vaccineBasicVaccine =
+                ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
 
             val nextBasicVaccine = vaccineBasicVaccine?.let {
                 immunizationHandler.getNextDoseDetails(
@@ -407,7 +448,8 @@ class AdministerVaccineViewModel(
                 )
             }
 
-            val seriesVaccine = vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
+            val seriesVaccine =
+                vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
 
             val targetDisease = seriesVaccine?.targetDisease
             val vaccineName = nextBasicVaccine?.vaccineName
@@ -416,20 +458,25 @@ class AdministerVaccineViewModel(
             CoroutineScope(Dispatchers.IO + job).launch {
                 //Save resources to Shared preference
                 if (vaccineName != null && targetDisease != null) {
-                    FormatterClass().saveStockValue(vaccineName, targetDisease, getApplication<Application>().applicationContext)
+                    FormatterClass().saveStockValue(
+                        vaccineName,
+                        targetDisease,
+                        getApplication<Application>().applicationContext
+                    )
                 }
             }.join()
 
             //Generate the next immunisation recommendation
-            if (nextBasicVaccine != null){
-                val administrativeWeeksSincePreviousList = nextBasicVaccine.administrativeWeeksSincePrevious
+            if (nextBasicVaccine != null) {
+                val administrativeWeeksSincePreviousList =
+                    nextBasicVaccine.administrativeWeeksSincePrevious
                 val administrativeWeeksSinceDob = nextBasicVaccine.administrativeWeeksSinceDOB
                 //Check if the above list is more than one.
-                val nextImmunizationDate = if (administrativeWeeksSincePreviousList.isNotEmpty()){
+                val nextImmunizationDate = if (administrativeWeeksSincePreviousList.isNotEmpty()) {
                     //This is not the first vaccine, check on administrative weeks after birth
                     val weeksToAdd = administrativeWeeksSincePreviousList[0]
                     formatterClass.getNextDate(date, weeksToAdd)
-                }else{
+                } else {
                     formatterClass.getNextDate(date, administrativeWeeksSinceDob.toDouble())
                 }
 
@@ -441,7 +488,8 @@ class AdministerVaccineViewModel(
                     nextImmunizationDate,
                     "Due",
                     "Next Immunization date",
-                    immunizationId)
+                    immunizationId
+                )
                 saveResourceToDatabase(recommendation, "ImmRec")
 
             }
@@ -450,20 +498,26 @@ class AdministerVaccineViewModel(
         }
 
 
-
     }
 
-    fun createManualContraindication(immunizationList:List<String>, patientId: String, nextImmunizationDate: Date?, immunizationId: String?){
+    fun createManualContraindication(
+        immunizationList: List<String>,
+        patientId: String,
+        nextImmunizationDate: Date?,
+        immunizationId: String?
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
 
             val immunizationHandler = ImmunizationHandler()
 
-            for (vaccineNameValue in immunizationList){
+            for (vaccineNameValue in immunizationList) {
 
-                val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
+                val vaccineBasicVaccine =
+                    ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
 
                 if (vaccineBasicVaccine != null) {
-                    val seriesVaccine = immunizationHandler.getRoutineSeriesByBasicVaccine(vaccineBasicVaccine)
+                    val seriesVaccine =
+                        immunizationHandler.getRoutineSeriesByBasicVaccine(vaccineBasicVaccine)
                     val targetDisease = seriesVaccine?.targetDisease
 
                     val job = Job()
@@ -483,11 +537,11 @@ class AdministerVaccineViewModel(
                         nextImmunizationDate,
                         "Due",
                         "Next Immunization date",
-                        immunizationId)
+                        immunizationId
+                    )
                     saveResourceToDatabase(recommendation, "ImmRec")
 
                 }
-
 
 
             }
@@ -500,10 +554,10 @@ class AdministerVaccineViewModel(
     private fun createImmunizationRecommendationResource(
         patientId: String,
         recommendedDate: Date?,
-        status:String,
-        statusReason:String?,
-        immunizationId:String?,
-        ):ImmunizationRecommendation{
+        status: String,
+        statusReason: String?,
+        immunizationId: String?,
+    ): ImmunizationRecommendation {
 
         val immunizationHandler = ImmunizationHandler()
         val immunizationRecommendation = ImmunizationRecommendation()
@@ -514,13 +568,16 @@ class AdministerVaccineViewModel(
         immunizationRecommendation.date = Date()
 
         //Recommendation
-        val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
-        val immunizationRequest = ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
+        val recommendationList =
+            ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
+        val immunizationRequest =
+            ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
 
         //Target Disease
         val targetDisease = FormatterClass().getSharedPref(
             "vaccinationTargetDisease",
-            getApplication<Application>().applicationContext)
+            getApplication<Application>().applicationContext
+        )
         val codeableConceptTargetDisease = CodeableConcept()
         codeableConceptTargetDisease.text = targetDisease
         immunizationRequest.targetDisease = codeableConceptTargetDisease
@@ -531,7 +588,7 @@ class AdministerVaccineViewModel(
         immunizationRequest.forecastStatus = codeableConceptStatus
 
         //Status Reason
-        if (statusReason != null){
+        if (statusReason != null) {
             val codeableConceptStatusReason = CodeableConcept()
             codeableConceptStatusReason.text = statusReason
             val forecastList = ArrayList<CodeableConcept>()
@@ -541,9 +598,11 @@ class AdministerVaccineViewModel(
         }
 
         //Recommended date
-        if (recommendedDate != null){
-            val dateCriterionList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
-            val dateCriterion = ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
+        if (recommendedDate != null) {
+            val dateCriterionList =
+                ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
+            val dateCriterion =
+                ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
 
             val codeableConcept = CodeableConcept()
             codeableConcept.text = "Earliest date to give"
@@ -559,8 +618,9 @@ class AdministerVaccineViewModel(
         //Dose Number
         val vaccinationDoseNumber = FormatterClass().getSharedPref(
             "vaccinationDoseNumber",
-            getApplication<Application>().applicationContext)
-        if (vaccinationDoseNumber != null){
+            getApplication<Application>().applicationContext
+        )
+        if (vaccinationDoseNumber != null) {
             val doseNumberType = StringType()
             doseNumberType.value = vaccinationDoseNumber
             immunizationRequest.doseNumber = doseNumberType
@@ -569,15 +629,16 @@ class AdministerVaccineViewModel(
         //SeriesDoses
         val vaccinationSeriesDoses = FormatterClass().getSharedPref(
             "vaccinationSeriesDoses",
-            getApplication<Application>().applicationContext)
-        if (vaccinationSeriesDoses != null){
+            getApplication<Application>().applicationContext
+        )
+        if (vaccinationSeriesDoses != null) {
             val seriesDoseType = StringType()
             seriesDoseType.value = vaccinationSeriesDoses
             immunizationRequest.seriesDoses = seriesDoseType
         }
 
         //Supporting immunisation
-        if (immunizationId != null){
+        if (immunizationId != null) {
             val immunizationReferenceList = ArrayList<Reference>()
             val immunizationReference = Reference()
             immunizationReference.reference = "Immunization/$immunizationId"
@@ -586,19 +647,24 @@ class AdministerVaccineViewModel(
             immunizationRequest.supportingImmunization = immunizationReferenceList
         }
 
-        if (status == "Contraindicated" || status == "Due"){
+        if (status == "Contraindicated" || status == "Due") {
             //Administered vaccine
             val administeredProduct = FormatterClass().getSharedPref(
                 "administeredProduct",
-                getApplication<Application>().applicationContext)
-            if (administeredProduct != null){
-                val baseVaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
-                if (baseVaccineDetails != null){
+                getApplication<Application>().applicationContext
+            )
+            if (administeredProduct != null) {
+                val baseVaccineDetails =
+                    immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
+                if (baseVaccineDetails != null) {
                     val contraindicationCodeableConceptList = ArrayList<CodeableConcept>()
                     val codeableConceptContraindicatedVaccineCode = CodeableConcept()
                     codeableConceptContraindicatedVaccineCode.text = administeredProduct
-                    contraindicationCodeableConceptList.add(codeableConceptContraindicatedVaccineCode)
-                    immunizationRequest.contraindicatedVaccineCode = contraindicationCodeableConceptList
+                    contraindicationCodeableConceptList.add(
+                        codeableConceptContraindicatedVaccineCode
+                    )
+                    immunizationRequest.contraindicatedVaccineCode =
+                        contraindicationCodeableConceptList
                 }
             }
 
@@ -612,45 +678,57 @@ class AdministerVaccineViewModel(
 
         recommendationList.add(immunizationRequest)
         immunizationRecommendation.recommendation = recommendationList
-        Log.e("----->","------6")
+        Log.e("----->", "------6")
         return immunizationRecommendation
     }
 
     //Generate immunisation record
     suspend fun generateImmunizationRecord(
         encounterId: String,
-        patientId: String){
+        patientId: String
+    ) {
 
         val fomatterClass = FormatterClass()
         val immunizationHandler = ImmunizationHandler()
 
         //Check if request is for creating immunisation
-        val vaccinationFlow = FormatterClass().getSharedPref("vaccinationFlow",
-            getApplication<Application>().applicationContext)
-        if (vaccinationFlow == "createVaccineDetails"){
+        val vaccinationFlow = FormatterClass().getSharedPref(
+            "vaccinationFlow",
+            getApplication<Application>().applicationContext
+        )
+        if (vaccinationFlow == "createVaccineDetails") {
             //Request is to create immunisation record
 
             //Get the vaccines informations
-            val vaccinationTargetDisease = fomatterClass.getSharedPref("vaccinationTargetDisease",
-                getApplication<Application>().applicationContext)
-            val administeredProduct = fomatterClass.getSharedPref("administeredProduct",
-                getApplication<Application>().applicationContext)
+            val vaccinationTargetDisease = fomatterClass.getSharedPref(
+                "vaccinationTargetDisease",
+                getApplication<Application>().applicationContext
+            )
+            val administeredProduct = fomatterClass.getSharedPref(
+                "administeredProduct",
+                getApplication<Application>().applicationContext
+            )
 
-            if (administeredProduct != null && vaccinationTargetDisease != null){
+            if (administeredProduct != null && vaccinationTargetDisease != null) {
 
                 val job = Job()
                 CoroutineScope(Dispatchers.IO + job).launch {
                     //Save resources to Shared preference
-                    FormatterClass().saveStockValue(administeredProduct, vaccinationTargetDisease, getApplication<Application>().applicationContext)
+                    FormatterClass().saveStockValue(
+                        administeredProduct,
+                        vaccinationTargetDisease,
+                        getApplication<Application>().applicationContext
+                    )
                 }.join()
 
                 //Check answer to If user wants to administer vaccine
                 val status = observationFromCode(
                     "11-1122",
                     patientId,
-                    encounterId)
-                val value = status.value.replace(" ","")
-                if (value == "Yes" || value == "No"){
+                    encounterId
+                )
+                val value = status.value.replace(" ", "")
+                if (value == "Yes" || value == "No") {
                     /**
                      * User choose to administer vaccine, send immunisation status as Completed
                      * Generate immunization resource
@@ -661,26 +739,28 @@ class AdministerVaccineViewModel(
                     var immunizationStatus = ImmunizationStatus.COMPLETED
                     if (value == "No") immunizationStatus = ImmunizationStatus.NOTDONE
 
-                    val immunization = createImmunizationResource(encounterId,
+                    val immunization = createImmunizationResource(
+                        encounterId,
                         patientId,
-                        immunizationStatus,date)
+                        immunizationStatus, date
+                    )
 
                     saveResourceToDatabase(immunization, "Imm")
 
 //                    //Generate the next immunization
 //                    createNextImmunization(immunization)
 
-                    if (value == "Yes"){
+                    if (value == "Yes") {
                         //Navigate to Stock Management
                         FormatterClass().saveSharedPref(
                             "isVaccineAdministered",
                             "stockManagement",
-                            getApplication<Application>().applicationContext)
+                            getApplication<Application>().applicationContext
+                        )
                     }
 
 
-
-                }else{
+                } else {
                     /**
                      * User did not select Yes administer vaccine
                      * This could be contraindications
@@ -694,36 +774,41 @@ class AdministerVaccineViewModel(
                     val dateTime = observationFromCode(
                         "833-23",
                         patientId,
-                        encounterId)
+                        encounterId
+                    )
                     val nextDateStr = dateTime.dateTime
 
-                    if (nextDateStr != null){
-                        val nextDate = FormatterClass().convertStringToDate(nextDateStr, "yyyy-MM-dd'T'HH:mm:ssXXX")
+                    if (nextDateStr != null) {
+                        val nextDate = FormatterClass().convertStringToDate(
+                            nextDateStr,
+                            "yyyy-MM-dd'T'HH:mm:ssXXX"
+                        )
 
                         //Contraindication reasons
                         val statusReason = observationFromCode(
                             "321-12",
                             patientId,
-                            encounterId)
+                            encounterId
+                        )
                         val statusReasonStr = statusReason.value
 
-                        val recommendation = createImmunizationRecommendationResource(patientId,
+                        val recommendation = createImmunizationRecommendationResource(
+                            patientId,
                             nextDate,
                             "Contraindicated",
                             statusReasonStr,
-                            null)
+                            null
+                        )
 
                         saveResourceToDatabase(recommendation, "ImmRec")
                     }
-
 
 
                 }
             }
 
 
-
-        }else if (vaccinationFlow == "updateVaccineDetails"){
+        } else if (vaccinationFlow == "updateVaccineDetails") {
             /**
              * The request is from the update history -> vaccine details screens,
              * Get the type of vaccine from observation , save to shared pref and create immunisation
@@ -737,31 +822,38 @@ class AdministerVaccineViewModel(
             val vaccineType = observationFromCode(
                 "222-11",
                 patientId,
-                encounterId)
+                encounterId
+            )
             val administeredProduct = vaccineType.value.trim()
 
             //Target Disease
             val disease = observationFromCode(
                 "882-22",
                 patientId,
-                encounterId)
+                encounterId
+            )
             val targetDisease = disease.value.trim()
 
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
                 //Save resources to Shared preference
-                FormatterClass().saveStockValue(administeredProduct, targetDisease, getApplication<Application>().applicationContext)
+                FormatterClass().saveStockValue(
+                    administeredProduct,
+                    targetDisease,
+                    getApplication<Application>().applicationContext
+                )
             }.join()
 
             //Date of last dose
             val lastDoseDate = observationFromCode(
                 "111-8",
                 patientId,
-                encounterId)
+                encounterId
+            )
             val lastDateDose = lastDoseDate.dateTime
-            if(lastDateDose != null){
+            if (lastDateDose != null) {
                 val convertedDate = fomatterClass.convertDateFormat(lastDateDose)
-                if (convertedDate != null){
+                if (convertedDate != null) {
                     val date = FormatterClass().convertStringToDate(convertedDate, "MMM d yyyy")
 
                     //Vaccine details have been saved
@@ -782,8 +874,6 @@ class AdministerVaccineViewModel(
             }
 
 
-
-
             /**
              * TODO: Check if you should create recommendations from the historical data
              */
@@ -791,7 +881,7 @@ class AdministerVaccineViewModel(
 //            //Generate the next immunization
 //            createNextImmunization(immunization)
 
-        } else if (vaccinationFlow == "recommendVaccineDetails"){
+        } else if (vaccinationFlow == "recommendVaccineDetails") {
 
 //            /**
 //             * TODO: UPDATE THIS FLOW TO USE THE NEW FLOW
@@ -845,7 +935,6 @@ class AdministerVaccineViewModel(
     }
 
 
-
     private suspend fun observationFromCode(
         codeValue: String,
         patientId: String,
@@ -874,7 +963,7 @@ class AdministerVaccineViewModel(
         observations.forEach {
             code = it.code
             value = it.value
-            if (it.dateTime != null){
+            if (it.dateTime != null) {
                 dateTime = it.dateTime
             }
         }
@@ -928,15 +1017,19 @@ class AdministerVaccineViewModel(
     }
 
     //Create an appointment
-    fun createAppointment(dbAppointmentData: DbAppointmentData){
+    fun createAppointment(dbAppointmentData: DbAppointmentData) {
         CoroutineScope(Dispatchers.IO).launch { generateAppointment(dbAppointmentData) }
 
     }
-    private suspend fun generateAppointment(dbAppointmentData: DbAppointmentData){
+
+    private suspend fun generateAppointment(dbAppointmentData: DbAppointmentData) {
 
         val immunizationHandler = ImmunizationHandler()
         val formatterClass = FormatterClass()
-        val patientId = formatterClass.getSharedPref("patientId",getApplication<Application>().applicationContext)
+        val patientId = formatterClass.getSharedPref(
+            "patientId",
+            getApplication<Application>().applicationContext
+        )
 
         val title = dbAppointmentData.title
         val description = dbAppointmentData.description
@@ -946,15 +1039,15 @@ class AdministerVaccineViewModel(
         val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
         val selectedDate = if (dobFormat != null) {
             FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
-        }else{
+        } else {
             null
         }
 
-        Log.e("----->","<------")
+        Log.e("----->", "<------")
         println("dateScheduled $dateScheduled")
         println("dobFormat $dobFormat")
         println("selectedDate $selectedDate")
-        Log.e("----->","<------")
+        Log.e("----->", "<------")
         /**
          * TODO: Create a recommendation
          */
@@ -962,27 +1055,32 @@ class AdministerVaccineViewModel(
         var recommendationId = ""
         //1. Get the basic vaccine from the vaccineName
 
-        if (vaccineName != null && vaccineName != ""){
+        if (vaccineName != null && vaccineName != "") {
             val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
-            if (basicVaccine != null){
+            if (basicVaccine != null) {
 
                 //This works for Routine and non-routine alone
                 val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(basicVaccine)
-                if (seriesVaccine != null && patientId != null && selectedDate != null){
+                if (seriesVaccine != null && patientId != null && selectedDate != null) {
                     val targetDisease = seriesVaccine.targetDisease
                     val administeredProduct = basicVaccine.vaccineName
 
                     val job = Job()
                     CoroutineScope(Dispatchers.IO + job).launch {
                         //Save resources to Shared preference
-                        FormatterClass().saveStockValue(administeredProduct, targetDisease, getApplication<Application>().applicationContext)
+                        FormatterClass().saveStockValue(
+                            administeredProduct,
+                            targetDisease,
+                            getApplication<Application>().applicationContext
+                        )
 
                         val recommendation = createImmunizationRecommendationResource(
                             patientId,
                             selectedDate,
                             "Due",
                             "Next Immunization date",
-                            null)
+                            null
+                        )
 
                         recommendationId = recommendation.id
                         saveResourceToDatabase(recommendation, "ImmRec")
@@ -1009,7 +1107,7 @@ class AdministerVaccineViewModel(
         appointment.description = newText
 
         //List of based on references
-        if (recommendationId != ""){
+        if (recommendationId != "") {
             val recommendationReference = Reference("ImmunizationRecommendation/$recommendationId")
             val referenceList = ArrayList<Reference>()
             referenceList.add(recommendationReference)
@@ -1027,7 +1125,7 @@ class AdministerVaccineViewModel(
         appointment.created = Date()
 
         //start and end
-        if (selectedDate != null){
+        if (selectedDate != null) {
             appointment.start = selectedDate
             saveResourceToDatabase(appointment, "appointment")
         }
@@ -1035,7 +1133,6 @@ class AdministerVaccineViewModel(
         /**
          * TODO: Add Participants
          */
-
 
 
     }

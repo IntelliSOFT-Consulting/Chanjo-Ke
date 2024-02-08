@@ -6,22 +6,29 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.add_patient.AddPatientFragment
 import com.intellisoft.chanjoke.databinding.ActivityMainBinding
 import com.intellisoft.chanjoke.detail.ui.main.UpdateFragment
+import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
     private val formatter = FormatterClass()
-
+    private lateinit var fhirEngine: FhirEngine
+    private lateinit var patientDetailsViewModel: PatientDetailsViewModel
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             setHomeAsUpIndicator(null)
         }
 
+        fhirEngine = FhirApplication.fhirEngine(this)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -77,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             "registerFunction" -> {
                 registerFunction()
             }
+
             "updateFunction" -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
@@ -104,6 +113,7 @@ class MainActivity : AppCompatActivity() {
                     administerVaccine(patientId, R.id.administerVaccine)
                 }
             }
+
             NavigationDetails.CONTRAINDICATIONS.name -> {
                 contraindicationFunction()
             }
@@ -118,6 +128,22 @@ class MainActivity : AppCompatActivity() {
             NavigationDetails.LIST_AEFI.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
+                    patientDetailsViewModel =
+                        ViewModelProvider(
+                            this,
+                            PatientDetailsViewModelFactory(
+                                this.application,
+                                fhirEngine,
+                                patientId.toString()
+                            ),
+                        ).get(PatientDetailsViewModel::class.java)
+                    val current_age = FormatterClass().getSharedPref(
+                        "current_age", this
+                    )
+                    if (current_age != null) {
+                        Timber.tag("TAG").e("Created an Encounter with Started %s", current_age)
+//                        patientDetailsViewModel.createAefiEncounter(this, patientId, current_age)
+                    }
                     administerVaccine(patientId, R.id.aefisFragment)
                 }
             }
@@ -128,12 +154,14 @@ class MainActivity : AppCompatActivity() {
                     administerVaccine(patientId, R.id.patient_list)
                 }
             }
+
             NavigationDetails.ADD_AEFI.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
                     administerVaccine(patientId, R.id.administerVaccine)
                 }
             }
+
             NavigationDetails.EDIT_CLIENT.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
@@ -200,17 +228,20 @@ class MainActivity : AppCompatActivity() {
             bundle
         )
     }
+
     private fun contraindicationFunction() {
 
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
             R.id.contraindicationsFragment
         )
     }
+
     private fun registerFunction() {
         val bundle = Bundle()
         bundle.putString(
             AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
-            "new-patient-registration-paginated.json")
+            "new-patient-registration-paginated.json"
+        )
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
             R.id.addPatientFragment,
             bundle
