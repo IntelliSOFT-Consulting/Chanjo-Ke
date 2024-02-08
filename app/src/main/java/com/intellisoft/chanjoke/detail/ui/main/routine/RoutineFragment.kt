@@ -108,12 +108,6 @@ class RoutineFragment : Fragment() {
             val vaccines = expandableListDetail[keys]
             val administeredVaccineNames = administeredList.map { it.vaccineName }
 
-            Log.e("****","****")
-            Log.e("keys",keys)
-            Log.e("vaccines","$vaccines")
-            Log.e("administeredVaccineNames","$administeredVaccineNames")
-            Log.e("****","****")
-
             var statusColor = ""
             if (vaccines != null) {
                 if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
@@ -124,12 +118,15 @@ class RoutineFragment : Fragment() {
                     statusColor = StatusColors.RED.name
                 }
             }
+
             val dbStatusColor = DbStatusColor(keys, statusColor)
             statusColorsList.add(dbStatusColor)
         }
 
+
         val vaccineScheduleAdapter = VaccineScheduleAdapter(
             requireContext(),
+            administeredList,
             statusColorsList,
             expandableListTitle,
             expandableListDetail,

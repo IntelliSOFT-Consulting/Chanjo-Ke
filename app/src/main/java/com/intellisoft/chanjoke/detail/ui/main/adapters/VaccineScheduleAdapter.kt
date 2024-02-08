@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main.adapters
 
 import android.content.Context
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +10,17 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbStatusColor
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import org.hl7.fhir.r4.model.Immunization
 
 class VaccineScheduleAdapter(
     private val context: Context,
+    private val administeredList: ArrayList<DbVaccineData>,
     private val dbStatusColorList: ArrayList<DbStatusColor>,
     private val expandableListTitle: List<String>,
     private val expandableListDetail: HashMap<String, List<BasicVaccine>>,
@@ -53,9 +57,12 @@ class VaccineScheduleAdapter(
             convertView = layoutInflater.inflate(R.layout.vaccination_schedule_vaccines, null)
         }
         val expandedListTextView = convertView!!.findViewById<TextView>(R.id.tvVaccineName)
+        val tvVaccineDate = convertView!!.findViewById<TextView>(R.id.tvVaccineDate)
+        val tvScheduleStatus = convertView!!.findViewById<TextView>(R.id.tvScheduleStatus)
         val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
 
-        expandedListTextView.text = expandedListText.vaccineName
+        val vaccineName = expandedListText.vaccineName
+        expandedListTextView.text = vaccineName
 
         // Set checkbox state based on stored checked state
         val key = Pair(listPosition, expandedListPosition)
@@ -66,6 +73,33 @@ class VaccineScheduleAdapter(
             checkedStates[key] = isChecked
             updateAdministerVaccineText()
         }
+
+        //Check vaccine status
+        for (administeredVaccine in administeredList){
+
+            if (vaccineName == administeredVaccine.vaccineName){
+                val dateAdministered = administeredVaccine.dateAdministered
+                val status = administeredVaccine.status
+
+                var vaccineStatus = ""
+                if ("COMPLETED" == status){
+                    vaccineStatus = "administered"
+                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
+                    checkBox.visibility = View.INVISIBLE
+                }else if ("NOTDONE" == status){
+                    vaccineStatus = "contraindicated"
+                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
+                }else{
+                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.darker_gray))
+                }
+
+                tvVaccineDate.text = dateAdministered
+                tvScheduleStatus.text = vaccineStatus
+
+            }
+
+        }
+
 
         return convertView
     }

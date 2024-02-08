@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@+id/tvVaccineDate"
-                android:text="Jan 20 2020"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -43,7 +43,7 @@
             <TextView
                 android:gravity="start"
                 android:id="@+id/tvScheduleStatus"
-                android:text="Contraindicated"
+                android:text=""
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

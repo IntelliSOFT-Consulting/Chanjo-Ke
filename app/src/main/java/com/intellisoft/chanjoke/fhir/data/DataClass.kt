@@ -12,6 +12,10 @@ data class DbStatusColor(
     val keyTitle:String,
     val statusColor: String
 )
+data class DbVaccineListData(
+    val keyTitle:String,
+    val statusColor: String,
+)
 enum class StatusColors {
     GREEN, //All administered
     AMBER, //Some administered
