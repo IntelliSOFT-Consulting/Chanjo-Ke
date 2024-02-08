@@ -198,34 +198,31 @@ class AdministerVaccineViewModel(
 
                 val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
 
-                val nextBasicVaccine = vaccineBasicVaccine?.let {
-                    immunizationHandler.getNextDoseDetails(
-                        it
-                    )
+                if (vaccineBasicVaccine != null){
+                    val seriesVaccine = immunizationHandler.getRoutineSeriesByBasicVaccine(vaccineBasicVaccine)
+                    val targetDisease = seriesVaccine?.targetDisease
+
+                    val job = Job()
+                    CoroutineScope(Dispatchers.IO + job).launch {
+                        //Save resources to Shared preference
+                        if (targetDisease != null) {
+                            FormatterClass().saveStockValue(
+                                vaccineNameValue,
+                                targetDisease,
+                                getApplication<Application>().applicationContext)
+                        }
+                    }.join()
+                    val immunization = createImmunizationResource(
+                        encounterId,
+                        patientId,
+                        ImmunizationStatus.COMPLETED,
+                        Date())
+
+                    saveResourceToDatabase(immunization, "immunization")
                 }
 
-                val seriesVaccine = vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
 
-                val targetDisease = seriesVaccine?.targetDisease
-                val vaccineName = nextBasicVaccine?.vaccineName
 
-                val job = Job()
-                CoroutineScope(Dispatchers.IO + job).launch {
-                    //Save resources to Shared preference
-                    if (vaccineName != null && targetDisease != null) {
-                        FormatterClass().saveStockValue(
-                            vaccineName,
-                            targetDisease,
-                            getApplication<Application>().applicationContext)
-                    }
-                }.join()
-                val immunization = createImmunizationResource(
-                    encounterId,
-                    patientId,
-                    ImmunizationStatus.COMPLETED,
-                    Date())
-
-                saveResourceToDatabase(immunization, "immunization")
 
             }
 
@@ -453,34 +450,33 @@ class AdministerVaccineViewModel(
 
                 val vaccineBasicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
 
-                val nextBasicVaccine = vaccineBasicVaccine?.let {
-                    immunizationHandler.getNextDoseDetails(
-                        it
-                    )
+                if (vaccineBasicVaccine != null) {
+                    val seriesVaccine = immunizationHandler.getRoutineSeriesByBasicVaccine(vaccineBasicVaccine)
+                    val targetDisease = seriesVaccine?.targetDisease
+
+                    val job = Job()
+                    CoroutineScope(Dispatchers.IO + job).launch {
+                        //Save resources to Shared preference
+                        if (targetDisease != null) {
+                            FormatterClass().saveStockValue(
+                                vaccineNameValue,
+                                targetDisease,
+                                getApplication<Application>().applicationContext
+                            )
+                        }
+                    }.join()
+
+                    val recommendation = createImmunizationRecommendationResource(
+                        patientId,
+                        nextImmunizationDate,
+                        "Due",
+                        "Next Immunization date",
+                        immunizationId)
+                    saveResourceToDatabase(recommendation, "ImmRec")
+
                 }
 
-                val seriesVaccine = vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
 
-                val targetDisease = seriesVaccine?.targetDisease
-                val vaccineName = nextBasicVaccine?.vaccineName
-
-                val job = Job()
-                CoroutineScope(Dispatchers.IO + job).launch {
-                    //Save resources to Shared preference
-                    if (vaccineName != null && targetDisease != null) {
-                        FormatterClass().saveStockValue(
-                            vaccineName,
-                            targetDisease,
-                            getApplication<Application>().applicationContext)
-                    }
-                }.join()
-                val recommendation = createImmunizationRecommendationResource(
-                    patientId,
-                    nextImmunizationDate,
-                    "Due",
-                    "Next Immunization date",
-                    immunizationId)
-                saveResourceToDatabase(recommendation, "ImmRec")
 
             }
 

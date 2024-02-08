@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.DbStatusColor
+import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -70,12 +72,65 @@ class RoutineFragment : Fragment() {
 
     }
 
+    fun getStatusForString(
+        stringToCheck: String,
+        expandableListDetail: HashMap<String, List<BasicVaccine>>,
+        administeredList: ArrayList<DbVaccineData>): String {
+
+        val vaccines = expandableListDetail[stringToCheck]
+        val administeredVaccineNames = administeredList.map { it.vaccineName }
+
+        Log.e("****","****")
+        Log.e("stringToCheck","$stringToCheck")
+        Log.e("vaccines","$vaccines")
+        Log.e("administeredVaccineNames","$administeredVaccineNames")
+        Log.e("****","****")
+
+        return when {
+            vaccines == null -> StatusColors.RED.name
+            vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) } -> StatusColors.GREEN.name
+            vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) } -> StatusColors.AMBER.name
+            else -> StatusColors.RED.name
+        }
+    }
+
     private fun getRoutine() {
 
         val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
         val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
-        val vaccineScheduleAdapter = VaccineScheduleAdapter(requireContext(),
+        //Get the administered list
+        val administeredList = patientDetailsViewModel.getVaccineList()
+
+        val statusColorsList = ArrayList<DbStatusColor>()
+        for (keys in expandableListTitle){
+
+            val vaccines = expandableListDetail[keys]
+            val administeredVaccineNames = administeredList.map { it.vaccineName }
+
+            Log.e("****","****")
+            Log.e("keys",keys)
+            Log.e("vaccines","$vaccines")
+            Log.e("administeredVaccineNames","$administeredVaccineNames")
+            Log.e("****","****")
+
+            var statusColor = ""
+            if (vaccines != null) {
+                if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+                    statusColor = StatusColors.GREEN.name
+                }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+                    statusColor = StatusColors.AMBER.name
+                }else{
+                    statusColor = StatusColors.RED.name
+                }
+            }
+            val dbStatusColor = DbStatusColor(keys, statusColor)
+            statusColorsList.add(dbStatusColor)
+        }
+
+        val vaccineScheduleAdapter = VaccineScheduleAdapter(
+            requireContext(),
+            statusColorsList,
             expandableListTitle,
             expandableListDetail,
             binding.tvAdministerVaccine)

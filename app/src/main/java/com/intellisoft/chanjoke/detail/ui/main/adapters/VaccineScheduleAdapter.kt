@@ -7,12 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.TextView
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.DbStatusColor
+import com.intellisoft.chanjoke.fhir.data.DbVaccineData
+import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 
 class VaccineScheduleAdapter(
     private val context: Context,
+    private val dbStatusColorList: ArrayList<DbStatusColor>,
     private val expandableListTitle: List<String>,
     private val expandableListDetail: HashMap<String, List<BasicVaccine>>,
     private val tvAdministerVaccine: TextView
@@ -118,6 +123,7 @@ class VaccineScheduleAdapter(
             convertView = layoutInflater.inflate(R.layout.vaccination_schedule, null)
         }
         val listTitleTextView = convertView!!.findViewById<TextView>(R.id.tvScheduleTime)
+        val imageViewSchedule = convertView!!.findViewById<ImageView>(R.id.imageViewSchedule)
         listTitleTextView.setTypeface(null, Typeface.BOLD)
         val weekNo: String = if (listTitle == "0"){
             "At Birth"
@@ -125,8 +131,30 @@ class VaccineScheduleAdapter(
             "$listTitle weeks"
         }
         listTitleTextView.text = weekNo
+        //Check if its immunised
+
+        var statusColorValue = StatusColors.NORMAL.name
+        for (dbStatusColor in dbStatusColorList){
+            if (dbStatusColor.keyTitle == listTitle){
+                statusColorValue = dbStatusColor.statusColor
+            }
+        }
+
+        if (statusColorValue == StatusColors.GREEN.name){
+            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
+        }else if (statusColorValue == StatusColors.AMBER.name){
+            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
+        }else if (statusColorValue == StatusColors.RED.name){
+            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
+        }else{
+            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal)
+        }
+
+
         return convertView
     }
+
+
 
     override fun hasStableIds(): Boolean {
         return false
