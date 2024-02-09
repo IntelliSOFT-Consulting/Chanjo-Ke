@@ -140,6 +140,7 @@ class AefisFragment : Fragment() {
             })
             .map { (status, vaccines) ->
                 val reactions = ArrayList<DbVaccineData>(vaccines)
+
                 AllergicReaction(
                     status,
                     "",

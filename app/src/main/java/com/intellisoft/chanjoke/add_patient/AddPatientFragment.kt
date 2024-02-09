@@ -35,13 +35,14 @@ import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
+import com.intellisoft.chanjoke.utils.ProgressDialogFragment
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 
 /** A fragment class to show patient registration screen. */
 class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
 
     private val viewModel: AddPatientViewModel by viewModels()
-
+    private val progressDialogFragment = ProgressDialogFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
@@ -136,15 +137,21 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
     }
 
     private fun savePatient(questionnaireResponse: QuestionnaireResponse) {
+//        progressDialogFragment.show(requireFragmentManager(), "progressDialog")
         viewModel.savePatient(questionnaireResponse, requireContext())
     }
 
     private fun observePatientSaveAction() {
         viewModel.isPatientSaved.observe(viewLifecycleOwner) {
+
+//            if (progressDialogFragment.isVisible) {
+//                progressDialogFragment.dismiss()
+//            }
             if (!it) {
                 Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
                 return@observe
             }
+
 
 //            NavHostFragment.findNavController(this@AddPatientFragment).navigateUp()
             val patientId = FormatterClass().getSharedPref("patientId", requireContext())
