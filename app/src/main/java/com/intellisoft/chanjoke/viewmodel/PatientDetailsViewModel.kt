@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.viewmodel
 
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Resources
 import android.icu.text.DateFormat
 import android.util.Log
@@ -17,6 +18,8 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.common.datatype.asStringValue
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
+import com.google.android.fhir.search.StringFilterModifier
+import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
@@ -35,6 +38,7 @@ import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Encounter
@@ -42,8 +46,10 @@ import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
+import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.RiskAssessment
+import timber.log.Timber
 
 /**
  * The ViewModel helper class for PatientItemRecyclerViewAdapter, that is responsible for preparing
@@ -376,6 +382,22 @@ class PatientDetailsViewModel(
         val vaccineList = ArrayList<DbVaccineData>()
 
         fhirEngine
+            .search<AllergyIntolerance> {
+                filter(AllergyIntolerance.PATIENT, { value = "Patient/$patientId" })
+                sort(AllergyIntolerance.DATE, Order.DESCENDING)
+            }
+            .map { createAllergyIntoleranceItem(it) }
+            .let { vaccineList.addAll(it) }
+
+
+        return ArrayList(vaccineList)
+    }
+
+    private suspend fun getVaccineListDetailsOld(): ArrayList<DbVaccineData> {
+
+        val vaccineList = ArrayList<DbVaccineData>()
+
+        fhirEngine
             .search<Immunization> {
                 filter(Immunization.PATIENT, { value = "Patient/$patientId" })
                 sort(Immunization.DATE, Order.DESCENDING)
@@ -388,6 +410,46 @@ class PatientDetailsViewModel(
         }
 
         return ArrayList(newVaccineList)
+    }
+
+    private fun createAllergyIntoleranceItem(data: AllergyIntolerance): DbVaccineData {
+
+        var vaccineName = ""
+        var doseNumberValue = ""
+        val logicalId = if (data.hasEncounter()) data.encounter.reference else ""
+        var dateScheduled = ""
+        var status = ""
+
+        val ref = logicalId.toString().replace("Encounter/", "")
+
+        Log.e("TAG", "Encounter Referenced $ref")
+//
+//        if (immunization.hasVaccineCode()) {
+//            if (immunization.vaccineCode.hasText()) vaccineName = immunization.vaccineCode.text
+//        }
+//
+//        if (immunization.hasOccurrenceDateTimeType()) {
+//            val fhirDate = immunization.occurrenceDateTimeType.valueAsString
+//            val convertedDate = FormatterClass().convertDateFormat(fhirDate)
+//            if (convertedDate != null) {
+//                dateScheduled = convertedDate
+//            }
+//        }
+//        if (immunization.hasProtocolApplied()) {
+//            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue =
+//                immunization.protocolApplied[0].seriesDoses.asStringValue()
+//        }
+        if (data.hasNote()) {
+            status = if (data.noteFirstRep.hasText()) data.noteFirstRep.text else ""
+        }
+
+        return DbVaccineData(
+            ref,
+            vaccineName,
+            doseNumberValue,
+            dateScheduled,
+            status
+        )
     }
 
     private fun createVaccineItem(immunization: Immunization): DbVaccineData {
@@ -465,11 +527,11 @@ class PatientDetailsViewModel(
         return data
     }
 
-    fun loadImmunizationAefis(logicalId: String) = runBlocking {
+    fun loadImmunizationAefis(logicalId: List<DbVaccineData>) = runBlocking {
         loadInternalImmunizationAefis(logicalId)
     }
 
-    private suspend fun loadInternalImmunizationAefis(logicalId: String): List<AdverseEventData> {
+    private suspend fun loadInternalImmunizationAefis(list: List<DbVaccineData>): List<AdverseEventData> {
 
         val encounterList = ArrayList<AdverseEventData>()
         fhirEngine
@@ -477,9 +539,6 @@ class PatientDetailsViewModel(
                 filter(
                     Encounter.SUBJECT,
                     { value = "Patient/$patientId" })
-                filter(
-                    Encounter.PART_OF,
-                    { value = "Encounter/$logicalId" })
                 sort(Encounter.DATE, Order.DESCENDING)
             }
             .map {
@@ -488,7 +547,12 @@ class PatientDetailsViewModel(
                     getApplication<Application>().resources
                 )
             }
-            .let { encounterList.addAll(it) }
+            .forEach { j ->
+                if (list.any { it.logicalId == j.logicalId }) {
+                    encounterList.add(j)
+                }
+            }
+
         return encounterList.reversed()
     }
 
@@ -593,6 +657,52 @@ class PatientDetailsViewModel(
     private fun formatDateToHumanReadable(date: String): String? {
         return FormatterClass().convertDateFormat(date)
 
+    }
+
+    fun createAefiEncounter(context: Context, patientId: String, currentAge: String) {
+
+        viewModelScope.launch {
+            recordData(context, patientId, currentAge)
+        }
+    }
+
+    suspend fun recordData(context: Context, patientId: String, currentAge: String) {
+        try {
+            val modifiedString = currentAge.toLowerCase().replace(' ', '_')
+            val subjectReference = Reference("Patient/$patientId")
+            val resource = Encounter();
+            resource.subject = subjectReference
+            resource.id = modifiedString
+            fhirEngine.create(resource)
+            Timber.tag("TAG").e("Created an Encounter with ID %s", currentAge)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Timber.tag("TAG").e("Created an Encounter with Exception %s", e.message)
+        }
+    }
+
+      fun generateCurrentCount(weekNo: String, patientId: String)= runBlocking{
+            counterAllergies(weekNo, patientId)
+    }
+
+
+
+    private suspend fun counterAllergies(weekNo: String, patientId: String): String {
+        var counter = 0
+        fhirEngine
+            .search<AllergyIntolerance> {
+                filter(AllergyIntolerance.PATIENT, { value = "Patient/$patientId" })
+                sort(AllergyIntolerance.DATE, Order.DESCENDING)
+            }
+            .map { createAllergyIntoleranceItem(it) }
+            .forEach { q ->
+                if (q.status.contains(weekNo)) {
+                    counter++
+                }
+            }
+
+        Log.e("TAG", "Counter **** Final $weekNo Current Counter $counter")
+        return "$counter"
     }
 }
 

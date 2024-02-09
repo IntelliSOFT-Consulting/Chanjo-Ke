@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
-import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentNonRoutineBinding
-import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbStatusColor
@@ -103,7 +101,9 @@ class NonRoutineFragment : Fragment() {
             statusColorsList,
             expandableListTitle,
             expandableListDetail,
-            binding.tvAdministerVaccine)
+            patientDetailsViewModel,
+            binding.tvAdministerVaccine
+        )
         binding.expandableListView.setAdapter(vaccineScheduleAdapter)
 
         binding.tvAdministerVaccine.setOnClickListener {
