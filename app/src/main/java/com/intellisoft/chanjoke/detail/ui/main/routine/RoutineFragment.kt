@@ -108,6 +108,7 @@ class RoutineFragment : Fragment() {
             expandableListDetail,
             patientDetailsViewModel,
             binding.tvAdministerVaccine)
+
         binding.expandableListView.setAdapter(vaccineScheduleAdapter)
 
         binding.tvAdministerVaccine.setOnClickListener {
