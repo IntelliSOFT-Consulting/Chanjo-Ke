@@ -78,6 +78,12 @@ enum class NavigationDetails {
     ADD_AEFI
 }
 
+data class DbAppointmentDataDetails(
+    val id: String? = null,
+    val vaccineName: String?,
+    val dateScheduled: String,
+)
+
 data class DbAppointmentData(
     val id: String? = null,
     val title: String,

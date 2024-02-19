@@ -24,6 +24,7 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
@@ -31,6 +32,9 @@ import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class AddAppointment : AppCompatActivity() {
@@ -84,34 +88,32 @@ class AddAppointment : AppCompatActivity() {
 
         binding.btnPreview.setOnClickListener {
 
-            val title = binding.etTitle.text.toString()
-            val description = binding.etDescription.text.toString()
             val dateScheduled = binding.tvDatePicker.text.toString()
-            if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description) && !TextUtils.isEmpty(dateScheduled)){
+            if (!TextUtils.isEmpty(dateScheduled)){
 
-                var vaccineName = ""
-//                if (selectedVaccineName != "" && selectedVaccineName.isNotEmpty()) {
-//                    vaccineName = selectedVaccineName
-//                }
-//
-//                val dbAppointmentData = DbAppointmentData(
-//                    null,
-//                    title,
-//                    description,
-//                    vaccineName,
-//                    dateScheduled
-//                )
-//                administerVaccineViewModel.createAppointment(dbAppointmentData)
-//
-//                Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
-//
-//                val intent = Intent(this, PatientDetailActivity::class.java)
-//                startActivity(intent)
-//                finish()
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    selectedItemList.forEach {
+                        val dbAppointmentData = DbAppointmentDataDetails(
+                            null,
+                            it,
+                            dateScheduled
+                        )
+                        administerVaccineViewModel.createAppointment(dbAppointmentData)
+                    }
+
+                }
+
+
+
+                Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this, PatientDetailActivity::class.java)
+                startActivity(intent)
+                finish()
 
             }else{
-                if (TextUtils.isEmpty(title)) binding.etTitle.error = "Field cannot be empty.."
-                if (TextUtils.isEmpty(description)) binding.etDescription.error = "Field cannot be empty.."
+                if (TextUtils.isEmpty(dateScheduled)) binding.tvDatePicker.error = "Field cannot be empty.."
             }
 
         }
