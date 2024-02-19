@@ -5,6 +5,11 @@
     <string name="fab_content_desc">Register Client</string>
     <string name="administer_vaccine_count">Administer Vaccine </string>
 
+    <string name="all_details"><u>All Details</u>.</string>
+    <string name="appointment"><u>Appointment</u>.</string>
+    <string name="administer_vaccine_text"><u>Administer Vaccine (0)</u>.</string>
+
+
     <string name="title_patient_list">Registered Clients</string>
     <string name="syncing">Syncing</string>
     <string name="sync">Sync</string>
