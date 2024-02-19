@@ -213,14 +213,19 @@ class VaccineScheduleAdapter(
             }
         }
 
-        if (statusColorValue == StatusColors.GREEN.name) {
-            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
-        } else if (statusColorValue == StatusColors.AMBER.name) {
-            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
-        } else if (statusColorValue == StatusColors.RED.name) {
-            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
-        } else {
-            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal)
+        when (statusColorValue) {
+            StatusColors.GREEN.name -> {
+                imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
+            }
+            StatusColors.AMBER.name -> {
+                imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
+            }
+            StatusColors.RED.name -> {
+                imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
+            }
+            else -> {
+                imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
+            }
         }
 
 
