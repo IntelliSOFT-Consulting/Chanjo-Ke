@@ -68,12 +68,8 @@ class AppointmentDetails : AppCompatActivity() {
         if (dbAppointmentData != null){
             recommendationList = dbAppointmentData.recommendationList!!
 
-            val title = dbAppointmentData.title
-            val description = dbAppointmentData.description
             val dateScheduled = dbAppointmentData.dateScheduled
 
-            binding.tvTitle.text = title
-            binding.tvDescription.text = description
             binding.tvDateScheduled.text = dateScheduled
 
             val appointmentDetailsAdapter = AppointmentDetailsAdapter(recommendationList, this)
