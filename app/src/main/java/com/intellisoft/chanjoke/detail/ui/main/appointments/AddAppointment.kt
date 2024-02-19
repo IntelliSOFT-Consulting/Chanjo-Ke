@@ -15,10 +15,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAddAppointmentBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
+import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
@@ -35,13 +38,15 @@ class AddAppointment : AppCompatActivity() {
     private lateinit var binding: ActivityAddAppointmentBinding
     private lateinit var patientId: String
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
-    private var selectedVaccineName = ""
+//    private var selectedVaccineName = ""
     private lateinit var fhirEngine: FhirEngine
 
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
     private val formatterClass = FormatterClass()
     private val immunizationHandler = ImmunizationHandler()
+    private val selectedItemList = ArrayList<String>()
+    private lateinit var layoutManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +68,14 @@ class AddAppointment : AppCompatActivity() {
 
         createSpinner()
 
+        layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.setHasFixedSize(true)
+
         binding.tvDatePicker.setOnClickListener { showDatePickerDialog() }
 
         binding.btnCancel.setOnClickListener {
@@ -77,24 +90,24 @@ class AddAppointment : AppCompatActivity() {
             if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description) && !TextUtils.isEmpty(dateScheduled)){
 
                 var vaccineName = ""
-                if (selectedVaccineName != "" && selectedVaccineName.isNotEmpty()) {
-                    vaccineName = selectedVaccineName
-                }
-
-                val dbAppointmentData = DbAppointmentData(
-                    null,
-                    title,
-                    description,
-                    vaccineName,
-                    dateScheduled
-                )
-                administerVaccineViewModel.createAppointment(dbAppointmentData)
-
-                Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
-
-                val intent = Intent(this, PatientDetailActivity::class.java)
-                startActivity(intent)
-                finish()
+//                if (selectedVaccineName != "" && selectedVaccineName.isNotEmpty()) {
+//                    vaccineName = selectedVaccineName
+//                }
+//
+//                val dbAppointmentData = DbAppointmentData(
+//                    null,
+//                    title,
+//                    description,
+//                    vaccineName,
+//                    dateScheduled
+//                )
+//                administerVaccineViewModel.createAppointment(dbAppointmentData)
+//
+//                Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
+//
+//                val intent = Intent(this, PatientDetailActivity::class.java)
+//                startActivity(intent)
+//                finish()
 
             }else{
                 if (TextUtils.isEmpty(title)) binding.etTitle.error = "Field cannot be empty.."
@@ -102,6 +115,15 @@ class AddAppointment : AppCompatActivity() {
             }
 
         }
+
+    }
+
+    private fun createAppointment(selectedItem: String) {
+        if (selectedItemList.contains(selectedItem)) selectedItemList.remove(selectedItem)
+        selectedItemList.add(selectedItem)
+
+        val vaccineAdapter = ContraindicationsAdapter(selectedItemList,this)
+        binding.recyclerView.adapter = vaccineAdapter
 
     }
 
@@ -234,7 +256,10 @@ class AddAppointment : AppCompatActivity() {
                 // Get the selected item
                 val selectedItem = itemListLower[position]
                 val selectedVaccine = recommendationList.find { it.vaccineName == selectedItem }
-                if (selectedVaccine != null) selectedVaccineName = selectedVaccine.vaccineName
+                if (selectedVaccine != null) {
+                    val selectedVaccineName = selectedVaccine.vaccineName
+                    createAppointment(selectedVaccineName)
+                }
 
             }
 
