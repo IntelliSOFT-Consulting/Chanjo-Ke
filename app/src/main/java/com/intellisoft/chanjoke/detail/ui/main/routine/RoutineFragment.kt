@@ -91,7 +91,7 @@ class RoutineFragment : Fragment() {
                 }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
                     statusColor = StatusColors.AMBER.name
                 }else{
-                    statusColor = StatusColors.RED.name
+                    statusColor = StatusColors.NORMAL.name
                 }
             }
 
@@ -108,6 +108,7 @@ class RoutineFragment : Fragment() {
             expandableListDetail,
             patientDetailsViewModel,
             binding.tvAdministerVaccine)
+
         binding.expandableListView.setAdapter(vaccineScheduleAdapter)
 
         binding.tvAdministerVaccine.setOnClickListener {

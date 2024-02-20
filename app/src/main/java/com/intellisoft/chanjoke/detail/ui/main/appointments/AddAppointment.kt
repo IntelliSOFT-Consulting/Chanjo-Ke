@@ -15,12 +15,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAddAppointmentBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
+import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
@@ -28,6 +32,9 @@ import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class AddAppointment : AppCompatActivity() {
@@ -35,13 +42,15 @@ class AddAppointment : AppCompatActivity() {
     private lateinit var binding: ActivityAddAppointmentBinding
     private lateinit var patientId: String
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
-    private var selectedVaccineName = ""
+//    private var selectedVaccineName = ""
     private lateinit var fhirEngine: FhirEngine
 
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
     private val formatterClass = FormatterClass()
     private val immunizationHandler = ImmunizationHandler()
+    private val selectedItemList = ArrayList<String>()
+    private lateinit var layoutManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +72,14 @@ class AddAppointment : AppCompatActivity() {
 
         createSpinner()
 
+        layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.setHasFixedSize(true)
+
         binding.tvDatePicker.setOnClickListener { showDatePickerDialog() }
 
         binding.btnCancel.setOnClickListener {
@@ -71,24 +88,23 @@ class AddAppointment : AppCompatActivity() {
 
         binding.btnPreview.setOnClickListener {
 
-            val title = binding.etTitle.text.toString()
-            val description = binding.etDescription.text.toString()
             val dateScheduled = binding.tvDatePicker.text.toString()
-            if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description) && !TextUtils.isEmpty(dateScheduled)){
+            if (!TextUtils.isEmpty(dateScheduled)){
 
-                var vaccineName = ""
-                if (selectedVaccineName != "" && selectedVaccineName.isNotEmpty()) {
-                    vaccineName = selectedVaccineName
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    selectedItemList.forEach {
+                        val dbAppointmentData = DbAppointmentDataDetails(
+                            null,
+                            it,
+                            dateScheduled
+                        )
+                        administerVaccineViewModel.createAppointment(dbAppointmentData)
+                    }
+
                 }
 
-                val dbAppointmentData = DbAppointmentData(
-                    null,
-                    title,
-                    description,
-                    vaccineName,
-                    dateScheduled
-                )
-                administerVaccineViewModel.createAppointment(dbAppointmentData)
+
 
                 Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
 
@@ -97,11 +113,19 @@ class AddAppointment : AppCompatActivity() {
                 finish()
 
             }else{
-                if (TextUtils.isEmpty(title)) binding.etTitle.error = "Field cannot be empty.."
-                if (TextUtils.isEmpty(description)) binding.etDescription.error = "Field cannot be empty.."
+                if (TextUtils.isEmpty(dateScheduled)) binding.tvDatePicker.error = "Field cannot be empty.."
             }
 
         }
+
+    }
+
+    private fun createAppointment(selectedItem: String) {
+        if (selectedItemList.contains(selectedItem)) selectedItemList.remove(selectedItem)
+        selectedItemList.add(selectedItem)
+
+        val vaccineAdapter = ContraindicationsAdapter(selectedItemList,this)
+        binding.recyclerView.adapter = vaccineAdapter
 
     }
 
@@ -234,7 +258,10 @@ class AddAppointment : AppCompatActivity() {
                 // Get the selected item
                 val selectedItem = itemListLower[position]
                 val selectedVaccine = recommendationList.find { it.vaccineName == selectedItem }
-                if (selectedVaccine != null) selectedVaccineName = selectedVaccine.vaccineName
+                if (selectedVaccine != null) {
+                    val selectedVaccineName = selectedVaccine.vaccineName
+                    createAppointment(selectedVaccineName)
+                }
 
             }
 

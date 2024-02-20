@@ -68,13 +68,21 @@ data class ObservationDateValue(
 
 enum class NavigationDetails {
     CONTRAINDICATIONS,
+    APPOINTMENT,
     ADMINISTER_VACCINE,
     UPDATE_CLIENT_HISTORY,
     LIST_VACCINE_DETAILS,
     CLIENT_LIST,
     EDIT_CLIENT,
-    LIST_AEFI, ADD_AEFI
+    LIST_AEFI,
+    ADD_AEFI
 }
+
+data class DbAppointmentDataDetails(
+    val id: String? = null,
+    val vaccineName: String?,
+    val dateScheduled: String,
+)
 
 data class DbAppointmentData(
     val id: String? = null,

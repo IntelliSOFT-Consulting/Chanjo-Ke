@@ -107,6 +107,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            NavigationDetails.APPOINTMENT.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    contraindicationFunction(patientId,  R.id.appointmentsFragment)
+                }
+            }
+
             NavigationDetails.ADMINISTER_VACCINE.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
@@ -115,7 +122,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             NavigationDetails.CONTRAINDICATIONS.name -> {
-                contraindicationFunction()
+                contraindicationFunction("",  R.id.contraindicationsFragment)
             }
 
             NavigationDetails.LIST_VACCINE_DETAILS.name -> {
@@ -229,10 +236,10 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun contraindicationFunction() {
+    private fun contraindicationFunction(patientId: String, navigateInt: Int) {
 
         findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
-            R.id.contraindicationsFragment
+            navigateInt
         )
     }
 
