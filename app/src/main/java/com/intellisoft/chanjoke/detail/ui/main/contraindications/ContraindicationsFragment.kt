@@ -13,17 +13,20 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.databinding.FragmentAefisBinding
 import com.intellisoft.chanjoke.databinding.FragmentContraindicationsBinding
 import com.intellisoft.chanjoke.detail.ui.main.RecommendationAdapter
 
@@ -42,6 +45,15 @@ class ContraindicationsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+    }
+
     private lateinit var binding: FragmentContraindicationsBinding
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private lateinit var patientId: String
@@ -54,35 +66,35 @@ class ContraindicationsFragment : Fragment() {
     private var administrationFlowTitle :String? = null
     private var status :String = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
-        val toolbar = view?.findViewById<Toolbar>(R.id.toolbar)
+        binding = FragmentContraindicationsBinding.inflate(layoutInflater)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)        // Inflate the layout for this fragment
+
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
-        binding = FragmentContraindicationsBinding.inflate(inflater, container, false)
+        administrationFlowTitle = formatterClass.getSharedPref("administrationFlowTitle", requireContext())
+
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
-        administrationFlowTitle = formatterClass.getSharedPref("administrationFlowTitle", requireContext())
 
         updateUI()
 
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
-
+        onBackPressed()
         layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
@@ -145,8 +157,13 @@ class ContraindicationsFragment : Fragment() {
 
         }
 
+    }
+    private fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
 
-        return binding.root
+            NavHostFragment.findNavController(this@ContraindicationsFragment)
+                .navigateUp()
+        }
     }
 
     private fun updateUI() {
@@ -169,6 +186,7 @@ class ContraindicationsFragment : Fragment() {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             title = titleString
+            setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -202,9 +220,7 @@ class ContraindicationsFragment : Fragment() {
     }
 
     // Handle back press in the fragment
-    fun onBackPressed(): Boolean {
-        return false
-    }
+
 
     private fun createSpinner() {
 
