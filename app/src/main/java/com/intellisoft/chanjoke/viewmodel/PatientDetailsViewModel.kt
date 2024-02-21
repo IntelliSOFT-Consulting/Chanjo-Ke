@@ -376,8 +376,11 @@ class PatientDetailsViewModel(
 
     }
 
-    fun getVaccineList() = runBlocking {
+    fun getVaccineListWithAefis() = runBlocking {
         getVaccineListDetails()
+    }
+    fun getVaccineList() = runBlocking {
+        getVaccineListDetailsOld()
     }
 
     private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {

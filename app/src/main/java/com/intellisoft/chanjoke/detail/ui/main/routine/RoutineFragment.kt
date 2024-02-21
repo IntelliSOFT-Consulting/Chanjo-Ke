@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main.routine
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +16,13 @@ import com.intellisoft.chanjoke.fhir.data.DbStatusColor
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -75,9 +80,17 @@ class RoutineFragment : Fragment() {
         val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
         val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
+//        var  daysToValue = 0
+//        val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
+//        if (patientDob != null){
+//            val daysTo = FormatterClass().daysBetweenTodayAndGivenDate(patientDob)
+//            if (daysTo != null){
+//                daysToValue = daysTo.toInt()
+//            }
+//        }
+
         //Get the administered list
         val administeredList = patientDetailsViewModel.getVaccineList()
-
         val statusColorsList = ArrayList<DbStatusColor>()
         for (keys in expandableListTitle){
 
@@ -87,10 +100,17 @@ class RoutineFragment : Fragment() {
             var statusColor = ""
             if (vaccines != null) {
                 if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+                    //Checks if all have been vaccinated
                     statusColor = StatusColors.GREEN.name
                 }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+                    //Checks if there's any that has been vaccinated
                     statusColor = StatusColors.AMBER.name
                 }else{
+                    //Everything under here does not have any vaccines
+                    /**
+                     * 1. Check if current date is past the number of weeks from birth
+                     * 2. If current date is past the number of weeks from birth, eka red if not weka black
+                     */
                     statusColor = StatusColors.NORMAL.name
                 }
             }

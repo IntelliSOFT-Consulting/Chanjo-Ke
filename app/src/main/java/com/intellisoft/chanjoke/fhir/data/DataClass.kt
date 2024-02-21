@@ -10,7 +10,9 @@ enum class UrlData(var message: Int) {
 
 data class DbStatusColor(
     val keyTitle: String,
-    val statusColor: String
+    val statusColor: String,
+    val isStatusDue: Boolean = false,
+
 )
 
 data class DbVaccineListData(
@@ -22,7 +24,7 @@ enum class StatusColors {
     GREEN, //All administered
     AMBER, //Some administered
     RED, //All missed
-    NORMAL, //Nothing
+    NORMAL, //Future
 }
 
 data class DbVaccineData(
