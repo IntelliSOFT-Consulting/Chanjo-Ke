@@ -184,37 +184,10 @@ class PatientDetailActivity : AppCompatActivity() {
                 }
             }
 
-            val vaccineList = patientDetailsViewModel.getVaccineList()
-            generateMissedVaccines(vaccineList)
 
         }
     }
-    private fun generateMissedVaccines(vaccineList: ArrayList<DbVaccineData>) {
 
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val patientDob = formatterClass.getSharedPref("patientDob", this@PatientDetailActivity)
-            if (patientDob != null) {
-
-                val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
-                val basicVaccineList = ArrayList<BasicVaccine>()
-                vaccineList.forEach{
-                    val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(it.vaccineName)
-                    basicVaccine?.let { it1 -> basicVaccineList.add(it1) }
-                }
-
-                val missedVaccinesList =
-                    ageInWeeks?.let { immunizationHandler.getMissedRoutineVaccines(basicVaccineList, it) }
-
-
-
-            }
-
-
-
-        }
-
-    }
 
 
     override fun onSupportNavigateUp(): Boolean {
