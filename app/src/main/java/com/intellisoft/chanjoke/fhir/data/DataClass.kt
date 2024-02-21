@@ -14,7 +14,10 @@ data class DbStatusColor(
     val isStatusDue: Boolean = false,
 
 )
-
+data class DbBatchNumbers(
+    val vaccineName: String,
+    val diseaseTargeted:String?
+)
 data class DbVaccineListData(
     val keyTitle: String,
     val statusColor: String,
