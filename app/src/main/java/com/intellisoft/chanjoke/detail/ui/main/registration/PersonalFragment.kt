@@ -1,8 +1,8 @@
 package com.intellisoft.chanjoke.detail.ui.main.registration
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,9 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentPersonalBinding
@@ -20,6 +22,7 @@ import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import timber.log.Timber
 import java.util.Calendar
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,6 +50,8 @@ class PersonalFragment : Fragment() {
     private lateinit var binding: FragmentPersonalBinding
     private val formatter = FormatterClass()
     private val viewModel: AddPatientViewModel by viewModels()
+    private var mListener: OnButtonClickListener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +61,18 @@ class PersonalFragment : Fragment() {
         observeSubmission()
         return binding.root
     }
+
+    // Define an interface
+      override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Ensure that the parent activity implements the interface
+        mListener = if (context is OnButtonClickListener) {
+            context
+        } else {
+            throw ClassCastException("$context must implement OnButtonClickListener")
+        }
+    }
+
     private fun observeSubmission() {
         viewModel.isPatientSaved.observe(viewLifecycleOwner) {
             if (!it) {
@@ -256,8 +273,10 @@ class PersonalFragment : Fragment() {
             telephone = telephone
         )
 
+        formatter.saveSharedPref("personal", Gson().toJson(payload), requireContext())
         Timber.e("TAG Patient payload ***** $payload")
-        viewModel.saveCustomPatient(requireContext(), payload)
+        mListener?.onNextPageRequested()
+//        viewModel.saveCustomPatient(requireContext(), payload)
 
     }
 

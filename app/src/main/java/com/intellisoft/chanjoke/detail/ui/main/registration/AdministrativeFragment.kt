@@ -1,11 +1,22 @@
 package com.intellisoft.chanjoke.detail.ui.main.registration
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
+import com.intellisoft.chanjoke.databinding.FragmentAdministrativeBinding
+import com.intellisoft.chanjoke.databinding.FragmentCaregiverBinding
+import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,13 +41,88 @@ class AdministrativeFragment : Fragment() {
         }
     }
 
+    private val formatter = FormatterClass()
+    private val viewModel: AddPatientViewModel by viewModels()
+    private var mListener: OnButtonClickListener? = null
+    private lateinit var binding: FragmentAdministrativeBinding
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Ensure that the parent activity implements the interface
+        mListener = if (context is OnButtonClickListener) {
+            context
+        } else {
+            throw ClassCastException("$context must implement OnButtonClickListener")
+        }
+    }
+
+    private lateinit var fhirEngine: FhirEngine
+    private lateinit var locationViewModel: LocationViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_administrative, container, false)
+        binding = FragmentAdministrativeBinding.inflate(layoutInflater)
+        fhirEngine = FhirApplication.fhirEngine(requireContext())
+        locationViewModel =
+            ViewModelProvider(
+                this,
+                PatientListViewModel.PatientListViewModelFactory(
+                    requireActivity().application,
+                    fhirEngine
+                ),
+            )[LocationViewModel::class.java]
+        return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+//        locationViewModel.liveSearchedPatients.observe(viewLifecycleOwner) {
+//            if (it.isEmpty()) {
+//                val suggestions: MutableList<String> = mutableListOf()
+//                binding.apply {
+//                    suggestions.clear()
+//                    it.forEach {
+//                        suggestions.add(it.name)
+//                    }
+//                    val adapterType =
+//                        ArrayAdapter(
+//                            requireContext(),
+//                            android.R.layout.simple_dropdown_item_1line,
+//                            suggestions
+//                        )
+//                    county.apply {
+//                        setAdapter(adapterType)
+//                    }
+//                }
+//            }
+//        }
+
+        binding.apply {
+            previousButton.apply {
+                setOnClickListener {
+                    mListener?.onPreviousPageRequested()
+                }
+            }
+            nextButton.apply {
+                setOnClickListener {
+                    if (validData()) {
+                        mListener?.onNextPageRequested()
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun validData(): Boolean {
+
+        return true
+
+    }
+
 
     companion object {
         /**
