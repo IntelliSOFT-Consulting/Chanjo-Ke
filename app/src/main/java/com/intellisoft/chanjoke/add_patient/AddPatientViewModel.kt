@@ -30,12 +30,14 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
+import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
+import org.hl7.fhir.r4.model.ContactPoint
 import org.hl7.fhir.r4.model.HumanName
 import org.hl7.fhir.r4.model.Identifier
 import org.hl7.fhir.r4.model.Patient
@@ -44,6 +46,7 @@ import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.RelatedPerson
 import org.hl7.fhir.r4.model.ResourceType
+import org.hl7.fhir.r4.model.StringType
 import org.json.JSONObject
 import timber.log.Timber
 import java.time.LocalDate
@@ -367,5 +370,51 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             isActive = isActive,
             html = html,
         )
+    }
+
+    fun saveCustomPatient(requireContext: Context, payload: CustomPatient) {
+        viewModelScope.launch {
+            val givens: MutableList<StringType> = mutableListOf()
+            if (payload.middlename.isNotEmpty()) {
+                val string = StringType(payload.middlename)
+                givens.add(string)
+            }
+            if (payload.lastname.isNotEmpty()) {
+                val string = StringType(payload.lastname)
+                givens.add(string)
+            }
+
+            val names: MutableList<HumanName> = mutableListOf()
+            val identifier: MutableList<Identifier> = mutableListOf()
+            val contacts: MutableList<ContactPoint> = mutableListOf()
+            val relatives: MutableList<Patient.ContactComponent> = mutableListOf()
+            val name = HumanName()
+            name.family = payload.firstname
+            name.given = givens
+            names.add(name)
+
+            val singleIdentifier = Identifier()
+            singleIdentifier.system = payload.identification
+            singleIdentifier.value = payload.identificationNumber
+            identifier.add(singleIdentifier)
+
+            val contact = ContactPoint()
+            contact.system = ContactPoint.ContactPointSystem.PHONE
+            contact.value = payload.telephone
+
+            contacts.add(contact)
+
+            val patient = Patient()
+            patient.id = generateUuid()
+            patient.identifier = identifier
+            patient.name = names
+            patient.birthDate = FormatterClass().convertStringToDate(payload.dateOfBirth,"yyyy-MM-dd")
+            patient.telecom = contacts
+            patient.contact = relatives
+            patient.active = true
+            fhirEngine.create(patient)
+            isPatientSaved.value = true
+        }
+
     }
 }

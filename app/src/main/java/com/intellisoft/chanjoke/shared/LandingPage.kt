@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.shared
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientFragment
 import com.intellisoft.chanjoke.databinding.FragmentLandingPageBinding
+import com.intellisoft.chanjoke.detail.ui.main.registration.RegistrationActivity
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.viewmodel.LayoutListViewModel
@@ -51,9 +53,10 @@ class LandingPage : Fragment() {
 
     private fun createSpinner() {
 
-        val resultList= listOf("Facility", "Outreach")
+        val resultList = listOf("Facility", "Outreach")
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -62,18 +65,28 @@ class LandingPage : Fragment() {
         binding.spinnerLocation.adapter = adapter
 
         // Set a listener to handle the item selection
-        binding.spinnerLocation.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
-                // Get the selected item
-                val selectedItem = parentView.getItemAtPosition(position).toString()
-                formatterClass.saveSharedPref("selectedFacility",selectedItem, requireContext())
+        binding.spinnerLocation.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    // Get the selected item
+                    val selectedItem = parentView.getItemAtPosition(position).toString()
+                    formatterClass.saveSharedPref(
+                        "selectedFacility",
+                        selectedItem,
+                        requireContext()
+                    )
 
-            }
+                }
 
-            override fun onNothingSelected(parentView: AdapterView<*>) {
-                // Do nothing here
+                override fun onNothingSelected(parentView: AdapterView<*>) {
+                    // Do nothing here
+                }
             }
-        }
 
     }
 
@@ -90,19 +103,24 @@ class LandingPage : Fragment() {
                     AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
                     "new-patient-registration-paginated.json"
                 )
-                findNavController().navigate(R.id.addPatientFragment, bundle)
+//                findNavController().navigate(R.id.addPatientFragment, bundle)
+                startActivity(Intent(requireContext(), RegistrationActivity::class.java))
             }
 
             "Update Client History" -> {
                 findNavController().navigate(R.id.patient_list)
-                formatterClass.saveSharedPref("patientListAction",
-                    NavigationDetails.UPDATE_CLIENT_HISTORY.name, requireContext())
+                formatterClass.saveSharedPref(
+                    "patientListAction",
+                    NavigationDetails.UPDATE_CLIENT_HISTORY.name, requireContext()
+                )
             }
 
             "Administer vaccine" -> {
                 findNavController().navigate(R.id.patient_list)
-                formatterClass.saveSharedPref("patientListAction",
-                    NavigationDetails.ADMINISTER_VACCINE.name, requireContext())
+                formatterClass.saveSharedPref(
+                    "patientListAction",
+                    NavigationDetails.ADMINISTER_VACCINE.name, requireContext()
+                )
             }
 
 //            "AEFI" -> {

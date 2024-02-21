@@ -57,6 +57,11 @@
     <string name="checkbox">Please click on the check box to select which vaccine to administer</string>
     <string name="at_birth">At Birth</string>
     <string name="previous_aefi">Previous AEFI</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="weeks">Week</string>
+    <string name="months">Month</string>
+    <string name="years">Year</string>
 
 
 </resources>

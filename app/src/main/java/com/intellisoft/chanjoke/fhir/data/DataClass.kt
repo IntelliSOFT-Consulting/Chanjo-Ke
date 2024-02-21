@@ -149,3 +149,13 @@ data class DbVaccineSchedule(
     val scheduleStatus: String?,
     val scheduleVaccinationList: List<BasicVaccine>
 )
+data class CustomPatient(
+    val firstname:String,
+    val middlename:String,
+    val lastname:String,
+    val gender:String,
+    val dateOfBirth:String,
+    val identification:String,
+    val identificationNumber:String,
+    val telephone:String
+)
