@@ -272,21 +272,28 @@ class AdministerVaccineViewModel(
             immunizationId,
             getApplication<Application>().applicationContext
         )
-
         immunization.status = immunisationStatus
 
+        val annotationList = ArrayList<Annotation>()
+
+        val practitionerFacility = FormatterClass().getSharedPref("practitionerFacility", getApplication<Application>().applicationContext)
+        if (practitionerFacility != null){
+            val facilityDetails = practitionerFacility.replace("Location/","")
+            val locationReference = Reference("Location/$facilityDetails")
+            immunization.location = locationReference
+
+            val annotation = Annotation()
+            annotation.text = practitionerFacility
+            annotationList.add(annotation)
+        }
         //Include a location
-        val location = FormatterClass().getSharedPref(
-            "selectedFacility",
-            getApplication<Application>().applicationContext
-        )
+        val location = FormatterClass().getSharedPref("selectedFacility", getApplication<Application>().applicationContext)
         if (location != null) {
-            val annotationList = ArrayList<Annotation>()
             val annotation = Annotation()
             annotation.text = location
             annotationList.add(annotation)
-            immunization.note = annotationList
         }
+        if (annotationList.isNotEmpty()) immunization.note = annotationList
 
 
         //Date administered
