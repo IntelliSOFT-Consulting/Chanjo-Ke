@@ -86,7 +86,10 @@ class PatientDetailsViewModel(
         var contact_gender = ""
         var systemId = ""
         searchResult.first().let {
-            name = it.name[0].nameAsSingleString
+
+            name = if (it.hasName()){
+                it.name[0].nameAsSingleString
+            }else ""
 
             phone = ""
             if (it.hasTelecom()) {
@@ -373,8 +376,11 @@ class PatientDetailsViewModel(
 
     }
 
-    fun getVaccineList() = runBlocking {
+    fun getVaccineListWithAefis() = runBlocking {
         getVaccineListDetails()
+    }
+    fun getVaccineList() = runBlocking {
+        getVaccineListDetailsOld()
     }
 
     private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {

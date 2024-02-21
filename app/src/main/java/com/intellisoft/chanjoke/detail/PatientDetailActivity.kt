@@ -105,6 +105,13 @@ class PatientDetailActivity : AppCompatActivity() {
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
 
+        binding.tvAppointment.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.APPOINTMENT.name)
+            intent.putExtra("patientId", patientId)
+            startActivity(intent)
+        }
+
         getPatientDetails()
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)

@@ -35,6 +35,7 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import kotlinx.coroutines.CoroutineScope
@@ -1017,12 +1018,11 @@ class AdministerVaccineViewModel(
     }
 
     //Create an appointment
-    fun createAppointment(dbAppointmentData: DbAppointmentData) {
+    fun createAppointment(dbAppointmentData: DbAppointmentDataDetails) {
         CoroutineScope(Dispatchers.IO).launch { generateAppointment(dbAppointmentData) }
-
     }
 
-    private suspend fun generateAppointment(dbAppointmentData: DbAppointmentData) {
+    private suspend fun generateAppointment(dbAppointmentData: DbAppointmentDataDetails) {
 
         val immunizationHandler = ImmunizationHandler()
         val formatterClass = FormatterClass()
@@ -1031,10 +1031,8 @@ class AdministerVaccineViewModel(
             getApplication<Application>().applicationContext
         )
 
-        val title = dbAppointmentData.title
-        val description = dbAppointmentData.description
         val dateScheduled = dbAppointmentData.dateScheduled
-        val vaccineName = dbAppointmentData.vaccineName
+//        val vaccineName = dbAppointmentData.vaccineName
 
         val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
         val selectedDate = if (dobFormat != null) {
@@ -1043,19 +1041,16 @@ class AdministerVaccineViewModel(
             null
         }
 
-        Log.e("----->", "<------")
-        println("dateScheduled $dateScheduled")
-        println("dobFormat $dobFormat")
-        println("selectedDate $selectedDate")
-        Log.e("----->", "<------")
         /**
          * TODO: Create a recommendation
          */
 
         var recommendationId = ""
         //1. Get the basic vaccine from the vaccineName
+        val vaccineName = dbAppointmentData.vaccineName
 
         if (vaccineName != null && vaccineName != "") {
+
             val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
             if (basicVaccine != null) {
 
@@ -1101,10 +1096,6 @@ class AdministerVaccineViewModel(
 
         //Status
         appointment.setStatus(Appointment.AppointmentStatus.BOOKED)
-
-        //description
-        val newText = "Title: $title Description:$description"
-        appointment.description = newText
 
         //List of based on references
         if (recommendationId != "") {

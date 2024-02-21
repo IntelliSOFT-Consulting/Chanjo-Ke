@@ -86,7 +86,7 @@ class NonRoutineFragment : Fragment() {
                 }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
                     statusColor = StatusColors.AMBER.name
                 }else{
-                    statusColor = StatusColors.RED.name
+                    statusColor = StatusColors.NORMAL.name
                 }
             }
 

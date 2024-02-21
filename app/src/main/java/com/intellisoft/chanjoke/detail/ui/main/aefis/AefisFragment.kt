@@ -128,7 +128,7 @@ class AefisFragment : Fragment() {
     }
 
     private fun pullVaccinesWithAefis() {
-        val vaccineList = patientDetailsViewModel.getVaccineList()
+        val vaccineList = patientDetailsViewModel.getVaccineListWithAefis()
 
         val groupedByStatus = vaccineList.groupBy { it.status }
 

@@ -24,12 +24,12 @@
 
     <LinearLayout
         android:layout_below="@+id/layout"
-        android:layout_margin="10dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
+            android:padding="15dp"
             android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center"
@@ -37,7 +37,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <LinearLayout
+            android:background="@color/bac_trans"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    android:text="Add Vaccines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:background="@drawable/edittext_border"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:listitem="@layout/contraindications_list_item" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <EditText
+            android:visibility="gone"
             android:layout_marginTop="20dp"
             android:id="@+id/etTitle"
             android:background="@drawable/edittext_border"
@@ -46,6 +91,7 @@
             android:layout_height="wrap_content"/>
 
         <EditText
+            android:visibility="gone"
             android:paddingBottom="80dp"
             android:layout_marginTop="20dp"
             android:id="@+id/etDescription"
@@ -55,37 +101,21 @@
             android:layout_height="wrap_content"/>
 
         <LinearLayout
-            android:orientation="vertical"
+            android:padding="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_marginTop="10dp"
-                android:text="Vaccine"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/tvDatePicker"
+                android:drawableEnd="@drawable/ic_action_date"
                 android:background="@drawable/edittext_border"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Appointment Date *"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:ignore="UseCompatTextViewDrawableXml" />
 
         </LinearLayout>
-
-
-
-        <TextView
-            android:id="@+id/tvDatePicker"
-            android:drawableEnd="@drawable/ic_action_date"
-            android:background="@drawable/edittext_border"
-            android:layout_marginTop="20dp"
-            android:text="Date *"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:ignore="UseCompatTextViewDrawableXml" />
-
 
 
     </LinearLayout>

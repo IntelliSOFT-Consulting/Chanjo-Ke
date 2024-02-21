@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -21,6 +22,10 @@ import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class VaccineScheduleAdapter(
     private val context: Context,
@@ -66,9 +71,11 @@ class VaccineScheduleAdapter(
         val tvVaccineDate = convertView!!.findViewById<TextView>(R.id.tvVaccineDate)
         val tvScheduleStatus = convertView!!.findViewById<TextView>(R.id.tvScheduleStatus)
         val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
+        val checked = convertView.findViewById<ImageButton>(R.id.checked)
 
         val vaccineName = expandedListText.vaccineName
         expandedListTextView.text = vaccineName
+
 
         // Set checkbox state based on stored checked state
         val key = Pair(listPosition, expandedListPosition)
@@ -92,6 +99,7 @@ class VaccineScheduleAdapter(
                     vaccineStatus = "administered"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
                     checkBox.visibility = View.INVISIBLE
+                    checked.visibility = View.VISIBLE
                 } else if ("NOTDONE" == status) {
                     vaccineStatus = "contraindicated"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
@@ -172,31 +180,29 @@ class VaccineScheduleAdapter(
         val imageViewSchedule = convertView!!.findViewById<ImageView>(R.id.imageViewSchedule)
         val aefiTextview = convertView!!.findViewById<TextView>(R.id.tvAefi)
 
-
         listTitleTextView.setTypeface(null, Typeface.BOLD)
 
+
         var weekNo = ""
-        if (listTitle.toIntOrNull() != null) {
-            weekNo = if (listTitle == "0") {
+        weekNo = if (listTitle.toIntOrNull() != null) {
+            if (listTitle == "0") {
                 "At Birth"
             } else {
                 "$listTitle weeks"
             }
         } else {
-            weekNo = listTitle
+            listTitle
         }
+
         val patientId = FormatterClass().getSharedPref("patientId", context)
         val counter = patientDetailsViewModel.generateCurrentCount(
             weekNo,
             patientId.toString()
         )
 
-        aefiTextview.text =
-            "AEFIs ($counter)"
+        aefiTextview.text = "AEFIs ($counter)"
         aefiTextview.setOnClickListener {
-            FormatterClass().saveSharedPref(
-                "current_age", weekNo, context
-            )
+            FormatterClass().saveSharedPref("current_age", weekNo, context)
 
             val intent = Intent(context, MainActivity::class.java)
             intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
@@ -207,20 +213,29 @@ class VaccineScheduleAdapter(
         //Check if its immunised
 
         var statusColorValue = StatusColors.NORMAL.name
+        var isStatusDue = false
         for (dbStatusColor in dbStatusColorList) {
+            isStatusDue = dbStatusColor.isStatusDue
             if (dbStatusColor.keyTitle == listTitle) {
                 statusColorValue = dbStatusColor.statusColor
             }
         }
 
-        if (statusColorValue == StatusColors.GREEN.name) {
-            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
-        } else if (statusColorValue == StatusColors.AMBER.name) {
-            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
-        } else if (statusColorValue == StatusColors.RED.name) {
-            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
-        } else {
-            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal)
+
+
+        when (statusColorValue) {
+            StatusColors.GREEN.name -> {
+                imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
+            }
+            StatusColors.AMBER.name -> {
+                imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
+            }
+            StatusColors.RED.name -> {
+                imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
+            }
+            else -> {
+                imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
+            }
         }
 
 
