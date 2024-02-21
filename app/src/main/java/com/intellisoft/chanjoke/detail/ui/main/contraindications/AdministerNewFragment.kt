@@ -78,8 +78,7 @@ class AdministerNewFragment : Fragment() {
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
-
-
+        onBackPressed()
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
