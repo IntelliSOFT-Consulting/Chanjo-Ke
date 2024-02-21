@@ -505,6 +505,7 @@ class AdministerVaccineViewModel(
         immunizationList: List<String>,
         patientId: String,
         nextImmunizationDate: Date?,
+        status: String,
         immunizationId: String?
     ) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -533,10 +534,13 @@ class AdministerVaccineViewModel(
                         }
                     }.join()
 
+                    /**
+                     * Update the status with the typed one
+                     */
                     val recommendation = createImmunizationRecommendationResource(
                         patientId,
                         nextImmunizationDate,
-                        "Due",
+                        status,
                         "Next Immunization date",
                         immunizationId
                     )

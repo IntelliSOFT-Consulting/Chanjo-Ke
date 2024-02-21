@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -27,6 +29,7 @@ import com.intellisoft.chanjoke.detail.ui.main.RecommendationAdapter
 
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -48,6 +51,8 @@ class ContraindicationsFragment : Fragment() {
     private val selectedItemList = ArrayList<String>()
     private var selectedVaccineName:String? = null
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
+    private var administrationFlowTitle :String? = null
+    private var status :String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,14 +65,19 @@ class ContraindicationsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
+        val toolbar = view?.findViewById<Toolbar>(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
         binding = FragmentContraindicationsBinding.inflate(inflater, container, false)
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
+        administrationFlowTitle = formatterClass.getSharedPref("administrationFlowTitle", requireContext())
+
+        updateUI()
 
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
@@ -115,6 +125,7 @@ class ContraindicationsFragment : Fragment() {
                                     newList.toList(),
                                     patientId,
                                     dobDate,
+                                    status,
                                     null)
                                 findNavController().navigate(R.id.administerNewFragment)
                             }
@@ -136,6 +147,32 @@ class ContraindicationsFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    private fun updateUI() {
+
+        formatterClass.deleteSharedPref("administrationFlowTitle",requireContext())
+
+        var titleString = ""
+        if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
+            binding.etDescription.setHint("Enter Contraindications")
+            binding.tvInstructions.setText("Vaccines to Contraindicate")
+            titleString = "Contraindications"
+            status = "Contraindicated"
+        }
+        if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name){
+            binding.etDescription.setHint("Enter Reasons")
+            binding.tvInstructions.setText("Vaccines Not Administered")
+            titleString = "Not Administered"
+            status = "Due"
+        }
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = titleString
+            setDisplayHomeAsUpEnabled(true)
+        }
+
+
     }
 
     private fun showDatePickerDialog() {
