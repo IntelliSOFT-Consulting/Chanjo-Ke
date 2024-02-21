@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -70,9 +71,11 @@ class VaccineScheduleAdapter(
         val tvVaccineDate = convertView!!.findViewById<TextView>(R.id.tvVaccineDate)
         val tvScheduleStatus = convertView!!.findViewById<TextView>(R.id.tvScheduleStatus)
         val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
+        val checked = convertView.findViewById<ImageButton>(R.id.checked)
 
         val vaccineName = expandedListText.vaccineName
         expandedListTextView.text = vaccineName
+
 
         // Set checkbox state based on stored checked state
         val key = Pair(listPosition, expandedListPosition)
@@ -96,6 +99,7 @@ class VaccineScheduleAdapter(
                     vaccineStatus = "administered"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
                     checkBox.visibility = View.INVISIBLE
+                    checked.visibility = View.VISIBLE
                 } else if ("NOTDONE" == status) {
                     vaccineStatus = "contraindicated"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))

@@ -80,18 +80,17 @@ class RoutineFragment : Fragment() {
         val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
         val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
-        var  daysToValue = 0
-        val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
-        if (patientDob != null){
-            val daysTo = FormatterClass().daysBetweenTodayAndGivenDate(patientDob)
-            if (daysTo != null){
-                daysToValue = daysTo.toInt()
-            }
-        }
+//        var  daysToValue = 0
+//        val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
+//        if (patientDob != null){
+//            val daysTo = FormatterClass().daysBetweenTodayAndGivenDate(patientDob)
+//            if (daysTo != null){
+//                daysToValue = daysTo.toInt()
+//            }
+//        }
 
         //Get the administered list
         val administeredList = patientDetailsViewModel.getVaccineList()
-        var isStatusDue = false
         val statusColorsList = ArrayList<DbStatusColor>()
         for (keys in expandableListTitle){
 
@@ -112,29 +111,11 @@ class RoutineFragment : Fragment() {
                      * 1. Check if current date is past the number of weeks from birth
                      * 2. If current date is past the number of weeks from birth, eka red if not weka black
                      */
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        if (keys.toIntOrNull() != null){
-//                            val listTitleInt = keys.toInt()
-//                            val difference = if (daysToValue >= listTitleInt) {
-//                                daysToValue - listTitleInt // Calculate difference when listTitleInt is larger
-//                            } else {
-//                                listTitleInt - daysToValue // Calculate difference when daysTo is larger
-//                            }
-//                            if (difference <= 21){
-//                                isStatusDue = true
-//                            }
-//
-//                        }
-//                    }
                     statusColor = StatusColors.NORMAL.name
-
-
-
-
                 }
             }
 
-            val dbStatusColor = DbStatusColor(keys, statusColor, isStatusDue)
+            val dbStatusColor = DbStatusColor(keys, statusColor)
             statusColorsList.add(dbStatusColor)
         }
 
