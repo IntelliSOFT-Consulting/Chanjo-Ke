@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -149,6 +150,24 @@ class PatientDetailActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val patientListAction = formatterClass.getSharedPref("patientListAction", this)
+        if (patientListAction != null && patientListAction == NavigationDetails.APPOINTMENT.name) {
+            formatterClass.deleteSharedPref("patientListAction", this)
+            goAppointments()
+        }
+
+    }
+
+    private fun goAppointments(){
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("functionToCall", NavigationDetails.APPOINTMENT.name)
+        intent.putExtra("patientId", patientId)
+        startActivity(intent)
     }
 
 
