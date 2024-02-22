@@ -7,11 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentAdministrativeBinding
 import com.intellisoft.chanjoke.databinding.FragmentPreviewBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.Administrative
+import com.intellisoft.chanjoke.fhir.data.CareGiver
+import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 // TODO: Rename parameter arguments, choose names that match
@@ -64,6 +68,36 @@ class PreviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+            val personal = formatter.getSharedPref("personal", requireContext())
+            val caregiver = formatter.getSharedPref("caregiver", requireContext())
+            val administrative = formatter.getSharedPref("administrative", requireContext())
+
+            if (personal != null && caregiver != null && administrative != null) {
+
+                val refinedPersonal = Gson().fromJson(personal, CustomPatient::class.java)
+                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
+                val refinedAdministrative =
+                    Gson().fromJson(administrative, Administrative::class.java)
+
+                tvFirstname.text = refinedPersonal.firstname
+                tvLastname.text = refinedPersonal.lastname
+                tvMiddlename.text = refinedPersonal.middlename
+                tvGender.text = refinedPersonal.gender
+                tvDateOfBirth.text = refinedPersonal.dateOfBirth
+                tvAge.text = refinedPersonal.age
+                tvIdNumber.text = refinedPersonal.identificationNumber
+                tvCname.text = refinedCaregiver.name
+                tvCtype.text = refinedCaregiver.type
+                tvCphone.text = refinedCaregiver.phone
+                tvCounty.text = refinedAdministrative.county
+                tvSubCounty.text = refinedAdministrative.subCounty
+                tvWard.text = refinedAdministrative.ward
+                tvTrading.text = refinedAdministrative.trading
+                tvVillage.text = refinedAdministrative.estate
+            }
+
+
+
             previousButton.apply {
                 setOnClickListener {
                     mListener?.onPreviousPageRequested()
@@ -71,7 +105,7 @@ class PreviewFragment : Fragment() {
             }
             nextButton.apply {
                 setOnClickListener {
-
+                    isEnabled = false
                     mListener?.onNextPageRequested()
 
                 }

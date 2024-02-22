@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.detail.ui.main.registration
 
+import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -30,12 +31,18 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
     private lateinit var pagerAdapter: ViewPagerAdapter
     private val formatter = FormatterClass()
     private val viewModel: AddPatientViewModel by viewModels()
+    private lateinit var progressDialog: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         observeSubmission()
+        progressDialog = ProgressDialog(this)
+        progressDialog.setTitle("Please wait")
+        progressDialog.setMessage("Processing..")
+        progressDialog.setCanceledOnTouchOutside(false)
+
         supportActionBar?.apply {
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
@@ -53,14 +60,17 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
 
     private fun observeSubmission() {
         viewModel.isPatientSaved.observe(this) {
+            progressDialog.dismiss()
             if (!it) {
                 Toast.makeText(this, "Inputs are missing.", Toast.LENGTH_SHORT).show()
                 return@observe
             }
 
             val blurBackgroundDialog =
-                ActivityBlurBackground(this@RegistrationActivity)
+                ActivityBlurBackground(this,this@RegistrationActivity)
             blurBackgroundDialog.show()
+
+
 
         }
     }
@@ -108,6 +118,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
                     caregivers = caregivers,
                     administrative = refinedAdministrative
                 )
+                progressDialog.show()
                 viewModel.saveCustomPatient(this, completePatient)
 
             } else {

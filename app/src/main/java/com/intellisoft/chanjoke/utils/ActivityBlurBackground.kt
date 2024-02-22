@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.utils
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -16,7 +17,7 @@ import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 
 class ActivityBlurBackground(
-
+    private val activity: Activity,
     context: Context
 ) : Dialog(context) {
 
@@ -76,6 +77,7 @@ class ActivityBlurBackground(
                     val intent = Intent(context, PatientDetailActivity::class.java)
                     intent.putExtra("patientId", patientId)
                     context.startActivity(intent)
+                    activity.finish()
 
                 }
             } else {

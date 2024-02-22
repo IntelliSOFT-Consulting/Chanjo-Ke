@@ -175,6 +175,7 @@ class PersonalFragment : Fragment() {
         val lastName = binding.lastname.text.toString()
         val middleName = binding.middlename.text.toString()
         val dateOfBirthString = binding.dateOfBirth.text.toString()
+        val age = binding.calculatedAge.text.toString()
         val identificationType = binding.identificationType.text.toString()
         val identificationNumberString = binding.identificationNumber.text.toString()
         val telephone = binding.telephone.text.toString()
@@ -255,6 +256,7 @@ class PersonalFragment : Fragment() {
             middlename = middleName,
             lastname = lastName,
             gender = gender,
+            age =age ,
             dateOfBirth = dateOfBirthString,
             identification = identificationType,
             identificationNumber = identificationNumberString,
