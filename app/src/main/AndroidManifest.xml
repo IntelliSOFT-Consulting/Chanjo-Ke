@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
         <activity
+            android:name=".detail.ui.main.registration.CompleteDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".detail.ui.main.registration.RegistrationActivity"
             android:exported="false" />
         <activity

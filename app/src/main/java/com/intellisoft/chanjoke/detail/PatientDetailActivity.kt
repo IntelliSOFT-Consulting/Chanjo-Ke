@@ -25,6 +25,7 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
 import com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment
+import com.intellisoft.chanjoke.detail.ui.main.registration.CompleteDetailsActivity
 import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -113,6 +114,17 @@ class PatientDetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.tvAllDetails.apply {
+            setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@PatientDetailActivity,
+                        CompleteDetailsActivity::class.java
+                    )
+                )
+            }
+        }
+
         getPatientDetails()
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
@@ -163,7 +175,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
     }
 
-    private fun goAppointments(){
+    private fun goAppointments() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("functionToCall", NavigationDetails.APPOINTMENT.name)
         intent.putExtra("patientId", patientId)
@@ -178,12 +190,13 @@ class PatientDetailActivity : AppCompatActivity() {
             formatterClass.clearVaccineShared(this@PatientDetailActivity)
 
 
-            formatterClass.saveSharedPref("isPaged","false", this@PatientDetailActivity)
+            formatterClass.saveSharedPref("isPaged", "false", this@PatientDetailActivity)
 
-            val observationDateValue = patientDetailsViewModel.getObservationByCode(patientId, null, "861-122")
-            val isPaged = observationDateValue.value.replace(" ","")
-            if (isPaged != "" && isPaged == "Yes"){
-                formatterClass.saveSharedPref("isPaged","true", this@PatientDetailActivity)
+            val observationDateValue =
+                patientDetailsViewModel.getObservationByCode(patientId, null, "861-122")
+            val isPaged = observationDateValue.value.replace(" ", "")
+            if (isPaged != "" && isPaged == "Yes") {
+                formatterClass.saveSharedPref("isPaged", "true", this@PatientDetailActivity)
             }
 
             val patientDetail = patientDetailsViewModel.getPatientInfo()
@@ -194,7 +207,8 @@ class PatientDetailActivity : AppCompatActivity() {
                     tvSystemId.text = patientDetail.systemId
 
                     val dob = formatterClass.convertDateFormat(patientDetail.dob)
-                    val age = formatterClass.getFormattedAge(patientDetail.dob,tvAge.context.resources)
+                    val age =
+                        formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources)
 //                    val dobAge = "$dob ($age old)"
 
                     tvDob.text = dob
@@ -206,7 +220,6 @@ class PatientDetailActivity : AppCompatActivity() {
 
         }
     }
-
 
 
     override fun onSupportNavigateUp(): Boolean {
@@ -238,6 +251,7 @@ class PatientDetailActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
