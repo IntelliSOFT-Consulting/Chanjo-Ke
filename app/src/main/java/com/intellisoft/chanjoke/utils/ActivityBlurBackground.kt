@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
@@ -16,8 +15,8 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 
-class BlurBackgroundDialog(
-    private val fragment: Fragment,
+class ActivityBlurBackground(
+
     context: Context
 ) : Dialog(context) {
 
@@ -73,11 +72,11 @@ class BlurBackgroundDialog(
             val isRegistration = FormatterClass().getSharedPref("isRegistration", context)
             if (isRegistration != null) {
                 if (isRegistration == "true") {
-//                    val intent = Intent(context, PatientDetailActivity::class.java)
-//                    intent.putExtra("patientId", patientId)
-//                    context.startActivity(intent)
                     FormatterClass().deleteSharedPref("isRegistration", context)
-                    NavHostFragment.findNavController(fragment).navigateUp()
+                    val intent = Intent(context, PatientDetailActivity::class.java)
+                    intent.putExtra("patientId", patientId)
+                    context.startActivity(intent)
+
                 }
             } else {
                 val vaccinationFlow =

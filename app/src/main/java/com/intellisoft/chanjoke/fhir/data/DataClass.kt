@@ -14,9 +14,10 @@ data class DbStatusColor(
     val isStatusDue: Boolean = false,
 
     )
+
 data class DbBatchNumbers(
     val vaccineName: String,
-    val diseaseTargeted:String?
+    val diseaseTargeted: String?
 )
 
 data class DbVaccineListData(
@@ -183,3 +184,38 @@ data class CareGiver(
     val name: String,
     val phone: String
 )
+
+data class Administrative(
+    val county: String,
+    val subCounty: String,
+    val ward: String,
+    val trading: String,
+    val estate: String
+)
+
+data class CompletePatient(
+    val personal: CustomPatient,
+    val caregivers: List<CareGiver>,
+    val administrative: Administrative
+)
+
+data class County(
+    val name: String,
+    val sub_counties: List<SubCounty>
+)
+
+data class SubCounty(
+    val name: String,
+//
+)
+
+data class SubCountyWard(
+    val subCounty: String,
+    val wards: List<Ward>
+//
+)
+
+data class Ward(
+    val name: String,
+
+    )

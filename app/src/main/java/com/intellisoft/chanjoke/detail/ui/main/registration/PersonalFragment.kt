@@ -49,7 +49,6 @@ class PersonalFragment : Fragment() {
 
     private lateinit var binding: FragmentPersonalBinding
     private val formatter = FormatterClass()
-    private val viewModel: AddPatientViewModel by viewModels()
     private var mListener: OnButtonClickListener? = null
 
     override fun onCreateView(
@@ -58,7 +57,7 @@ class PersonalFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentPersonalBinding.inflate(layoutInflater)
-        observeSubmission()
+
         return binding.root
     }
 
@@ -73,17 +72,7 @@ class PersonalFragment : Fragment() {
         }
     }
 
-    private fun observeSubmission() {
-        viewModel.isPatientSaved.observe(viewLifecycleOwner) {
-            if (!it) {
-                Toast.makeText(requireContext(), "Inputs are missing.", Toast.LENGTH_SHORT).show()
-                return@observe
-            }
-            val blurBackgroundDialog =
-                BlurBackgroundDialog(this@PersonalFragment, requireContext())
-            blurBackgroundDialog.show()
-        }
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -160,7 +149,6 @@ class PersonalFragment : Fragment() {
 
             identificationType.apply {
                 setAdapter(adapterType)
-//                adapter = adapterType
             }
             nextButton.apply {
                 setOnClickListener {
@@ -276,7 +264,7 @@ class PersonalFragment : Fragment() {
         formatter.saveSharedPref("personal", Gson().toJson(payload), requireContext())
         Timber.e("TAG Patient payload ***** $payload")
         mListener?.onNextPageRequested()
-//        viewModel.saveCustomPatient(requireContext(), payload)
+
 
     }
 

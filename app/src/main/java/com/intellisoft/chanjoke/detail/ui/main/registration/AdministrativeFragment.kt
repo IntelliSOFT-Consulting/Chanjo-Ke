@@ -2,6 +2,8 @@ package com.intellisoft.chanjoke.detail.ui.main.registration
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +12,26 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentAdministrativeBinding
 import com.intellisoft.chanjoke.databinding.FragmentCaregiverBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.Administrative
+import com.intellisoft.chanjoke.fhir.data.CareGiver
+import com.intellisoft.chanjoke.fhir.data.County
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.patient_list.PatientListViewModel
+import com.intellisoft.chanjoke.fhir.data.SubCounty
+import com.intellisoft.chanjoke.fhir.data.SubCountyWard
+import com.intellisoft.chanjoke.fhir.data.Ward
+import com.intellisoft.chanjoke.utils.AppUtils
+import org.json.JSONArray
+import timber.log.Timber
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,69 +71,292 @@ class AdministrativeFragment : Fragment() {
         }
     }
 
-    private lateinit var fhirEngine: FhirEngine
-    private lateinit var locationViewModel: LocationViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentAdministrativeBinding.inflate(layoutInflater)
-        fhirEngine = FhirApplication.fhirEngine(requireContext())
-        locationViewModel =
-            ViewModelProvider(
-                this,
-                PatientListViewModel.PatientListViewModelFactory(
-                    requireActivity().application,
-                    fhirEngine
-                ),
-            )[LocationViewModel::class.java]
+
         return binding.root
     }
 
+    private var countyList = ArrayList<String>()
+    private var subCountyList = ArrayList<String>()
+    private var wardList = ArrayList<String>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        locationViewModel.liveSearchedPatients.observe(viewLifecycleOwner) {
-//            if (it.isEmpty()) {
-//                val suggestions: MutableList<String> = mutableListOf()
-//                binding.apply {
-//                    suggestions.clear()
-//                    it.forEach {
-//                        suggestions.add(it.name)
-//                    }
-//                    val adapterType =
-//                        ArrayAdapter(
-//                            requireContext(),
-//                            android.R.layout.simple_dropdown_item_1line,
-//                            suggestions
-//                        )
-//                    county.apply {
-//                        setAdapter(adapterType)
-//                    }
-//                }
-//            }
-//        }
+        try {
+            val gson = Gson()
+            val inputStream =
+                context?.assets?.open("county.json") // Path relative to assets directory
+            val reader = InputStreamReader(inputStream)
+            val counties = gson.fromJson(reader, Array<County>::class.java)
 
-        binding.apply {
-            previousButton.apply {
-                setOnClickListener {
-                    mListener?.onPreviousPageRequested()
-                }
+            val inputStreamWard =
+                context?.assets?.open("wards.json") // Path relative to assets directory
+            val readerWard = InputStreamReader(inputStreamWard)
+            val wards = gson.fromJson(readerWard, Array<SubCountyWard>::class.java)
+
+            countyList.clear()
+            counties.forEach { county ->
+                Timber.e("County List **** ${county.name}")
+                countyList.add(county.name)
+
             }
-            nextButton.apply {
-                setOnClickListener {
-                    if (validData()) {
-                        mListener?.onNextPageRequested()
+
+            val adapterType =
+                ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    countyList
+                )
+
+            binding.apply {
+                county.apply {
+                    setAdapter(adapterType)
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {
+                            val value = s.toString()
+                            if (value.isNotEmpty()) {
+                                binding.telCounty.error = null
+                                val county = counties.find { it.name == value }
+                                if (county != null) {
+                                    subCountyList.clear()
+                                    binding.subCounty.setText("", false)
+                                    county.sub_counties.forEach {
+                                        subCountyList.add(it.name)
+                                    }
+                                    val subCountyAdapter =
+                                        ArrayAdapter(
+                                            requireContext(),
+                                            android.R.layout.simple_dropdown_item_1line,
+                                            subCountyList
+                                        )
+                                    binding.subCounty.apply {
+                                        setAdapter(subCountyAdapter)
+                                    }
+
+                                }
+                            }
+                        }
+                    })
+
+                }
+                subCounty.apply {
+
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {
+                            val value = s.toString()
+                            if (value.isNotEmpty()) {
+                                binding.telSubCounty.error = null
+                                val subCounty = wards.find { it.subCounty == value.lowercase() }
+                                if (subCounty != null) {
+                                    wardList.clear()
+                                    binding.ward.setText("", false)
+                                    subCounty.wards.forEach {
+                                        wardList.add(AppUtils().capitalizeFirstLetter(it.name))
+
+                                    }
+                                    val subCountyAdapter =
+                                        ArrayAdapter(
+                                            requireContext(),
+                                            android.R.layout.simple_dropdown_item_1line,
+                                            wardList
+                                        )
+                                    binding.ward.apply {
+                                        setAdapter(subCountyAdapter)
+                                    }
+                                }
+                            }
+                        }
+                    })
+
+                }
+                ward.apply {
+
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {
+                            val value = s.toString()
+                            if (value.isNotEmpty()) {
+                                binding.telWard.error = null
+
+                            }
+                        }
+                    })
+
+                }
+                previousButton.apply {
+                    setOnClickListener {
+                        mListener?.onPreviousPageRequested()
                     }
                 }
-            }
+                nextButton.apply {
+                    setOnClickListener {
+                        if (validData()) {
+                            mListener?.onNextPageRequested()
+                        }
+                    }
+                }
+                estate.apply {
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {
+                        }
 
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {
+                            val value = s.toString()
+                            if (value.isNotEmpty()) {
+                                binding.telEstate.error = null
+
+                            }
+                        }
+                    })
+
+                }
+                trading.apply {
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {
+                            val value = s.toString()
+                            if (value.isNotEmpty()) {
+                                binding.telTrading.error = null
+
+                            }
+                        }
+                    })
+
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
+
     private fun validData(): Boolean {
 
+        val countyString = binding.county.text.toString()
+        val subCountyString = binding.subCounty.text.toString()
+        val wardString = binding.ward.text.toString()
+        val tradingString = binding.trading.text.toString()
+        val estateString = binding.estate.text.toString()
+
+        if (countyString.isEmpty()) {
+            binding.telCounty.error = "Enter county"
+            binding.county.requestFocus()
+            return false
+        }
+        if (subCountyString.isEmpty()) {
+            binding.telSubCounty.error = "Enter sub county"
+            binding.subCounty.requestFocus()
+            return false
+        }
+        if (wardString.isEmpty()) {
+            binding.telWard.error = "Enter ward"
+            binding.ward.requestFocus()
+            return false
+        }
+        if (tradingString.isEmpty()) {
+            binding.telTrading.error = "Enter trading center"
+            binding.trading.requestFocus()
+            return false
+        }
+        if (estateString.isEmpty()) {
+            binding.telEstate.error = "Enter estate"
+            binding.estate.requestFocus()
+            return false
+        }
+        val payload = Administrative(
+            county = countyString,
+            subCounty = subCountyString,
+            ward = wardString,
+            trading = tradingString,
+            estate = estateString
+        )
+        formatter.saveSharedPref("administrative", Gson().toJson(payload), requireContext())
         return true
 
     }
