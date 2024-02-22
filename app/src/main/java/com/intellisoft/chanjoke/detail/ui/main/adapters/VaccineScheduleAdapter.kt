@@ -21,6 +21,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +52,14 @@ class VaccineScheduleAdapter(
     override fun getChildId(listPosition: Int, expandedListPosition: Int): Long {
         return expandedListPosition.toLong()
     }
-
+    private fun findDateAdministered(previousVaccineName: BasicVaccine?): String? {
+        for (item in administeredList) {
+            if (item.previousVaccineName == previousVaccineName) {
+                return item.dateAdministered
+            }
+        }
+        return null // If previousVaccineName is not found in administeredList
+    }
     // Modify getChildView to handle checkbox state
     override fun getChildView(
         listPosition: Int,
@@ -87,11 +95,16 @@ class VaccineScheduleAdapter(
             updateAdministerVaccineText()
         }
 
+        Log.e("----->","<-------")
+        println("vaccineName $vaccineName")
+
         //Check vaccine status
         for (administeredVaccine in administeredList) {
 
+            println("administeredVaccine $administeredVaccine")
+
+            var displayDate = ""
             if (vaccineName == administeredVaccine.vaccineName) {
-                val dateAdministered = administeredVaccine.dateAdministered
                 val status = administeredVaccine.status
 
                 var vaccineStatus = ""
@@ -111,11 +124,27 @@ class VaccineScheduleAdapter(
                         )
                     )
                 }
-
-                tvVaccineDate.text = dateAdministered
                 tvScheduleStatus.text = vaccineStatus
 
+            }else{
+
+                val previousVaccine = administeredVaccine.previousVaccineName
+                if (previousVaccine != null){
+                    val dateAdministered = administeredVaccine.dateAdministered
+                    val administeredDate = findDateAdministered(previousVaccine)
+                    displayDate = administeredDate ?: dateAdministered
+
+                    println("dateAdministered $dateAdministered")
+                    println("administeredDate $administeredDate")
+                }
+
+
+                println("previousVaccine $previousVaccine")
+                println("displayDate $displayDate")
+                Log.e("----->","<-------")
+
             }
+            tvVaccineDate.text = displayDate
 
         }
 

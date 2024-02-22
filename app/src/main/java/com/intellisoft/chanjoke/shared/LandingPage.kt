@@ -105,13 +105,15 @@ class LandingPage : Fragment() {
                     NavigationDetails.ADMINISTER_VACCINE.name, requireContext())
             }
 
-//            "AEFI" -> {
-//                findNavController().navigate(R.id.patient_list)
-//            }
-//
-//            "Appointments" -> {
-//                findNavController().navigate(R.id.patient_list)
-//            }
+            "Reports" -> {
+                findNavController().navigate(R.id.reportsFragment)
+            }
+
+            "Appointments" -> {
+                formatterClass.saveSharedPref("patientListAction",
+                    NavigationDetails.APPOINTMENT.name, requireContext())
+                findNavController().navigate(R.id.patient_list)
+            }
         }
 
     }

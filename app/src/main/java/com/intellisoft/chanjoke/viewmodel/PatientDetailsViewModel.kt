@@ -30,6 +30,10 @@ import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.utils.Constants.AEFI_DATE
 import com.intellisoft.chanjoke.utils.Constants.AEFI_TYPE
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -44,6 +48,7 @@ import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
+import org.hl7.fhir.r4.model.Location
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Reference
@@ -451,6 +456,7 @@ class PatientDetailsViewModel(
 
         return DbVaccineData(
             ref,
+            null,
             vaccineName,
             doseNumberValue,
             dateScheduled,
@@ -459,6 +465,8 @@ class PatientDetailsViewModel(
     }
 
     private fun createVaccineItem(immunization: Immunization): DbVaccineData {
+
+        val immunizationHandler = ImmunizationHandler()
 
         var vaccineName = ""
         var doseNumberValue = ""
@@ -487,8 +495,31 @@ class PatientDetailsViewModel(
             status = immunization.statusElement.value.name
         }
 
+        /**
+         * 1. Get the vaccine name, get series number, get the previous series number, get the previous Basic Vaccine
+         * 2. From the Previous Basic Vaccine, get the date administered
+         * 3. Calculate the next vaccination date and display it
+         */
+        var previousBasicVaccine:BasicVaccine? = null
+        val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+        if (basicVaccine != null){
+            val doseNumber = basicVaccine.doseNumber
+            val seriesVaccine = immunizationHandler.getRoutineSeriesByBasicVaccine(basicVaccine)
+            if (seriesVaccine != null){
+                previousBasicVaccine = immunizationHandler.getPreviousBasicVaccineInSeries(seriesVaccine, doseNumber)
+            }
+        }
+
+        Log.e("*****","****")
+        println("vaccineName $vaccineName")
+        println("previousBasicVaccine $previousBasicVaccine")
+        Log.e("*****","****")
+
+
+
         return DbVaccineData(
             ref,
+            previousBasicVaccine,
             vaccineName,
             doseNumberValue,
             dateScheduled,

@@ -272,21 +272,28 @@ class AdministerVaccineViewModel(
             immunizationId,
             getApplication<Application>().applicationContext
         )
-
         immunization.status = immunisationStatus
 
+        val annotationList = ArrayList<Annotation>()
+
+        val practitionerFacility = FormatterClass().getSharedPref("practitionerFacility", getApplication<Application>().applicationContext)
+        if (practitionerFacility != null){
+            val facilityDetails = practitionerFacility.replace("Location/","")
+            val locationReference = Reference("Location/$facilityDetails")
+            immunization.location = locationReference
+
+            val annotation = Annotation()
+            annotation.text = practitionerFacility
+            annotationList.add(annotation)
+        }
         //Include a location
-        val location = FormatterClass().getSharedPref(
-            "selectedFacility",
-            getApplication<Application>().applicationContext
-        )
+        val location = FormatterClass().getSharedPref("selectedFacility", getApplication<Application>().applicationContext)
         if (location != null) {
-            val annotationList = ArrayList<Annotation>()
             val annotation = Annotation()
             annotation.text = location
             annotationList.add(annotation)
-            immunization.note = annotationList
         }
+        if (annotationList.isNotEmpty()) immunization.note = annotationList
 
 
         //Date administered
@@ -505,6 +512,7 @@ class AdministerVaccineViewModel(
         immunizationList: List<String>,
         patientId: String,
         nextImmunizationDate: Date?,
+        status: String,
         immunizationId: String?
     ) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -533,10 +541,13 @@ class AdministerVaccineViewModel(
                         }
                     }.join()
 
+                    /**
+                     * Update the status with the typed one
+                     */
                     val recommendation = createImmunizationRecommendationResource(
                         patientId,
                         nextImmunizationDate,
-                        "Due",
+                        status,
                         "Next Immunization date",
                         immunizationId
                     )

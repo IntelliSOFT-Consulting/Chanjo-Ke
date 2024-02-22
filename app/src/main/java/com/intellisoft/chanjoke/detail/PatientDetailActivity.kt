@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -151,6 +152,24 @@ class PatientDetailActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        val patientListAction = formatterClass.getSharedPref("patientListAction", this)
+        if (patientListAction != null && patientListAction == NavigationDetails.APPOINTMENT.name) {
+            formatterClass.deleteSharedPref("patientListAction", this)
+            goAppointments()
+        }
+
+    }
+
+    private fun goAppointments(){
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("functionToCall", NavigationDetails.APPOINTMENT.name)
+        intent.putExtra("patientId", patientId)
+        startActivity(intent)
+    }
+
 
     private fun getPatientDetails() {
 
@@ -184,37 +203,10 @@ class PatientDetailActivity : AppCompatActivity() {
                 }
             }
 
-            val vaccineList = patientDetailsViewModel.getVaccineList()
-            generateMissedVaccines(vaccineList)
 
         }
     }
-    private fun generateMissedVaccines(vaccineList: ArrayList<DbVaccineData>) {
 
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val patientDob = formatterClass.getSharedPref("patientDob", this@PatientDetailActivity)
-            if (patientDob != null) {
-
-                val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
-                val basicVaccineList = ArrayList<BasicVaccine>()
-                vaccineList.forEach{
-                    val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(it.vaccineName)
-                    basicVaccine?.let { it1 -> basicVaccineList.add(it1) }
-                }
-
-                val missedVaccinesList =
-                    ageInWeeks?.let { immunizationHandler.getMissedRoutineVaccines(basicVaccineList, it) }
-
-
-
-            }
-
-
-
-        }
-
-    }
 
 
     override fun onSupportNavigateUp(): Boolean {

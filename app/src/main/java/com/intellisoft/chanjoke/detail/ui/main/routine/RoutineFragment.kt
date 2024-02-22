@@ -13,6 +13,7 @@ import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbStatusColor
+import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
@@ -107,10 +108,6 @@ class RoutineFragment : Fragment() {
                     statusColor = StatusColors.AMBER.name
                 }else{
                     //Everything under here does not have any vaccines
-                    /**
-                     * 1. Check if current date is past the number of weeks from birth
-                     * 2. If current date is past the number of weeks from birth, eka red if not weka black
-                     */
                     statusColor = StatusColors.NORMAL.name
                 }
             }
