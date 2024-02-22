@@ -1,0 +1,5802 @@
+[
+  {
+    "subCounty": "changamwe",
+    "wards": [
+      {
+        "name": "port reitz"
+      },
+      {
+        "name": "kipevu"
+      },
+      {
+        "name": "airport"
+      },
+      {
+        "name": "changamwe"
+      },
+      {
+        "name": "chaani"
+      }
+    ]
+  },
+  {
+    "subCounty": "jomvu",
+    "wards": [
+      {
+        "name": "jomvu kuu"
+      },
+      {
+        "name": "miritini"
+      },
+      {
+        "name": "mikindani"
+      }
+    ]
+  },
+  {
+    "subCounty": "kisauni",
+    "wards": [
+      {
+        "name": "mjambere"
+      },
+      {
+        "name": "junda"
+      },
+      {
+        "name": "bamburi"
+      },
+      {
+        "name": "mwakirunge"
+      },
+      {
+        "name": "mtopanga"
+      },
+      {
+        "name": "magogoni"
+      },
+      {
+        "name": "shanzu"
+      }
+    ]
+  },
+  {
+    "subCounty": "nyali",
+    "wards": [
+      {
+        "name": "frere town"
+      },
+      {
+        "name": "ziwa la ng'ombe"
+      },
+      {
+        "name": "mkomani"
+      },
+      {
+        "name": "kongowea"
+      },
+      {
+        "name": "kadzandani"
+      }
+    ]
+  },
+  {
+    "subCounty": "likoni",
+    "wards": [
+      {
+        "name": "mtongwe"
+      },
+      {
+        "name": "shika adabu"
+      },
+      {
+        "name": "bofu"
+      },
+      {
+        "name": "likoni"
+      },
+      {
+        "name": "timbwani"
+      }
+    ]
+  },
+  {
+    "subCounty": "mvita",
+    "wards": [
+      {
+        "name": "mji wa kale makadara"
+      },
+      {
+        "name": "tudor"
+      },
+      {
+        "name": "tononoka"
+      },
+      {
+        "name": "shimanzi ganjoni"
+      },
+      {
+        "name": "majengo"
+      }
+    ]
+  },
+  {
+    "subCounty": "msambweni",
+    "wards": [
+      {
+        "name": "gombatobongwe"
+      },
+      {
+        "name": "ukunda"
+      },
+      {
+        "name": "kinondo"
+      },
+      {
+        "name": "ramisi"
+      }
+    ]
+  },
+  {
+    "subCounty": "lungalunga",
+    "wards": [
+      {
+        "name": "pongwekikoneni"
+      },
+      {
+        "name": "dzombo"
+      },
+      {
+        "name": "mwereni"
+      },
+      {
+        "name": "vanga"
+      }
+    ]
+  },
+  {
+    "subCounty": "matuga",
+    "wards": [
+      {
+        "name": "tsimba golini"
+      },
+      {
+        "name": "waa"
+      },
+      {
+        "name": "tiwi"
+      },
+      {
+        "name": "kubo south"
+      },
+      {
+        "name": "mkongani"
+      }
+    ]
+  },
+  {
+    "subCounty": "kinango",
+    "wards": [
+      {
+        "name": "nadavaya"
+      },
+      {
+        "name": "puma"
+      },
+      {
+        "name": "kinango"
+      },
+      {
+        "name": "mackinnon-road"
+      },
+      {
+        "name": "chengoni samburu"
+      },
+      {
+        "name": "mwavumbo"
+      },
+      {
+        "name": "kasemeni"
+      }
+    ]
+  },
+  {
+    "subCounty": "kilifi north",
+    "wards": [
+      {
+        "name": "tezo"
+      },
+      {
+        "name": "sokoni"
+      },
+      {
+        "name": "kibarani"
+      },
+      {
+        "name": "dabaso"
+      },
+      {
+        "name": "matsangoni"
+      },
+      {
+        "name": "watamu"
+      },
+      {
+        "name": "mnarani"
+      }
+    ]
+  },
+  {
+    "subCounty": "kilifi south",
+    "wards": [
+      {
+        "name": "junju"
+      },
+      {
+        "name": "mwarakaya"
+      },
+      {
+        "name": "shimo la tewa"
+      },
+      {
+        "name": "chasimba"
+      },
+      {
+        "name": "mtepeni"
+      }
+    ]
+  },
+  {
+    "subCounty": "kaloleni",
+    "wards": [
+      {
+        "name": "mariakani"
+      },
+      {
+        "name": "kayafungo"
+      },
+      {
+        "name": "kaloleni"
+      },
+      {
+        "name": "mwanamwinga"
+      }
+    ]
+  },
+  {
+    "subCounty": "rabai",
+    "wards": [
+      {
+        "name": "mwawesa"
+      },
+      {
+        "name": "ruruma"
+      },
+      {
+        "name": "kambe ribe"
+      },
+      {
+        "name": "rabai kisurutini"
+      }
+    ]
+  },
+  {
+    "subCounty": "ganze",
+    "wards": [
+      {
+        "name": "ganze"
+      },
+      {
+        "name": "bamba"
+      },
+      {
+        "name": "jaribuni"
+      },
+      {
+        "name": "sokoke"
+      }
+    ]
+  },
+  {
+    "subCounty": "malindi",
+    "wards": [
+      {
+        "name": "jilore"
+      },
+      {
+        "name": "kakuyuni"
+      },
+      {
+        "name": "ganda"
+      },
+      {
+        "name": "malindi town"
+      },
+      {
+        "name": "shella"
+      }
+    ]
+  },
+  {
+    "subCounty": "magarini",
+    "wards": [
+      {
+        "name": "marafa"
+      },
+      {
+        "name": "magarini"
+      },
+      {
+        "name": "gongoni"
+      },
+      {
+        "name": "adu"
+      },
+      {
+        "name": "garashi"
+      },
+      {
+        "name": "sabaki"
+      }
+    ]
+  },
+  {
+    "subCounty": "garsen",
+    "wards": [
+      {
+        "name": "kipini east"
+      },
+      {
+        "name": "garsen south"
+      },
+      {
+        "name": "kipini west"
+      },
+      {
+        "name": "garsen central"
+      },
+      {
+        "name": "garsen west"
+      },
+      {
+        "name": "garsen north"
+      }
+    ]
+  },
+  {
+    "subCounty": "galole",
+    "wards": [
+      {
+        "name": "kinakomba"
+      },
+      {
+        "name": "mikinduni"
+      },
+      {
+        "name": "chewani"
+      },
+      {
+        "name": "wayu"
+      }
+    ]
+  },
+  {
+    "subCounty": "bura",
+    "wards": [
+      {
+        "name": "chewele"
+      },
+      {
+        "name": "bura"
+      },
+      {
+        "name": "bangale"
+      },
+      {
+        "name": "sala"
+      },
+      {
+        "name": "madogo"
+      }
+    ]
+  },
+  {
+    "subCounty": "lamu east",
+    "wards": [
+      {
+        "name": "faza"
+      },
+      {
+        "name": "kiunga"
+      },
+      {
+        "name": "basuba"
+      }
+    ]
+  },
+  {
+    "subCounty": "lamu west",
+    "wards": [
+      {
+        "name": "shella"
+      },
+      {
+        "name": "mkomani"
+      },
+      {
+        "name": "hindi"
+      },
+      {
+        "name": "mkunumbi"
+      },
+      {
+        "name": "hongwe"
+      },
+      {
+        "name": "witu"
+      },
+      {
+        "name": "bahari"
+      }
+    ]
+  },
+  {
+    "subCounty": "taveta",
+    "wards": [
+      {
+        "name": "chala"
+      },
+      {
+        "name": "mahoo"
+      },
+      {
+        "name": "bomeni"
+      },
+      {
+        "name": "mboghoni"
+      },
+      {
+        "name": "mata"
+      }
+    ]
+  },
+  {
+    "subCounty": "wundanyi",
+    "wards": [
+      {
+        "name": "wundanyi mbale"
+      },
+      {
+        "name": "werugha"
+      },
+      {
+        "name": "wumingu kishushe"
+      },
+      {
+        "name": "mwanda mgange"
+      }
+    ]
+  },
+  {
+    "subCounty": "mwatate",
+    "wards": [
+      {
+        "name": "rong'e"
+      },
+      {
+        "name": "mwatate"
+      },
+      {
+        "name": "bura"
+      },
+      {
+        "name": "chawia"
+      },
+      {
+        "name": "wusi kishamba"
+      }
+    ]
+  },
+  {
+    "subCounty": "voi",
+    "wards": [
+      {
+        "name": "mbololo"
+      },
+      {
+        "name": "sagalla"
+      },
+      {
+        "name": "kaloleni"
+      },
+      {
+        "name": "marungu"
+      },
+      {
+        "name": "kasigau"
+      },
+      {
+        "name": "ngolia"
+      }
+    ]
+  },
+  {
+    "subCounty": "garissa township",
+    "wards": [
+      {
+        "name": "waberi"
+      },
+      {
+        "name": "galbet"
+      },
+      {
+        "name": "township"
+      },
+      {
+        "name": "iftin"
+      }
+    ]
+  },
+  {
+    "subCounty": "balambala",
+    "wards": [
+      {
+        "name": "balambala"
+      },
+      {
+        "name": "danyere"
+      },
+      {
+        "name": "jara jara"
+      },
+      {
+        "name": "saka"
+      },
+      {
+        "name": "sankuri"
+      }
+    ]
+  },
+  {
+    "subCounty": "lagdera",
+    "wards": [
+      {
+        "name": "modogashe"
+      },
+      {
+        "name": "benane"
+      },
+      {
+        "name": "goreale"
+      },
+      {
+        "name": "maalimin"
+      },
+      {
+        "name": "sabena"
+      },
+      {
+        "name": "baraki"
+      }
+    ]
+  },
+  {
+    "subCounty": "dadaab",
+    "wards": [
+      {
+        "name": "dertu"
+      },
+      {
+        "name": "dadaab"
+      },
+      {
+        "name": "labasigale"
+      },
+      {
+        "name": "damajale"
+      },
+      {
+        "name": "liboi"
+      },
+      {
+        "name": "abakaile"
+      }
+    ]
+  },
+  {
+    "subCounty": "fafi",
+    "wards": [
+      {
+        "name": "bura"
+      },
+      {
+        "name": "dekaharia"
+      },
+      {
+        "name": "jarajila"
+      },
+      {
+        "name": "fafi"
+      },
+      {
+        "name": "nanighi"
+      }
+    ]
+  },
+  {
+    "subCounty": "ijara",
+    "wards": [
+      {
+        "name": "hulugho"
+      },
+      {
+        "name": "sangailu"
+      },
+      {
+        "name": "ijara"
+      },
+      {
+        "name": "masalani"
+      }
+    ]
+  },
+  {
+    "subCounty": "wajir north",
+    "wards": [
+      {
+        "name": "gurar"
+      },
+      {
+        "name": "bute"
+      },
+      {
+        "name": "korondile"
+      },
+      {
+        "name": "malkagufu"
+      },
+      {
+        "name": "batalu"
+      },
+      {
+        "name": "danaba"
+      },
+      {
+        "name": "godoma"
+      }
+    ]
+  },
+  {
+    "subCounty": "wajir east",
+    "wards": [
+      {
+        "name": "wagberi"
+      },
+      {
+        "name": "township"
+      },
+      {
+        "name": "barwago"
+      },
+      {
+        "name": "khorof harar"
+      }
+    ]
+  },
+  {
+    "subCounty": "tarbaj",
+    "wards": [
+      {
+        "name": "elben"
+      },
+      {
+        "name": "sarman"
+      },
+      {
+        "name": "tarbaj"
+      },
+      {
+        "name": "wargadud"
+      }
+    ]
+  },
+  {
+    "subCounty": "wajir west",
+    "wards": [
+      {
+        "name": "arbajahan"
+      },
+      {
+        "name": "hadado athibohol"
+      },
+      {
+        "name": "ademasajide"
+      },
+      {
+        "name": "wagalla ganyure"
+      }
+    ]
+  },
+  {
+    "subCounty": "eldas",
+    "wards": [
+      {
+        "name": "eldas"
+      },
+      {
+        "name": "della"
+      },
+      {
+        "name": "lakoley south basir"
+      },
+      {
+        "name": "elnur tula tula"
+      }
+    ]
+  },
+  {
+    "subCounty": "wajir south",
+    "wards": [
+      {
+        "name": "benane"
+      },
+      {
+        "name": "burder"
+      },
+      {
+        "name": "dadaja bulla"
+      },
+      {
+        "name": "habasswein"
+      },
+      {
+        "name": "lagboghol south"
+      },
+      {
+        "name": "ibrahim ure"
+      },
+      {
+        "name": "diif"
+      }
+    ]
+  },
+  {
+    "subCounty": "mandera west",
+    "wards": [
+      {
+        "name": "takaba south"
+      },
+      {
+        "name": "takaba"
+      },
+      {
+        "name": "lag sure"
+      },
+      {
+        "name": "dandu"
+      },
+      {
+        "name": "gither"
+      }
+    ]
+  },
+  {
+    "subCounty": "banissa",
+    "wards": [
+      {
+        "name": "banissa"
+      },
+      {
+        "name": "derkhale"
+      },
+      {
+        "name": "guba"
+      },
+      {
+        "name": "malkamari"
+      },
+      {
+        "name": "kiliwehiri"
+      }
+    ]
+  },
+  {
+    "subCounty": "mandera north",
+    "wards": [
+      {
+        "name": "ashabito"
+      },
+      {
+        "name": "guticha"
+      },
+      {
+        "name": "morothile"
+      },
+      {
+        "name": "rhamu"
+      },
+      {
+        "name": "rhamu-dimtu"
+      }
+    ]
+  },
+  {
+    "subCounty": "mandera south",
+    "wards": [
+      {
+        "name": "wargudud"
+      },
+      {
+        "name": "kutulo"
+      },
+      {
+        "name": "elwak south"
+      },
+      {
+        "name": "elwak north"
+      },
+      {
+        "name": "shimbir fatuma"
+      }
+    ]
+  },
+  {
+    "subCounty": "mandera east",
+    "wards": [
+      {
+        "name": "arabia"
+      },
+      {
+        "name": "bulla mpya"
+      },
+      {
+        "name": "khalalio"
+      },
+      {
+        "name": "neboi"
+      },
+      {
+        "name": "township"
+      }
+    ]
+  },
+  {
+    "subCounty": "lafey",
+    "wards": [
+      {
+        "name": "libehia"
+      },
+      {
+        "name": "fino"
+      },
+      {
+        "name": "lafey"
+      },
+      {
+        "name": "warankara"
+      },
+      {
+        "name": "alungo gof"
+      }
+    ]
+  },
+  {
+    "subCounty": "moyale",
+    "wards": [
+      {
+        "name": "butiye"
+      },
+      {
+        "name": "sololo"
+      },
+      {
+        "name": "heilu-manyatta"
+      },
+      {
+        "name": "golbo"
+      },
+      {
+        "name": "moyale township"
+      },
+      {
+        "name": "uran"
+      },
+      {
+        "name": "obbu"
+      }
+    ]
+  },
+  {
+    "subCounty": "north horr",
+    "wards": [
+      {
+        "name": "illeret"
+      },
+      {
+        "name": "north horr"
+      },
+      {
+        "name": "dukana"
+      },
+      {
+        "name": "maikona"
+      },
+      {
+        "name": "turbi"
+      }
+    ]
+  },
+  {
+    "subCounty": "saku",
+    "wards": [
+      {
+        "name": "sagante jaldesa"
+      },
+      {
+        "name": "karare"
+      },
+      {
+        "name": "marsabit central"
+      }
+    ]
+  },
+  {
+    "subCounty": "laisamis",
+    "wards": [
+      {
+        "name": "loiyangalani"
+      },
+      {
+        "name": "kargi south horr"
+      },
+      {
+        "name": "korr ngurunit"
+      },
+      {
+        "name": "log logo"
+      },
+      {
+        "name": "laisamis"
+      }
+    ]
+  },
+  {
+    "subCounty": "isiolo north",
+    "wards": [
+      {
+        "name": "wabera"
+      },
+      {
+        "name": "bulla pesa"
+      },
+      {
+        "name": "chari"
+      },
+      {
+        "name": "cherab"
+      },
+      {
+        "name": "ngare mara"
+      },
+      {
+        "name": "burat"
+      },
+      {
+        "name": "oldonyiro"
+      }
+    ]
+  },
+  {
+    "subCounty": "isiolo south",
+    "wards": [
+      {
+        "name": "garbatulla"
+      },
+      {
+        "name": "kinna"
+      },
+      {
+        "name": "sericho"
+      }
+    ]
+  },
+  {
+    "subCounty": "igembe south",
+    "wards": [
+      {
+        "name": "maua"
+      },
+      {
+        "name": "kiegoi antubochiu"
+      },
+      {
+        "name": "athiru gaiti"
+      },
+      {
+        "name": "akachiu"
+      },
+      {
+        "name": "kanuni"
+      }
+    ]
+  },
+  {
+    "subCounty": "igembe central",
+    "wards": [
+      {
+        "name": "akirang'ondu"
+      },
+      {
+        "name": "athiru ruujine"
+      },
+      {
+        "name": "igembe east"
+      },
+      {
+        "name": "njia"
+      },
+      {
+        "name": "kangeta"
+      }
+    ]
+  },
+  {
+    "subCounty": "igembe north",
+    "wards": [
+      {
+        "name": "antuambui"
+      },
+      {
+        "name": "ntunene"
+      },
+      {
+        "name": "antubetwe kiongo"
+      },
+      {
+        "name": "naathu"
+      },
+      {
+        "name": "amwathi"
+      }
+    ]
+  },
+  {
+    "subCounty": "tigania west",
+    "wards": [
+      {
+        "name": "athwana"
+      },
+      {
+        "name": "akithii"
+      },
+      {
+        "name": "kianjai"
+      },
+      {
+        "name": "nkomo"
+      },
+      {
+        "name": "mbeu"
+      }
+    ]
+  },
+  {
+    "subCounty": "tigania east",
+    "wards": [
+      {
+        "name": "thangatha"
+      },
+      {
+        "name": "mikinduri"
+      },
+      {
+        "name": "kiguchwa"
+      },
+      {
+        "name": "muthara"
+      },
+      {
+        "name": "karama"
+      }
+    ]
+  },
+  {
+    "subCounty": "north imenti",
+    "wards": [
+      {
+        "name": "municipality"
+      },
+      {
+        "name": "ntima east"
+      },
+      {
+        "name": "ntima west"
+      },
+      {
+        "name": "nyaki west"
+      },
+      {
+        "name": "nyaki east"
+      }
+    ]
+  },
+  {
+    "subCounty": "buuri",
+    "wards": [
+      {
+        "name": "timau"
+      },
+      {
+        "name": "kisima"
+      },
+      {
+        "name": "kiirua naari"
+      },
+      {
+        "name": "ruiri rwarera"
+      },
+      {
+        "name": "kibirichia"
+      }
+    ]
+  },
+  {
+    "subCounty": "central imenti",
+    "wards": [
+      {
+        "name": "mwanganthia"
+      },
+      {
+        "name": "abothuguchi central"
+      },
+      {
+        "name": "abothuguchi west"
+      },
+      {
+        "name": "kiagu"
+      }
+    ]
+  },
+  {
+    "subCounty": "south imenti",
+    "wards": [
+      {
+        "name": "mitunguu"
+      },
+      {
+        "name": "igoji east"
+      },
+      {
+        "name": "igoji west"
+      },
+      {
+        "name": "abogeta east"
+      },
+      {
+        "name": "abogeta west"
+      },
+      {
+        "name": "nkuene"
+      }
+    ]
+  },
+  {
+    "subCounty": "maara",
+    "wards": [
+      {
+        "name": "mitheru"
+      },
+      {
+        "name": "muthambi"
+      },
+      {
+        "name": "mwimbi"
+      },
+      {
+        "name": "ganga"
+      },
+      {
+        "name": "chogoria"
+      }
+    ]
+  },
+  {
+    "subCounty": "chuka igambang'om",
+    "wards": [
+      {
+        "name": "mariani"
+      },
+      {
+        "name": "karingani"
+      },
+      {
+        "name": "magumoni"
+      },
+      {
+        "name": "mugwe"
+      },
+      {
+        "name": "igambang'ombe"
+      }
+    ]
+  },
+  {
+    "subCounty": "tharaka",
+    "wards": [
+      {
+        "name": "gatunga"
+      },
+      {
+        "name": "mukothima"
+      },
+      {
+        "name": "nkondi"
+      },
+      {
+        "name": "chiakariga"
+      },
+      {
+        "name": "marimanti"
+      }
+    ]
+  },
+  {
+    "subCounty": "manyatta",
+    "wards": [
+      {
+        "name": "ruguru ngandori"
+      },
+      {
+        "name": "kithimu"
+      },
+      {
+        "name": "nginda"
+      },
+      {
+        "name": "mbeti north"
+      },
+      {
+        "name": "kirimari"
+      },
+      {
+        "name": "gaturi south"
+      }
+    ]
+  },
+  {
+    "subCounty": "runyenjes",
+    "wards": [
+      {
+        "name": "gaturi north"
+      },
+      {
+        "name": "kagaari south"
+      },
+      {
+        "name": "central ward"
+      },
+      {
+        "name": "kagaari north"
+      },
+      {
+        "name": "kyeni north"
+      },
+      {
+        "name": "kyeni south"
+      }
+    ]
+  },
+  {
+    "subCounty": "mbeere south",
+    "wards": [
+      {
+        "name": "mwea"
+      },
+      {
+        "name": "makima"
+      },
+      {
+        "name": "mbeti south"
+      },
+      {
+        "name": "mavuria"
+      },
+      {
+        "name": "kiambere"
+      }
+    ]
+  },
+  {
+    "subCounty": "mbeere north",
+    "wards": [
+      {
+        "name": "nthawa"
+      },
+      {
+        "name": "muminji"
+      },
+      {
+        "name": "evurore"
+      }
+    ]
+  },
+  {
+    "subCounty": "mwingi north",
+    "wards": [
+      {
+        "name": "ngomeni"
+      },
+      {
+        "name": "kyuso"
+      },
+      {
+        "name": "mumoni"
+      },
+      {
+        "name": "tseikuru"
+      },
+      {
+        "name": "tharaka"
+      }
+    ]
+  },
+  {
+    "subCounty": "mwingi west",
+    "wards": [
+      {
+        "name": "kyome thaana"
+      },
+      {
+        "name": "nguutani"
+      },
+      {
+        "name": "migwani"
+      },
+      {
+        "name": "kiomo kyethani"
+      }
+    ]
+  },
+  {
+    "subCounty": "mwingi central",
+    "wards": [
+      {
+        "name": "central"
+      },
+      {
+        "name": "kivou"
+      },
+      {
+        "name": "nguni"
+      },
+      {
+        "name": "nuu"
+      },
+      {
+        "name": "mui"
+      },
+      {
+        "name": "waita"
+      }
+    ]
+  },
+  {
+    "subCounty": "kitui west",
+    "wards": [
+      {
+        "name": "mutonguni"
+      },
+      {
+        "name": "kauwi"
+      },
+      {
+        "name": "matinyani"
+      },
+      {
+        "name": "kwa mutonga kithumula"
+      }
+    ]
+  },
+  {
+    "subCounty": "kitui rural",
+    "wards": [
+      {
+        "name": "kisasi"
+      },
+      {
+        "name": "mbitini"
+      },
+      {
+        "name": "kwavonza yatta"
+      },
+      {
+        "name": "kanyangi"
+      }
+    ]
+  },
+  {
+    "subCounty": "kitui central",
+    "wards": [
+      {
+        "name": "miambani"
+      },
+      {
+        "name": "township"
+      },
+      {
+        "name": "kyangwithya west"
+      },
+      {
+        "name": "mulango"
+      },
+      {
+        "name": "kyangwithya east"
+      }
+    ]
+  },
+  {
+    "subCounty": "kitui east",
+    "wards": [
+      {
+        "name": "zombe mwitika"
+      },
+      {
+        "name": "chuluni"
+      },
+      {
+        "name": "nzambani"
+      },
+      {
+        "name": "voo kyamatu"
+      },
+      {
+        "name": "endau malalani"
+      },
+      {
+        "name": "mutito kaliku"
+      }
+    ]
+  },
+  {
+    "subCounty": "kitui south",
+    "wards": [
+      {
+        "name": "ikanga kyatune"
+      },
+      {
+        "name": "mutomo"
+      },
+      {
+        "name": "mutha"
+      },
+      {
+        "name": "ikutha"
+      },
+      {
+        "name": "kanziko"
+      },
+      {
+        "name": "athi"
+      }
+    ]
+  },
+  {
+    "subCounty": "masinga",
+    "wards": [
+      {
+        "name": "kivaa"
+      },
+      {
+        "name": "masinga central"
+      },
+      {
+        "name": "ekalakala"
+      },
+      {
+        "name": "muthesya"
+      },
+      {
+        "name": "ndithini"
+      }
+    ]
+  },
+  {
+    "subCounty": "yatta",
+    "wards": [
+      {
+        "name": "ndalani"
+      },
+      {
+        "name": "matuu"
+      },
+      {
+        "name": "kithimani"
+      },
+      {
+        "name": "ikombe"
+      },
+      {
+        "name": "katangi"
+      }
+    ]
+  },
+  {
+    "subCounty": "kangundo",
+    "wards": [
+      {
+        "name": "kangundo north"
+      },
+      {
+        "name": "kangundo central"
+      },
+      {
+        "name": "kangundo east"
+      },
+      {
+        "name": "kangundo west"
+      }
+    ]
+  },
+  {
+    "subCounty": "matungulu",
+    "wards": [
+      {
+        "name": "tala"
+      },
+      {
+        "name": "matungulu north"
+      },
+      {
+        "name": "matungulu east"
+      },
+      {
+        "name": "matungulu west"
+      },
+      {
+        "name": "kyeleni"
+      }
+    ]
+  },
+  {
+    "subCounty": "kathiani",
+    "wards": [
+      {
+        "name": "mitaboni"
+      },
+      {
+        "name": "kathiani central"
+      },
+      {
+        "name": "upper kaewa iveti"
+      },
+      {
+        "name": "lower kaewa kaani"
+      }
+    ]
+  },
+  {
+    "subCounty": "mavoko",
+    "wards": [
+      {
+        "name": "athi river"
+      },
+      {
+        "name": "kinanie"
+      },
+      {
+        "name": "muthwani"
+      },
+      {
+        "name": "syokimau mulolongo"
+      }
+    ]
+  },
+  {
+    "subCounty": "machakos town",
+    "wards": [
+      {
+        "name": "kalama"
+      },
+      {
+        "name": "mua"
+      },
+      {
+        "name": "mutituni"
+      },
+      {
+        "name": "machakos central"
+      },
+      {
+        "name": "mumbuni north"
+      },
+      {
+        "name": "muvuti kiima-kimwe"
+      },
+      {
+        "name": "kola"
+      }
+    ]
+  },
+  {
+    "subCounty": "mwala",
+    "wards": [
+      {
+        "name": "mbiuni"
+      },
+      {
+        "name": "makutano mwala"
+      },
+      {
+        "name": "masii"
+      },
+      {
+        "name": "muthetheni"
+      },
+      {
+        "name": "wamunyu"
+      },
+      {
+        "name": "kibauni"
+      }
+    ]
+  },
+  {
+    "subCounty": "mbooni",
+    "wards": [
+      {
+        "name": "tulimani"
+      },
+      {
+        "name": "mbooni"
+      },
+      {
+        "name": "kithungo kitundu"
+      },
+      {
+        "name": "kisau kiteta"
+      },
+      {
+        "name": "waia kako"
+      },
+      {
+        "name": "kalawa"
+      }
+    ]
+  },
+  {
+    "subCounty": "kilome",
+    "wards": [
+      {
+        "name": "kasikeu"
+      },
+      {
+        "name": "mukaa"
+      },
+      {
+        "name": "kiima kiu kalanzoni"
+      }
+    ]
+  },
+  {
+    "subCounty": "kaiti",
+    "wards": [
+      {
+        "name": "ukia"
+      },
+      {
+        "name": "kee"
+      },
+      {
+        "name": "kilungu"
+      },
+      {
+        "name": "ilima"
+      }
+    ]
+  },
+  {
+    "subCounty": "makueni",
+    "wards": [
+      {
+        "name": "wote"
+      },
+      {
+        "name": "muvau kikuumini"
+      },
+      {
+        "name": "mavindini"
+      },
+      {
+        "name": "kitise kithuki"
+      },
+      {
+        "name": "kathonzweni"
+      },
+      {
+        "name": "nzaui kilili kalamba"
+      },
+      {
+        "name": "mbitini"
+      }
+    ]
+  },
+  {
+    "subCounty": "kibwezi west",
+    "wards": [
+      {
+        "name": "makindu"
+      },
+      {
+        "name": "nguumo"
+      },
+      {
+        "name": "kikumbulyu north"
+      },
+      {
+        "name": "kikumbulyu south"
+      },
+      {
+        "name": "nguu masumba"
+      },
+      {
+        "name": "emali mulala"
+      }
+    ]
+  },
+  {
+    "subCounty": "kibwezi east",
+    "wards": [
+      {
+        "name": "masongaleni"
+      },
+      {
+        "name": "mtito andei"
+      },
+      {
+        "name": "thange"
+      },
+      {
+        "name": "ivingoni nzambani"
+      }
+    ]
+  },
+  {
+    "subCounty": "kinangop",
+    "wards": [
+      {
+        "name": "engineer"
+      },
+      {
+        "name": "gathara"
+      },
+      {
+        "name": "north kinangop"
+      },
+      {
+        "name": "murungaru"
+      },
+      {
+        "name": "njabini kiburu"
+      },
+      {
+        "name": "nyakio"
+      },
+      {
+        "name": "githabai"
+      },
+      {
+        "name": "magumu"
+      }
+    ]
+  },
+  {
+    "subCounty": "kipipiri",
+    "wards": [
+      {
+        "name": "wanjohi"
+      },
+      {
+        "name": "kipipiri"
+      },
+      {
+        "name": "geta"
+      },
+      {
+        "name": "githioro"
+      }
+    ]
+  },
+  {
+    "subCounty": "ol kalou",
+    "wards": [
+      {
+        "name": "karau"
+      },
+      {
+        "name": "kanjuiri ridge"
+      },
+      {
+        "name": "mirangine"
+      },
+      {
+        "name": "kaimbaga"
+      },
+      {
+        "name": "rurii"
+      }
+    ]
+  },
+  {
+    "subCounty": "ol jorok",
+    "wards": [
+      {
+        "name": "gathanji"
+      },
+      {
+        "name": "gatimu"
+      },
+      {
+        "name": "weru"
+      },
+      {
+        "name": "charagita"
+      }
+    ]
+  },
+  {
+    "subCounty": "ndaragwa",
+    "wards": [
+      {
+        "name": "leshau pondo"
+      },
+      {
+        "name": "kiriita"
+      },
+      {
+        "name": "central"
+      },
+      {
+        "name": "shamata"
+      }
+    ]
+  },
+  {
+    "subCounty": "tetu",
+    "wards": [
+      {
+        "name": "dedan kimanthi"
+      },
+      {
+        "name": "wamagana"
+      },
+      {
+        "name": "aguthi gaaki"
+      }
+    ]
+  },
+  {
+    "subCounty": "kieni",
+    "wards": [
+      {
+        "name": "mweiga"
+      },
+      {
+        "name": "naromoru kiamathaga"
+      },
+      {
+        "name": "mwiyogo endarasha"
+      },
+      {
+        "name": "mugunda"
+      },
+      {
+        "name": "gatarakwa"
+      },
+      {
+        "name": "thegu river"
+      },
+      {
+        "name": "kabaru"
+      },
+      {
+        "name": "gakawa"
+      }
+    ]
+  },
+  {
+    "subCounty": "mathira",
+    "wards": [
+      {
+        "name": "ruguru"
+      },
+      {
+        "name": "magutu"
+      },
+      {
+        "name": "iriaini"
+      },
+      {
+        "name": "konyu"
+      },
+      {
+        "name": "kirimukuyu"
+      },
+      {
+        "name": "karatina town"
+      }
+    ]
+  },
+  {
+    "subCounty": "othaya",
+    "wards": [
+      {
+        "name": "mahiga"
+      },
+      {
+        "name": "iria-ini"
+      },
+      {
+        "name": "chinga"
+      },
+      {
+        "name": "karima"
+      }
+    ]
+  },
+  {
+    "subCounty": "mukurweini",
+    "wards": [
+      {
+        "name": "gikondi"
+      },
+      {
+        "name": "rugi"
+      },
+      {
+        "name": "mukurwe-ini west"
+      },
+      {
+        "name": "mukurwe-ini central"
+      }
+    ]
+  },
+  {
+    "subCounty": "nyeri town",
+    "wards": [
+      {
+        "name": "kiganjo mathari"
+      },
+      {
+        "name": "rware"
+      },
+      {
+        "name": "gatitu muruguru"
+      },
+      {
+        "name": "ruring'u"
+      },
+      {
+        "name": "kamakwa mukaro"
+      }
+    ]
+  },
+  {
+    "subCounty": "mwea",
+    "wards": [
+      {
+        "name": "mutithi"
+      },
+      {
+        "name": "kangai"
+      },
+      {
+        "name": "thiba"
+      },
+      {
+        "name": "wamumu"
+      },
+      {
+        "name": "nyangati"
+      },
+      {
+        "name": "murinduko"
+      },
+      {
+        "name": "gathigiriri"
+      },
+      {
+        "name": "tebere"
+      }
+    ]
+  },
+  {
+    "subCounty": "gichugu",
+    "wards": [
+      {
+        "name": "kabare"
+      },
+      {
+        "name": "baragwi"
+      },
+      {
+        "name": "njukiini"
+      },
+      {
+        "name": "ngariama"
+      },
+      {
+        "name": "karumandi"
+      }
+    ]
+  },
+  {
+    "subCounty": "ndia",
+    "wards": [
+      {
+        "name": "mukure"
+      },
+      {
+        "name": "kiine"
+      },
+      {
+        "name": "kariti"
+      }
+    ]
+  },
+  {
+    "subCounty": "kirinyaga central",
+    "wards": [
+      {
+        "name": "mutira"
+      },
+      {
+        "name": "kanyeki-ini"
+      },
+      {
+        "name": "kerugoya"
+      },
+      {
+        "name": "inoi"
+      }
+    ]
+  },
+  {
+    "subCounty": "kangema",
+    "wards": [
+      {
+        "name": "kanyenyaini"
+      },
+      {
+        "name": "muguru"
+      },
+      {
+        "name": "rwathia"
+      }
+    ]
+  },
+  {
+    "subCounty": "mathioya",
+    "wards": [
+      {
+        "name": "gitugi"
+      },
+      {
+        "name": "kiru"
+      },
+      {
+        "name": "kamacharia"
+      }
+    ]
+  },
+  {
+    "subCounty": "kiharu",
+    "wards": [
+      {
+        "name": "wangu"
+      },
+      {
+        "name": "mugoiri"
+      },
+      {
+        "name": "mbiri"
+      },
+      {
+        "name": "township"
+      },
+      {
+        "name": "murarandia"
+      },
+      {
+        "name": "gaturi"
+      }
+    ]
+  },
+  {
+    "subCounty": "kigumo",
+    "wards": [
+      {
+        "name": "kahumbu"
+      },
+      {
+        "name": "muthithi"
+      },
+      {
+        "name": "kigumo"
+      },
+      {
+        "name": "kangari"
+      },
+      {
+        "name": "kinyona"
+      }
+    ]
+  },
+  {
+    "subCounty": "maragwa",
+    "wards": [
+      {
+        "name": "kimorori wempa"
+      },
+      {
+        "name": "makuyu"
+      },
+      {
+        "name": "kambiti"
+      },
+      {
+        "name": "kamahuha"
+      },
+      {
+        "name": "ichagaki"
+      },
+      {
+        "name": "nginda"
+      }
+    ]
+  },
+  {
+    "subCounty": "kandara",
+    "wards": [
+      {
+        "name": "ng'araria"
+      },
+      {
+        "name": "muruka"
+      },
+      {
+        "name": "kagundu-ini"
+      },
+      {
+        "name": "gaichanjiru"
+      },
+      {
+        "name": "ithiru"
+      },
+      {
+        "name": "ruchu"
+      }
+    ]
+  },
+  {
+    "subCounty": "gatanga",
+    "wards": [
+      {
+        "name": "ithanga"
+      },
+      {
+        "name": "kakuzi mitubiri"
+      },
+      {
+        "name": "mugumo-ini"
+      },
+      {
+        "name": "kihumbu-ini"
+      },
+      {
+        "name": "gatanga"
+      },
+      {
+        "name": "kariara"
+      }
+    ]
+  },
+  {
+    "subCounty": "gatundu south",
+    "wards": [
+      {
+        "name": "kiamwangi"
+      },
+      {
+        "name": "kiganjo"
+      },
+      {
+        "name": "ndarugu"
+      },
+      {
+        "name": "ngenda"
+      }
+    ]
+  },
+  {
+    "subCounty": "gatundu north",
+    "wards": [
+      {
+        "name": "gituamba"
+      },
+      {
+        "name": "githobokoni"
+      },
+      {
+        "name": "chania"
+      },
+      {
+        "name": "mang'u"
+      }
+    ]
+  },
+  {
+    "subCounty": "juja",
+    "wards": [
+      {
+        "name": "murera"
+      },
+      {
+        "name": "theta"
+      },
+      {
+        "name": "juja"
+      },
+      {
+        "name": "witeithie"
+      },
+      {
+        "name": "kalimoni"
+      }
+    ]
+  },
+  {
+    "subCounty": "thika town",
+    "wards": [
+      {
+        "name": "township"
+      },
+      {
+        "name": "kamenu"
+      },
+      {
+        "name": "hospital"
+      },
+      {
+        "name": "gatuanyaga"
+      },
+      {
+        "name": "ngoliba"
+      }
+    ]
+  },
+  {
+    "subCounty": "ruiru",
+    "wards": [
+      {
+        "name": "gitothua"
+      },
+      {
+        "name": "biashara"
+      },
+      {
+        "name": "gatongora"
+      },
+      {
+        "name": "kahawa sukari"
+      },
+      {
+        "name": "kahawa wendani"
+      },
+      {
+        "name": "kiuu"
+      },
+      {
+        "name": "mwiki"
+      },
+      {
+        "name": "mwihoko"
+      }
+    ]
+  },
+  {
+    "subCounty": "githunguri",
+    "wards": [
+      {
+        "name": "githunguri"
+      },
+      {
+        "name": "githiga"
+      },
+      {
+        "name": "ikinu"
+      },
+      {
+        "name": "ngewa"
+      },
+      {
+        "name": "komothai"
+      }
+    ]
+  },
+  {
+    "subCounty": "kiambu",
+    "wards": [
+      {
+        "name": "ting'ang'a"
+      },
+      {
+        "name": "ndumberi"
+      },
+      {
+        "name": "riabai"
+      },
+      {
+        "name": "township"
+      }
+    ]
+  },
+  {
+    "subCounty": "kiambaa",
+    "wards": [
+      {
+        "name": "cianda"
+      },
+      {
+        "name": "karuri"
+      },
+      {
+        "name": "ndenderu"
+      },
+      {
+        "name": "muchatha"
+      },
+      {
+        "name": "kihara"
+      }
+    ]
+  },
+  {
+    "subCounty": "kabete",
+    "wards": [
+      {
+        "name": "gitaru"
+      },
+      {
+        "name": "muguga"
+      },
+      {
+        "name": "nyadhuna"
+      },
+      {
+        "name": "kabete"
+      },
+      {
+        "name": "uthiru"
+      }
+    ]
+  },
+  {
+    "subCounty": "kikuyu",
+    "wards": [
+      {
+        "name": "karai"
+      },
+      {
+        "name": "nachu"
+      },
+      {
+        "name": "sigona"
+      },
+      {
+        "name": "kikuyu"
+      },
+      {
+        "name": "kinoo"
+      }
+    ]
+  },
+  {
+    "subCounty": "limuru",
+    "wards": [
+      {
+        "name": "bibirioni"
+      },
+      {
+        "name": "limuru central"
+      },
+      {
+        "name": "ndeiya"
+      },
+      {
+        "name": "limuru east"
+      },
+      {
+        "name": "ngecha tigoni"
+      }
+    ]
+  },
+  {
+    "subCounty": "lari",
+    "wards": [
+      {
+        "name": "kinale"
+      },
+      {
+        "name": "kijabe"
+      },
+      {
+        "name": "nyanduma"
+      },
+      {
+        "name": "kamburu"
+      },
+      {
+        "name": "lari kirenga"
+      }
+    ]
+  },
+  {
+    "subCounty": "turkana north",
+    "wards": [
+      {
+        "name": "kaeris"
+      },
+      {
+        "name": "lake zone"
+      },
+      {
+        "name": "lapur"
+      },
+      {
+        "name": "kaaleng kaikor"
+      },
+      {
+        "name": "kibish"
+      },
+      {
+        "name": "nakalale"
+      }
+    ]
+  },
+  {
+    "subCounty": "turkana west",
+    "wards": [
+      {
+        "name": "kakuma"
+      },
+      {
+        "name": "lopur"
+      },
+      {
+        "name": "letea"
+      },
+      {
+        "name": "songot"
+      },
+      {
+        "name": "kalobeyei"
+      },
+      {
+        "name": "lokichoggio"
+      },
+      {
+        "name": "nanaam"
+      }
+    ]
+  },
+  {
+    "subCounty": "turkana central",
+    "wards": [
+      {
+        "name": "kerio delta"
+      },
+      {
+        "name": "kang'atotha"
+      },
+      {
+        "name": "kalokol"
+      },
+      {
+        "name": "lodwar township"
+      },
+      {
+        "name": "kanamkemer"
+      }
+    ]
+  },
+  {
+    "subCounty": "loima",
+    "wards": [
+      {
+        "name": "kotaruk lobei"
+      },
+      {
+        "name": "turkwel"
+      },
+      {
+        "name": "loima"
+      },
+      {
+        "name": "lokiriama lorengippi"
+      }
+    ]
+  },
+  {
+    "subCounty": "turkana south",
+    "wards": [
+      {
+        "name": "kaputir"
+      },
+      {
+        "name": "katilu"
+      },
+      {
+        "name": "lobokat"
+      },
+      {
+        "name": "kalapata"
+      },
+      {
+        "name": "lokichar"
+      }
+    ]
+  },
+  {
+    "subCounty": "turkana east",
+    "wards": [
+      {
+        "name": "kapedo napeitom"
+      },
+      {
+        "name": "katilia"
+      },
+      {
+        "name": "lokori kochodin"
+      }
+    ]
+  },
+  {
+    "subCounty": "kapenguria",
+    "wards": [
+      {
+        "name": "riwo"
+      },
+      {
+        "name": "kapenguria"
+      },
+      {
+        "name": "mnagei"
+      },
+      {
+        "name": "siyoi"
+      },
+      {
+        "name": "endugh"
+      },
+      {
+        "name": "sook"
+      }
+    ]
+  },
+  {
+    "subCounty": "sigor",
+    "wards": [
+      {
+        "name": "sekerr"
+      },
+      {
+        "name": "masool"
+      },
+      {
+        "name": "lomut"
+      },
+      {
+        "name": "weiwei"
+      }
+    ]
+  },
+  {
+    "subCounty": "kacheliba",
+    "wards": [
+      {
+        "name": "suam"
+      },
+      {
+        "name": "kodich"
+      },
+      {
+        "name": "kapckok"
+      },
+      {
+        "name": "kasei"
+      },
+      {
+        "name": "kiwawa"
+      },
+      {
+        "name": "alale"
+      }
+    ]
+  },
+  {
+    "subCounty": "pokot south",
+    "wards": [
+      {
+        "name": "chepareria"
+      },
+      {
+        "name": "batei"
+      },
+      {
+        "name": "lelan"
+      },
+      {
+        "name": "tapach"
+      }
+    ]
+  },
+  {
+    "subCounty": "samburu west",
+    "wards": [
+      {
+        "name": "lodokejek"
+      },
+      {
+        "name": "suguta marmar"
+      },
+      {
+        "name": "maralal"
+      },
+      {
+        "name": "loosuk"
+      },
+      {
+        "name": "poro"
+      }
+    ]
+  },
+  {
+    "subCounty": "samburu north",
+    "wards": [
+      {
+        "name": "el-barta"
+      },
+      {
+        "name": "nachola"
+      },
+      {
+        "name": "ndoto"
+      },
+      {
+        "name": "nyiro"
+      },
+      {
+        "name": "angata nanyokie"
+      },
+      {
+        "name": "baawa"
+      }
+    ]
+  },
+  {
+    "subCounty": "samburu east",
+    "wards": [
+      {
+        "name": "waso"
+      },
+      {
+        "name": "wamba west"
+      },
+      {
+        "name": "wamba east"
+      },
+      {
+        "name": "wamba north"
+      }
+    ]
+  },
+  {
+    "subCounty": "kwanza",
+    "wards": [
+      {
+        "name": "kapomboi"
+      },
+      {
+        "name": "kwanza"
+      },
+      {
+        "name": "keiyo"
+      },
+      {
+        "name": "bidii"
+      }
+    ]
+  },
+  {
+    "subCounty": "endebess",
+    "wards": [
+      {
+        "name": "chepchoina"
+      },
+      {
+        "name": "endebess"
+      },
+      {
+        "name": "matumbei"
+      }
+    ]
+  },
+  {
+    "subCounty": "saboti",
+    "wards": [
+      {
+        "name": "kinyoro"
+      },
+      {
+        "name": "matisi"
+      },
+      {
+        "name": "tuwani"
+      },
+      {
+        "name": "saboti"
+      },
+      {
+        "name": "machewa"
+      }
+    ]
+  },
+  {
+    "subCounty": "kiminini",
+    "wards": [
+      {
+        "name": "kiminini"
+      },
+      {
+        "name": "waitaluk"
+      },
+      {
+        "name": "sirende"
+      },
+      {
+        "name": "hospital"
+      },
+      {
+        "name": "sikhendu"
+      },
+      {
+        "name": "nabiswa"
+      }
+    ]
+  },
+  {
+    "subCounty": "cherangany",
+    "wards": [
+      {
+        "name": "sinyerere"
+      },
+      {
+        "name": "makutano"
+      },
+      {
+        "name": "kaplamai"
+      },
+      {
+        "name": "motosiet"
+      },
+      {
+        "name": "cherangany suwerwa"
+      },
+      {
+        "name": "chepsiro kiptoror"
+      },
+      {
+        "name": "sitatunga"
+      }
+    ]
+  },
+  {
+    "subCounty": "soy",
+    "wards": [
+      {
+        "name": "moi's bridge"
+      },
+      {
+        "name": "kapkures"
+      },
+      {
+        "name": "ziwa"
+      },
+      {
+        "name": "segero barsombe"
+      },
+      {
+        "name": "kipsomba"
+      },
+      {
+        "name": "soy"
+      },
+      {
+        "name": "kuinet kapsuswa"
+      }
+    ]
+  },
+  {
+    "subCounty": "turbo",
+    "wards": [
+      {
+        "name": "ngenyilel"
+      },
+      {
+        "name": "tapsagoi"
+      },
+      {
+        "name": "kamagut"
+      },
+      {
+        "name": "kiplombe"
+      },
+      {
+        "name": "kapsaos"
+      },
+      {
+        "name": "huruma"
+      }
+    ]
+  },
+  {
+    "subCounty": "moiben",
+    "wards": [
+      {
+        "name": "tembelio"
+      },
+      {
+        "name": "sergoit"
+      },
+      {
+        "name": "karuna meibeki"
+      },
+      {
+        "name": "moiben"
+      },
+      {
+        "name": "kimumu"
+      }
+    ]
+  },
+  {
+    "subCounty": "ainabkoi",
+    "wards": [
+      {
+        "name": "kapsoya"
+      },
+      {
+        "name": "kaptagat"
+      },
+      {
+        "name": "ainabkoi olare"
+      }
+    ]
+  },
+  {
+    "subCounty": "kapseret",
+    "wards": [
+      {
+        "name": "simat kapseret"
+      },
+      {
+        "name": "kipkenyo"
+      },
+      {
+        "name": "ngeria"
+      },
+      {
+        "name": "megun"
+      },
+      {
+        "name": "langas"
+      }
+    ]
+  },
+  {
+    "subCounty": "kesses",
+    "wards": [
+      {
+        "name": "racecourse"
+      },
+      {
+        "name": "cheptiret kipchamo"
+      },
+      {
+        "name": "tulwet chuiyat"
+      },
+      {
+        "name": "tarakwa"
+      }
+    ]
+  },
+  {
+    "subCounty": "marakwet east",
+    "wards": [
+      {
+        "name": "kapyego"
+      },
+      {
+        "name": "sambirir"
+      },
+      {
+        "name": "endo"
+      },
+      {
+        "name": "embobut embulot"
+      }
+    ]
+  },
+  {
+    "subCounty": "marakwet west",
+    "wards": [
+      {
+        "name": "lelan"
+      },
+      {
+        "name": "sengwer"
+      },
+      {
+        "name": "cherang'any chebororwa"
+      },
+      {
+        "name": "moiben kuserwo"
+      },
+      {
+        "name": "kapsowar"
+      },
+      {
+        "name": "arror"
+      }
+    ]
+  },
+  {
+    "subCounty": "keiyo north",
+    "wards": [
+      {
+        "name": "emsoo"
+      },
+      {
+        "name": "kamariny"
+      },
+      {
+        "name": "kapchemutwa"
+      },
+      {
+        "name": "tambach"
+      }
+    ]
+  },
+  {
+    "subCounty": "keiyo south",
+    "wards": [
+      {
+        "name": "kaptarakwa"
+      },
+      {
+        "name": "chepkorio"
+      },
+      {
+        "name": "soy north"
+      },
+      {
+        "name": "soy south"
+      },
+      {
+        "name": "kabiemit"
+      },
+      {
+        "name": "metkei"
+      }
+    ]
+  },
+  {
+    "subCounty": "tinderet",
+    "wards": [
+      {
+        "name": "songhor soba"
+      },
+      {
+        "name": "tindiret"
+      },
+      {
+        "name": "chemelil chemase"
+      },
+      {
+        "name": "kapsimotwo"
+      }
+    ]
+  },
+  {
+    "subCounty": "aldai",
+    "wards": [
+      {
+        "name": "kabwareng"
+      },
+      {
+        "name": "terik"
+      },
+      {
+        "name": "kemeloi-maraba"
+      },
+      {
+        "name": "kobujoi"
+      },
+      {
+        "name": "kaptumo-kaboi"
+      },
+      {
+        "name": "koyo-ndurio"
+      }
+    ]
+  },
+  {
+    "subCounty": "nandi hills",
+    "wards": [
+      {
+        "name": "nandi hills"
+      },
+      {
+        "name": "chepkunyuk"
+      },
+      {
+        "name": "ol'lessos"
+      },
+      {
+        "name": "kapchorua"
+      }
+    ]
+  },
+  {
+    "subCounty": "chesumei",
+    "wards": [
+      {
+        "name": "chemundu kapng'etuny"
+      },
+      {
+        "name": "kosirai"
+      },
+      {
+        "name": "lelmokwo ngechek"
+      },
+      {
+        "name": "kaptel kamoiywo"
+      },
+      {
+        "name": "kiptuya"
+      }
+    ]
+  },
+  {
+    "subCounty": "emgwen",
+    "wards": [
+      {
+        "name": "chepkumia"
+      },
+      {
+        "name": "kapkangani"
+      },
+      {
+        "name": "kapsabet"
+      },
+      {
+        "name": "kilibwoni"
+      }
+    ]
+  },
+  {
+    "subCounty": "mosop",
+    "wards": [
+      {
+        "name": "chepterwai"
+      },
+      {
+        "name": "kipkaren"
+      },
+      {
+        "name": "kurgung surungai"
+      },
+      {
+        "name": "kabiyet"
+      },
+      {
+        "name": "ndalat"
+      },
+      {
+        "name": "kabisaga"
+      },
+      {
+        "name": "sangalo kebulonik"
+      }
+    ]
+  },
+  {
+    "subCounty": "tiaty",
+    "wards": [
+      {
+        "name": "tirioko"
+      },
+      {
+        "name": "kolowa"
+      },
+      {
+        "name": "ribkwo"
+      },
+      {
+        "name": "silale"
+      },
+      {
+        "name": "loiyamorock"
+      },
+      {
+        "name": "tangulbei korossi"
+      },
+      {
+        "name": "churo amaya"
+      }
+    ]
+  },
+  {
+    "subCounty": "baringo north",
+    "wards": [
+      {
+        "name": "barwessa"
+      },
+      {
+        "name": "kabartonjo"
+      },
+      {
+        "name": "saimo kipsaraman"
+      },
+      {
+        "name": "saimo soi"
+      },
+      {
+        "name": "bartabwa"
+      }
+    ]
+  },
+  {
+    "subCounty": "baringo central",
+    "wards": [
+      {
+        "name": "kabarnet"
+      },
+      {
+        "name": "sacho"
+      },
+      {
+        "name": "tenges"
+      },
+      {
+        "name": "ewalel chapchap"
+      },
+      {
+        "name": "kapropita"
+      }
+    ]
+  },
+  {
+    "subCounty": "baringo south",
+    "wards": [
+      {
+        "name": "marigat"
+      },
+      {
+        "name": "ilchamus"
+      },
+      {
+        "name": "mochongoi"
+      },
+      {
+        "name": "mukutani"
+      }
+    ]
+  },
+  {
+    "subCounty": "mogotio",
+    "wards": [
+      {
+        "name": "mogotio"
+      },
+      {
+        "name": "emining"
+      },
+      {
+        "name": "kisanana"
+      }
+    ]
+  },
+  {
+    "subCounty": "eldama ravine",
+    "wards": [
+      {
+        "name": "lembus"
+      },
+      {
+        "name": "lembus kwen"
+      },
+      {
+        "name": "ravine"
+      },
+      {
+        "name": "mumberes maji mazuri"
+      },
+      {
+        "name": "lembus perkerra"
+      },
+      {
+        "name": "koibatek"
+      }
+    ]
+  },
+  {
+    "subCounty": "laikipia west",
+    "wards": [
+      {
+        "name": "olmoran"
+      },
+      {
+        "name": "rumuruti township"
+      },
+      {
+        "name": "kinamba"
+      },
+      {
+        "name": "marmanet"
+      },
+      {
+        "name": "igwamiti"
+      },
+      {
+        "name": "salama"
+      }
+    ]
+  },
+  {
+    "subCounty": "laikipia east",
+    "wards": [
+      {
+        "name": "ngobit"
+      },
+      {
+        "name": "tigithi"
+      },
+      {
+        "name": "thingithu"
+      },
+      {
+        "name": "nanyuki"
+      },
+      {
+        "name": "umande"
+      }
+    ]
+  },
+  {
+    "subCounty": "laikipia north",
+    "wards": [
+      {
+        "name": "sosian"
+      },
+      {
+        "name": "segera"
+      },
+      {
+        "name": "mukogondo west"
+      },
+      {
+        "name": "mukogondo east"
+      }
+    ]
+  },
+  {
+    "subCounty": "molo",
+    "wards": [
+      {
+        "name": "mariashoni"
+      },
+      {
+        "name": "elburgon"
+      },
+      {
+        "name": "turi"
+      },
+      {
+        "name": "molo"
+      }
+    ]
+  },
+  {
+    "subCounty": "njoro",
+    "wards": [
+      {
+        "name": "maunarok"
+      },
+      {
+        "name": "mauche"
+      },
+      {
+        "name": "kihingo"
+      },
+      {
+        "name": "nessuit"
+      },
+      {
+        "name": "lare"
+      },
+      {
+        "name": "njoro"
+      }
+    ]
+  },
+  {
+    "subCounty": "naivasha",
+    "wards": [
+      {
+        "name": "biashara"
+      },
+      {
+        "name": "hells gate"
+      },
+      {
+        "name": "lakeview"
+      },
+      {
+        "name": "maai-mahiu"
+      },
+      {
+        "name": "maiella"
+      },
+      {
+        "name": "olkaria"
+      },
+      {
+        "name": "naivasha east"
+      },
+      {
+        "name": "viwandani"
+      }
+    ]
+  },
+  {
+    "subCounty": "gilgil",
+    "wards": [
+      {
+        "name": "gilgil"
+      },
+      {
+        "name": "elementaita"
+      },
+      {
+        "name": "mbaruk eburu"
+      },
+      {
+        "name": "malewa west"
+      },
+      {
+        "name": "murindati"
+      }
+    ]
+  },
+  {
+    "subCounty": "kuresoi south",
+    "wards": [
+      {
+        "name": "amalo"
+      },
+      {
+        "name": "keringet"
+      },
+      {
+        "name": "kiptagich"
+      },
+      {
+        "name": "tinet"
+      }
+    ]
+  },
+  {
+    "subCounty": "kuresoi north",
+    "wards": [
+      {
+        "name": "kiptororo"
+      },
+      {
+        "name": "nyota"
+      },
+      {
+        "name": "sirikwa"
+      },
+      {
+        "name": "kamara"
+      }
+    ]
+  },
+  {
+    "subCounty": "subukia",
+    "wards": [
+      {
+        "name": "subukia"
+      },
+      {
+        "name": "waseges"
+      },
+      {
+        "name": "kabazi"
+      }
+    ]
+  },
+  {
+    "subCounty": "rongai",
+    "wards": [
+      {
+        "name": "menengai west"
+      },
+      {
+        "name": "soin"
+      },
+      {
+        "name": "visoi"
+      },
+      {
+        "name": "mosop"
+      },
+      {
+        "name": "solai"
+      }
+    ]
+  },
+  {
+    "subCounty": "bahati",
+    "wards": [
+      {
+        "name": "dundori"
+      },
+      {
+        "name": "kabatini"
+      },
+      {
+        "name": "kiamaina"
+      },
+      {
+        "name": "lanet umoja"
+      },
+      {
+        "name": "bahati"
+      }
+    ]
+  },
+  {
+    "subCounty": "nakuru town west",
+    "wards": [
+      {
+        "name": "barut"
+      },
+      {
+        "name": "london"
+      },
+      {
+        "name": "kaptembwo"
+      },
+      {
+        "name": "kapkures"
+      },
+      {
+        "name": "rhoda"
+      },
+      {
+        "name": "shaabab"
+      }
+    ]
+  },
+  {
+    "subCounty": "nakuru town east",
+    "wards": [
+      {
+        "name": "biashara"
+      },
+      {
+        "name": "kivumbini"
+      },
+      {
+        "name": "flamingo"
+      },
+      {
+        "name": "menengai"
+      },
+      {
+        "name": "nakuru east"
+      }
+    ]
+  },
+  {
+    "subCounty": "kilgoris",
+    "wards": [
+      {
+        "name": "kilgoris central"
+      },
+      {
+        "name": "keyian"
+      },
+      {
+        "name": "angata barikoi"
+      },
+      {
+        "name": "shankoe"
+      },
+      {
+        "name": "kimintet"
+      },
+      {
+        "name": "lolgorian"
+      }
+    ]
+  },
+  {
+    "subCounty": "emurua dikirr",
+    "wards": [
+      {
+        "name": "ilkerin"
+      },
+      {
+        "name": "ololmasani"
+      },
+      {
+        "name": "mogondo"
+      },
+      {
+        "name": "kapsasian"
+      }
+    ]
+  },
+  {
+    "subCounty": "narok north",
+    "wards": [
+      {
+        "name": "olpusimoru"
+      },
+      {
+        "name": "olokurto"
+      },
+      {
+        "name": "narok town"
+      },
+      {
+        "name": "nkareta"
+      },
+      {
+        "name": "olorropil"
+      },
+      {
+        "name": "melili"
+      }
+    ]
+  },
+  {
+    "subCounty": "narok east",
+    "wards": [
+      {
+        "name": "mosiro"
+      },
+      {
+        "name": "ildamat"
+      },
+      {
+        "name": "keekonyokie"
+      },
+      {
+        "name": "suswa"
+      }
+    ]
+  },
+  {
+    "subCounty": "narok south",
+    "wards": [
+      {
+        "name": "majimoto naroosura"
+      },
+      {
+        "name": "ololulung'a"
+      },
+      {
+        "name": "melelo"
+      },
+      {
+        "name": "loita"
+      },
+      {
+        "name": "sogoo"
+      },
+      {
+        "name": "sagamian"
+      }
+    ]
+  },
+  {
+    "subCounty": "narok west",
+    "wards": [
+      {
+        "name": "ilmotiok"
+      },
+      {
+        "name": "mara"
+      },
+      {
+        "name": "siana"
+      },
+      {
+        "name": "naikarra"
+      }
+    ]
+  },
+  {
+    "subCounty": "kajiado north",
+    "wards": [
+      {
+        "name": "olkeri"
+      },
+      {
+        "name": "ongata rongai"
+      },
+      {
+        "name": "nkaimurunya"
+      },
+      {
+        "name": "oloolua"
+      },
+      {
+        "name": "ngong"
+      }
+    ]
+  },
+  {
+    "subCounty": "kajiado central",
+    "wards": [
+      {
+        "name": "purko"
+      },
+      {
+        "name": "ildamat"
+      },
+      {
+        "name": "dalalekutuk"
+      },
+      {
+        "name": "matapato north"
+      },
+      {
+        "name": "matapato south"
+      }
+    ]
+  },
+  {
+    "subCounty": "kajiado east",
+    "wards": [
+      {
+        "name": "kaputiei north"
+      },
+      {
+        "name": "kitengela"
+      },
+      {
+        "name": "oloosirkon sholinke"
+      },
+      {
+        "name": "kenyawa-poka"
+      },
+      {
+        "name": "imaroro"
+      }
+    ]
+  },
+  {
+    "subCounty": "kajiado west",
+    "wards": [
+      {
+        "name": "keekonyokie"
+      },
+      {
+        "name": "iloodokilani"
+      },
+      {
+        "name": "magadi"
+      },
+      {
+        "name": "ewuaso oonkidong'i"
+      },
+      {
+        "name": "mosiro"
+      }
+    ]
+  },
+  {
+    "subCounty": "kajiado south",
+    "wards": [
+      {
+        "name": "entonet lenkisim"
+      },
+      {
+        "name": "mbirikani eselenkei"
+      },
+      {
+        "name": "kuku"
+      },
+      {
+        "name": "rombo"
+      },
+      {
+        "name": "kimana"
+      }
+    ]
+  },
+  {
+    "subCounty": "kipkelion east",
+    "wards": [
+      {
+        "name": "londiani"
+      },
+      {
+        "name": "kedowa kimugul"
+      },
+      {
+        "name": "chepseon"
+      },
+      {
+        "name": "tendeno sorget"
+      }
+    ]
+  },
+  {
+    "subCounty": "kipkelion west",
+    "wards": [
+      {
+        "name": "kunyak"
+      },
+      {
+        "name": "kamasian"
+      },
+      {
+        "name": "kipkelion"
+      },
+      {
+        "name": "chilchila"
+      }
+    ]
+  },
+  {
+    "subCounty": "ainamoi",
+    "wards": [
+      {
+        "name": "kapsoit"
+      },
+      {
+        "name": "ainamoi"
+      },
+      {
+        "name": "kapkugerwet"
+      },
+      {
+        "name": "kipchebor"
+      },
+      {
+        "name": "kipchimchim"
+      },
+      {
+        "name": "kapsaos"
+      }
+    ]
+  },
+  {
+    "subCounty": "bureti",
+    "wards": [
+      {
+        "name": "kisiara"
+      },
+      {
+        "name": "tebesonik"
+      },
+      {
+        "name": "cheboin"
+      },
+      {
+        "name": "chemosot"
+      },
+      {
+        "name": "litein"
+      },
+      {
+        "name": "cheplanget"
+      },
+      {
+        "name": "kapkatet"
+      }
+    ]
+  },
+  {
+    "subCounty": "belgut",
+    "wards": [
+      {
+        "name": "waldai"
+      },
+      {
+        "name": "kabianga"
+      },
+      {
+        "name": "cheptororiet seretut"
+      },
+      {
+        "name": "chaik"
+      },
+      {
+        "name": "kapsuser"
+      }
+    ]
+  },
+  {
+    "subCounty": "sigowet soin",
+    "wards": [
+      {
+        "name": "sigowet"
+      },
+      {
+        "name": "kaplelartet"
+      },
+      {
+        "name": "soliat"
+      },
+      {
+        "name": "soin"
+      }
+    ]
+  },
+  {
+    "subCounty": "sotik",
+    "wards": [
+      {
+        "name": "ndanai abosi"
+      },
+      {
+        "name": "chemagel"
+      },
+      {
+        "name": "kipsonoi"
+      },
+      {
+        "name": "kapletundo"
+      },
+      {
+        "name": "rongena manaret"
+      }
+    ]
+  },
+  {
+    "subCounty": "chepalungu",
+    "wards": [
+      {
+        "name": "kong'asis"
+      },
+      {
+        "name": "nyangores"
+      },
+      {
+        "name": "sigor"
+      },
+      {
+        "name": "chebunyo"
+      },
+      {
+        "name": "siongiroi"
+      }
+    ]
+  },
+  {
+    "subCounty": "bomet east",
+    "wards": [
+      {
+        "name": "merigi"
+      },
+      {
+        "name": "kembu"
+      },
+      {
+        "name": "longisa"
+      },
+      {
+        "name": "kipreres"
+      },
+      {
+        "name": "chemaner"
+      }
+    ]
+  },
+  {
+    "subCounty": "bomet central",
+    "wards": [
+      {
+        "name": "silibwet township"
+      },
+      {
+        "name": "ndaraweta"
+      },
+      {
+        "name": "singorwet"
+      },
+      {
+        "name": "chesoen"
+      },
+      {
+        "name": "mutarakwa"
+      }
+    ]
+  },
+  {
+    "subCounty": "konoin",
+    "wards": [
+      {
+        "name": "chepchabas"
+      },
+      {
+        "name": "kimulot"
+      },
+      {
+        "name": "mogogosiek"
+      },
+      {
+        "name": "boito"
+      },
+      {
+        "name": "embomos"
+      }
+    ]
+  },
+  {
+    "subCounty": "lugari",
+    "wards": [
+      {
+        "name": "mautuma"
+      },
+      {
+        "name": "lugari"
+      },
+      {
+        "name": "lumakanda"
+      },
+      {
+        "name": "chekalini"
+      },
+      {
+        "name": "chevaywa"
+      },
+      {
+        "name": "lwandeti"
+      }
+    ]
+  },
+  {
+    "subCounty": "likuyani",
+    "wards": [
+      {
+        "name": "likuyani"
+      },
+      {
+        "name": "sango"
+      },
+      {
+        "name": "kongoni"
+      },
+      {
+        "name": "nzoia"
+      },
+      {
+        "name": "sinoko"
+      }
+    ]
+  },
+  {
+    "subCounty": "malava",
+    "wards": [
+      {
+        "name": "west kabras"
+      },
+      {
+        "name": "chemuche"
+      },
+      {
+        "name": "east kabras"
+      },
+      {
+        "name": "butali chegulo"
+      },
+      {
+        "name": "manda-shivanga"
+      },
+      {
+        "name": "shirugu-mugai"
+      },
+      {
+        "name": "south kabras"
+      }
+    ]
+  },
+  {
+    "subCounty": "lurambi",
+    "wards": [
+      {
+        "name": "butsotso east"
+      },
+      {
+        "name": "butsotso south"
+      },
+      {
+        "name": "butsotso central"
+      },
+      {
+        "name": "sheywe"
+      },
+      {
+        "name": "mahiakalo"
+      },
+      {
+        "name": "shirere"
+      }
+    ]
+  },
+  {
+    "subCounty": "navakholo",
+    "wards": [
+      {
+        "name": "ingostse-mathia"
+      },
+      {
+        "name": "shinoyi-shikomari-"
+      },
+      {
+        "name": "bunyala west"
+      },
+      {
+        "name": "bunyala east"
+      },
+      {
+        "name": "bunyala central"
+      }
+    ]
+  },
+  {
+    "subCounty": "mumias west",
+    "wards": [
+      {
+        "name": "mumias central"
+      },
+      {
+        "name": "mumias north"
+      },
+      {
+        "name": "etenje"
+      },
+      {
+        "name": "musanda"
+      }
+    ]
+  },
+  {
+    "subCounty": "mumias east",
+    "wards": [
+      {
+        "name": "lubinu lusheya"
+      },
+      {
+        "name": "isongo makunga malaha"
+      },
+      {
+        "name": "east wanga"
+      }
+    ]
+  },
+  {
+    "subCounty": "matungu",
+    "wards": [
+      {
+        "name": "koyonzo"
+      },
+      {
+        "name": "kholera"
+      },
+      {
+        "name": "khalaba"
+      },
+      {
+        "name": "mayoni"
+      },
+      {
+        "name": "namamali"
+      }
+    ]
+  },
+  {
+    "subCounty": "butere",
+    "wards": [
+      {
+        "name": "marama west"
+      },
+      {
+        "name": "marama central"
+      },
+      {
+        "name": "marenyo - shianda"
+      },
+      {
+        "name": "marama north"
+      },
+      {
+        "name": "marama south"
+      }
+    ]
+  },
+  {
+    "subCounty": "khwisero",
+    "wards": [
+      {
+        "name": "kisa north"
+      },
+      {
+        "name": "kisa east"
+      },
+      {
+        "name": "kisa west"
+      },
+      {
+        "name": "kisa central"
+      }
+    ]
+  },
+  {
+    "subCounty": "shinyalu",
+    "wards": [
+      {
+        "name": "isukha north"
+      },
+      {
+        "name": "murhanda"
+      },
+      {
+        "name": "isukha central"
+      },
+      {
+        "name": "isukha south"
+      },
+      {
+        "name": "isukha east"
+      },
+      {
+        "name": "isukha west"
+      }
+    ]
+  },
+  {
+    "subCounty": "ikolomani",
+    "wards": [
+      {
+        "name": "idakho south"
+      },
+      {
+        "name": "idakho east"
+      },
+      {
+        "name": "idakho north"
+      },
+      {
+        "name": "idakho central"
+      }
+    ]
+  },
+  {
+    "subCounty": "vihiga",
+    "wards": [
+      {
+        "name": "lugaga-wamuluma"
+      },
+      {
+        "name": "south maragoli"
+      },
+      {
+        "name": "central maragoli"
+      },
+      {
+        "name": "mungoma"
+      }
+    ]
+  },
+  {
+    "subCounty": "sabatia",
+    "wards": [
+      {
+        "name": "lyaduywa izava"
+      },
+      {
+        "name": "west sabatia"
+      },
+      {
+        "name": "chavakali"
+      },
+      {
+        "name": "north maragoli"
+      },
+      {
+        "name": "wodanga"
+      },
+      {
+        "name": "busali"
+      }
+    ]
+  },
+  {
+    "subCounty": "hamisi",
+    "wards": [
+      {
+        "name": "shiru"
+      },
+      {
+        "name": "muhudu"
+      },
+      {
+        "name": "shamakhokho"
+      },
+      {
+        "name": "gisambai"
+      },
+      {
+        "name": "banja"
+      },
+      {
+        "name": "tambua"
+      },
+      {
+        "name": "jepkoyai"
+      }
+    ]
+  },
+  {
+    "subCounty": "luanda",
+    "wards": [
+      {
+        "name": "luanda township"
+      },
+      {
+        "name": "wemilabi"
+      },
+      {
+        "name": "mwibona"
+      },
+      {
+        "name": "luanda south"
+      },
+      {
+        "name": "emabungo"
+      }
+    ]
+  },
+  {
+    "subCounty": "emuhaya",
+    "wards": [
+      {
+        "name": "north east bunyore"
+      },
+      {
+        "name": "central bunyore"
+      },
+      {
+        "name": "west bunyore"
+      }
+    ]
+  },
+  {
+    "subCounty": "mt.elgon",
+    "wards": [
+      {
+        "name": "cheptais"
+      },
+      {
+        "name": "chesikaki"
+      },
+      {
+        "name": "chepyuk"
+      },
+      {
+        "name": "kapkateny"
+      },
+      {
+        "name": "kaptama"
+      },
+      {
+        "name": "elgon"
+      }
+    ]
+  },
+  {
+    "subCounty": "sirisia",
+    "wards": [
+      {
+        "name": "namwela"
+      },
+      {
+        "name": "malakisi south kulisiru"
+      },
+      {
+        "name": "lwandanyi"
+      }
+    ]
+  },
+  {
+    "subCounty": "kabuchai",
+    "wards": [
+      {
+        "name": "kabuchai chwele"
+      },
+      {
+        "name": "west nalondo"
+      },
+      {
+        "name": "bwake luuya"
+      },
+      {
+        "name": "mukuyuni"
+      }
+    ]
+  },
+  {
+    "subCounty": "bumula",
+    "wards": [
+      {
+        "name": "south bukusu"
+      },
+      {
+        "name": "bumula"
+      },
+      {
+        "name": "khasoko"
+      },
+      {
+        "name": "kabula"
+      },
+      {
+        "name": "kimaeti"
+      },
+      {
+        "name": "west bukusu"
+      },
+      {
+        "name": "siboti"
+      }
+    ]
+  },
+  {
+    "subCounty": "kanduyi",
+    "wards": [
+      {
+        "name": "bukembe west"
+      },
+      {
+        "name": "bukembe east"
+      },
+      {
+        "name": "township"
+      },
+      {
+        "name": "khalaba"
+      },
+      {
+        "name": "musikoma"
+      },
+      {
+        "name": "east sang'alo"
+      },
+      {
+        "name": "marakaru tuuti"
+      },
+      {
+        "name": "sang'alo west"
+      }
+    ]
+  },
+  {
+    "subCounty": "webuye east",
+    "wards": [
+      {
+        "name": "mihuu"
+      },
+      {
+        "name": "ndivisi"
+      },
+      {
+        "name": "maraka"
+      }
+    ]
+  },
+  {
+    "subCounty": "webuye west",
+    "wards": [
+      {
+        "name": "misikhu"
+      },
+      {
+        "name": "sitikho"
+      },
+      {
+        "name": "matulo"
+      },
+      {
+        "name": "bokoli"
+      }
+    ]
+  },
+  {
+    "subCounty": "kimilili",
+    "wards": [
+      {
+        "name": "kimilili"
+      },
+      {
+        "name": "kibingei"
+      },
+      {
+        "name": "maeni"
+      },
+      {
+        "name": "kamukuywa"
+      }
+    ]
+  },
+  {
+    "subCounty": "tongaren",
+    "wards": [
+      {
+        "name": "mbakalo"
+      },
+      {
+        "name": "naitiri kabuyefwe"
+      },
+      {
+        "name": "milima"
+      },
+      {
+        "name": "ndalu tabani"
+      },
+      {
+        "name": "tongaren"
+      },
+      {
+        "name": "soysambu mitua"
+      }
+    ]
+  },
+  {
+    "subCounty": "teso north",
+    "wards": [
+      {
+        "name": "malaba central"
+      },
+      {
+        "name": "malaba north"
+      },
+      {
+        "name": "ang'urai south"
+      },
+      {
+        "name": "ang'urai north"
+      },
+      {
+        "name": "ang'urai east"
+      },
+      {
+        "name": "malaba south"
+      }
+    ]
+  },
+  {
+    "subCounty": "teso south",
+    "wards": [
+      {
+        "name": "ang'orom"
+      },
+      {
+        "name": "chakol south"
+      },
+      {
+        "name": "chakol north"
+      },
+      {
+        "name": "amukura west"
+      },
+      {
+        "name": "amukura east"
+      },
+      {
+        "name": "amukura central"
+      }
+    ]
+  },
+  {
+    "subCounty": "nambale",
+    "wards": [
+      {
+        "name": "nambale township"
+      },
+      {
+        "name": "bukhayo north waltsi"
+      },
+      {
+        "name": "bukhayo east"
+      },
+      {
+        "name": "bukhayo central"
+      }
+    ]
+  },
+  {
+    "subCounty": "matayos",
+    "wards": [
+      {
+        "name": "bukhayo west"
+      },
+      {
+        "name": "mayenje"
+      },
+      {
+        "name": "matayos south"
+      },
+      {
+        "name": "busibwabo"
+      },
+      {
+        "name": "burumba"
+      }
+    ]
+  },
+  {
+    "subCounty": "butula",
+    "wards": [
+      {
+        "name": "marachi west"
+      },
+      {
+        "name": "kingandole"
+      },
+      {
+        "name": "marachi central"
+      },
+      {
+        "name": "marachi east"
+      },
+      {
+        "name": "marachi north"
+      },
+      {
+        "name": "elugulu"
+      }
+    ]
+  },
+  {
+    "subCounty": "funyula",
+    "wards": [
+      {
+        "name": "namboboto nambuku"
+      },
+      {
+        "name": "nangina"
+      },
+      {
+        "name": "ageng'a nanguba"
+      },
+      {
+        "name": "bwiri"
+      }
+    ]
+  },
+  {
+    "subCounty": "budalangi",
+    "wards": [
+      {
+        "name": "bunyala central"
+      },
+      {
+        "name": "bunyala north"
+      },
+      {
+        "name": "bunyala west"
+      },
+      {
+        "name": "bunyala south"
+      }
+    ]
+  },
+  {
+    "subCounty": "ugenya",
+    "wards": [
+      {
+        "name": "west ugenya"
+      },
+      {
+        "name": "ukwala"
+      },
+      {
+        "name": "north ugenya"
+      },
+      {
+        "name": "east ugenya"
+      }
+    ]
+  },
+  {
+    "subCounty": "ugunja",
+    "wards": [
+      {
+        "name": "sidindi"
+      },
+      {
+        "name": "sigomere"
+      },
+      {
+        "name": "ugunja"
+      }
+    ]
+  },
+  {
+    "subCounty": "alego usonga",
+    "wards": [
+      {
+        "name": "usonga"
+      },
+      {
+        "name": "west alego"
+      },
+      {
+        "name": "central alego"
+      },
+      {
+        "name": "siaya township"
+      },
+      {
+        "name": "north alego"
+      },
+      {
+        "name": "south east alego"
+      }
+    ]
+  },
+  {
+    "subCounty": "gem",
+    "wards": [
+      {
+        "name": "north gem"
+      },
+      {
+        "name": "west gem"
+      },
+      {
+        "name": "central gem"
+      },
+      {
+        "name": "yala township"
+      },
+      {
+        "name": "east gem"
+      },
+      {
+        "name": "south gem"
+      }
+    ]
+  },
+  {
+    "subCounty": "bondo",
+    "wards": [
+      {
+        "name": "west yimbo"
+      },
+      {
+        "name": "central sakwa"
+      },
+      {
+        "name": "south sakwa"
+      },
+      {
+        "name": "yimbo east"
+      },
+      {
+        "name": "west sakwa"
+      },
+      {
+        "name": "north sakwa"
+      }
+    ]
+  },
+  {
+    "subCounty": "rarieda",
+    "wards": [
+      {
+        "name": "east asembo"
+      },
+      {
+        "name": "west asembo"
+      },
+      {
+        "name": "north uyoma"
+      },
+      {
+        "name": "south uyoma"
+      },
+      {
+        "name": "west uyoma"
+      }
+    ]
+  },
+  {
+    "subCounty": "kisumu east",
+    "wards": [
+      {
+        "name": "kajulu"
+      },
+      {
+        "name": "kolwa east"
+      },
+      {
+        "name": "manyatta 'b'"
+      },
+      {
+        "name": "nyalenda 'a'"
+      },
+      {
+        "name": "kolwa central"
+      }
+    ]
+  },
+  {
+    "subCounty": "kisumu west",
+    "wards": [
+      {
+        "name": "south west kisumu"
+      },
+      {
+        "name": "central kisumu"
+      },
+      {
+        "name": "kisumu north"
+      },
+      {
+        "name": "west kisumu"
+      },
+      {
+        "name": "north west kisumu"
+      }
+    ]
+  },
+  {
+    "subCounty": "kisumu central",
+    "wards": [
+      {
+        "name": "railways"
+      },
+      {
+        "name": "migosi"
+      },
+      {
+        "name": "shaurimoyo kaloleni"
+      },
+      {
+        "name": "market milimani"
+      },
+      {
+        "name": "kondele"
+      },
+      {
+        "name": "nyalenda b"
+      }
+    ]
+  },
+  {
+    "subCounty": "seme",
+    "wards": [
+      {
+        "name": "west seme"
+      },
+      {
+        "name": "central seme"
+      },
+      {
+        "name": "east seme"
+      },
+      {
+        "name": "north seme"
+      }
+    ]
+  },
+  {
+    "subCounty": "nyando",
+    "wards": [
+      {
+        "name": "east kano wawidhi"
+      },
+      {
+        "name": "awasi onjiko"
+      },
+      {
+        "name": "ahero"
+      },
+      {
+        "name": "kabonyo kanyagwal"
+      },
+      {
+        "name": "kobura"
+      }
+    ]
+  },
+  {
+    "subCounty": "muhoroni",
+    "wards": [
+      {
+        "name": "miwani"
+      },
+      {
+        "name": "ombeyi"
+      },
+      {
+        "name": "masogo nyang'oma"
+      },
+      {
+        "name": "chemelil"
+      },
+      {
+        "name": "muhoroni koru"
+      }
+    ]
+  },
+  {
+    "subCounty": "nyakach",
+    "wards": [
+      {
+        "name": "south west nyakach"
+      },
+      {
+        "name": "north nyakach"
+      },
+      {
+        "name": "central nyakach"
+      },
+      {
+        "name": "west nyakach"
+      },
+      {
+        "name": "south east nyakach"
+      }
+    ]
+  },
+  {
+    "subCounty": "kasipul",
+    "wards": [
+      {
+        "name": "west kasipul"
+      },
+      {
+        "name": "south kasipul"
+      },
+      {
+        "name": "central kasipul"
+      },
+      {
+        "name": "east kamagak"
+      },
+      {
+        "name": "west kamagak"
+      }
+    ]
+  },
+  {
+    "subCounty": "kabondo kasipul",
+    "wards": [
+      {
+        "name": "kabondo east"
+      },
+      {
+        "name": "kabondo west"
+      },
+      {
+        "name": "kokwanyo kakelo"
+      },
+      {
+        "name": "kojwach"
+      }
+    ]
+  },
+  {
+    "subCounty": "karachuonyo",
+    "wards": [
+      {
+        "name": "west karachuonyo"
+      },
+      {
+        "name": "north karachuonyo"
+      },
+      {
+        "name": "central"
+      },
+      {
+        "name": "kanyaluo"
+      },
+      {
+        "name": "kibiri"
+      },
+      {
+        "name": "wangchieng"
+      },
+      {
+        "name": "kendu bay town"
+      }
+    ]
+  },
+  {
+    "subCounty": "rangwe",
+    "wards": [
+      {
+        "name": "west gem"
+      },
+      {
+        "name": "east gem"
+      },
+      {
+        "name": "kagan"
+      },
+      {
+        "name": "kochia"
+      }
+    ]
+  },
+  {
+    "subCounty": "homa bay town",
+    "wards": [
+      {
+        "name": "homa bay central"
+      },
+      {
+        "name": "homa bay arujo"
+      },
+      {
+        "name": "homa bay west"
+      },
+      {
+        "name": "homa bay east"
+      }
+    ]
+  },
+  {
+    "subCounty": "ndhiwa",
+    "wards": [
+      {
+        "name": "kwabwai"
+      },
+      {
+        "name": "kanyadoto"
+      },
+      {
+        "name": "kanyikela"
+      },
+      {
+        "name": "north kabuoch"
+      },
+      {
+        "name": "kabuoch south pala"
+      },
+      {
+        "name": "kanyamwa kologi"
+      },
+      {
+        "name": "kanyamwa kosewe"
+      }
+    ]
+  },
+  {
+    "subCounty": "mbita",
+    "wards": [
+      {
+        "name": "mfangano island"
+      },
+      {
+        "name": "rusinga island"
+      },
+      {
+        "name": "kasgunga"
+      },
+      {
+        "name": "gembe"
+      },
+      {
+        "name": "lambwe"
+      }
+    ]
+  },
+  {
+    "subCounty": "suba",
+    "wards": [
+      {
+        "name": "gwassi south"
+      },
+      {
+        "name": "gwassi north"
+      },
+      {
+        "name": "kaksingri west"
+      },
+      {
+        "name": "ruma kaksingri east"
+      }
+    ]
+  },
+  {
+    "subCounty": "rongo",
+    "wards": [
+      {
+        "name": "north kamagambo"
+      },
+      {
+        "name": "central kamagambo"
+      },
+      {
+        "name": "east kamagambo"
+      },
+      {
+        "name": "south kamagambo"
+      }
+    ]
+  },
+  {
+    "subCounty": "awendo",
+    "wards": [
+      {
+        "name": "north sakwa"
+      },
+      {
+        "name": "south sakwa"
+      },
+      {
+        "name": "west sakwa"
+      },
+      {
+        "name": "central sakwa"
+      }
+    ]
+  },
+  {
+    "subCounty": "suna east",
+    "wards": [
+      {
+        "name": "god jope"
+      },
+      {
+        "name": "suna central"
+      },
+      {
+        "name": "kakrao"
+      },
+      {
+        "name": "kwa"
+      }
+    ]
+  },
+  {
+    "subCounty": "suna west",
+    "wards": [
+      {
+        "name": "wiga"
+      },
+      {
+        "name": "wasweta ii"
+      },
+      {
+        "name": "ragana-oruba"
+      },
+      {
+        "name": "wasimbete"
+      }
+    ]
+  },
+  {
+    "subCounty": "uriri",
+    "wards": [
+      {
+        "name": "west kanyamkago"
+      },
+      {
+        "name": "north kanyamkago"
+      },
+      {
+        "name": "central kanyamkago"
+      },
+      {
+        "name": "south kanyamkago"
+      },
+      {
+        "name": "east kanyamkago"
+      }
+    ]
+  },
+  {
+    "subCounty": "nyatike",
+    "wards": [
+      {
+        "name": "kachien'g"
+      },
+      {
+        "name": "kanyasa"
+      },
+      {
+        "name": "north kadem"
+      },
+      {
+        "name": "macalder kanyarwanda"
+      },
+      {
+        "name": "kaler"
+      },
+      {
+        "name": "got kachola"
+      },
+      {
+        "name": "muhuru"
+      }
+    ]
+  },
+  {
+    "subCounty": "kuria west",
+    "wards": [
+      {
+        "name": "bukira east"
+      },
+      {
+        "name": "bukira centrl ikerege"
+      },
+      {
+        "name": "isibania"
+      },
+      {
+        "name": "makerero"
+      },
+      {
+        "name": "masaba"
+      },
+      {
+        "name": "tagare"
+      },
+      {
+        "name": "nyamosense komosoko"
+      }
+    ]
+  },
+  {
+    "subCounty": "kuria east",
+    "wards": [
+      {
+        "name": "gokeharaka getambwega"
+      },
+      {
+        "name": "ntimaru west"
+      },
+      {
+        "name": "ntimaru east"
+      },
+      {
+        "name": "nyabasi east"
+      },
+      {
+        "name": "nyabasi west"
+      }
+    ]
+  },
+  {
+    "subCounty": "bonchari",
+    "wards": [
+      {
+        "name": "bomariba"
+      },
+      {
+        "name": "bogiakumu"
+      },
+      {
+        "name": "bomorenda"
+      },
+      {
+        "name": "riana"
+      }
+    ]
+  },
+  {
+    "subCounty": "south mugirango",
+    "wards": [
+      {
+        "name": "tabaka"
+      },
+      {
+        "name": "boikang'a"
+      },
+      {
+        "name": "bogetenga"
+      },
+      {
+        "name": "borabu chitago"
+      },
+      {
+        "name": "moticho"
+      },
+      {
+        "name": "getenga"
+      }
+    ]
+  },
+  {
+    "subCounty": "bomachoge borabu",
+    "wards": [
+      {
+        "name": "bombaba borabu"
+      },
+      {
+        "name": "boochi borabu"
+      },
+      {
+        "name": "bokimonge"
+      },
+      {
+        "name": "magenche"
+      }
+    ]
+  },
+  {
+    "subCounty": "bobasi",
+    "wards": [
+      {
+        "name": "masige west"
+      },
+      {
+        "name": "masige east"
+      },
+      {
+        "name": "bobasi central"
+      },
+      {
+        "name": "nyacheki"
+      },
+      {
+        "name": "bobasi bogetaorio"
+      },
+      {
+        "name": "bobasi chache"
+      },
+      {
+        "name": "sameta mokwerero"
+      },
+      {
+        "name": "bobasi boitangare"
+      }
+    ]
+  },
+  {
+    "subCounty": "bomachoge chache",
+    "wards": [
+      {
+        "name": "majoge"
+      },
+      {
+        "name": "boochi tendere"
+      },
+      {
+        "name": "bosoti sengera"
+      }
+    ]
+  },
+  {
+    "subCounty": "nyaribari masaba",
+    "wards": [
+      {
+        "name": "ichuni"
+      },
+      {
+        "name": "nyamasibi"
+      },
+      {
+        "name": "masimba"
+      },
+      {
+        "name": "gesusu"
+      },
+      {
+        "name": "kiamokama"
+      }
+    ]
+  },
+  {
+    "subCounty": "nyaribari chache",
+    "wards": [
+      {
+        "name": "bobaracho"
+      },
+      {
+        "name": "kisii central"
+      },
+      {
+        "name": "keumbu"
+      },
+      {
+        "name": "kiogoro"
+      },
+      {
+        "name": "birongo"
+      },
+      {
+        "name": "ibeno"
+      }
+    ]
+  },
+  {
+    "subCounty": "kitutu chache north",
+    "wards": [
+      {
+        "name": "monyerero"
+      },
+      {
+        "name": "sensi"
+      },
+      {
+        "name": "marani"
+      },
+      {
+        "name": "kegogi"
+      }
+    ]
+  },
+  {
+    "subCounty": "kitutu chache south",
+    "wards": [
+      {
+        "name": "bogusero"
+      },
+      {
+        "name": "bogeka"
+      },
+      {
+        "name": "nyakoe"
+      },
+      {
+        "name": "kitutu central"
+      },
+      {
+        "name": "nyatieko"
+      }
+    ]
+  },
+  {
+    "subCounty": "kitutu masaba",
+    "wards": [
+      {
+        "name": "rigoma"
+      },
+      {
+        "name": "gachuba"
+      },
+      {
+        "name": "kemera"
+      },
+      {
+        "name": "magombo"
+      },
+      {
+        "name": "manga"
+      },
+      {
+        "name": "gesima"
+      }
+    ]
+  },
+  {
+    "subCounty": "west mugirango",
+    "wards": [
+      {
+        "name": "nyamaiya"
+      },
+      {
+        "name": "bogichora"
+      },
+      {
+        "name": "bosamaro"
+      },
+      {
+        "name": "bonyamatuta"
+      },
+      {
+        "name": "township"
+      }
+    ]
+  },
+  {
+    "subCounty": "north mugirango",
+    "wards": [
+      {
+        "name": "itibo"
+      },
+      {
+        "name": "bomwagamo"
+      },
+      {
+        "name": "bokeira"
+      },
+      {
+        "name": "magwagwa"
+      },
+      {
+        "name": "ekerenyo"
+      }
+    ]
+  },
+  {
+    "subCounty": "borabu",
+    "wards": [
+      {
+        "name": "mekenene"
+      },
+      {
+        "name": "kiabonyoru"
+      },
+      {
+        "name": "nyansiongo"
+      },
+      {
+        "name": "esise"
+      }
+    ]
+  },
+  {
+    "subCounty": "westlands",
+    "wards": [
+      {
+        "name": "kitisuru"
+      },
+      {
+        "name": "parklands highridge"
+      },
+      {
+        "name": "karura"
+      },
+      {
+        "name": "kangemi"
+      },
+      {
+        "name": "mountain view"
+      }
+    ]
+  },
+  {
+    "subCounty": "dagoretti north",
+    "wards": [
+      {
+        "name": "kilimani"
+      },
+      {
+        "name": "kawangware"
+      },
+      {
+        "name": "gatina"
+      },
+      {
+        "name": "kileleshwa"
+      },
+      {
+        "name": "kabiro"
+      }
+    ]
+  },
+  {
+    "subCounty": "dagoretti south",
+    "wards": [
+      {
+        "name": "mutuini"
+      },
+      {
+        "name": "ngando"
+      },
+      {
+        "name": "riruta"
+      },
+      {
+        "name": "uthiru ruthimitu"
+      },
+      {
+        "name": "waithaka"
+      }
+    ]
+  },
+  {
+    "subCounty": "langata",
+    "wards": [
+      {
+        "name": "karen"
+      },
+      {
+        "name": "nairobi west"
+      },
+      {
+        "name": "mugumo-ini"
+      },
+      {
+        "name": "south-c"
+      },
+      {
+        "name": "nyayo highrise"
+      }
+    ]
+  },
+  {
+    "subCounty": "kibra",
+    "wards": [
+      {
+        "name": "laini saba"
+      },
+      {
+        "name": "lindi"
+      },
+      {
+        "name": "makina"
+      },
+      {
+        "name": "woodley kenyatta golf"
+      },
+      {
+        "name": "sarangombe"
+      }
+    ]
+  },
+  {
+    "subCounty": "roysambu",
+    "wards": [
+      {
+        "name": "githurai"
+      },
+      {
+        "name": "kahawa west"
+      },
+      {
+        "name": "zimmerman"
+      },
+      {
+        "name": "roysambu"
+      },
+      {
+        "name": "kahawa"
+      }
+    ]
+  },
+  {
+    "subCounty": "kasarani",
+    "wards": [
+      {
+        "name": "claycity"
+      },
+      {
+        "name": "mwiki"
+      },
+      {
+        "name": "kasarani"
+      },
+      {
+        "name": "njiru"
+      },
+      {
+        "name": "ruai"
+      }
+    ]
+  },
+  {
+    "subCounty": "ruaraka",
+    "wards": [
+      {
+        "name": "baba dogo"
+      },
+      {
+        "name": "utalii"
+      },
+      {
+        "name": "mathare north"
+      },
+      {
+        "name": "lucky summer"
+      },
+      {
+        "name": "korogocho"
+      }
+    ]
+  },
+  {
+    "subCounty": "embakasi south",
+    "wards": [
+      {
+        "name": "imara daima"
+      },
+      {
+        "name": "kwa njenga"
+      },
+      {
+        "name": "kwa reuben"
+      },
+      {
+        "name": "pipeline"
+      },
+      {
+        "name": "kware"
+      }
+    ]
+  },
+  {
+    "subCounty": "embakasi north",
+    "wards": [
+      {
+        "name": "kariobangi north"
+      },
+      {
+        "name": "dandora area i"
+      },
+      {
+        "name": "dandora area ii"
+      },
+      {
+        "name": "dandora area iii"
+      },
+      {
+        "name": "dandora area iv"
+      }
+    ]
+  },
+  {
+    "subCounty": "embakasi central",
+    "wards": [
+      {
+        "name": "kayole north"
+      },
+      {
+        "name": "kayole central"
+      },
+      {
+        "name": "kayole south"
+      },
+      {
+        "name": "komarock"
+      },
+      {
+        "name": "matopeni"
+      }
+    ]
+  },
+  {
+    "subCounty": "embakasi east",
+    "wards": [
+      {
+        "name": "upper savannah"
+      },
+      {
+        "name": "lower savannah"
+      },
+      {
+        "name": "embakasi"
+      },
+      {
+        "name": "utawala"
+      },
+      {
+        "name": "mihango"
+      }
+    ]
+  },
+  {
+    "subCounty": "embakasi west",
+    "wards": [
+      {
+        "name": "umoja i"
+      },
+      {
+        "name": "umoja ii"
+      },
+      {
+        "name": "mowlem"
+      },
+      {
+        "name": "kariobangi south"
+      }
+    ]
+  },
+  {
+    "subCounty": "makadara",
+    "wards": [
+      {
+        "name": "makongeni"
+      },
+      {
+        "name": "maringo hamza"
+      },
+      {
+        "name": "harambee"
+      },
+      {
+        "name": "viwandani"
+      }
+    ]
+  },
+  {
+    "subCounty": "kamukunji",
+    "wards": [
+      {
+        "name": "pumwani"
+      },
+      {
+        "name": "eastleigh north"
+      },
+      {
+        "name": "eastleigh south"
+      },
+      {
+        "name": "airbase"
+      },
+      {
+        "name": "california"
+      }
+    ]
+  },
+  {
+    "subCounty": "starehe",
+    "wards": [
+      {
+        "name": "nairobi central"
+      },
+      {
+        "name": "ngara"
+      },
+      {
+        "name": "ziwani kariokor"
+      },
+      {
+        "name": "pangani"
+      },
+      {
+        "name": "landimawe"
+      },
+      {
+        "name": "nairobi south"
+      }
+    ]
+  },
+  {
+    "subCounty": "mathare",
+    "wards": [
+      {
+        "name": "hospital"
+      },
+      {
+        "name": "mabatini"
+      },
+      {
+        "name": "huruma"
+      },
+      {
+        "name": "ngei"
+      },
+      {
+        "name": "mlango kubwa"
+      },
+      {
+        "name": "kiamaiko"
+      }
+    ]
+  }
+]

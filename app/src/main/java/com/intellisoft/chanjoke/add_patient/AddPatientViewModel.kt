@@ -30,12 +30,16 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
+import com.intellisoft.chanjoke.fhir.data.CompletePatient
+import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import java.util.UUID
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
+import org.hl7.fhir.r4.model.ContactPoint
+import org.hl7.fhir.r4.model.Enumerations
 import org.hl7.fhir.r4.model.HumanName
 import org.hl7.fhir.r4.model.Identifier
 import org.hl7.fhir.r4.model.Patient
@@ -44,6 +48,7 @@ import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.RelatedPerson
 import org.hl7.fhir.r4.model.ResourceType
+import org.hl7.fhir.r4.model.StringType
 import org.json.JSONObject
 import timber.log.Timber
 import java.time.LocalDate
@@ -367,5 +372,87 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             isActive = isActive,
             html = html,
         )
+    }
+
+    fun saveCustomPatient(context: Context, payload: CompletePatient) {
+        viewModelScope.launch {
+            val givens: MutableList<StringType> = mutableListOf()
+            if (payload.personal.middlename.isNotEmpty()) {
+                val string = StringType(payload.personal.middlename)
+                givens.add(string)
+            }
+            if (payload.personal.lastname.isNotEmpty()) {
+                val string = StringType(payload.personal.lastname)
+                givens.add(string)
+            }
+
+            val names: MutableList<HumanName> = mutableListOf()
+            val identifier: MutableList<Identifier> = mutableListOf()
+            val contacts: MutableList<ContactPoint> = mutableListOf()
+            val contacts1: MutableList<ContactPoint> = mutableListOf()
+            val relatives: MutableList<Patient.ContactComponent> = mutableListOf()
+            val name = HumanName()
+            name.family = payload.personal.firstname
+            name.given = givens
+            names.add(name)
+
+            val singleIdentifier = Identifier()
+            singleIdentifier.system = payload.personal.identification
+            singleIdentifier.value = payload.personal.identificationNumber
+            identifier.add(singleIdentifier)
+
+            payload.caregivers.forEach {
+                val rName = HumanName()
+                rName.family = it.name
+
+                val contact1 = ContactPoint()
+                contact1.system = ContactPoint.ContactPointSystem.PHONE
+                contact1.value = it.phone
+                val relative = Patient.ContactComponent()
+                contacts1.add(contact1)
+                val coding = Coding()
+                coding.system = "http://hl7.org/fhir/ValueSet/patient-contactrelationship"
+                coding.code = it.type
+                coding.display = it.type
+                val code = CodeableConcept()
+                code.text = it.type
+                code.addCoding(coding)
+
+                relative.name = rName
+                relative.telecom = contacts1
+                relative.addRelationship(code)
+                relatives.add(relative)
+            }
+
+            val contact = ContactPoint()
+            contact.system = ContactPoint.ContactPointSystem.PHONE
+            contact.value = payload.personal.telephone
+
+            contacts.add(contact)
+            val patientId = generateUuid()
+            val patient = Patient()
+            patient.id = patientId
+            patient.identifier = identifier
+            patient.name = names
+            patient.gender =
+                if (payload.personal.gender == "Male") Enumerations.AdministrativeGender.MALE else Enumerations.AdministrativeGender.FEMALE
+            patient.birthDate =
+                FormatterClass().convertStringToDate(payload.personal.dateOfBirth, "yyyy-MM-dd")
+            patient.addressFirstRep.city = payload.administrative.county
+            patient.addressFirstRep.district = payload.administrative.subCounty
+            patient.addressFirstRep.state = payload.administrative.ward
+            patient.addressFirstRep.addLine(payload.administrative.trading)
+            patient.addressFirstRep.addLine(payload.administrative.estate)
+            patient.telecom = contacts
+            patient.contact = relatives
+            patient.active = true
+            fhirEngine.create(patient)
+
+            FormatterClass().saveSharedPref("patientId", patientId, context)
+            FormatterClass().saveSharedPref("isRegistration", "true", context)
+
+            isPatientSaved.value = true
+        }
+
     }
 }

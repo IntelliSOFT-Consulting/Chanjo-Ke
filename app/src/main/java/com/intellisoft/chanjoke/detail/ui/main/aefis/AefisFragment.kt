@@ -59,6 +59,7 @@ class AefisFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -140,6 +141,7 @@ class AefisFragment : Fragment() {
             })
             .map { (status, vaccines) ->
                 val reactions = ArrayList<DbVaccineData>(vaccines)
+
                 AllergicReaction(
                     status,
                     "",

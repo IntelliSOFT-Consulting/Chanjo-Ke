@@ -18,9 +18,15 @@
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
         <activity
-            android:parentActivityName=".detail.PatientDetailActivity"
-            android:name=".detail.ui.main.administration.VaccineAdministration"
+            android:name=".detail.ui.main.registration.CompleteDetailsActivity"
             android:exported="false" />
+        <activity
+            android:name=".detail.ui.main.registration.RegistrationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".detail.ui.main.administration.VaccineAdministration"
+            android:exported="false"
+            android:parentActivityName=".detail.PatientDetailActivity" />
         <activity
             android:name=".shared.PractitionerDetails"
             android:exported="false" />
