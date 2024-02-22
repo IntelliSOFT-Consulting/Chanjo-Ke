@@ -7,15 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.databinding.FragmentAdministerNewBinding
 import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -45,8 +50,25 @@ class AppointmentsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
+        binding = FragmentAppointmentsBinding.inflate(layoutInflater)
 
-        binding = FragmentAppointmentsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = "Administer Vaccine"
+            setDisplayShowHomeEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+        }
+        onBackPressed()
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
@@ -78,7 +100,13 @@ class AppointmentsFragment : Fragment() {
 
 
         getAppointments()
-        return binding.root
+    }
+    private fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
+
+            NavHostFragment.findNavController(this@AppointmentsFragment)
+                .navigateUp()
+        }
     }
 
     private fun getAppointments() {

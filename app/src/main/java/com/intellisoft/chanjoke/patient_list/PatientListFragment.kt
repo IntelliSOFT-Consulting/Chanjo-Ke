@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.patient_list
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -33,6 +34,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.sync.SyncJobStatus
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -253,6 +255,8 @@ class PatientListFragment : Fragment() {
 
         _binding = null
     }
+
+
 
     private fun onPatientItemClicked(patientItem: PatientListViewModel.PatientItem) {
 

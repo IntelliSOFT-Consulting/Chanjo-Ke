@@ -131,6 +131,11 @@
         android:id="@+id/appointmentsFragment"
         android:name="com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment"
         android:label="AppointmentsFragment" />
+    <fragment
+        android:id="@+id/reportsFragment"
+        android:name="com.intellisoft.chanjoke.ReportsFragment"
+        android:label="fragment_reports"
+        tools:layout="@layout/fragment_reports" />
 
 
 </navigation>

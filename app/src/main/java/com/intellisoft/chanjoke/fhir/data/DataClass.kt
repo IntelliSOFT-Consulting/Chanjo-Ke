@@ -14,6 +14,10 @@ data class DbStatusColor(
     val isStatusDue: Boolean = false,
 
     )
+data class DbBatchNumbers(
+    val vaccineName: String,
+    val diseaseTargeted:String?
+)
 
 data class DbVaccineListData(
     val keyTitle: String,
@@ -29,9 +33,10 @@ enum class StatusColors {
 
 data class DbVaccineData(
     val logicalId: String,
+    val previousVaccineName: BasicVaccine? = null,
     val vaccineName: String,
     val doseNumber: String,
-    val dateAdministered: String,
+    var dateAdministered: String,
     val status: String,
 )
 
@@ -72,6 +77,7 @@ enum class NavigationDetails {
     CONTRAINDICATIONS,
     APPOINTMENT,
     ADMINISTER_VACCINE,
+    NOT_ADMINISTER_VACCINE,
     UPDATE_CLIENT_HISTORY,
     LIST_VACCINE_DETAILS,
     CLIENT_LIST,
@@ -140,6 +146,7 @@ data class DbUser(
     val email: String,
     val phone: String?,
     val id: String,
+    val facility: String,
 )
 
 data class DbVaccinationSchedule(

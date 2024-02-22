@@ -26,6 +26,7 @@ class BottomSheetDialog : BottomSheetDialogFragment() {
 
         val btnAdministerVaccine = view.findViewById<Button>(R.id.btnAdministerVaccine)
         val btnContraindications = view.findViewById<Button>(R.id.btnContraindications)
+        val btnNotAdministered = view.findViewById<Button>(R.id.btnNotAdministered)
 
         btnContraindications.setOnClickListener {
             val intent = Intent(context, VaccineAdministration::class.java)
@@ -37,6 +38,13 @@ class BottomSheetDialog : BottomSheetDialogFragment() {
         btnAdministerVaccine.setOnClickListener {
             val intent = Intent(context, VaccineAdministration::class.java)
             intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            context?.startActivity(intent)
+            dismiss()
+        }
+
+        btnNotAdministered.setOnClickListener {
+            val intent = Intent(context, VaccineAdministration::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.NOT_ADMINISTER_VACCINE.name)
             context?.startActivity(intent)
             dismiss()
         }

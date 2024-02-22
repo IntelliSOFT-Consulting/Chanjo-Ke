@@ -697,6 +697,9 @@ class ImmunizationHandler() {
     fun getNextBasicVaccineInSeries(series: RoutineVaccine, doseNumber: String): BasicVaccine? {
         return series.vaccineList.firstOrNull { it.doseNumber == doseNumber.toInt().plus(1).toString() }
     }
+    fun getPreviousBasicVaccineInSeries(series: RoutineVaccine, doseNumber: String): BasicVaccine? {
+        return series.vaccineList.firstOrNull { it.doseNumber == doseNumber.toInt().minus(1).toString() }
+    }
 
     fun getMissedRoutineVaccines(
         administeredList: List<BasicVaccine>,
@@ -789,7 +792,6 @@ class ImmunizationHandler() {
 
         return expandableListDetail.mapValues { it.value.toList() }
     }
-
 
 
 
