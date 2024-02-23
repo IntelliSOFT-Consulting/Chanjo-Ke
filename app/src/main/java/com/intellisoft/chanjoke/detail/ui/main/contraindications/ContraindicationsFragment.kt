@@ -119,7 +119,7 @@ class ContraindicationsFragment : Fragment() {
                 val newList = resultList.subtract(selectedItemList.toSet())
 
                 if (newList.isEmpty()){
-                    Toast.makeText(requireContext(), "There's no vaccine available", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "There's no vaccine available!", Toast.LENGTH_SHORT).show()
                 }else{
                     formatterClass.saveSharedPref(
                         "selectedUnContraindicatedVaccine",
@@ -142,11 +142,7 @@ class ContraindicationsFragment : Fragment() {
                                 findNavController().navigate(R.id.administerNewFragment)
                             }
                         }
-
-
                     }
-
-
                 }
 
 
