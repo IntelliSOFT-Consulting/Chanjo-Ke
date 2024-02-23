@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 
@@ -27,7 +29,7 @@ class AppointmentDetails : AppCompatActivity() {
     private lateinit var fhirEngine: FhirEngine
     private var formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
-
+    private var appointmentId:String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAppointmentDetailsBinding.inflate(layoutInflater)
@@ -40,6 +42,8 @@ class AppointmentDetails : AppCompatActivity() {
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
+        appointmentId = formatterClass.getSharedPref("appointmentId", this)
+
 
         fhirEngine = FhirApplication.fhirEngine(this)
         patientDetailsViewModel =
@@ -59,6 +63,17 @@ class AppointmentDetails : AppCompatActivity() {
 
         binding.btnCloseAppointment.setOnClickListener {
             onSupportNavigateUp()
+        }
+        binding.btnEditAppointment.setOnClickListener {
+            if (appointmentId != null){
+
+                val intent = Intent(this, AddAppointment::class.java)
+                intent.putExtra("appointmentId", appointmentId)
+                startActivity(intent)
+
+            }else
+                Toast.makeText(this, "You cannot edit the appointment", Toast.LENGTH_SHORT).show()
+
         }
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
@@ -106,7 +121,6 @@ class AppointmentDetails : AppCompatActivity() {
 
     private fun getAppointments() {
 
-        val appointmentId = formatterClass.getSharedPref("appointmentId", this)
         val appointmentList = patientDetailsViewModel.getAppointmentList()
         val recommendationList: ArrayList<DbAppointmentDetails>
 
