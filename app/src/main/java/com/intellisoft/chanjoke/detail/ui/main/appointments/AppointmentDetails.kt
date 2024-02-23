@@ -57,6 +57,10 @@ class AppointmentDetails : AppCompatActivity() {
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.setHasFixedSize(true)
 
+        binding.btnCloseAppointment.setOnClickListener {
+            onSupportNavigateUp()
+        }
+
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
