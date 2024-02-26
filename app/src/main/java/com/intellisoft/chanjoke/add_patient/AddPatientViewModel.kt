@@ -375,10 +375,10 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         )
     }
 
-    fun saveCustomPatient(context: Context, payload: CompletePatient) {
+    fun saveCustomPatient(context: Context, payload: CompletePatient, practitioner: String) {
         viewModelScope.launch {
 
-            Log.e("TAG","Payload ***** $payload")
+            Log.e("TAG", "Payload ***** $payload")
             val givens: MutableList<StringType> = mutableListOf()
             if (payload.personal.middlename.isNotEmpty()) {
                 val string = StringType(payload.personal.middlename)
@@ -394,6 +394,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val contacts: MutableList<ContactPoint> = mutableListOf()
             val contacts1: MutableList<ContactPoint> = mutableListOf()
             val relatives: MutableList<Patient.ContactComponent> = mutableListOf()
+            val generalPractitioner: MutableList<Reference> = mutableListOf()
             val name = HumanName()
             name.family = payload.personal.firstname
             name.given = givens
@@ -448,6 +449,10 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             patient.addressFirstRep.addLine(payload.administrative.estate)
             patient.telecom = contacts
             patient.contact = relatives
+
+            val subjectReference = Reference("Practitioner/$practitioner")
+            generalPractitioner.add(subjectReference)
+            patient.generalPractitioner = generalPractitioner
             patient.active = true
             fhirEngine.create(patient)
 
