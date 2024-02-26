@@ -211,6 +211,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10dp"
+            android:id="@+id/tv_title_name"
             android:layout_marginBottom="@dimen/_10dp"
             android:text="@string/caregiver_details"
             android:textAlignment="center"

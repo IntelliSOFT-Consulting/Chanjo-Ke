@@ -3,6 +3,8 @@ package com.intellisoft.chanjoke.detail.ui.main.registration
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +23,9 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -51,6 +55,7 @@ class PersonalFragment : Fragment() {
     private val formatter = FormatterClass()
     private var mListener: OnButtonClickListener? = null
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,7 +67,7 @@ class PersonalFragment : Fragment() {
     }
 
     // Define an interface
-      override fun onAttach(context: Context) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         // Ensure that the parent activity implements the interface
         mListener = if (context is OnButtonClickListener) {
@@ -73,11 +78,11 @@ class PersonalFragment : Fragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         AppUtils().disableEditing(binding.dateOfBirth)
         AppUtils().disableEditing(binding.calculatedAge)
+
 
         val suggestions = arrayOf(
             "Birth Certificate",
@@ -92,6 +97,102 @@ class PersonalFragment : Fragment() {
 
         binding.apply {
 
+            editTextOne.apply {
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                        val value = s.toString()
+                        if (value.isNotEmpty()) {
+                            updateCalculatedAge()
+                            try {
+                                val intValue = value.toInt()
+                                if (intValue >= 18) {
+                                    telephone.visibility = View.VISIBLE
+
+                                    formatter.saveSharedPref("isAbove", "true", requireContext())
+                                } else {
+                                    telephone.visibility = View.GONE
+                                    formatter.saveSharedPref("isAbove", "false", requireContext())
+                                }
+                            } catch (e: NumberFormatException) {
+                                // Handle the case where the input is not a valid integer
+                            }
+                        }
+                    }
+                })
+            }
+            editTextTwo.apply {
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                        val value = s.toString()
+                        if (value.isNotEmpty()) {
+                            updateCalculatedAge()
+
+                        }
+                    }
+                })
+            }
+            editTextThree.apply {
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                        val value = s.toString()
+                        if (value.isNotEmpty()) {
+                            updateCalculatedAge()
+
+                        }
+                    }
+                })
+            }
             radioGroup.setOnCheckedChangeListener { group, checkedId ->
                 if (checkedId != -1) {
                     val dataValue = when (checkedId) {
@@ -162,9 +263,37 @@ class PersonalFragment : Fragment() {
 
     }
 
+    private fun updateCalculatedAge() {
+        try {
+            val enteredYear = binding.editTextOne.text.toString().toIntOrNull() ?: 0
+            val enteredMonths = binding.editTextTwo.text.toString().toIntOrNull() ?: 0
+            val enteredWeeks = binding.editTextThree.text.toString().toIntOrNull() ?: 0
+
+            binding.calculatedAge.setText("$enteredYear years $enteredMonths months $enteredWeeks weeks")
+
+            if (enteredYear >= 18) {
+                formatter.saveSharedPref("isAbove", "true", requireContext())
+            } else {
+                formatter.saveSharedPref("isAbove", "false", requireContext())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun calculateUserAge(valueCurrent: String) {
         val result = formatter.calculateAge(valueCurrent)
         binding.calculatedAge.setText(result)
+
+        // check the year as well
+        val year = formatter.calculateAgeYear(valueCurrent)
+        if (year >= 18) {
+            binding.telephone.visibility = View.VISIBLE
+            formatter.saveSharedPref("isAbove", "true", requireContext())
+        } else {
+            binding.telephone.visibility = View.GONE
+            formatter.saveSharedPref("isAbove", "false", requireContext())
+        }
 
     }
 
@@ -174,7 +303,7 @@ class PersonalFragment : Fragment() {
         val firstName = binding.firstname.text.toString()
         val lastName = binding.lastname.text.toString()
         val middleName = binding.middlename.text.toString()
-        val dateOfBirthString = binding.dateOfBirth.text.toString()
+        var dateOfBirthString = binding.dateOfBirth.text.toString()
         val age = binding.calculatedAge.text.toString()
         val identificationType = binding.identificationType.text.toString()
         val identificationNumberString = binding.identificationNumber.text.toString()
@@ -223,6 +352,7 @@ class PersonalFragment : Fragment() {
             return
         }
         if (dateType == "Actual") {
+
             if (dateOfBirthString.isEmpty()) {
                 binding.apply {
                     telDateOfBirth.error = "Enter date of birth"
@@ -232,6 +362,27 @@ class PersonalFragment : Fragment() {
             }
         } else {
             // check all the fields
+            val year = binding.editTextOne.text.toString()
+            val months = binding.editTextTwo.text.toString()
+            val weeks = binding.editTextThree.text.toString()
+
+            if (year.isEmpty() && months.isEmpty() && weeks.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter estimate age", Toast.LENGTH_SHORT)
+                    .show()
+                return
+            }
+
+            val enteredYear = binding.editTextOne.text.toString().toIntOrNull() ?: 0
+            val enteredMonths = binding.editTextTwo.text.toString().toIntOrNull() ?: 0
+            val enteredWeeks = binding.editTextThree.text.toString().toIntOrNull() ?: 0
+
+// Calculate date of birth
+            val dateOfBirth = calculateDateOfBirth(enteredYear, enteredMonths, enteredWeeks)
+
+// Output the date of birth
+            println("Date of Birth: $dateOfBirth")
+            dateOfBirthString = dateOfBirth
+
         }
         if (identificationType.isEmpty()) {
             binding.apply {
@@ -256,7 +407,7 @@ class PersonalFragment : Fragment() {
             middlename = middleName,
             lastname = lastName,
             gender = gender,
-            age =age ,
+            age = age,
             dateOfBirth = dateOfBirthString,
             identification = identificationType,
             identificationNumber = identificationNumberString,
@@ -269,6 +420,21 @@ class PersonalFragment : Fragment() {
 
 
     }
+
+    private fun calculateDateOfBirth(year: Int, months: Int, weeks: Int): String {
+        // Get current date
+        val currentDate = Calendar.getInstance()
+        // Subtract years from the current date
+        currentDate.add(Calendar.YEAR, -year)
+        // Subtract months
+        currentDate.add(Calendar.MONTH, -months)
+        // Subtract weeks
+        currentDate.add(Calendar.WEEK_OF_YEAR, -weeks)
+        // Format the date to yyyy-MM-dd
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(currentDate.time)
+    }
+
 
     companion object {
         /**

@@ -18,6 +18,7 @@ package com.intellisoft.chanjoke.add_patient
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -376,6 +377,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
     fun saveCustomPatient(context: Context, payload: CompletePatient) {
         viewModelScope.launch {
+
+            Log.e("TAG","Payload ***** $payload")
             val givens: MutableList<StringType> = mutableListOf()
             if (payload.personal.middlename.isNotEmpty()) {
                 val string = StringType(payload.personal.middlename)

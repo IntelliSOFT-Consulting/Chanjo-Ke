@@ -60,11 +60,21 @@ class CaregiverFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentCaregiverBinding.inflate(layoutInflater)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val isAbove = formatter.getSharedPref("isAbove", requireContext())
+        if (isAbove != null) {
+            if (isAbove == "true") {
+                binding.apply {
+                    tvTitleName.text = "Next of Kin Details"
+                }
+            }
+        }
         val suggestions = arrayOf(
             "Father",
             "Mother",

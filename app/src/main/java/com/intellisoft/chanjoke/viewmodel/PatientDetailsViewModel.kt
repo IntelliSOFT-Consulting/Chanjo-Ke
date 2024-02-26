@@ -89,12 +89,18 @@ class PatientDetailsViewModel(
         var contact_name = ""
         var contact_phone = ""
         var contact_gender = ""
+        var contact_type = ""
         var systemId = ""
+        var county = ""
+        var subCounty = ""
+        var ward = ""
+        var trading = ""
+        var estate = ""
         searchResult.first().let {
 
-            name = if (it.hasName()){
+            name = if (it.hasName()) {
                 it.name[0].nameAsSingleString
-            }else ""
+            } else ""
 
             phone = ""
             if (it.hasTelecom()) {
@@ -128,6 +134,11 @@ class PatientDetailsViewModel(
                     } else ""
                 if (it.contactFirstRep.hasGenderElement()) contact_gender =
                     if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+                if (it.contactFirstRep.hasRelationship()) {
+                    if (it.contactFirstRep.relationshipFirstRep.hasCoding()) {
+                        contact_type = it.contactFirstRep.relationshipFirstRep.text
+                    }
+                }
             }
 
             if (it.hasGenderElement()) gender = it.genderElement.valueAsString
@@ -145,6 +156,21 @@ class PatientDetailsViewModel(
                     }
                 }
             }
+
+
+            if (it.hasAddress()) {
+                if (it.addressFirstRep.hasCity()) county = it.addressFirstRep.city
+                if (it.addressFirstRep.hasDistrict()) subCounty = it.addressFirstRep.district
+                if (it.addressFirstRep.hasState()) ward = it.addressFirstRep.state
+                if (it.addressFirstRep.hasLine()) {
+                    if (it.addressFirstRep.line.size >= 2) {
+                        trading = it.addressFirstRep.line[0].value
+                        estate = it.addressFirstRep.line[1].value
+                    }
+                }
+            }
+
+
         }
 
         FormatterClass().saveSharedPref(
@@ -165,8 +191,13 @@ class PatientDetailsViewModel(
             gender,
             contact_name = contact_name,
             contact_phone = contact_phone,
-            contact_gender = contact_gender,
-            systemId
+            contact_gender = contact_type,
+            systemId,
+            county = county,
+            subCounty = subCounty,
+            ward = ward,
+            trading = trading,
+            estate = estate
         )
     }
 
@@ -179,7 +210,13 @@ class PatientDetailsViewModel(
         val contact_phone: String?,
         val contact_gender: String?,
         val systemId: String?,
-    ) {
+        val county: String?,
+        val subCounty: String?,
+        val ward: String?,
+        val trading: String?,
+        val estate: String?,
+
+        ) {
         override fun toString(): String = name
     }
 
@@ -384,6 +421,7 @@ class PatientDetailsViewModel(
     fun getVaccineListWithAefis() = runBlocking {
         getVaccineListDetails()
     }
+
     fun getVaccineList() = runBlocking {
         getVaccineListDetailsOld()
     }
@@ -500,20 +538,21 @@ class PatientDetailsViewModel(
          * 2. From the Previous Basic Vaccine, get the date administered
          * 3. Calculate the next vaccination date and display it
          */
-        var previousBasicVaccine:BasicVaccine? = null
+        var previousBasicVaccine: BasicVaccine? = null
         val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
-        if (basicVaccine != null){
+        if (basicVaccine != null) {
             val doseNumber = basicVaccine.doseNumber
             val seriesVaccine = immunizationHandler.getRoutineSeriesByBasicVaccine(basicVaccine)
-            if (seriesVaccine != null){
-                previousBasicVaccine = immunizationHandler.getPreviousBasicVaccineInSeries(seriesVaccine, doseNumber)
+            if (seriesVaccine != null) {
+                previousBasicVaccine =
+                    immunizationHandler.getPreviousBasicVaccineInSeries(seriesVaccine, doseNumber)
             }
         }
 
-        Log.e("*****","****")
+        Log.e("*****", "****")
         println("vaccineName $vaccineName")
         println("previousBasicVaccine $previousBasicVaccine")
-        Log.e("*****","****")
+        Log.e("*****", "****")
 
 
 
@@ -718,10 +757,9 @@ class PatientDetailsViewModel(
         }
     }
 
-      fun generateCurrentCount(weekNo: String, patientId: String)= runBlocking{
-            counterAllergies(weekNo, patientId)
+    fun generateCurrentCount(weekNo: String, patientId: String) = runBlocking {
+        counterAllergies(weekNo, patientId)
     }
-
 
 
     private suspend fun counterAllergies(weekNo: String, patientId: String): String {

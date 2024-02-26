@@ -17,6 +17,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_title_name"
             style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,8 +32,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type"
             android:layout_marginBottom="@dimen/_10dp"
+            android:hint="Type"
             app:boxBackgroundMode="outline">
 
             <AutoCompleteTextView
