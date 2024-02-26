@@ -100,15 +100,15 @@ class RoutineFragment : Fragment() {
 
             var statusColor = ""
             if (vaccines != null) {
-                if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+                statusColor = if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
                     //Checks if all have been vaccinated
-                    statusColor = StatusColors.GREEN.name
+                    StatusColors.GREEN.name
                 }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
                     //Checks if there's any that has been vaccinated
-                    statusColor = StatusColors.AMBER.name
+                    StatusColors.AMBER.name
                 }else{
                     //Everything under here does not have any vaccines
-                    statusColor = StatusColors.NORMAL.name
+                    StatusColors.NORMAL.name
                 }
             }
 
