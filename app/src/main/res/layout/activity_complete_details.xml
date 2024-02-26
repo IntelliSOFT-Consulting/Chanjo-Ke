@@ -62,7 +62,7 @@
                     android:layout_width="@dimen/_0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="First Name" />
+                    android:text="Name" />
 
                 <TextView
                     android:id="@+id/tv_firstname"
@@ -82,6 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="2">
 
                 <TextView
@@ -102,12 +103,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_10dp"
-                android:background="@color/darker_gray" />
+                android:background="@color/darker_gray"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="2">
 
                 <TextView
@@ -128,7 +131,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_10dp"
-                android:background="@color/darker_gray" />
+                android:background="@color/darker_gray"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -238,6 +242,7 @@
             <TextView
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="match_parent"
+                android:id="@+id/tv_title_name"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10dp"
                 android:layout_marginBottom="@dimen/_10dp"

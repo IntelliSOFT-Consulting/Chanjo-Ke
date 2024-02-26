@@ -324,6 +324,25 @@ class FormatterClass {
         return ""
     }
 
+    fun getFormattedAgeYears(
+        dob: String?,
+        resources: Resources,
+    ): Int {
+        if (dob == null) return 0
+
+        val dobFormat = convertDateFormat(dob)
+        if (dobFormat != null) {
+            val dobDate = convertStringToDate(dobFormat, "MMM d yyyy")
+            if (dobDate != null) {
+                val finalDate = convertDateToLocalDate(dobDate)
+                val period = Period.between(finalDate, LocalDate.now())
+                return period.years
+            }
+        }
+
+        return 0
+    }
+
 
     fun generateRandomCode(): String {
         // Get current date

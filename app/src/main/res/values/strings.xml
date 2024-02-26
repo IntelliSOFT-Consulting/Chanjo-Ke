@@ -71,6 +71,7 @@
     <string name="add">Add</string>
     <string name="administrative_area">Administrative Area</string>
     <string name="client_info">Client Details</string>
+    <string name="next_of_kin_details">Next of Kin Details</string>
 
 
 </resources>

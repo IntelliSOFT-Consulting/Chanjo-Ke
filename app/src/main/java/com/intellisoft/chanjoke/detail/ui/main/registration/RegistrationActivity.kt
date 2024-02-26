@@ -109,7 +109,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
 
                 val refinedPersonal = Gson().fromJson(personal, CustomPatient::class.java)
                 val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
-                val refinedAdministrative = Gson().fromJson(personal, Administrative::class.java)
+                val refinedAdministrative = Gson().fromJson(administrative, Administrative::class.java)
                 val caregivers = ArrayList<CareGiver>()
                 caregivers.clear()
                 caregivers.add(refinedCaregiver)
