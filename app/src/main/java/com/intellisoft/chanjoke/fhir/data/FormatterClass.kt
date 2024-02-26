@@ -324,6 +324,25 @@ class FormatterClass {
         return ""
     }
 
+    fun getFormattedAgeYears(
+        dob: String?,
+        resources: Resources,
+    ): Int {
+        if (dob == null) return 0
+
+        val dobFormat = convertDateFormat(dob)
+        if (dobFormat != null) {
+            val dobDate = convertStringToDate(dobFormat, "MMM d yyyy")
+            if (dobDate != null) {
+                val finalDate = convertDateToLocalDate(dobDate)
+                val period = Period.between(finalDate, LocalDate.now())
+                return period.years
+            }
+        }
+
+        return 0
+    }
+
 
     fun generateRandomCode(): String {
         // Get current date
@@ -789,12 +808,13 @@ class FormatterClass {
         val date: Date = calendar.time
         return FormatterClass().formatCurrentDate(date)
     }
+
     fun formatCurrentDate(date: Date): String {
         return dateInverseFormat.format(date)
     }
 
 
-      fun calculateAge(dateString: String): String {
+    fun calculateAge(dateString: String): String {
         return try {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
@@ -811,6 +831,22 @@ class FormatterClass {
             }
         } catch (e: Exception) {
             "0 day(s)"
+        }
+    }
+
+
+    fun calculateAgeYear(dateString: String): Int {
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+            // Parse the string into a LocalDate
+            val date1 = LocalDate.parse(dateString, formatter)
+            val date2 = LocalDate.now() // Use the current date
+            // Calculate the period between the two dates
+            val period = Period.between(date1, date2)
+            return period.years
+        } catch (e: Exception) {
+            0
         }
     }
 
