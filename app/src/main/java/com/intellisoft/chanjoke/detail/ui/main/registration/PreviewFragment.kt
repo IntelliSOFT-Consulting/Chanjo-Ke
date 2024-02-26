@@ -66,7 +66,14 @@ class PreviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val isAbove = formatter.getSharedPref("isAbove", requireContext())
+        if (isAbove != null) {
+            if (isAbove == "true") {
+                binding.apply {
+                    tvTitleName.text = "Next of Kin Details"
+                }
+            }
+        }
         binding.apply {
             val personal = formatter.getSharedPref("personal", requireContext())
             val caregiver = formatter.getSharedPref("caregiver", requireContext())
@@ -105,6 +112,8 @@ class PreviewFragment : Fragment() {
             }
             nextButton.apply {
                 setOnClickListener {
+
+                    formatter.deleteSharedPref("isAbove", requireContext())
                     isEnabled = false
                     mListener?.onNextPageRequested()
 
