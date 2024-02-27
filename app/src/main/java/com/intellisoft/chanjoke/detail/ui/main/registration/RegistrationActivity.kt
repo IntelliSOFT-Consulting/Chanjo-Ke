@@ -3,6 +3,7 @@ package com.intellisoft.chanjoke.detail.ui.main.registration
 import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -67,9 +68,8 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
             }
 
             val blurBackgroundDialog =
-                ActivityBlurBackground(this,this@RegistrationActivity)
+                ActivityBlurBackground(this, this@RegistrationActivity)
             blurBackgroundDialog.show()
-
 
 
         }
@@ -109,7 +109,8 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
 
                 val refinedPersonal = Gson().fromJson(personal, CustomPatient::class.java)
                 val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
-                val refinedAdministrative = Gson().fromJson(administrative, Administrative::class.java)
+                val refinedAdministrative =
+                    Gson().fromJson(administrative, Administrative::class.java)
                 val caregivers = ArrayList<CareGiver>()
                 caregivers.clear()
                 caregivers.add(refinedCaregiver)
@@ -119,7 +120,13 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
                     administrative = refinedAdministrative
                 )
                 progressDialog.show()
-                viewModel.saveCustomPatient(this, completePatient)
+
+                val fhirPractitionerId = formatter.getSharedPref("fhirPractitionerId", this)
+                if (fhirPractitionerId != null) {
+                    viewModel.saveCustomPatient(this, completePatient, fhirPractitionerId)
+                } else {
+                    Toast.makeText(this, "Please contact administrator", Toast.LENGTH_SHORT).show()
+                }
 
             } else {
                 Toast.makeText(this, "Please enter all details", Toast.LENGTH_SHORT).show()
