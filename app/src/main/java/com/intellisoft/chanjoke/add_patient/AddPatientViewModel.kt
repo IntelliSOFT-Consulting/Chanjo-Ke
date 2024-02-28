@@ -359,6 +359,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         val isActive = active
         val html: String = if (hasText()) text.div.valueAsString else ""
         val identification: String = if (hasIdentifier()) identifier[0].value else "N/A"
+        val lastUpdated: String = if (hasMeta()) meta.lastUpdated.toString() else "N/A"
 
         return PatientListViewModel.PatientItem(
             id = position.toString(),
@@ -371,7 +372,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             city = city ?: "",
             country = country ?: "",
             isActive = isActive,
-            html = html,
+            html = html, lastUpdated = lastUpdated
         )
     }
 
