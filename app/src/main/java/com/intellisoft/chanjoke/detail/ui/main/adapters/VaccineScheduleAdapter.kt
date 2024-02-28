@@ -27,6 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.math.round
 
 class VaccineScheduleAdapter(
     private val context: Context,
@@ -216,8 +217,12 @@ class VaccineScheduleAdapter(
         weekNo = if (listTitle.toIntOrNull() != null) {
             if (listTitle == "0") {
                 "At Birth"
-            } else {
+            } else if (listTitle.toInt() in 1..51){
                 "$listTitle weeks"
+            }else if (listTitle.toInt() in 52..105){
+                "${(round(listTitle.toInt() * 0.23)).toString().replace(".0","")} months"
+            }else{
+                "${(round(listTitle.toInt() * 0.019)).toString().replace(".0","")} years"
             }
         } else {
             listTitle
