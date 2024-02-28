@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Location
 import org.hl7.fhir.r4.model.Patient
+import java.sql.DataTruncation
 
 /**
  * The ViewModel helper class for PatientItemRecyclerViewAdapter, that is responsible for preparing
@@ -92,24 +93,29 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
 
                 if (nameQuery.isNotEmpty()) {
                     filter(
-                        Patient.NAME, {
+                        Patient.NAME,
+                        {
                             modifier = StringFilterModifier.CONTAINS
                             value = nameQuery
                         },
                     )
                 }
-
-                sort(Patient.BIRTHDATE, Order.DESCENDING)
                 count = 100
                 from = 0
             }
             .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
-            .let { patients.addAll(it) }
+            .let {
+                val sortedPatientItems = it.sortedBy { q ->
+                    q.lastUpdated // Assuming lastUpdated is a property of PatientItem
+                }
+
+                patients.addAll(sortedPatientItems)
+            }
 
         /**
          * TODO: Check on the best way to filter by the id or phone number
          */
-        if (patients.isEmpty()){
+        if (patients.isEmpty()) {
             patients = searchPatientsByPhoneOrIdentification(nameQuery)
         }
 
@@ -127,7 +133,13 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
                 from = 0
             }
             .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
-            .let { patients.addAll(it) }
+            .let {
+                val sortedPatientItems = it.sortedBy { q ->
+                    q.lastUpdated // Assuming lastUpdated is a property of PatientItem
+                }
+
+                patients.addAll(sortedPatientItems)
+            }
 
 
         for (patient in patients) {
@@ -137,7 +149,11 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             }
 
             // Check if the identification matches or is close
-            if (patient.identification.contains(searchString) || isCloseMatch(patient.identification, searchString)) {
+            if (patient.identification.contains(searchString) || isCloseMatch(
+                    patient.identification,
+                    searchString
+                )
+            ) {
                 matchingPatients.add(patient)
             }
         }
@@ -182,6 +198,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         val isActive: Boolean,
         val html: String,
         var risk: String? = "",
+        var lastUpdated: String
     ) {
         override fun toString(): String = name
     }
@@ -249,6 +266,7 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
     val html: String = if (hasText()) text.div.valueAsString else ""
 
     val identification: String = if (hasIdentifier()) identifier[0].value else "N/A"
+    val lastUpdated: String = if (hasMeta()) meta.lastUpdated.toString() else ""
 
     return PatientListViewModel.PatientItem(
         id = position.toString(),
@@ -262,6 +280,7 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
         country = country ?: "",
         isActive = isActive,
         html = html,
+        lastUpdated = lastUpdated
     )
 }
 

@@ -55,6 +55,14 @@ class PersonalFragment : Fragment() {
     private val formatter = FormatterClass()
     private var mListener: OnButtonClickListener? = null
 
+    val identifications = arrayOf(
+        "Birth Certificate",
+//        "National ID",
+//        "Passport",
+        "NEMIS No",
+        "Birth Notification Number"
+    )
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,16 +92,13 @@ class PersonalFragment : Fragment() {
         AppUtils().disableEditing(binding.calculatedAge)
 
 
-        val suggestions = arrayOf(
-            "Birth Certificate",
-            "National ID",
-            "Passport",
-            "NEMIS No",
-            "Birth Notification Number"
-        )
         // Create ArrayAdapter with the array of strings
         val adapterType =
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, suggestions)
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                identifications
+            )
 
         binding.apply {
 
@@ -273,12 +278,41 @@ class PersonalFragment : Fragment() {
 
             if (enteredYear >= 18) {
                 formatter.saveSharedPref("isAbove", "true", requireContext())
+                updateIdentifications(true)
             } else {
                 formatter.saveSharedPref("isAbove", "false", requireContext())
+                updateIdentifications(false)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun updateIdentifications(isAbove: Boolean) {
+        val identifications = if (isAbove) {
+            arrayOf(
+                "National ID",
+                "Passport",
+            )
+        } else {
+            arrayOf(
+                "Birth Certificate",
+                "NEMIS No",
+                "Birth Notification Number"
+            )
+        }
+        val adapterType =
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                identifications
+            )
+        binding.apply {
+            identificationType.apply {
+                setAdapter(adapterType)
+            }
+        }
+
     }
 
     private fun calculateUserAge(valueCurrent: String) {
@@ -290,9 +324,11 @@ class PersonalFragment : Fragment() {
         if (year >= 18) {
             binding.telephone.visibility = View.VISIBLE
             formatter.saveSharedPref("isAbove", "true", requireContext())
+            updateIdentifications(true)
         } else {
             binding.telephone.visibility = View.GONE
             formatter.saveSharedPref("isAbove", "false", requireContext())
+            updateIdentifications(false)
         }
 
     }
