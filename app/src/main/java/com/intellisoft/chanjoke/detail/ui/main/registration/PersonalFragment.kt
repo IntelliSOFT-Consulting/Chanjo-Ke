@@ -55,13 +55,6 @@ class PersonalFragment : Fragment() {
     private val formatter = FormatterClass()
     private var mListener: OnButtonClickListener? = null
 
-    val identifications = arrayOf(
-        "Birth Certificate",
-//        "National ID",
-//        "Passport",
-        "NEMIS No",
-        "Birth Notification Number"
-    )
 
 
     override fun onCreateView(
@@ -90,6 +83,11 @@ class PersonalFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         AppUtils().disableEditing(binding.dateOfBirth)
         AppUtils().disableEditing(binding.calculatedAge)
+        val identifications = arrayOf(
+            "Birth Certificate",
+            "NEMIS No",
+            "Birth Notification Number"
+        )
 
 
         // Create ArrayAdapter with the array of strings
