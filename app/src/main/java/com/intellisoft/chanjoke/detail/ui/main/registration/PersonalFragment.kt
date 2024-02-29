@@ -55,14 +55,6 @@ class PersonalFragment : Fragment() {
     private val formatter = FormatterClass()
     private var mListener: OnButtonClickListener? = null
 
-    val identifications = arrayOf(
-        "Birth Certificate",
-//        "National ID",
-//        "Passport",
-        "NEMIS No",
-        "Birth Notification Number"
-    )
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +83,16 @@ class PersonalFragment : Fragment() {
         AppUtils().disableEditing(binding.dateOfBirth)
         AppUtils().disableEditing(binding.calculatedAge)
 
+
+        val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
+        if (isUpdate != null) {
+            displayInitialData()
+        }
+        val identifications = arrayOf(
+            "Birth Certificate",
+            "Passport",
+            "Birth Notification Number"
+        )
 
         // Create ArrayAdapter with the array of strings
         val adapterType =
@@ -268,6 +270,53 @@ class PersonalFragment : Fragment() {
 
     }
 
+    private fun displayInitialData() {
+        try {
+            val personal = formatter.getSharedPref("personal", requireContext())
+
+            if (personal != null) {
+                val data = Gson().fromJson(personal, CustomPatient::class.java)
+                binding.apply {
+                    val parts = data.firstname.split(" ")
+                    when (parts.size) {
+                        2 -> {
+                            val (firstName, lastName) = parts
+                            firstname.setText(firstName)
+                            lastname.setText(lastName)
+                        }
+
+                        3 -> {
+                            val (firstName, middleName, lastName) = parts
+                            firstname.setText(firstName)
+                            lastname.setText(lastName)
+                            middlename.setText(middleName)
+                        }
+
+                        else -> {
+                            println("Invalid name format")
+                        }
+                    }
+                    val gender = data.gender
+                    if (gender == "Male") {
+                        radioButtonYes.isChecked = true
+                    } else {
+                        radioButtonNo.isChecked = true
+                    }
+                    radioButtonYesDob.isChecked = true
+                    telDateOfBirth.visibility = View.VISIBLE
+                    dateOfBirth.setText(data.dateOfBirth)
+                    calculateUserAge(data.dateOfBirth)
+                    identificationType.setText(data.identification, false)
+                    identificationNumber.setText(data.identificationNumber)
+                    telephone.setText(data.telephone)
+
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun updateCalculatedAge() {
         try {
             val enteredYear = binding.editTextOne.text.toString().toIntOrNull() ?: 0
@@ -278,35 +327,51 @@ class PersonalFragment : Fragment() {
 
             if (enteredYear >= 18) {
                 formatter.saveSharedPref("isAbove", "true", requireContext())
-                updateIdentifications(true)
+
             } else {
                 formatter.saveSharedPref("isAbove", "false", requireContext())
-                updateIdentifications(false)
+
             }
+            updateIdentifications(enteredYear)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun updateIdentifications(isAbove: Boolean) {
-        val identifications = if (isAbove) {
-            arrayOf(
-                "National ID",
-                "Passport",
-            )
-        } else {
-            arrayOf(
-                "Birth Certificate",
-                "NEMIS No",
-                "Birth Notification Number"
-            )
+    private fun updateIdentifications(age: Int) {
+        val identifications = when {
+            age < 3 -> {
+                arrayOf(
+                    "Birth Certificate",
+                    "Passport",
+                    "Birth Notification Number"
+                )
+            }
+
+            age in 3..17 -> {
+                arrayOf(
+                    "Birth Certificate",
+                    "Passport",
+                    "Nemis"
+                )
+            }
+
+            else -> {
+                arrayOf(
+                    "Birth Certificate",
+                    "ID Number",
+                    "Passport"
+                )
+            }
         }
+
         val adapterType =
             ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 identifications
             )
+
         binding.apply {
             identificationType.apply {
                 setAdapter(adapterType)
@@ -324,13 +389,13 @@ class PersonalFragment : Fragment() {
         if (year >= 18) {
             binding.telephone.visibility = View.VISIBLE
             formatter.saveSharedPref("isAbove", "true", requireContext())
-            updateIdentifications(true)
+
         } else {
             binding.telephone.visibility = View.GONE
             formatter.saveSharedPref("isAbove", "false", requireContext())
-            updateIdentifications(false)
-        }
 
+        }
+        updateIdentifications(year)
     }
 
     private fun validateData() {
@@ -362,12 +427,14 @@ class PersonalFragment : Fragment() {
         val checkedRadioButtonId = binding.radioGroup.checkedRadioButtonId
         if (checkedRadioButtonId != -1) {
             // RadioButton is selected, find the selected RadioButton
-            val selectedRadioButton = binding.root.findViewById<RadioButton>(checkedRadioButtonId)
+            val selectedRadioButton =
+                binding.root.findViewById<RadioButton>(checkedRadioButtonId)
             gender = selectedRadioButton.text.toString()
 
         } else {
             // No RadioButton is selected, handle it as needed
-            Toast.makeText(requireContext(), "Please select a gender", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please select a gender", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -403,7 +470,11 @@ class PersonalFragment : Fragment() {
             val weeks = binding.editTextThree.text.toString()
 
             if (year.isEmpty() && months.isEmpty() && weeks.isEmpty()) {
-                Toast.makeText(requireContext(), "Please enter estimate age", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    "Please enter estimate age",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
                 return
             }
@@ -411,12 +482,8 @@ class PersonalFragment : Fragment() {
             val enteredYear = binding.editTextOne.text.toString().toIntOrNull() ?: 0
             val enteredMonths = binding.editTextTwo.text.toString().toIntOrNull() ?: 0
             val enteredWeeks = binding.editTextThree.text.toString().toIntOrNull() ?: 0
-
-// Calculate date of birth
             val dateOfBirth = calculateDateOfBirth(enteredYear, enteredMonths, enteredWeeks)
 
-// Output the date of birth
-            println("Date of Birth: $dateOfBirth")
             dateOfBirthString = dateOfBirth
 
         }
@@ -451,7 +518,7 @@ class PersonalFragment : Fragment() {
         )
 
         formatter.saveSharedPref("personal", Gson().toJson(payload), requireContext())
-        Timber.e("TAG Patient payload ***** $payload")
+
         mListener?.onNextPageRequested()
 
 

@@ -66,7 +66,10 @@ class CaregiverFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
+        if (isUpdate != null) {
+            displayInitialData()
+        }
         val isAbove = formatter.getSharedPref("isAbove", requireContext())
         if (isAbove != null) {
             if (isAbove == "true") {
@@ -102,6 +105,23 @@ class CaregiverFragment : Fragment() {
                 }
             }
 
+        }
+    }
+
+    private fun displayInitialData() {
+        try {
+            val caregiver = formatter.getSharedPref("caregiver", requireContext())
+            if (caregiver != null) {
+                val data = Gson().fromJson(caregiver, CareGiver::class.java)
+                binding.apply {
+                    identificationType.setText(data.type)
+                    name.setText(data.name)
+                    phone.setText(data.phone)
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
