@@ -43,23 +43,25 @@ class PatientAdapter(
             val id = dbPatientList[pos].resourceId
 
             FormatterClass().saveSharedPref("patientId", id, context)
-            val selectedVaccinationVenue = FormatterClass().getSharedPref("selectedVaccinationVenue", context)
-            val isSelectedVaccinationVenue = FormatterClass().getSharedPref("isSelectedVaccinationVenue", context)
+            val selectedVaccinationVenue =
+                FormatterClass().getSharedPref("selectedVaccinationVenue", context)
+            val isSelectedVaccinationVenue =
+                FormatterClass().getSharedPref("isSelectedVaccinationVenue", context)
 
-            if (isSelectedVaccinationVenue == null){
+            if (isSelectedVaccinationVenue == null) {
                 val intent = Intent(context, PatientDetailActivity::class.java)
                 intent.putExtra("patientId", id)
                 context.startActivity(intent)
-            }else{
-                if (selectedVaccinationVenue != null){
+            } else {
+                if (selectedVaccinationVenue != null) {
                     val intent = Intent(context, PatientDetailActivity::class.java)
                     intent.putExtra("patientId", id)
                     context.startActivity(intent)
-                }else{
-                    Toast.makeText(context, "Please select a vaccination venue", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Please select a vaccination venue", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
-
 
 
         }
@@ -85,7 +87,14 @@ class PatientAdapter(
         val name = dbPatientList[position].name
         val age = dbPatientList[position].dob
         val idNumber = dbPatientList[position].identification
-        val phoneNumber = dbPatientList[position].phone
+        var phoneNumber = dbPatientList[position].phone
+        val careGiverPhone = dbPatientList[position].contact_phone
+        val gender = dbPatientList[position].contact_gender
+        if (phoneNumber.isEmpty()) {
+            if (careGiverPhone != null) {
+                phoneNumber = "$careGiverPhone - ($gender)"
+            }
+        }
 
         holder.name.text = name
         holder.idNumber.text = idNumber
