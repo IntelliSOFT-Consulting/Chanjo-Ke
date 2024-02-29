@@ -90,14 +90,16 @@ class PatientDetailsViewModel(
         var contact_phone = ""
         var contact_gender = ""
         var contact_type = ""
+        var type = ""
         var systemId = ""
         var county = ""
         var subCounty = ""
         var ward = ""
         var trading = ""
         var estate = ""
+        var logicalId = ""
         searchResult.first().let {
-
+            logicalId = it.logicalId
             name = if (it.hasName()) {
                 // display name in order as fname, then others
                 "${it.name[0].family} ${it.name[0].givenAsSingleString}"
@@ -146,14 +148,19 @@ class PatientDetailsViewModel(
 
             if (it.hasIdentifier()) {
                 it.identifier.forEach { identifier ->
+                    try {
+                        systemId = identifier.value
+                        type = identifier.system
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                     val codeableConceptType = identifier.type
                     if (codeableConceptType.hasText() && codeableConceptType.text.contains(
                             Identifiers.SYSTEM_GENERATED.name
                         )
                     ) {
-                        if (identifier.hasValue()) {
-                            systemId = identifier.value
-                        }
+
+
                     }
                 }
             }
@@ -186,6 +193,7 @@ class PatientDetailsViewModel(
         )
 
         return PatientData(
+            logicalId = logicalId,
             name,
             phone,
             dob,
@@ -195,6 +203,7 @@ class PatientDetailsViewModel(
             contact_gender = contact_type,
             systemId = systemId,
             county = county,
+            type = type,
             subCounty = subCounty,
             ward = ward,
             trading = trading,
@@ -203,6 +212,7 @@ class PatientDetailsViewModel(
     }
 
     data class PatientData(
+        val logicalId: String,
         val name: String,
         val phone: String,
         val dob: String,
@@ -211,6 +221,7 @@ class PatientDetailsViewModel(
         val contact_phone: String?,
         val contact_gender: String?,
         val systemId: String?,
+        val type: String?,
         val county: String?,
         val subCounty: String?,
         val ward: String?,

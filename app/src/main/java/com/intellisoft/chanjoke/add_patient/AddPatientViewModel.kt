@@ -343,7 +343,12 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
     }
 
 
-    fun saveCustomPatient(context: Context, payload: CompletePatient, practitioner: String) {
+    fun saveCustomPatient(
+        context: Context,
+        payload: CompletePatient,
+        practitioner: String,
+        boolean: Boolean
+    ) {
         viewModelScope.launch {
 
             val givens: MutableList<StringType> = mutableListOf()
@@ -400,9 +405,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             contact.value = payload.personal.telephone
 
             contacts.add(contact)
-            val patientId = generateUuid()
             val patient = Patient()
-            patient.id = patientId
             patient.identifier = identifier
             patient.name = names
             patient.gender =
@@ -421,7 +424,17 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             generalPractitioner.add(subjectReference)
             patient.generalPractitioner = generalPractitioner
             patient.active = true
-            fhirEngine.create(patient)
+
+            var patientId = generateUuid()
+            if (boolean) {
+                patientId = FormatterClass().getSharedPref("patientId", context).toString()
+                patient.id = patientId
+                fhirEngine.update(patient)
+            } else {
+
+                patient.id = patientId
+                fhirEngine.create(patient)
+            }
 
             FormatterClass().saveSharedPref("patientId", patientId, context)
             FormatterClass().saveSharedPref("isRegistration", "true", context)

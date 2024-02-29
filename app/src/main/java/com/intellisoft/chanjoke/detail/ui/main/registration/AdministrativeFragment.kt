@@ -86,7 +86,10 @@ class AdministrativeFragment : Fragment() {
     private var wardList = ArrayList<String>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
+        if (isUpdate != null) {
+            displayInitialData()
+        }
         try {
             val gson = Gson()
             val inputStream =
@@ -101,7 +104,6 @@ class AdministrativeFragment : Fragment() {
 
             countyList.clear()
             counties.forEach { county ->
-                Timber.e("County List **** ${county.name}")
                 countyList.add(county.name)
 
             }
@@ -309,6 +311,24 @@ class AdministrativeFragment : Fragment() {
 
                 }
 
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun displayInitialData() {
+        try {
+            val administrative = formatter.getSharedPref("administrative", requireContext())
+            if (administrative != null) {
+                val data = Gson().fromJson(administrative, Administrative::class.java)
+                binding.apply {
+                    county.setText(data.county, false)
+                    subCounty.setText(data.subCounty, false)
+                    ward.setText(data.ward, false)
+                    trading.setText(data.trading)
+                    estate.setText(data.estate)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

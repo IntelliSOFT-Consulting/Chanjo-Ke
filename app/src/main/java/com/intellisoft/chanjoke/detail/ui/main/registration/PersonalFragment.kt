@@ -82,6 +82,12 @@ class PersonalFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         AppUtils().disableEditing(binding.dateOfBirth)
         AppUtils().disableEditing(binding.calculatedAge)
+
+
+        val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
+        if (isUpdate != null) {
+            displayInitialData()
+        }
         val identifications = arrayOf(
             "Birth Certificate",
             "Passport",
@@ -264,6 +270,53 @@ class PersonalFragment : Fragment() {
 
     }
 
+    private fun displayInitialData() {
+        try {
+            val personal = formatter.getSharedPref("personal", requireContext())
+
+            if (personal != null) {
+                val data = Gson().fromJson(personal, CustomPatient::class.java)
+                binding.apply {
+                    val parts = data.firstname.split(" ")
+                    when (parts.size) {
+                        2 -> {
+                            val (firstName, lastName) = parts
+                            firstname.setText(firstName)
+                            lastname.setText(lastName)
+                        }
+
+                        3 -> {
+                            val (firstName, middleName, lastName) = parts
+                            firstname.setText(firstName)
+                            lastname.setText(lastName)
+                            middlename.setText(middleName)
+                        }
+
+                        else -> {
+                            println("Invalid name format")
+                        }
+                    }
+                    val gender = data.gender
+                    if (gender == "Male") {
+                        radioButtonYes.isChecked = true
+                    } else {
+                        radioButtonNo.isChecked = true
+                    }
+                    radioButtonYesDob.isChecked = true
+                    telDateOfBirth.visibility = View.VISIBLE
+                    dateOfBirth.setText(data.dateOfBirth)
+                    calculateUserAge(data.dateOfBirth)
+                    identificationType.setText(data.identification, false)
+                    identificationNumber.setText(data.identificationNumber)
+                    telephone.setText(data.telephone)
+
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun updateCalculatedAge() {
         try {
             val enteredYear = binding.editTextOne.text.toString().toIntOrNull() ?: 0
@@ -294,6 +347,7 @@ class PersonalFragment : Fragment() {
                     "Birth Notification Number"
                 )
             }
+
             age in 3..17 -> {
                 arrayOf(
                     "Birth Certificate",
@@ -301,6 +355,7 @@ class PersonalFragment : Fragment() {
                     "Nemis"
                 )
             }
+
             else -> {
                 arrayOf(
                     "Birth Certificate",
@@ -427,12 +482,8 @@ class PersonalFragment : Fragment() {
             val enteredYear = binding.editTextOne.text.toString().toIntOrNull() ?: 0
             val enteredMonths = binding.editTextTwo.text.toString().toIntOrNull() ?: 0
             val enteredWeeks = binding.editTextThree.text.toString().toIntOrNull() ?: 0
-
-// Calculate date of birth
             val dateOfBirth = calculateDateOfBirth(enteredYear, enteredMonths, enteredWeeks)
 
-// Output the date of birth
-            println("Date of Birth: $dateOfBirth")
             dateOfBirthString = dateOfBirth
 
         }
@@ -467,7 +518,7 @@ class PersonalFragment : Fragment() {
         )
 
         formatter.saveSharedPref("personal", Gson().toJson(payload), requireContext())
-        Timber.e("TAG Patient payload ***** $payload")
+
         mListener?.onNextPageRequested()
 
 
