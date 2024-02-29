@@ -27,6 +27,7 @@ import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.utils.AppUtils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
@@ -198,7 +199,10 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         val isActive: Boolean,
         val html: String,
         var risk: String? = "",
-        var lastUpdated: String
+        var lastUpdated: String,
+        val contact_name: String?,
+        val contact_phone: String?,
+        val contact_gender: String?,
     ) {
         override fun toString(): String = name
     }
@@ -251,7 +255,9 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
 internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientItem {
     // Show nothing if no values available for gender and date of birth.
     val patientId = if (hasIdElement()) idElement.idPart else ""
-    val name = if (hasName()) name[0].nameAsSingleString else ""
+    val name = if (hasName()) {
+        "${name[0].family} ${name[0].givenAsSingleString}"
+    } else ""
     val gender = if (hasGenderElement()) genderElement.valueAsString else ""
     val dob =
         if (hasBirthDateElement()) {
@@ -268,6 +274,35 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
     val identification: String = if (hasIdentifier()) identifier[0].value else "N/A"
     val lastUpdated: String = if (hasMeta()) meta.lastUpdated.toString() else ""
 
+    var contact_name = ""
+    var contact_phone = ""
+    var contact_gender = ""
+    var contact_type = ""
+    if (hasContact()) {
+        if (contactFirstRep.hasName()) contact_name =
+            if (hasContact()) {
+                if (contactFirstRep.hasName()) {
+                    contactFirstRep.name.nameAsSingleString
+                } else ""
+            } else ""
+        if (contactFirstRep.hasTelecom()) contact_phone =
+            if (hasContact()) {
+                if (contactFirstRep.hasTelecom()) {
+                    if (contactFirstRep.telecomFirstRep.hasValue()) {
+                        contactFirstRep.telecomFirstRep.value
+                    } else ""
+                } else ""
+            } else ""
+        if (contactFirstRep.hasGenderElement()) contact_gender =
+            if (hasContact()) AppUtils().capitalizeFirstLetter(contactFirstRep.genderElement.valueAsString) else ""
+        if (contactFirstRep.hasRelationship()) {
+            if (contactFirstRep.relationshipFirstRep.hasCoding()) {
+                contact_type = contactFirstRep.relationshipFirstRep.text
+            }
+        }
+    }
+
+
     return PatientListViewModel.PatientItem(
         id = position.toString(),
         resourceId = patientId,
@@ -280,7 +315,10 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
         country = country ?: "",
         isActive = isActive,
         html = html,
-        lastUpdated = lastUpdated
+        lastUpdated = lastUpdated,
+        contact_name = contact_name,
+        contact_phone = contact_phone,
+        contact_gender = contact_type,
     )
 }
 

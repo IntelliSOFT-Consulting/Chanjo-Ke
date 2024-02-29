@@ -342,44 +342,15 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         fhirEngine.update(pp)
     }
 
-    internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientItem {
-        // Show nothing if no values available for gender and date of birth.
-        val patientId = if (hasIdElement()) idElement.idPart else ""
-        val name = if (hasName()) name[0].nameAsSingleString else ""
-        val gender = if (hasGenderElement()) genderElement.valueAsString else ""
-        val dob =
-            if (hasBirthDateElement()) {
-                LocalDate.parse(birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
-            } else {
-                null
-            }
-        val phone = if (hasTelecom()) telecom[0].value else ""
-        val city = if (hasAddress()) address[0].city else ""
-        val country = if (hasAddress()) address[0].country else ""
-        val isActive = active
-        val html: String = if (hasText()) text.div.valueAsString else ""
-        val identification: String = if (hasIdentifier()) identifier[0].value else "N/A"
-        val lastUpdated: String = if (hasMeta()) meta.lastUpdated.toString() else "N/A"
 
-        return PatientListViewModel.PatientItem(
-            id = position.toString(),
-            resourceId = patientId,
-            name = name,
-            gender = gender ?: "",
-            dob = dob,
-            identification = identification,
-            phone = phone ?: "",
-            city = city ?: "",
-            country = country ?: "",
-            isActive = isActive,
-            html = html, lastUpdated = lastUpdated
-        )
-    }
-
-    fun saveCustomPatient(context: Context, payload: CompletePatient, practitioner: String) {
+    fun saveCustomPatient(
+        context: Context,
+        payload: CompletePatient,
+        practitioner: String,
+        boolean: Boolean
+    ) {
         viewModelScope.launch {
 
-            Log.e("TAG", "Payload ***** $payload")
             val givens: MutableList<StringType> = mutableListOf()
             if (payload.personal.middlename.isNotEmpty()) {
                 val string = StringType(payload.personal.middlename)
@@ -434,9 +405,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             contact.value = payload.personal.telephone
 
             contacts.add(contact)
-            val patientId = generateUuid()
             val patient = Patient()
-            patient.id = patientId
             patient.identifier = identifier
             patient.name = names
             patient.gender =
@@ -455,7 +424,17 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             generalPractitioner.add(subjectReference)
             patient.generalPractitioner = generalPractitioner
             patient.active = true
-            fhirEngine.create(patient)
+
+            var patientId = generateUuid()
+            if (boolean) {
+                patientId = FormatterClass().getSharedPref("patientId", context).toString()
+                patient.id = patientId
+                fhirEngine.update(patient)
+            } else {
+
+                patient.id = patientId
+                fhirEngine.create(patient)
+            }
 
             FormatterClass().saveSharedPref("patientId", patientId, context)
             FormatterClass().saveSharedPref("isRegistration", "true", context)

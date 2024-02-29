@@ -33,12 +33,21 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
     private val formatter = FormatterClass()
     private val viewModel: AddPatientViewModel by viewModels()
     private lateinit var progressDialog: ProgressDialog
+    private var isClientUpdate: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         observeSubmission()
+
+        val update = intent.extras?.getString("update")
+        if (update == "true") {
+            isClientUpdate = true
+            binding.tvTitle.text = getString(R.string.edit_client_detail)
+            formatter.saveSharedPref("isUpdate", "true", this@RegistrationActivity)
+        }
         progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Please wait")
         progressDialog.setMessage("Processing..")
@@ -48,7 +57,6 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
             title = ""
-
         }
         tabLayout = binding.tabs
         viewPager = binding.viewpager
@@ -99,7 +107,6 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
             val nextPageIndex = viewPager.currentItem + 1
             viewPager.setCurrentItem(nextPageIndex, true)
         } else {
-            Timber.e("TAG: Last Item")
 
             val personal = formatter.getSharedPref("personal", this)
             val caregiver = formatter.getSharedPref("caregiver", this)
@@ -123,7 +130,14 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
 
                 val fhirPractitionerId = formatter.getSharedPref("fhirPractitionerId", this)
                 if (fhirPractitionerId != null) {
-                    viewModel.saveCustomPatient(this, completePatient, fhirPractitionerId)
+
+                    viewModel.saveCustomPatient(
+                        this,
+                        completePatient,
+                        fhirPractitionerId,
+                        isClientUpdate
+                    )
+
                 } else {
                     Toast.makeText(this, "Please contact administrator", Toast.LENGTH_SHORT).show()
                 }

@@ -52,6 +52,7 @@ class AddPatientFragment : Fragment(R.layout.add_patient_fragment) {
             setDisplayHomeAsUpEnabled(true)
         }
 
+        FormatterClass().deleteSharedPref("isUpdate", requireContext())
         setUpActionBar()
         setHasOptionsMenu(true)
         updateArguments()
