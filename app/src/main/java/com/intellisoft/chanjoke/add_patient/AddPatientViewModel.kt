@@ -346,7 +346,6 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
     fun saveCustomPatient(context: Context, payload: CompletePatient, practitioner: String) {
         viewModelScope.launch {
 
-            Log.e("TAG", "Payload ***** $payload")
             val givens: MutableList<StringType> = mutableListOf()
             if (payload.personal.middlename.isNotEmpty()) {
                 val string = StringType(payload.personal.middlename)

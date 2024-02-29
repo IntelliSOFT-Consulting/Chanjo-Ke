@@ -99,7 +99,8 @@ class PatientDetailsViewModel(
         searchResult.first().let {
 
             name = if (it.hasName()) {
-                it.name[0].nameAsSingleString
+                // display name in order as fname, then others
+                "${it.name[0].family} ${it.name[0].givenAsSingleString}"
             } else ""
 
             phone = ""
@@ -192,7 +193,7 @@ class PatientDetailsViewModel(
             contact_name = contact_name,
             contact_phone = contact_phone,
             contact_gender = contact_type,
-            systemId,
+            systemId = systemId,
             county = county,
             subCounty = subCounty,
             ward = ward,
