@@ -56,7 +56,6 @@ class PersonalFragment : Fragment() {
     private var mListener: OnButtonClickListener? = null
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -85,10 +84,9 @@ class PersonalFragment : Fragment() {
         AppUtils().disableEditing(binding.calculatedAge)
         val identifications = arrayOf(
             "Birth Certificate",
-            "NEMIS No",
+            "Passport",
             "Birth Notification Number"
         )
-
 
         // Create ArrayAdapter with the array of strings
         val adapterType =
@@ -276,35 +274,49 @@ class PersonalFragment : Fragment() {
 
             if (enteredYear >= 18) {
                 formatter.saveSharedPref("isAbove", "true", requireContext())
-                updateIdentifications(true)
+
             } else {
                 formatter.saveSharedPref("isAbove", "false", requireContext())
-                updateIdentifications(false)
+
             }
+            updateIdentifications(enteredYear)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun updateIdentifications(isAbove: Boolean) {
-        val identifications = if (isAbove) {
-            arrayOf(
-                "National ID",
-                "Passport",
-            )
-        } else {
-            arrayOf(
-                "Birth Certificate",
-                "NEMIS No",
-                "Birth Notification Number"
-            )
+    private fun updateIdentifications(age: Int) {
+        val identifications = when {
+            age < 3 -> {
+                arrayOf(
+                    "Birth Certificate",
+                    "Passport",
+                    "Birth Notification Number"
+                )
+            }
+            age in 3..17 -> {
+                arrayOf(
+                    "Birth Certificate",
+                    "Passport",
+                    "Nemis"
+                )
+            }
+            else -> {
+                arrayOf(
+                    "Birth Certificate",
+                    "ID Number",
+                    "Passport"
+                )
+            }
         }
+
         val adapterType =
             ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 identifications
             )
+
         binding.apply {
             identificationType.apply {
                 setAdapter(adapterType)
@@ -322,13 +334,13 @@ class PersonalFragment : Fragment() {
         if (year >= 18) {
             binding.telephone.visibility = View.VISIBLE
             formatter.saveSharedPref("isAbove", "true", requireContext())
-            updateIdentifications(true)
+
         } else {
             binding.telephone.visibility = View.GONE
             formatter.saveSharedPref("isAbove", "false", requireContext())
-            updateIdentifications(false)
-        }
 
+        }
+        updateIdentifications(year)
     }
 
     private fun validateData() {
@@ -360,12 +372,14 @@ class PersonalFragment : Fragment() {
         val checkedRadioButtonId = binding.radioGroup.checkedRadioButtonId
         if (checkedRadioButtonId != -1) {
             // RadioButton is selected, find the selected RadioButton
-            val selectedRadioButton = binding.root.findViewById<RadioButton>(checkedRadioButtonId)
+            val selectedRadioButton =
+                binding.root.findViewById<RadioButton>(checkedRadioButtonId)
             gender = selectedRadioButton.text.toString()
 
         } else {
             // No RadioButton is selected, handle it as needed
-            Toast.makeText(requireContext(), "Please select a gender", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please select a gender", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -401,7 +415,11 @@ class PersonalFragment : Fragment() {
             val weeks = binding.editTextThree.text.toString()
 
             if (year.isEmpty() && months.isEmpty() && weeks.isEmpty()) {
-                Toast.makeText(requireContext(), "Please enter estimate age", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    "Please enter estimate age",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
                 return
             }
