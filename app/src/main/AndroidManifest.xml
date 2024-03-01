@@ -19,7 +19,9 @@
         tools:targetApi="31">
         <activity
             android:name=".detail.ui.main.contraindications.ContrasActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label=""
+            android:theme="@style/Theme.Zanzibar.NoActionBar" />
         <activity
             android:name=".detail.ui.main.registration.CompleteDetailsActivity"
             android:exported="false" />

@@ -10,6 +10,7 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import timber.log.Timber
 
 class ContrasActivity : AppCompatActivity() {
     private lateinit var binding: ActivityContrasBinding
@@ -19,6 +20,8 @@ class ContrasActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityContrasBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+
         binding.apply {
             btnClose.setOnClickListener {
                 onBackPressed()
@@ -36,11 +39,33 @@ class ContrasActivity : AppCompatActivity() {
         patientDetailsViewModel =
             ViewModelProvider(
                 this,
-                PatientDetailsViewModelFactory(this.application,
+                PatientDetailsViewModelFactory(
+                    this.application,
                     fhirEngine,
                     patientId.toString()
                 ),
             ).get(PatientDetailsViewModel::class.java)
+
+        loadContraindications()
+    }
+
+    private fun loadContraindications() {
+        val vaccineCode =
+            FormatterClass().getSharedPref("vaccineNameDetails", this)
+        if (vaccineCode != null) {
+            val contras = patientDetailsViewModel.loadContraindications(vaccineCode)
+            Timber.e("Contraindications details ****$vaccineCode,  $contras")
+            if (contras.isNotEmpty()) {
+                binding.apply {
+                    tvNextDate.text = contras.first().nextDate
+                    tvDetails.text = contras.first().contraDetail
+                }
+            }
+
+            binding.apply {
+                tvVaccineName.text = vaccineCode
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

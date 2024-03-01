@@ -22,6 +22,7 @@ import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
+import com.intellisoft.chanjoke.fhir.data.Contraindication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
@@ -454,9 +455,14 @@ class PatientDetailsViewModel(
 
         return ArrayList(vaccineList)
     }
-    fun getImmunizationDataDetails(codeValue: String)= runBlocking { getImmunizationDetails(codeValue) }
 
-    private suspend fun getImmunizationDetails(codeValue: String): ArrayList<DbVaccineDetailsData>{
+    fun getImmunizationDataDetails(codeValue: String) =
+        runBlocking { getImmunizationDetails(codeValue) }
+
+    fun loadContraindications(codeValue: String) =
+        runBlocking { loadContraindicationsInner(codeValue) }
+
+    private suspend fun getImmunizationDetails(codeValue: String): ArrayList<DbVaccineDetailsData> {
         val vaccineList = ArrayList<DbVaccineDetailsData>()
 
         fhirEngine
@@ -475,6 +481,26 @@ class PatientDetailsViewModel(
         return vaccineList
     }
 
+    private suspend fun loadContraindicationsInner(codeValue: String): ArrayList<Contraindication> {
+        val vaccineList = ArrayList<Contraindication>()
+
+        fhirEngine
+            .search<ImmunizationRecommendation> {
+                filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
+                sort(ImmunizationRecommendation.DATE, Order.DESCENDING)
+            }
+            .map { createContraItemDetails(it) }
+            .let { q ->
+                q.forEach {
+                    if (it.status.contains("Contraindicated")) {
+                        vaccineList.add(it)
+                    }
+                }
+            }
+
+        return vaccineList
+    }
+
     private fun createVaccineItemDetails(immunization: Immunization): DbVaccineDetailsData {
 
         var logicalId = ""
@@ -484,10 +510,10 @@ class PatientDetailsViewModel(
         var series = ""
         var status = ""
 
-        if (immunization.hasId()){
+        if (immunization.hasId()) {
             logicalId = immunization.id
         }
-        if (immunization.hasVaccineCode()){
+        if (immunization.hasVaccineCode()) {
             if (immunization.vaccineCode.hasText()) vaccineName = immunization.vaccineCode.text
         }
         if (immunization.hasOccurrenceDateTimeType()) {
@@ -500,7 +526,7 @@ class PatientDetailsViewModel(
         if (immunization.hasProtocolApplied()) {
             if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses())
                 seriesDosesString = immunization.protocolApplied[0].seriesDoses.asStringValue()
-                series = immunization.protocolApplied[0].series
+            series = immunization.protocolApplied[0].series
         }
 
 
@@ -510,7 +536,33 @@ class PatientDetailsViewModel(
 
 
         return DbVaccineDetailsData(
-            logicalId, vaccineName, dosesAdministered, seriesDosesString, series,status
+            logicalId, vaccineName, dosesAdministered, seriesDosesString, series, status
+        )
+    }
+
+    private fun createContraItemDetails(data: ImmunizationRecommendation): Contraindication {
+
+        var logicalId = ""
+        var vaccineName = ""
+        var vaccineCode = ""
+        var nextDate = ""
+        var contraDetail = ""
+        var status = ""
+
+        if (data.hasId()) {
+            logicalId = data.id
+        }
+        if (data.hasRecommendation()) {
+            vaccineCode = data.recommendationFirstRep.contraindicatedVaccineCodeFirstRep.text
+            vaccineName = data.recommendationFirstRep.targetDisease.text
+            nextDate = data.recommendationFirstRep.dateCriterionFirstRep.value.toString()
+            contraDetail = data.recommendationFirstRep.forecastReasonFirstRep.text
+            status = data.recommendationFirstRep.forecastStatus.text
+        }
+
+
+        return Contraindication(
+            logicalId, vaccineCode, vaccineName, nextDate, contraDetail, status
         )
     }
 
