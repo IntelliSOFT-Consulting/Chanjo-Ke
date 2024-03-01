@@ -14,6 +14,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/linearVaccineName"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_width="0dp"
@@ -71,8 +72,9 @@
 
 
             <ImageButton
+                android:backgroundTint="@color/colorPrimary"
                 android:layout_gravity="center"
-                android:background="@mipmap/ic_logo_next"
+                android:background="@drawable/ic_action_info_test"
                 android:id="@+id/imgBtnView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"/>

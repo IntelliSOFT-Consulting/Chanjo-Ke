@@ -22,10 +22,12 @@
             app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
-
     <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="160dp"
         android:layout_below="@+id/layout"
-        android:layout_margin="10dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -74,7 +76,6 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -99,8 +100,48 @@
 
         </LinearLayout>
 
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:padding="5dp"
+            android:layout_margin="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnEditAppointment"
+                android:layout_weight="1"
+                android:text="Edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnCloseAppointment"
+                android:layout_weight="1"
+                android:layout_marginStart="20dp"
+                android:text="Close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:background="@color/darker_gray"
+            android:layout_height="wrap_content"
+            app:menu="@menu/bottom_nav_menu" />
 
     </LinearLayout>
+
+
 
 </RelativeLayout>

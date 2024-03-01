@@ -328,6 +328,23 @@ class AdministerVaccineViewModel(
             immunizationProtocolAppliedComponent.series = vaccinationSeries
         }
 
+        //Add Performer
+        val fhirPractitionerId = FormatterClass().getSharedPref(
+            "fhirPractitionerId",
+            getApplication<Application>().applicationContext
+        )
+        if (fhirPractitionerId != null){
+            val practitionerReference = Reference("Practitioner/$fhirPractitionerId")
+            val immunizationPerformerComponentList = ArrayList<Immunization.ImmunizationPerformerComponent>()
+            val immunizationPerformerComponent = Immunization.ImmunizationPerformerComponent()
+            immunizationPerformerComponent.actor = practitionerReference
+            immunizationPerformerComponentList.add(immunizationPerformerComponent)
+
+            immunization.performer = immunizationPerformerComponentList
+        }
+
+
+
         //Dose number - Recommended number of doses for immunity
         val vaccinationDoseNumber = FormatterClass().getSharedPref(
             "vaccinationDoseNumber",
