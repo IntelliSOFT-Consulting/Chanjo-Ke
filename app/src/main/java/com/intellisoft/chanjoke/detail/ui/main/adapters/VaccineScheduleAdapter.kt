@@ -109,12 +109,17 @@ class VaccineScheduleAdapter(
         //Check vaccine status
         for (administeredVaccine in administeredList) {
 
+            Log.e(">>>>>>","<<<<<<")
+            println(administeredVaccine)
+            Log.e(">>>>>>","<<<<<<")
+
             var displayDate = ""
             if (vaccineName == administeredVaccine.vaccineName) {
                 val status = administeredVaccine.status
 
                 var vaccineStatus = ""
                 if ("COMPLETED" == status) {
+                    displayDate = administeredVaccine.dateAdministered
                     vaccineStatus = "administered"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
                     checkBox.visibility = View.INVISIBLE
@@ -131,15 +136,6 @@ class VaccineScheduleAdapter(
                     )
                 }
                 tvScheduleStatus.text = vaccineStatus
-
-            }else{
-
-                val previousVaccine = administeredVaccine.previousVaccineName
-                if (previousVaccine != null){
-                    val dateAdministered = administeredVaccine.dateAdministered
-                    val administeredDate = findDateAdministered(previousVaccine)
-                    displayDate = administeredDate ?: dateAdministered
-                }
 
             }
             tvVaccineDate.text = displayDate
