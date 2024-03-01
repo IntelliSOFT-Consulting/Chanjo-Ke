@@ -24,6 +24,7 @@ import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
+import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
@@ -453,6 +454,65 @@ class PatientDetailsViewModel(
 
         return ArrayList(vaccineList)
     }
+    fun getImmunizationDataDetails(codeValue: String)= runBlocking { getImmunizationDetails(codeValue) }
+
+    private suspend fun getImmunizationDetails(codeValue: String): ArrayList<DbVaccineDetailsData>{
+        val vaccineList = ArrayList<DbVaccineDetailsData>()
+
+        fhirEngine
+            .search<Immunization> {
+                filter(Immunization.PATIENT, { value = "Patient/$patientId" })
+                filter(
+                    Immunization.VACCINE_CODE,
+                    {
+                        value = of(Coding().apply { code = codeValue })
+                    })
+                sort(Immunization.DATE, Order.DESCENDING)
+            }
+            .map { createVaccineItemDetails(it) }
+            .let { vaccineList.addAll(it) }
+
+        return vaccineList
+    }
+
+    private fun createVaccineItemDetails(immunization: Immunization): DbVaccineDetailsData {
+
+        var logicalId = ""
+        var vaccineName = ""
+        var dosesAdministered = ""
+        var seriesDosesString = ""
+        var series = ""
+        var status = ""
+
+        if (immunization.hasId()){
+            logicalId = immunization.id
+        }
+        if (immunization.hasVaccineCode()){
+            if (immunization.vaccineCode.hasText()) vaccineName = immunization.vaccineCode.text
+        }
+        if (immunization.hasOccurrenceDateTimeType()) {
+            val fhirDate = immunization.occurrenceDateTimeType.valueAsString
+            val convertedDate = FormatterClass().convertDateFormat(fhirDate)
+            if (convertedDate != null) {
+                dosesAdministered = convertedDate
+            }
+        }
+        if (immunization.hasProtocolApplied()) {
+            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses())
+                seriesDosesString = immunization.protocolApplied[0].seriesDoses.asStringValue()
+                series = immunization.protocolApplied[0].series
+        }
+
+
+        if (immunization.hasStatus()) {
+            status = immunization.statusElement.value.name
+        }
+
+
+        return DbVaccineDetailsData(
+            logicalId, vaccineName, dosesAdministered, seriesDosesString, series,status
+        )
+    }
 
     private suspend fun getVaccineListDetailsOld(): ArrayList<DbVaccineData> {
 
@@ -560,13 +620,6 @@ class PatientDetailsViewModel(
                     immunizationHandler.getPreviousBasicVaccineInSeries(seriesVaccine, doseNumber)
             }
         }
-
-        Log.e("*****", "****")
-        println("vaccineName $vaccineName")
-        println("previousBasicVaccine $previousBasicVaccine")
-        Log.e("*****", "****")
-
-
 
         return DbVaccineData(
             ref,

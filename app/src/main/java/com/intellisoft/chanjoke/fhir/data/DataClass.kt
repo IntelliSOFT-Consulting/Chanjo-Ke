@@ -32,6 +32,15 @@ enum class StatusColors {
     NORMAL, //Future
 }
 
+data class DbVaccineDetailsData(
+    val logicalId: String,
+    val vaccineName: String,
+    val dosesAdministered: String,
+    val seriesDosesString: String,
+    val series: String,
+    val status: String,
+)
+
 data class DbVaccineData(
     val logicalId: String,
     val previousVaccineName: BasicVaccine? = null,

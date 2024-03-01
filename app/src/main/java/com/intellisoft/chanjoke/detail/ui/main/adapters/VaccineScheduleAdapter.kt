@@ -84,8 +84,12 @@ class VaccineScheduleAdapter(
         val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
         val checked = convertView.findViewById<ImageButton>(R.id.checked)
         val linearVaccineName = convertView.findViewById<LinearLayout>(R.id.linearVaccineName)
+        val vaccineName = expandedListText.vaccineName
 
         linearVaccineName.setOnClickListener {
+            val formatterClass = FormatterClass()
+            formatterClass.saveSharedPref("vaccineNameDetails", vaccineName, context)
+
             val patientId = FormatterClass().getSharedPref("patientId", context)
             val intent = Intent(context, MainActivity::class.java)
             intent.putExtra("functionToCall", NavigationDetails.VACCINE_DETAILS.name)
@@ -93,7 +97,6 @@ class VaccineScheduleAdapter(
             context.startActivity(intent)
         }
 
-        val vaccineName = expandedListText.vaccineName
         expandedListTextView.text = vaccineName
 
 
