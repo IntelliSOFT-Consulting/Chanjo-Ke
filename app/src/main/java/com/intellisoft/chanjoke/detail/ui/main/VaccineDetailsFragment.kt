@@ -92,7 +92,7 @@ class VaccineDetailsFragment : Fragment() {
 
                     binding.apply {
 
-                        tvVaccineName.text = vaccineNameDetails
+                        tvVaccineName.text = vaccineName
                         tvVaccineDate.text = dosesAdministered
                         tvVaccineDose.text = seriesDosesString
                         tvDaysSince.text = generateDaysSince(dosesAdministered, days = true, month = false)
@@ -104,6 +104,8 @@ class VaccineDetailsFragment : Fragment() {
                         }
                         val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
                         val age = generateAgeSince(patientDob, dosesAdministered)
+
+                        if (series == seriesDosesString) tvCompleteSeries.text = "Yes" else "No"
 
                         tvAgeThen.text = age
 
