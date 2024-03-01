@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Type"
+            android:hint="Type *"
             app:boxBackgroundMode="outline">
 
             <AutoCompleteTextView
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Names"
+            android:hint="Names *"
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Phone Number"
+            android:hint="Phone Number *"
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText

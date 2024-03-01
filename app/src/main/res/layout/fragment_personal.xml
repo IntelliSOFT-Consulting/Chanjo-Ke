@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="First Name"
+            android:hint="First Name *"
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Last Name"
+            android:hint="Last Name *"
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -80,7 +80,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gender"
+            android:text="Gender *"
             android:visibility="visible" />
 
         <RadioGroup
@@ -105,7 +105,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date of Birth"
+            android:text="Date of Birth *"
             android:visibility="visible" />
 
         <RadioGroup
@@ -207,7 +207,7 @@
             android:clickable="true"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:hint="Date of Birth"
+            android:hint="Date of Birth *"
             android:visibility="gone"
             app:boxBackgroundMode="outline"
             app:endIconDrawable="@drawable/baseline_calendar_month_24"
@@ -249,7 +249,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10dp"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Identification Type"
+            android:hint="Identification Type *"
             app:boxBackgroundMode="outline">
 
             <AutoCompleteTextView
@@ -267,7 +267,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10dp"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Identification Number"
+            android:hint="Identification Number *"
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText
