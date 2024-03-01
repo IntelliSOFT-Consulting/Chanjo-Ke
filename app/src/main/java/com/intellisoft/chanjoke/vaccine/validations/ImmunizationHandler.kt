@@ -181,7 +181,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         2,
         listOf(
             BasicVaccine(measles+"0", "Measles-Rubella", "Subcutaneous into the right upper arm (deltoid muscle)", 27, arrayListOf(), "0.5ml","0"),
-            BasicVaccine(measles+"1", "Measles-Rubella 1st Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 40, arrayListOf(), "0.5ml","1"),
+            BasicVaccine(measles+"1", "Measles-Rubella 1st Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 39, arrayListOf(), "0.5ml","1"),
             BasicVaccine(measles+"2", "Measles-Rubella 2nd Dose", "Subcutaneous into the right upper arm (deltoid muscle)", 79, arrayListOf(78.21), "0.5ml","2")
         )
     )
@@ -219,7 +219,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         "RTS/AS01 (Malaria)",
         4,
         listOf(
-            BasicVaccine(malaria+"1", "RTS/AS01 (Malaria Vaccine - 1)", "Intramuscular left deltoid muscle", 26, arrayListOf(), "0.5ml","1"),
+            BasicVaccine(malaria+"1", "RTS/AS01 (Malaria Vaccine - 1)", "Intramuscular left deltoid muscle", 27, arrayListOf(), "0.5ml","1"),
             BasicVaccine(malaria+"2", "RTS/AS01 (Malaria Vaccine - 2)", "Intramuscular left deltoid muscle", 30, arrayListOf(), "0.5ml","2"),
             BasicVaccine(malaria+"3", "RTS/AS01 (Malaria Vaccine - 3)", "Intramuscular left deltoid muscle", 39, arrayListOf(), "0.5ml","3"),
             BasicVaccine(malaria+"4", "RTS/AS01 (Malaria Vaccine - 4)", "Intramuscular left deltoid muscle", 104, arrayListOf(), "0.5ml","4")
@@ -327,7 +327,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
                 "Yellow Fever",
                 1,
                 listOf(
-                    BasicVaccine(yellowFever+"I", "Yellow Fever", "Subcutaneous left upper arm", 40, arrayListOf(), "0.5ml","1")
+                    BasicVaccine(yellowFever+"I", "Yellow Fever", "Subcutaneous left upper arm", 39, arrayListOf(), "0.5ml","1")
                 )
             )
         )

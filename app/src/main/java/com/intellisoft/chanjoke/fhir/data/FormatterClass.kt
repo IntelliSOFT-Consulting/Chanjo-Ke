@@ -789,11 +789,12 @@ class FormatterClass {
             "6 weeks",
             "10 weeks",
             "14 weeks",
-            "26 weeks",
+
+            "26 weeks", //6months
             "27 weeks",
             "30 weeks",
             "39 weeks",
-            "40 weeks",
+            "40 weeks",//9months
 
             "52 weeks", //12 months
             "79 weeks", //18 months
