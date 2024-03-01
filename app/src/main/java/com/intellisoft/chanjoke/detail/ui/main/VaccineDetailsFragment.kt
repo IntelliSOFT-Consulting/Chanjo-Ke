@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -17,6 +18,7 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentVaccineDetailsBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.adapters.EventsAdapter
+import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContrasActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -32,6 +34,7 @@ class VaccineDetailsFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private val immunizationHandler = ImmunizationHandler()
+
     /**/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,11 +74,26 @@ class VaccineDetailsFragment : Fragment() {
         }
 
         getVaccineDetails()
+
+        binding.apply {
+            btnContraindication.apply {
+                setOnClickListener {
+                    val vaccineCode =
+                        FormatterClass().getSharedPref("vaccineCode", requireContext())
+                    if (vaccineCode != null) {
+                        startActivity(Intent(requireContext(), ContrasActivity::class.java))
+                    } else {
+                        Toast.makeText(requireContext(), "Please wait...", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
     }
 
     private fun getVaccineDetails() {
         val vaccineName = FormatterClass().getSharedPref("vaccineNameDetails", requireContext())
-        if (vaccineName != null){
+        if (vaccineName != null) {
             //Get Vaccine details
             binding.tvVaccineName.text = vaccineName
             (requireActivity() as AppCompatActivity).supportActionBar?.apply {
@@ -83,10 +101,12 @@ class VaccineDetailsFragment : Fragment() {
             }
 
             val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
-            if (basicVaccine != null){
+            if (basicVaccine != null) {
                 val vaccineCode = basicVaccine.vaccineCode
-                val immunizationDetails = patientDetailsViewModel.getImmunizationDataDetails(vaccineCode)
-                if (immunizationDetails.isNotEmpty()){
+                FormatterClass().saveSharedPref("vaccineCode", vaccineCode, requireContext())
+                val immunizationDetails =
+                    patientDetailsViewModel.getImmunizationDataDetails(vaccineCode)
+                if (immunizationDetails.isNotEmpty()) {
 
                     val logicalId = immunizationDetails[0].logicalId
                     val vaccineNameDetails = immunizationDetails[0].vaccineName
@@ -99,11 +119,15 @@ class VaccineDetailsFragment : Fragment() {
 
                         tvVaccineDate.text = dosesAdministered
                         tvVaccineDose.text = seriesDosesString
-                        tvDaysSince.text = generateDaysSince(dosesAdministered, days = true, month = false)
-                        tvMonthSince.text = generateDaysSince(dosesAdministered, days = false, month = true)
-                        tvYearsSince.text = generateDaysSince(dosesAdministered, days = false, month = false)
+                        tvDaysSince.text =
+                            generateDaysSince(dosesAdministered, days = true, month = false)
+                        tvMonthSince.text =
+                            generateDaysSince(dosesAdministered, days = false, month = true)
+                        tvYearsSince.text =
+                            generateDaysSince(dosesAdministered, days = false, month = false)
 
-                        val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
+                        val patientDob =
+                            FormatterClass().getSharedPref("patientDob", requireContext())
                         val age = generateAgeSince(patientDob, dosesAdministered)
 
                         if (series == seriesDosesString) tvCompleteSeries.text = "Yes" else "No"
@@ -177,7 +201,6 @@ class VaccineDetailsFragment : Fragment() {
             return "0 day(s)"
         }
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

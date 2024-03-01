@@ -430,6 +430,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 patientId = FormatterClass().getSharedPref("patientId", context).toString()
                 patient.id = patientId
                 fhirEngine.update(patient)
+                FormatterClass().deleteSharedPref("isUpdate", context)
             } else {
 
                 patient.id = patientId

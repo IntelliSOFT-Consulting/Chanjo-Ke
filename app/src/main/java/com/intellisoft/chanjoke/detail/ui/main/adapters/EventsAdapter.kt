@@ -5,16 +5,13 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.detail.ui.main.AdverseEventActivity
+import com.intellisoft.chanjoke.detail.ui.main.aefis.AdverseEventActivity
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
 
 class EventsAdapter(

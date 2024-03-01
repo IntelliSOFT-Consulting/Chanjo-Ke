@@ -18,6 +18,11 @@
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
         <activity
+            android:name=".detail.ui.main.contraindications.ContrasActivity"
+            android:exported="false"
+            android:label=""
+            android:theme="@style/Theme.Zanzibar.NoActionBar" />
+        <activity
             android:name=".detail.ui.main.registration.CompleteDetailsActivity"
             android:exported="false" />
         <activity
@@ -40,7 +45,7 @@
             android:name=".detail.ui.main.appointments.AddAppointment"
             android:exported="false" />
         <activity
-            android:name=".detail.ui.main.AdverseEventActivity"
+            android:name=".detail.ui.main.aefis.AdverseEventActivity"
             android:exported="false" />
         <activity
             android:name=".vaccine.stock_management.VaccineStockManagement"

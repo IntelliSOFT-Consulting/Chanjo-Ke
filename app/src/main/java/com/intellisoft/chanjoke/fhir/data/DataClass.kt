@@ -41,6 +41,15 @@ data class DbVaccineDetailsData(
     val status: String,
 )
 
+data class Contraindication(
+    val logicalId: String,
+    val vaccineCode: String,
+    val vaccineName: String,
+    val nextDate: String,
+    val contraDetail: String,
+    val status: String,
+)
+
 data class DbVaccineData(
     val logicalId: String,
     val previousVaccineName: BasicVaccine? = null,

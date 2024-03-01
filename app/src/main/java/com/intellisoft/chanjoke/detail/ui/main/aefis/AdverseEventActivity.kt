@@ -1,13 +1,10 @@
-package com.intellisoft.chanjoke.detail.ui.main
+package com.intellisoft.chanjoke.detail.ui.main.aefis
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
-import com.google.android.fhir.logicalId
-import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAdverseEventBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -52,7 +49,7 @@ class AdverseEventActivity : AppCompatActivity() {
             ).get(PatientDetailsViewModel::class.java)
         binding.apply {
             val type = extractAefiData(patientId.toString(), encounterId.toString(), "882-22")
-            Timber.e("Type ****** $type")
+
             try {
                 val trimmedText = type.trim()
 

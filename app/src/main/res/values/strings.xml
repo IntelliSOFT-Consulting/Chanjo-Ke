@@ -73,6 +73,8 @@
     <string name="client_info">Client Details</string>
     <string name="next_of_kin_details">Next of Kin Details</string>
     <string name="edit_client_detail">Edit Client Detail</string>
+    <string name="contraindications">Contraindications</string>
+    <string name="next_vaccination_date">Next Vaccination Date</string>
 
 
 </resources>

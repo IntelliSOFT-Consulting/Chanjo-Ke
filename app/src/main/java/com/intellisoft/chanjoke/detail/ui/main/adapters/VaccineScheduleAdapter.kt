@@ -24,6 +24,7 @@ import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import timber.log.Timber
 import kotlin.math.round
 
 class VaccineScheduleAdapter(
@@ -51,6 +52,7 @@ class VaccineScheduleAdapter(
     override fun getChildId(listPosition: Int, expandedListPosition: Int): Long {
         return expandedListPosition.toLong()
     }
+
     private fun findDateAdministered(previousVaccineName: BasicVaccine?): String? {
         for (item in administeredList) {
             if (item.previousVaccineName == previousVaccineName) {
@@ -121,6 +123,12 @@ class VaccineScheduleAdapter(
         //Check vaccine status
         for (administeredVaccine in administeredList) {
 
+            Log.e(">>>>>>", "<<<<<<")
+            println(administeredVaccine)
+            Log.e(">>>>>>", "<<<<<<")
+
+            val administered = ArrayList<String>()
+
             var displayDate = ""
             if (vaccineName == administeredVaccine.vaccineName) {
                 val status = administeredVaccine.status
@@ -132,6 +140,8 @@ class VaccineScheduleAdapter(
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
                     checkBox.visibility = View.INVISIBLE
                     checked.visibility = View.VISIBLE
+                    administered.add(administeredVaccine.vaccineName)
+
                 } else if ("NOTDONE" == status) {
                     vaccineStatus = "contraindicated"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
@@ -148,9 +158,9 @@ class VaccineScheduleAdapter(
             }
             tvVaccineDate.text = displayDate
 
+            Timber.e("Administered **** $administered")
+
         }
-
-
 
 
         return convertView
@@ -264,12 +274,15 @@ class VaccineScheduleAdapter(
             StatusColors.GREEN.name -> {
                 imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
             }
+
             StatusColors.AMBER.name -> {
                 imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
             }
+
             StatusColors.RED.name -> {
                 imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
             }
+
             else -> {
                 imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
             }
