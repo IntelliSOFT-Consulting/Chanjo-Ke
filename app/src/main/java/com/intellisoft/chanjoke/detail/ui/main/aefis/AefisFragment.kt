@@ -27,8 +27,11 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -144,7 +147,7 @@ class AefisFragment : Fragment() {
 
                 AllergicReaction(
                     status,
-                    "",
+                    getVaccinesAtGivenAge(status),
                     reactions = reactions
                 )
             }
@@ -157,6 +160,49 @@ class AefisFragment : Fragment() {
             )
 
         binding.aefiParentList.adapter = vaccineAdapter
+    }
+
+    private fun getVaccinesAtGivenAge(status: String): String {
+        val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
+
+        /****
+         * status At Birth --- weeks -> 0
+         ***/
+
+        Timber.e("Data ***** $status $expandableListDetail")
+
+        try {
+            if (status == "At Birth") {
+                var commaSeparatedString = ""
+                val basic = expandableListDetail.entries.firstOrNull { it.key == "0" }?.value
+                basic?.forEach {
+                    commaSeparatedString += "${it.vaccineName},"
+                }
+
+                return commaSeparatedString
+
+            }else{
+                val weeks: Int = when {
+                    status.endsWith("weeks") -> status.replace(" weeks", "").toIntOrNull() ?: 0
+                    status.endsWith("months") -> (status.replace(" months", "").toDouble() / 0.230137).toInt()
+                    status.endsWith("years") -> (status.replace(" years", "").toDouble() / 0.019).toInt()
+                    else -> 0
+                }
+
+                var commaSeparatedString = ""
+                val basic = expandableListDetail.entries.firstOrNull { it.key == "$weeks" }?.value
+                basic?.forEach {
+                    commaSeparatedString += "${it.vaccineName},"
+                }
+
+                return commaSeparatedString
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return ""
+
     }
 
     private fun onBackPressed() {
