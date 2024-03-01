@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main.contraindications
 
 import android.app.Application
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentContraindicationsBinding
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -114,7 +116,7 @@ class ContraindicationsFragment : Fragment() {
                 val allDropdownList = selectedVaccineName!!.split(",").toList()
                 val vaccineList = allDropdownList.subtract(selectedItemList.toSet())
 
-                if (vaccineList.isEmpty()){
+                if (selectedItemList.isEmpty()){
                     Toast.makeText(requireContext(), "There's no vaccine available!", Toast.LENGTH_SHORT).show()
                 }else{
                     formatterClass.saveSharedPref(
@@ -137,7 +139,14 @@ class ContraindicationsFragment : Fragment() {
                                     status,
                                     null,
                                     description)
-                                findNavController().navigate(R.id.administerNewFragment)
+                                if (vaccineList.isNotEmpty()){
+                                    findNavController().navigate(R.id.administerNewFragment)
+                                }else{
+                                    val intent = Intent(context, PatientDetailActivity::class.java)
+                                    intent.putExtra("patientId", patientId)
+                                    startActivity(intent)
+                                }
+
                             }
                         }
                     }
