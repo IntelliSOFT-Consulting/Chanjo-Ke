@@ -84,7 +84,8 @@ enum class NavigationDetails {
     CLIENT_LIST,
     EDIT_CLIENT,
     LIST_AEFI,
-    ADD_AEFI
+    ADD_AEFI,
+    VACCINE_DETAILS
 }
 
 data class DbAppointmentDataDetails(

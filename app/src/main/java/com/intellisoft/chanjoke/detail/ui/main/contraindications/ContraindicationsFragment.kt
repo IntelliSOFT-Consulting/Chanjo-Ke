@@ -257,6 +257,8 @@ class ContraindicationsFragment : Fragment() {
         if (selectedItemList.contains(selectedItem)) selectedItemList.remove(selectedItem)
         selectedItemList.add(selectedItem)
 
+        selectedItemList.remove("")
+
         val vaccineAdapter = ContraindicationsAdapter(selectedItemList,requireContext())
         binding.recyclerView.adapter = vaccineAdapter
 

@@ -148,10 +148,6 @@ class AddAppointment : AppCompatActivity() {
         if (selectedItemList.contains(selectedItem)) selectedItemList.remove(selectedItem)
         selectedItemList.add(selectedItem)
 
-        Log.e("----->","<------")
-        println(selectedItemList)
-        Log.e("----->","<------")
-
         selectedItemList.remove("")
 
         val vaccineAdapter = ContraindicationsAdapter(selectedItemList,this)

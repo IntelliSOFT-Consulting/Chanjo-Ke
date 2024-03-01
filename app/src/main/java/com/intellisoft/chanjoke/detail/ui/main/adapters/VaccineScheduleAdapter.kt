@@ -11,6 +11,7 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.intellisoft.chanjoke.MainActivity
@@ -20,6 +21,7 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
+import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -81,6 +83,15 @@ class VaccineScheduleAdapter(
         val tvScheduleStatus = convertView!!.findViewById<TextView>(R.id.tvScheduleStatus)
         val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
         val checked = convertView.findViewById<ImageButton>(R.id.checked)
+        val linearVaccineName = convertView.findViewById<LinearLayout>(R.id.linearVaccineName)
+
+        linearVaccineName.setOnClickListener {
+            val patientId = FormatterClass().getSharedPref("patientId", context)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.VACCINE_DETAILS.name)
+            intent.putExtra("patientId", patientId)
+            context.startActivity(intent)
+        }
 
         val vaccineName = expandedListText.vaccineName
         expandedListTextView.text = vaccineName
