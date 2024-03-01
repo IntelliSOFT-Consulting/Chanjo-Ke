@@ -109,10 +109,6 @@ class VaccineScheduleAdapter(
         //Check vaccine status
         for (administeredVaccine in administeredList) {
 
-            Log.e(">>>>>>","<<<<<<")
-            println(administeredVaccine)
-            Log.e(">>>>>>","<<<<<<")
-
             var displayDate = ""
             if (vaccineName == administeredVaccine.vaccineName) {
                 val status = administeredVaccine.status
@@ -151,7 +147,11 @@ class VaccineScheduleAdapter(
                 tvScheduleStatus.text = status
                 tvVaccineDate.text = dateScheduled
                 tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
-
+            }
+            if (status == "Due") {
+                tvScheduleStatus.text = status
+                tvVaccineDate.text = dateScheduled
+                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
             }
 
         }
