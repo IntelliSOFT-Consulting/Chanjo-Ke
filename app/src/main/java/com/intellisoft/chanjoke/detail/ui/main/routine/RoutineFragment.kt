@@ -19,6 +19,8 @@ import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import java.time.LocalDate
+import java.time.Period
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -63,6 +65,7 @@ class RoutineFragment : Fragment() {
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
+
 
         getRoutine()
 
@@ -125,7 +128,22 @@ class RoutineFragment : Fragment() {
             patientDetailsViewModel,
             binding.tvAdministerVaccine)
 
-        binding.expandableListView.setAdapter(vaccineScheduleAdapter)
+        val patientDob = formatterClass.getSharedPref("patientDob",requireContext())
+        if (patientDob != null) {
+
+            val dob = formatterClass.convertDateFormat(patientDob)
+            if (dob != null){
+                val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
+                if (dobDate != null) {
+                    val finalDate = formatterClass.convertDateToLocalDate(dobDate)
+                    val period = Period.between(finalDate, LocalDate.now())
+                    val years = period.years
+                    if (years < 16){
+                        binding.expandableListView.setAdapter(vaccineScheduleAdapter)
+                    }
+                }
+            }
+        }
 
         binding.tvAdministerVaccine.setOnClickListener {
 
