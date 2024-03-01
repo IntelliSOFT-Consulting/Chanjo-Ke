@@ -4,7 +4,6 @@ import android.app.Application
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,21 +13,17 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.databinding.FragmentAefisBinding
 import com.intellisoft.chanjoke.databinding.FragmentContraindicationsBinding
-import com.intellisoft.chanjoke.detail.ui.main.RecommendationAdapter
 
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -128,7 +123,8 @@ class ContraindicationsFragment : Fragment() {
                         requireContext())
 
                     val datePicker =  binding.tvDatePicker.text.toString()
-                    if (!TextUtils.isEmpty(datePicker)){
+                    val description =  binding.etDescription.text.toString()
+                    if (!TextUtils.isEmpty(datePicker) && !TextUtils.isEmpty(description)){
 
                         val dobFormat = formatterClass.convertDateFormat(datePicker)
                         if (dobFormat != null) {
@@ -139,7 +135,8 @@ class ContraindicationsFragment : Fragment() {
                                     patientId,
                                     dobDate,
                                     status,
-                                    null)
+                                    null,
+                                    description)
                                 findNavController().navigate(R.id.administerNewFragment)
                             }
                         }

@@ -88,9 +88,6 @@ class RoutineFragment : Fragment() {
         //Get the administered list
         val recommendationList = patientDetailsViewModel.recommendationList()
 
-        Log.e(">>>>>>>","<<<<<<")
-        println(recommendationList)
-        Log.e(">>>>>>>","<<<<<<")
 
         val administeredList = patientDetailsViewModel.getVaccineList()
         val statusColorsList = ArrayList<DbStatusColor>()

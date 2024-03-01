@@ -19,7 +19,6 @@ package com.intellisoft.chanjoke.vaccine
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Paint.FontMetrics
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -34,7 +33,6 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
-import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -530,7 +528,8 @@ class AdministerVaccineViewModel(
         patientId: String,
         nextImmunizationDate: Date?,
         status: String,
-        immunizationId: String?
+        immunizationId: String?,
+        foreCastReason: String
     ) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -565,7 +564,7 @@ class AdministerVaccineViewModel(
                         patientId,
                         nextImmunizationDate,
                         status,
-                        "Next Immunization date",
+                        foreCastReason,
                         immunizationId
                     )
                     saveResourceToDatabase(recommendation, "ImmRec")

@@ -105,6 +105,18 @@ class VaccineScheduleAdapter(
             checkedStates[key] = isChecked
             updateAdministerVaccineText()
         }
+        // Check if the vaccineName exists in recommendationList
+        val recommendationDetails = recommendationList.find { it.vaccineName == vaccineName }
+        if (recommendationDetails != null){
+            val dateScheduled = recommendationDetails.dateScheduled
+            val status = recommendationDetails.appointmentStatus
+            if (status == "Contraindicated"){
+                tvScheduleStatus.text = status
+                tvVaccineDate.text = dateScheduled
+                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
+            }
+
+        }
 
         //Check vaccine status
         for (administeredVaccine in administeredList) {
@@ -138,23 +150,7 @@ class VaccineScheduleAdapter(
 
         }
 
-        // Check if the vaccineName exists in recommendationList
-        val recommendationDetails = recommendationList.find { it.vaccineName == vaccineName }
-        if (recommendationDetails != null){
-            val dateScheduled = recommendationDetails.dateScheduled
-            val status = recommendationDetails.appointmentStatus
-            if (status == "Contraindicated"){
-                tvScheduleStatus.text = status
-                tvVaccineDate.text = dateScheduled
-                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
-            }
-            if (status == "Due") {
-                tvScheduleStatus.text = status
-                tvVaccineDate.text = dateScheduled
-                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
-            }
 
-        }
 
 
         return convertView
