@@ -27,6 +27,7 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -51,12 +52,15 @@ class AddAppointment : AppCompatActivity() {
     private val immunizationHandler = ImmunizationHandler()
     private val selectedItemList = ArrayList<String>()
     private lateinit var layoutManager: RecyclerView.LayoutManager
+    private var appointmentId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddAppointmentBinding.inflate(layoutInflater)
         setContentView(binding.root)
         patientId = FormatterClass().getSharedPref("patientId", this).toString()
+
+        appointmentId = intent.getStringExtra("appointmentId")
 
         val toolbar =
             findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
@@ -69,6 +73,8 @@ class AddAppointment : AppCompatActivity() {
                 this,
                 PatientDetailsViewModelFactory(this.application, fhirEngine, patientId),
             ).get(PatientDetailsViewModel::class.java)
+
+        getPastAppointment()
 
         createSpinner()
 
@@ -120,9 +126,29 @@ class AddAppointment : AppCompatActivity() {
 
     }
 
+    private fun getPastAppointment() {
+
+        if (appointmentId != null){
+            val appointmentList = patientDetailsViewModel.getAppointmentList()
+            val recommendationList: ArrayList<DbAppointmentDetails>
+
+            val dbAppointmentData = appointmentList.find { it.id == appointmentId }
+
+            if (dbAppointmentData != null) {
+                recommendationList = dbAppointmentData.recommendationList!!
+
+                val dateScheduled = dbAppointmentData.dateScheduled
+                binding.tvDatePicker.text = dateScheduled
+            }
+        }
+
+    }
+
     private fun createAppointment(selectedItem: String) {
         if (selectedItemList.contains(selectedItem)) selectedItemList.remove(selectedItem)
         selectedItemList.add(selectedItem)
+
+        selectedItemList.remove("")
 
         val vaccineAdapter = ContraindicationsAdapter(selectedItemList,this)
         binding.recyclerView.adapter = vaccineAdapter
@@ -180,7 +206,6 @@ class AddAppointment : AppCompatActivity() {
                 }
 
                 val weeksList = ArrayList<Double>()
-
                 recommendationList.add(
                     BasicVaccine(
                         "",

@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -18,6 +19,7 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.adapters.EventsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import java.time.LocalDate
@@ -29,7 +31,7 @@ class VaccineDetailsFragment : Fragment() {
     private lateinit var binding: FragmentVaccineDetailsBinding
     private lateinit var fhirEngine: FhirEngine
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
-
+    private val immunizationHandler = ImmunizationHandler()
     /**/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,35 +66,57 @@ class VaccineDetailsFragment : Fragment() {
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-            title = getString(R.string.administer_vaccine)
+            title = "Vaccines"
             setDisplayHomeAsUpEnabled(true)
         }
 
-        binding.apply {
-            val vaccineName = FormatterClass().getSharedPref("vaccine_name", requireContext())
-            val vaccineDose = FormatterClass().getSharedPref("vaccine_dose", requireContext())
-            val vaccineDate = FormatterClass().getSharedPref("vaccine_date", requireContext())
-            tvVaccineName.text = vaccineName
-            tvVaccineDate.text = vaccineDate
-            tvVaccineDose.text = vaccineDose
-            tvDaysSince.text = generateDaysSince(vaccineDate.toString(), days = true, month = false)
-            tvMonthSince.text =
-                generateDaysSince(vaccineDate.toString(), days = false, month = true)
-            tvYearsSince.text =
-                generateDaysSince(vaccineDate.toString(), days = false, month = false)
+        getVaccineDetails()
+    }
 
+    private fun getVaccineDetails() {
+        val vaccineName = FormatterClass().getSharedPref("vaccineNameDetails", requireContext())
+        if (vaccineName != null){
+            //Get Vaccine details
+            val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+            if (basicVaccine != null){
+                val vaccineCode = basicVaccine.vaccineCode
+                val immunizationDetails = patientDetailsViewModel.getImmunizationDataDetails(vaccineCode)
+                if (immunizationDetails.isNotEmpty()){
 
-            (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-                if (vaccineName != null) {
-                    title = vaccineName.replace("Vaccine:", "")
+                    val logicalId = immunizationDetails[0].logicalId
+                    val vaccineNameDetails = immunizationDetails[0].vaccineName
+                    val dosesAdministered = immunizationDetails[0].dosesAdministered
+                    val seriesDosesString = immunizationDetails[0].seriesDosesString
+                    val series = immunizationDetails[0].series
+                    val status = immunizationDetails[0].status
+
+                    binding.apply {
+
+                        tvVaccineName.text = vaccineName
+                        tvVaccineDate.text = dosesAdministered
+                        tvVaccineDose.text = seriesDosesString
+                        tvDaysSince.text = generateDaysSince(dosesAdministered, days = true, month = false)
+                        tvMonthSince.text = generateDaysSince(dosesAdministered, days = false, month = true)
+                        tvYearsSince.text = generateDaysSince(dosesAdministered, days = false, month = false)
+
+                        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+                            title = vaccineName
+                        }
+                        val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
+                        val age = generateAgeSince(patientDob, dosesAdministered)
+
+                        if (series == seriesDosesString) tvCompleteSeries.text = "Yes" else "No"
+
+                        tvAgeThen.text = age
+
+                    }
+
                 }
+
             }
-            val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
-            val age = generateAgeSince(patientDob, vaccineDate)
-            tvAgeThen.text = age
 
         }
-        loadVaccineAdverseEvents()
+
     }
 
     private fun onBackPressed() {
@@ -153,17 +177,7 @@ class VaccineDetailsFragment : Fragment() {
         }
     }
 
-    private fun loadVaccineAdverseEvents() {
-        val logicalId = FormatterClass().getSharedPref("current_immunization", requireContext())
 
-        if (logicalId != null) {
-//            val adverseEvents = patientDetailsViewModel.loadImmunizationAefis(logicalId)
-//
-//            val vaccineAdapter = EventsAdapter(adverseEvents, requireContext())
-//            binding.recyclerView.adapter = vaccineAdapter
-        }
-
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

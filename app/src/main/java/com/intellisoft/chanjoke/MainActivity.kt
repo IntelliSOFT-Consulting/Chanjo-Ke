@@ -113,6 +113,12 @@ class MainActivity : AppCompatActivity() {
                     contraindicationFunction(patientId,  R.id.appointmentsFragment)
                 }
             }
+            NavigationDetails.VACCINE_DETAILS.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    contraindicationFunction(patientId,  R.id.vaccineDetailsFragment)
+                }
+            }
 
             NavigationDetails.ADMINISTER_VACCINE.name -> {
                 val patientId = intent.getStringExtra("patientId")

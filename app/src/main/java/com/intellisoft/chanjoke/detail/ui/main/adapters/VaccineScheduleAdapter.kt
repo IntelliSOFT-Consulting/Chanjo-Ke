@@ -11,6 +11,7 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.intellisoft.chanjoke.MainActivity
@@ -20,6 +21,7 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
+import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -27,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.math.round
 
 class VaccineScheduleAdapter(
     private val context: Context,
@@ -80,8 +83,20 @@ class VaccineScheduleAdapter(
         val tvScheduleStatus = convertView!!.findViewById<TextView>(R.id.tvScheduleStatus)
         val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
         val checked = convertView.findViewById<ImageButton>(R.id.checked)
-
+        val linearVaccineName = convertView.findViewById<LinearLayout>(R.id.linearVaccineName)
         val vaccineName = expandedListText.vaccineName
+
+        linearVaccineName.setOnClickListener {
+            val formatterClass = FormatterClass()
+            formatterClass.saveSharedPref("vaccineNameDetails", vaccineName, context)
+
+            val patientId = FormatterClass().getSharedPref("patientId", context)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.VACCINE_DETAILS.name)
+            intent.putExtra("patientId", patientId)
+            context.startActivity(intent)
+        }
+
         expandedListTextView.text = vaccineName
 
 
@@ -216,8 +231,12 @@ class VaccineScheduleAdapter(
         weekNo = if (listTitle.toIntOrNull() != null) {
             if (listTitle == "0") {
                 "At Birth"
-            } else {
+            } else if (listTitle.toInt() in 1..15){
                 "$listTitle weeks"
+            }else if (listTitle.toInt() in 15..105){
+                "${(round(listTitle.toInt() * 0.230137)).toString().replace(".0","")} months"
+            }else{
+                "${(round(listTitle.toInt() * 0.019)).toString().replace(".0","")} years"
             }
         } else {
             listTitle
