@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
@@ -17,6 +18,7 @@ import com.intellisoft.chanjoke.fhir.data.Administrative
 import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,12 +81,12 @@ class PreviewFragment : Fragment() {
             val caregiver = formatter.getSharedPref("caregiver", requireContext())
             val administrative = formatter.getSharedPref("administrative", requireContext())
 
-            if (personal != null && caregiver != null && administrative != null) {
+            Timber.e("Data &&&&****$personal")
+            Timber.e("Data &&&&**** $caregiver")
+            Timber.e("Data &&&&**** $administrative")
 
+            if (personal != null) {
                 val refinedPersonal = Gson().fromJson(personal, CustomPatient::class.java)
-                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
-                val refinedAdministrative =
-                    Gson().fromJson(administrative, Administrative::class.java)
 
                 tvFirstname.text = refinedPersonal.firstname
                 tvLastname.text = refinedPersonal.lastname
@@ -93,16 +95,29 @@ class PreviewFragment : Fragment() {
                 tvDateOfBirth.text = refinedPersonal.dateOfBirth
                 tvAge.text = refinedPersonal.age
                 tvIdNumber.text = refinedPersonal.identificationNumber
+            }
+
+            if (caregiver != null) {
+
+                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
                 tvCname.text = refinedCaregiver.name
                 tvCtype.text = refinedCaregiver.type
                 tvCphone.text = refinedCaregiver.phone
+            }
+
+            if (administrative != null) {
+
+                val refinedAdministrative =
+                    Gson().fromJson(administrative, Administrative::class.java)
+
                 tvCounty.text = refinedAdministrative.county
                 tvSubCounty.text = refinedAdministrative.subCounty
                 tvWard.text = refinedAdministrative.ward
                 tvTrading.text = refinedAdministrative.trading
                 tvVillage.text = refinedAdministrative.estate
+            } else {
+                Toast.makeText(requireContext(), "Please try", Toast.LENGTH_SHORT).show()
             }
-
 
 
             previousButton.apply {

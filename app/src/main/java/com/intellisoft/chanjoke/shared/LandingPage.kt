@@ -104,6 +104,9 @@ class LandingPage : Fragment() {
                     "new-patient-registration-paginated.json"
                 )
 //                findNavController().navigate(R.id.addPatientFragment, bundle)
+                formatterClass.deleteSharedPref("personal",requireContext())
+                formatterClass.deleteSharedPref("caregiver",requireContext())
+                formatterClass.deleteSharedPref("administrative",requireContext())
                 startActivity(Intent(requireContext(), RegistrationActivity::class.java))
             }
 

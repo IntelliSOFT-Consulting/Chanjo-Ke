@@ -250,6 +250,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun registerFunction() {
+        formatter.deleteSharedPref("personal",this)
+        formatter.deleteSharedPref("personal",this)
+        formatter.deleteSharedPref("personal",this)
         val bundle = Bundle()
         bundle.putString(
             AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,

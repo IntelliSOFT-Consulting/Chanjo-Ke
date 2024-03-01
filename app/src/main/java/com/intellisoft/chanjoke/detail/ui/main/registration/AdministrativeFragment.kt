@@ -248,6 +248,7 @@ class AdministrativeFragment : Fragment() {
                 nextButton.apply {
                     setOnClickListener {
                         if (validData()) {
+
                             mListener?.onNextPageRequested()
                         }
                     }
