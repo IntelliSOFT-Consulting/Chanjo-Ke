@@ -497,7 +497,7 @@ class PatientDetailsViewModel(
             .map { createContraItemDetails(it) }
             .let { q ->
                 q.forEach {
-                    if (it.status.contains("Contraindicated")) {
+                    if (it.vaccineCode.contains(codeValue) && it.status.contains("Contraindicated")) {
                         vaccineList.add(it)
                     }
                 }
@@ -602,23 +602,6 @@ class PatientDetailsViewModel(
 
         val ref = logicalId.toString().replace("Encounter/", "")
 
-        Log.e("TAG", "Encounter Referenced $ref")
-//
-//        if (immunization.hasVaccineCode()) {
-//            if (immunization.vaccineCode.hasText()) vaccineName = immunization.vaccineCode.text
-//        }
-//
-//        if (immunization.hasOccurrenceDateTimeType()) {
-//            val fhirDate = immunization.occurrenceDateTimeType.valueAsString
-//            val convertedDate = FormatterClass().convertDateFormat(fhirDate)
-//            if (convertedDate != null) {
-//                dateScheduled = convertedDate
-//            }
-//        }
-//        if (immunization.hasProtocolApplied()) {
-//            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) doseNumberValue =
-//                immunization.protocolApplied[0].seriesDoses.asStringValue()
-//        }
         if (data.hasNote()) {
             status = if (data.noteFirstRep.hasText()) data.noteFirstRep.text else ""
         }

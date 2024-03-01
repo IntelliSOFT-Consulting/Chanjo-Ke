@@ -27,8 +27,10 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -144,7 +146,7 @@ class AefisFragment : Fragment() {
 
                 AllergicReaction(
                     status,
-                    "",
+                    getVaccinesAtGivenAge(status),
                     reactions = reactions
                 )
             }
@@ -157,6 +159,13 @@ class AefisFragment : Fragment() {
             )
 
         binding.aefiParentList.adapter = vaccineAdapter
+    }
+
+    private fun getVaccinesAtGivenAge(status: String): String {
+        val vaccines = ImmunizationHandler().vaccines
+        Timber.e("TAG::**** $vaccines")
+        return ""
+
     }
 
     private fun onBackPressed() {

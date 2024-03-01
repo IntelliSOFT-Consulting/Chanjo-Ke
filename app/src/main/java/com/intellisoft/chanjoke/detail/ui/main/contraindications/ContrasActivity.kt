@@ -57,7 +57,11 @@ class ContrasActivity : AppCompatActivity() {
             Timber.e("Contraindications details ****$vaccineCode,  $contras")
             if (contras.isNotEmpty()) {
                 binding.apply {
-                    tvNextDate.text = contras.first().nextDate
+                    var date = contras.first().nextDate
+                    if (date.isNotEmpty()) {
+                        date = FormatterClass().convertDateFormat(date).toString()
+                    }
+                    tvNextDate.text = date
                     tvDetails.text = contras.first().contraDetail
                 }
             }

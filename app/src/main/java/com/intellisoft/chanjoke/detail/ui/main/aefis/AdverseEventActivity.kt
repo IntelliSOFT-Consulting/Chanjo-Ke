@@ -49,7 +49,7 @@ class AdverseEventActivity : AppCompatActivity() {
             ).get(PatientDetailsViewModel::class.java)
         binding.apply {
             val type = extractAefiData(patientId.toString(), encounterId.toString(), "882-22")
-            Timber.e("Type ****** $type")
+
             try {
                 val trimmedText = type.trim()
 
