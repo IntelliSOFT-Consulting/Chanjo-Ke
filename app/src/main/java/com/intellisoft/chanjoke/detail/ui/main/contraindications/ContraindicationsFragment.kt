@@ -114,16 +114,17 @@ class ContraindicationsFragment : Fragment() {
              * remove them from the shared preference
              * save the new list to the shared pref
              */
-            if (selectedVaccineName != null){
-                val resultList = selectedVaccineName!!.split(",").toList()
-                val newList = resultList.subtract(selectedItemList.toSet())
 
-                if (newList.isEmpty()){
+            if (selectedVaccineName != null){
+                val allDropdownList = selectedVaccineName!!.split(",").toList()
+                val vaccineList = allDropdownList.subtract(selectedItemList.toSet())
+
+                if (vaccineList.isEmpty()){
                     Toast.makeText(requireContext(), "There's no vaccine available!", Toast.LENGTH_SHORT).show()
                 }else{
                     formatterClass.saveSharedPref(
                         "selectedUnContraindicatedVaccine",
-                        newList.joinToString(","),
+                        vaccineList.joinToString(","),
                         requireContext())
 
                     val datePicker =  binding.tvDatePicker.text.toString()
@@ -134,7 +135,7 @@ class ContraindicationsFragment : Fragment() {
                             val dobDate = formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")
                             if (dobDate != null) {
                                 administerVaccineViewModel.createManualContraindication(
-                                    newList.toList(),
+                                    selectedItemList.toList(),
                                     patientId,
                                     dobDate,
                                     status,

@@ -72,6 +72,7 @@ class NonRoutineFragment : Fragment() {
 
         //Get the administered list
         val administeredList = patientDetailsViewModel.getVaccineList()
+        val recommendationList = patientDetailsViewModel.recommendationList()
 
         val statusColorsList = ArrayList<DbStatusColor>()
         for (keys in expandableListTitle){
@@ -98,6 +99,7 @@ class NonRoutineFragment : Fragment() {
         val vaccineScheduleAdapter = VaccineScheduleAdapter(
             requireContext(),
             administeredList,
+            recommendationList,
             statusColorsList,
             expandableListTitle,
             expandableListDetail,

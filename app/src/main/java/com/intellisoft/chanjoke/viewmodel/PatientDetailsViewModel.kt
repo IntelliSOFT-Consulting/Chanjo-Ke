@@ -302,7 +302,12 @@ class PatientDetailsViewModel(
                 it.recommendation[0].dateCriterion[0].hasValue()
             ) {
                 val dateCriterion = it.recommendation[0].dateCriterion[0].value.toString()
-                date = dateCriterion
+                val dobFormat = FormatterClass().convertDateFormat(dateCriterion)
+                if (dobFormat != null) {
+                    date = dobFormat.toString()
+                }
+
+
             }
 
         }
@@ -524,9 +529,11 @@ class PatientDetailsViewModel(
             }
         }
         if (immunization.hasProtocolApplied()) {
-            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses())
+            if (immunization.protocolApplied.isNotEmpty() && immunization.protocolApplied[0].hasSeriesDoses()) {
                 seriesDosesString = immunization.protocolApplied[0].seriesDoses.asStringValue()
-            series = immunization.protocolApplied[0].series
+
+                series = immunization.protocolApplied[0].series
+            }
         }
 
 

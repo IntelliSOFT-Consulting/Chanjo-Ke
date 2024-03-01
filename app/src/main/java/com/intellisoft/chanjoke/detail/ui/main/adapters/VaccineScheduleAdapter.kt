@@ -16,24 +16,20 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbStatusColor
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
-import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
-import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlin.math.abs
 import kotlin.math.round
 
 class VaccineScheduleAdapter(
     private val context: Context,
     private val administeredList: ArrayList<DbVaccineData>,
+    private val recommendationList: ArrayList<DbAppointmentDetails>,
     private val dbStatusColorList: ArrayList<DbStatusColor>,
     private val expandableListTitle: List<String>,
     private val expandableListDetail: Map<String, List<BasicVaccine>>,
@@ -110,13 +106,12 @@ class VaccineScheduleAdapter(
             updateAdministerVaccineText()
         }
 
-        Log.e("----->","<-------")
-        println("vaccineName $vaccineName")
-
         //Check vaccine status
         for (administeredVaccine in administeredList) {
 
-            println("administeredVaccine $administeredVaccine")
+            Log.e(">>>>>>","<<<<<<")
+            println(administeredVaccine)
+            Log.e(">>>>>>","<<<<<<")
 
             var displayDate = ""
             if (vaccineName == administeredVaccine.vaccineName) {
@@ -124,6 +119,7 @@ class VaccineScheduleAdapter(
 
                 var vaccineStatus = ""
                 if ("COMPLETED" == status) {
+                    displayDate = administeredVaccine.dateAdministered
                     vaccineStatus = "administered"
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
                     checkBox.visibility = View.INVISIBLE
@@ -141,25 +137,22 @@ class VaccineScheduleAdapter(
                 }
                 tvScheduleStatus.text = vaccineStatus
 
-            }else{
-
-                val previousVaccine = administeredVaccine.previousVaccineName
-                if (previousVaccine != null){
-                    val dateAdministered = administeredVaccine.dateAdministered
-                    val administeredDate = findDateAdministered(previousVaccine)
-                    displayDate = administeredDate ?: dateAdministered
-
-                    println("dateAdministered $dateAdministered")
-                    println("administeredDate $administeredDate")
-                }
-
-
-                println("previousVaccine $previousVaccine")
-                println("displayDate $displayDate")
-                Log.e("----->","<-------")
-
             }
             tvVaccineDate.text = displayDate
+
+        }
+
+        // Check if the vaccineName exists in recommendationList
+        val recommendationDetails = recommendationList.find { it.vaccineName == vaccineName }
+        if (recommendationDetails != null){
+            val dateScheduled = recommendationDetails.dateScheduled
+            val status = recommendationDetails.appointmentStatus
+            if (status == "Contraindicated"){
+                tvScheduleStatus.text = status
+                tvVaccineDate.text = dateScheduled
+                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
+
+            }
 
         }
 
