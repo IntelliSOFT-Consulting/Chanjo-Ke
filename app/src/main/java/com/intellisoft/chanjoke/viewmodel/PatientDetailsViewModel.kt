@@ -464,6 +464,9 @@ class PatientDetailsViewModel(
     fun getImmunizationDataDetails(codeValue: String) =
         runBlocking { getImmunizationDetails(codeValue) }
 
+    fun getAllImmunizationDetails() =
+        runBlocking { getAllImmunizationDetailsData() }
+
     fun loadContraindications(codeValue: String) =
         runBlocking { loadContraindicationsInner(codeValue) }
 
@@ -482,6 +485,27 @@ class PatientDetailsViewModel(
             }
             .map { createVaccineItemDetails(it) }
             .let { vaccineList.addAll(it) }
+
+        return vaccineList
+    }
+
+    private suspend fun getAllImmunizationDetailsData(): ArrayList<DbVaccineDetailsData> {
+        val vaccineList = ArrayList<DbVaccineDetailsData>()
+
+        fhirEngine
+            .search<Immunization> {
+                filter(Immunization.PATIENT, { value = "Patient/$patientId" })
+                sort(Immunization.DATE, Order.DESCENDING)
+            }
+            .map { createVaccineItemDetails(it) }
+            .let { q ->
+                q.forEach {
+                    if (it.status == "COMPLETED") {
+                        vaccineList.add(it)
+                    }
+                }
+            }
+
 
         return vaccineList
     }
