@@ -95,6 +95,11 @@ class VaccineDetailsFragment : Fragment() {
         val vaccineName = FormatterClass().getSharedPref("vaccineNameDetails", requireContext())
         if (vaccineName != null) {
             //Get Vaccine details
+            binding.tvVaccineName.text = vaccineName
+            (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+                title = vaccineName
+            }
+
             val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
             if (basicVaccine != null) {
                 val vaccineCode = basicVaccine.vaccineCode
@@ -112,7 +117,6 @@ class VaccineDetailsFragment : Fragment() {
 
                     binding.apply {
 
-                        tvVaccineName.text = vaccineName
                         tvVaccineDate.text = dosesAdministered
                         tvVaccineDose.text = seriesDosesString
                         tvDaysSince.text =
@@ -122,9 +126,6 @@ class VaccineDetailsFragment : Fragment() {
                         tvYearsSince.text =
                             generateDaysSince(dosesAdministered, days = false, month = false)
 
-                        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-                            title = vaccineName
-                        }
                         val patientDob =
                             FormatterClass().getSharedPref("patientDob", requireContext())
                         val age = generateAgeSince(patientDob, dosesAdministered)

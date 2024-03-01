@@ -20,8 +20,8 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.databinding.FragmentAdministerNewBinding
 import com.intellisoft.chanjoke.databinding.FragmentAppointmentsBinding
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
@@ -68,11 +68,11 @@ class AppointmentsFragment : Fragment() {
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
-        onBackPressed()
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
+//        onBackPressed()
 
         layoutManager = LinearLayoutManager(
             requireContext(),
@@ -97,16 +97,15 @@ class AppointmentsFragment : Fragment() {
             startActivity(intent)
 
         }
+        binding.btnBack.setOnClickListener { onBackPressed() }
 
 
         getAppointments()
     }
     private fun onBackPressed() {
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-
-            NavHostFragment.findNavController(this@AppointmentsFragment)
-                .navigateUp()
-        }
+        val intent = Intent(context, PatientDetailActivity::class.java)
+        intent.putExtra("patientId", patientId)
+        startActivity(intent)
     }
 
     private fun getAppointments() {

@@ -61,7 +61,6 @@ class VaccineScheduleAdapter(
         }
         return null // If previousVaccineName is not found in administeredList
     }
-
     // Modify getChildView to handle checkbox state
     override fun getChildView(
         listPosition: Int,
@@ -108,6 +107,18 @@ class VaccineScheduleAdapter(
             checkedStates[key] = isChecked
             updateAdministerVaccineText()
         }
+        // Check if the vaccineName exists in recommendationList
+        val recommendationDetails = recommendationList.find { it.vaccineName == vaccineName }
+        if (recommendationDetails != null){
+            val dateScheduled = recommendationDetails.dateScheduled
+            val status = recommendationDetails.appointmentStatus
+            if (status == "Contraindicated"){
+                tvScheduleStatus.text = status
+                tvVaccineDate.text = dateScheduled
+                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
+            }
+
+        }
 
         //Check vaccine status
         for (administeredVaccine in administeredList) {
@@ -148,20 +159,6 @@ class VaccineScheduleAdapter(
             tvVaccineDate.text = displayDate
 
             Timber.e("Administered **** $administered")
-
-        }
-
-        // Check if the vaccineName exists in recommendationList
-        val recommendationDetails = recommendationList.find { it.vaccineName == vaccineName }
-        if (recommendationDetails != null) {
-            val dateScheduled = recommendationDetails.dateScheduled
-            val status = recommendationDetails.appointmentStatus
-            if (status == "Contraindicated") {
-                tvScheduleStatus.text = status
-                tvVaccineDate.text = dateScheduled
-                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
-
-            }
 
         }
 
@@ -233,12 +230,12 @@ class VaccineScheduleAdapter(
         weekNo = if (listTitle.toIntOrNull() != null) {
             if (listTitle == "0") {
                 "At Birth"
-            } else if (listTitle.toInt() in 1..15) {
+            } else if (listTitle.toInt() in 1..15){
                 "$listTitle weeks"
-            } else if (listTitle.toInt() in 15..105) {
-                "${(round(listTitle.toInt() * 0.230137)).toString().replace(".0", "")} months"
-            } else {
-                "${(round(listTitle.toInt() * 0.019)).toString().replace(".0", "")} years"
+            }else if (listTitle.toInt() in 15..105){
+                "${(round(listTitle.toInt() * 0.230137)).toString().replace(".0","")} months"
+            }else{
+                "${(round(listTitle.toInt() * 0.019)).toString().replace(".0","")} years"
             }
         } else {
             listTitle
