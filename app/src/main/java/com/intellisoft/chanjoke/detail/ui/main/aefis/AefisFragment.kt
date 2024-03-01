@@ -165,6 +165,8 @@ class AefisFragment : Fragment() {
     private fun getVaccinesAtGivenAge(status: String): String {
         val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
 
+        var administeredVaccines = patientDetailsViewModel.getAllImmunizationDetails()
+
         /****
          * status At Birth --- weeks -> 0
          ***/
@@ -175,24 +177,33 @@ class AefisFragment : Fragment() {
             if (status == "At Birth") {
                 var commaSeparatedString = ""
                 val basic = expandableListDetail.entries.firstOrNull { it.key == "0" }?.value
-                basic?.forEach {
-                    commaSeparatedString += "${it.vaccineName},"
+                basic?.forEach { q ->
+                    val administered = administeredVaccines.find { it.vaccineName == q.vaccineName }
+                    if (administered != null) {
+                        commaSeparatedString += "${q.vaccineName},"
+                    }
                 }
 
                 return commaSeparatedString
 
-            }else{
+            } else {
                 val weeks: Int = when {
                     status.endsWith("weeks") -> status.replace(" weeks", "").toIntOrNull() ?: 0
-                    status.endsWith("months") -> (status.replace(" months", "").toDouble() / 0.230137).toInt()
-                    status.endsWith("years") -> (status.replace(" years", "").toDouble() / 0.019).toInt()
+                    status.endsWith("months") -> (status.replace(" months", "")
+                        .toDouble() / 0.230137).toInt()
+
+                    status.endsWith("years") -> (status.replace(" years", "")
+                        .toDouble() / 0.019).toInt()
+
                     else -> 0
                 }
 
                 var commaSeparatedString = ""
                 val basic = expandableListDetail.entries.firstOrNull { it.key == "$weeks" }?.value
-                basic?.forEach {
-                    commaSeparatedString += "${it.vaccineName},"
+                basic?.forEach {q->
+                    val administered = administeredVaccines.find { it.vaccineName == q.vaccineName }
+                    if (administered != null) {
+                    commaSeparatedString += "${q.vaccineName},"}
                 }
 
                 return commaSeparatedString
