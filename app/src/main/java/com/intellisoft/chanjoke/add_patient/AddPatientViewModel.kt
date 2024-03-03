@@ -379,7 +379,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             identifier.add(singleIdentifier)
             val singleIdentifier1 = Identifier()
             singleIdentifier1.system = "system-creation"
-            singleIdentifier1.value = FormatterClass().formatCurrentDate(Date())
+            singleIdentifier1.value = FormatterClass().formatCurrentDateTime(Date())
             identifier.add(singleIdentifier1)
 
             payload.caregivers.forEach {

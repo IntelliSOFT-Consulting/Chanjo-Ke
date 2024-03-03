@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentAdministrativeBinding
@@ -123,10 +124,16 @@ class PreviewFragment : Fragment() {
 
             if (caregiver != null) {
 
-                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
-                tvCname.text = refinedCaregiver.name
-                tvCtype.text = refinedCaregiver.type
-                tvCphone.text = refinedCaregiver.phone
+//                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
+                try {
+                    val type = object : TypeToken<List<CareGiver>>() {}.type
+                    val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
+                    tvCname.text = caregiverList[0].name
+                    tvCtype.text = caregiverList[0].type
+                    tvCphone.text = caregiverList[0].phone
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             if (administrative != null) {

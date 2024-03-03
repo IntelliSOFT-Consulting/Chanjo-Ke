@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.ActivityRegistrationBinding
@@ -123,12 +124,15 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
             if (personal != null && caregiver != null && administrative != null) {
 
                 val refinedPersonal = Gson().fromJson(personal, CustomPatient::class.java)
-                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
+//                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
                 val refinedAdministrative =
                     Gson().fromJson(administrative, Administrative::class.java)
+
+                val type = object : TypeToken<List<CareGiver>>() {}.type
+                val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
                 val caregivers = ArrayList<CareGiver>()
                 caregivers.clear()
-                caregivers.add(refinedCaregiver)
+                caregivers.addAll(caregiverList)
                 var completePatient = CompletePatient(
                     personal = refinedPersonal,
                     caregivers = caregivers,

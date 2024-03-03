@@ -28,6 +28,8 @@ class FormatterClass {
 
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
     private val dateInverseFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    private val dateInverseFormatSeconds: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+
 
     fun saveSharedPref(key: String, value: String, context: Context) {
         val sharedPreferences: SharedPreferences =
@@ -814,6 +816,10 @@ class FormatterClass {
 
     fun formatCurrentDate(date: Date): String {
         return dateInverseFormat.format(date)
+    }
+
+    fun formatCurrentDateTime(date: Date): String {
+        return dateInverseFormatSeconds.format(date)
     }
 
 
