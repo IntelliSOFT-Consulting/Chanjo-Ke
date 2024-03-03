@@ -151,7 +151,6 @@ class PatientDetailsViewModel(
             if (it.hasIdentifier()) {
                 it.identifier.forEach { identifier ->
 
-                    Log.e("TAG","identifier ${identifier.system}")
                     try {
                         if (identifier.system.toString() != "system-creation") {
                             systemId = identifier.value
