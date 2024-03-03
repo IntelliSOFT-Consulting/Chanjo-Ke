@@ -54,6 +54,7 @@ import org.json.JSONObject
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Date
 
 /** ViewModel for patient registration screen {@link AddPatientFragment}. */
 class AddPatientViewModel(application: Application, private val state: SavedStateHandle) :
@@ -376,6 +377,10 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             singleIdentifier.system = payload.personal.identification
             singleIdentifier.value = payload.personal.identificationNumber
             identifier.add(singleIdentifier)
+            val singleIdentifier1 = Identifier()
+            singleIdentifier1.system = "system-creation"
+            singleIdentifier1.value = FormatterClass().formatCurrentDate(Date())
+            identifier.add(singleIdentifier1)
 
             payload.caregivers.forEach {
                 val rName = HumanName()

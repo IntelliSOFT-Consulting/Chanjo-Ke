@@ -70,6 +70,7 @@ class CaregiverFragment : Fragment() {
         if (isUpdate != null) {
             displayInitialData()
         }
+
         val isAbove = formatter.getSharedPref("isAbove", requireContext())
         if (isAbove != null) {
             if (isAbove == "true") {

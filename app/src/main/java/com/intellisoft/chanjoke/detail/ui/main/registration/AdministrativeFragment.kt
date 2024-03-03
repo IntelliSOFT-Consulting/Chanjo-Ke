@@ -4,32 +4,25 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
-import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentAdministrativeBinding
-import com.intellisoft.chanjoke.databinding.FragmentCaregiverBinding
-import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.Administrative
-import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.County
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.fhir.data.SubCounty
 import com.intellisoft.chanjoke.fhir.data.SubCountyWard
-import com.intellisoft.chanjoke.fhir.data.Ward
 import com.intellisoft.chanjoke.utils.AppUtils
-import org.json.JSONArray
-import timber.log.Timber
-import java.io.BufferedReader
-import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 
 
@@ -60,6 +53,16 @@ class AdministrativeFragment : Fragment() {
     private val viewModel: AddPatientViewModel by viewModels()
     private var mListener: OnButtonClickListener? = null
     private lateinit var binding: FragmentAdministrativeBinding
+    private var onNextButtonClickListener: OnNextButtonClickListener? = null
+
+
+    interface OnNextButtonClickListener {
+        fun onNextButtonClicked(admin: String)
+    }
+
+    fun setOnNextButtonClickListener(listener: OnNextButtonClickListener) {
+        onNextButtonClickListener = listener
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -78,15 +81,18 @@ class AdministrativeFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentAdministrativeBinding.inflate(layoutInflater)
 
+        liveData = ViewModelProvider(this).get(AdminLiveData::class.java)
         return binding.root
     }
 
     private var countyList = ArrayList<String>()
     private var subCountyList = ArrayList<String>()
     private var wardList = ArrayList<String>()
+    private lateinit var liveData: AdminLiveData
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
+
         if (isUpdate != null) {
             displayInitialData()
         }
@@ -140,6 +146,7 @@ class AdministrativeFragment : Fragment() {
                             val value = s.toString()
                             if (value.isNotEmpty()) {
                                 binding.telCounty.error = null
+                                updatePrefs()
                                 val county = counties.find { it.name == value }
                                 if (county != null) {
                                     subCountyList.clear()
@@ -187,6 +194,7 @@ class AdministrativeFragment : Fragment() {
                             val value = s.toString()
                             if (value.isNotEmpty()) {
                                 binding.telSubCounty.error = null
+                                updatePrefs()
                                 val subCounty = wards.find { it.subCounty == value.lowercase() }
                                 if (subCounty != null) {
                                     wardList.clear()
@@ -234,6 +242,7 @@ class AdministrativeFragment : Fragment() {
                             val value = s.toString()
                             if (value.isNotEmpty()) {
                                 binding.telWard.error = null
+                                updatePrefs()
 
                             }
                         }
@@ -242,14 +251,19 @@ class AdministrativeFragment : Fragment() {
                 }
                 previousButton.apply {
                     setOnClickListener {
+                        updatePrefs()
                         mListener?.onPreviousPageRequested()
                     }
                 }
                 nextButton.apply {
                     setOnClickListener {
                         if (validData()) {
-
-                            mListener?.onNextPageRequested()
+                            val data = retrievedEnteredData()
+                            onNextButtonClickListener?.onNextButtonClicked(data)
+                            CoroutineScope(Dispatchers.Main).launch {
+                                delay(1000) // Delay for 1000 milliseconds (1 second)
+                                mListener?.onNextPageRequested()
+                            }
                         }
                     }
                 }
@@ -276,6 +290,7 @@ class AdministrativeFragment : Fragment() {
                             val value = s.toString()
                             if (value.isNotEmpty()) {
                                 binding.telEstate.error = null
+                                updatePrefs()
 
                             }
                         }
@@ -305,6 +320,7 @@ class AdministrativeFragment : Fragment() {
                             val value = s.toString()
                             if (value.isNotEmpty()) {
                                 binding.telTrading.error = null
+                                updatePrefs()
 
                             }
                         }
@@ -313,6 +329,45 @@ class AdministrativeFragment : Fragment() {
                 }
 
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun retrievedEnteredData(): String {
+        val countyString = binding.county.text.toString()
+        val subCountyString = binding.subCounty.text.toString()
+        val wardString = binding.ward.text.toString()
+        val tradingString = binding.trading.text.toString()
+        val estateString = binding.estate.text.toString()
+
+        val payload = Administrative(
+            county = countyString,
+            subCounty = subCountyString,
+            ward = wardString,
+            trading = tradingString,
+            estate = estateString
+        )
+        return Gson().toJson(payload)
+    }
+
+    private fun updatePrefs() {
+        try {
+            val countyString = binding.county.text.toString()
+            val subCountyString = binding.subCounty.text.toString()
+            val wardString = binding.ward.text.toString()
+            val tradingString = binding.trading.text.toString()
+            val estateString = binding.estate.text.toString()
+
+            val payload = Administrative(
+                county = countyString,
+                subCounty = subCountyString,
+                ward = wardString,
+                trading = tradingString,
+                estate = estateString
+            )
+            formatter.saveSharedPref("administrative", Gson().toJson(payload), requireContext())
+            liveData.updatePatientDetails(Gson().toJson(payload))
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -378,6 +433,7 @@ class AdministrativeFragment : Fragment() {
             estate = estateString
         )
         formatter.saveSharedPref("administrative", Gson().toJson(payload), requireContext())
+        liveData.updatePatientDetails(Gson().toJson(payload))
         return true
 
     }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
@@ -53,6 +54,8 @@ class PreviewFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentPreviewBinding.inflate(layoutInflater)
+
+        liveData = ViewModelProvider(this).get(AdminLiveData::class.java)
         return binding.root
     }
 
@@ -66,8 +69,12 @@ class PreviewFragment : Fragment() {
         }
     }
 
+
+    private lateinit var liveData: AdminLiveData
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        liveData = ViewModelProvider(this).get(AdminLiveData::class.java)
         val isAbove = formatter.getSharedPref("isAbove", requireContext())
         if (isAbove != null) {
             if (isAbove == "true") {
@@ -76,14 +83,31 @@ class PreviewFragment : Fragment() {
                 }
             }
         }
-        binding.apply {
-            val personal = formatter.getSharedPref("personal", requireContext())
-            val caregiver = formatter.getSharedPref("caregiver", requireContext())
-            val administrative = formatter.getSharedPref("administrative", requireContext())
 
-            Timber.e("Data &&&&****$personal")
-            Timber.e("Data &&&&**** $caregiver")
-            Timber.e("Data &&&&**** $administrative")
+        loadData()
+        binding.apply {
+
+            previousButton.apply {
+                setOnClickListener {
+                    mListener?.onPreviousPageRequested()
+                }
+            }
+            nextButton.apply {
+                setOnClickListener {
+                    formatter.deleteSharedPref("isAbove", requireContext())
+                    isEnabled = false
+                    mListener?.onNextPageRequested()
+
+                }
+            }
+        }
+    }
+
+    private fun loadData() {
+        val personal = formatter.getSharedPref("personal", requireContext())
+        val caregiver = formatter.getSharedPref("caregiver", requireContext())
+        val administrative = formatter.getSharedPref("administrative", requireContext())
+        binding.apply {
 
             if (personal != null) {
                 val refinedPersonal = Gson().fromJson(personal, CustomPatient::class.java)
@@ -115,26 +139,13 @@ class PreviewFragment : Fragment() {
                 tvWard.text = refinedAdministrative.ward
                 tvTrading.text = refinedAdministrative.trading
                 tvVillage.text = refinedAdministrative.estate
-            } else {
-                Toast.makeText(requireContext(), "Please try", Toast.LENGTH_SHORT).show()
-            }
-
-
-            previousButton.apply {
-                setOnClickListener {
-                    mListener?.onPreviousPageRequested()
-                }
-            }
-            nextButton.apply {
-                setOnClickListener {
-
-                    formatter.deleteSharedPref("isAbove", requireContext())
-                    isEnabled = false
-                    mListener?.onNextPageRequested()
-
-                }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadData()
     }
 
     companion object {
