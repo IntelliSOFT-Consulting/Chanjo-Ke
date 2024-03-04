@@ -138,7 +138,7 @@ class ContraindicationsFragment : Fragment() {
 
                                 var  forecastReason = ""
                                 if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
-                                    if (!TextUtils.isEmpty(description)) binding.etDescription.error = "Field cannot be empty" else forecastReason = description
+                                    if (TextUtils.isEmpty(description)) binding.etDescription.error = "Field cannot be empty" else forecastReason = description
                                 }
                                 if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
                                     if (spinnerReasons == "") Toast.makeText(requireContext(), "Please select a reason", Toast.LENGTH_SHORT).show() else forecastReason = spinnerReasons
