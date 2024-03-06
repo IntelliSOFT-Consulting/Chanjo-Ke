@@ -34,6 +34,7 @@ class VaccineDetailsFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private val immunizationHandler = ImmunizationHandler()
+    private var patientId = ""
 
     /**/
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +49,7 @@ class VaccineDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentVaccineDetailsBinding.inflate(inflater, container, false)
         fhirEngine = FhirApplication.fhirEngine(requireContext())
-        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+        patientId = FormatterClass().getSharedPref("patientId", requireContext()).toString()
 
         patientDetailsViewModel =
             ViewModelProvider(
@@ -106,6 +107,7 @@ class VaccineDetailsFragment : Fragment() {
                 FormatterClass().saveSharedPref("vaccineCode", vaccineCode, requireContext())
                 val immunizationDetails =
                     patientDetailsViewModel.getImmunizationDataDetails(vaccineCode)
+
                 if (immunizationDetails.isNotEmpty()) {
 
                     val logicalId = immunizationDetails[0].logicalId
@@ -136,6 +138,10 @@ class VaccineDetailsFragment : Fragment() {
 
                     }
 
+                }else{
+                    val intent = Intent(context, PatientDetailActivity::class.java)
+                    intent.putExtra("patientId", patientId)
+                    startActivity(intent)
                 }
 
             }
