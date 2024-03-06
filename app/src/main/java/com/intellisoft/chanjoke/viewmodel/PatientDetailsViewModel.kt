@@ -392,30 +392,23 @@ class PatientDetailsViewModel(
         val status = if (it.hasStatus()) it.status else ""
         val title = if (it.hasDescription()) it.description else ""
         val start = if (it.hasStart()) it.start else ""
-
-        val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
-            it.basedOn
-        } else {
-            emptyList()
-        }
-        var description = ""
         var dateScheduled = ""
-        var recommendationSavedList = ArrayList<DbAppointmentDetails>()
-
-//        val pattern = Regex("Title: (.*?) Description:(.*)")
-//        // Match the pattern in the input text
-//        val matchResult = pattern.find(input)
-//        matchResult?.let {
-//            title = it.groupValues[1].trim()
-//            description = it.groupValues[2].trim()
-//        }
-
 
         val startDate = FormatterClass().convertDateFormat(start.toString())
         if (startDate != null) {
             dateScheduled = startDate
         }
 
+        Log.e(">>>>>>>>>","<<<<<<<<")
+        println("title $title")
+        Log.e(">>>>>>>>>","<<<<<<<<")
+
+        var recommendationSavedList = ArrayList<DbAppointmentDetails>()
+        val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
+            it.basedOn
+        } else {
+            emptyList()
+        }
         basedOnImmunizationRecommendationList.forEach { ref ->
             val immunizationRecommendation = ref.reference
             val recommendationId =
@@ -430,7 +423,7 @@ class PatientDetailsViewModel(
         return DbAppointmentData(
             id,
             title,
-            description,
+            "",
             null,
             dateScheduled,
             recommendationSavedList,

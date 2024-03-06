@@ -74,16 +74,10 @@ class AppointmentAdapter(
         val description = entryList[position].description
         val dateScheduled = entryList[position].dateScheduled
         val status = entryList[position].status
-        val recommendationList = entryList[position].recommendationList
 
-        val text = if (recommendationList.isNullOrEmpty()){
-            title
-        }else{
-            recommendationList[0].vaccineName
-        }
 
-        holder.tvAppointment.text = text
-        holder.tvDescription.text = description
+        holder.tvAppointment.text = title
+//        holder.tvDescription.text = description
 
         holder.tvStatus.text = status.lowercase()
         holder.tvAppointmentDate.text = dateScheduled
