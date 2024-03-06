@@ -81,12 +81,17 @@ class VaccineDetailsFragment : Fragment() {
                 setOnClickListener {
                     val vaccineCode =
                         FormatterClass().getSharedPref("vaccineCode", requireContext())
-                    if (vaccineCode != null) {
-                        startActivity(Intent(requireContext(), ContrasActivity::class.java))
-                    } else {
-                        Toast.makeText(requireContext(), "Please wait...", Toast.LENGTH_SHORT)
-                            .show()
+
+                    if(vaccineCode != null){
+                        val contras = patientDetailsViewModel.loadContraindications(vaccineCode)
+                        if (contras.isNotEmpty()){
+                            startActivity(Intent(requireContext(), ContrasActivity::class.java))
+                        }else {
+                            Toast.makeText(requireContext(), "No contraindications found.", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     }
+
                 }
             }
         }
