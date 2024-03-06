@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +42,7 @@ class AddAppointment : AppCompatActivity() {
     private val selectedItemList = ArrayList<String>()
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private var appointmentId: String? = null
+    private var selectedItemValue: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,19 +85,21 @@ class AddAppointment : AppCompatActivity() {
         binding.btnPreview.setOnClickListener {
 
             val dateScheduled = binding.tvDatePicker.text.toString()
-            if (!TextUtils.isEmpty(dateScheduled)){
+            if (!TextUtils.isEmpty(dateScheduled) && selectedItemList.isNotEmpty() && selectedItemValue != null && dateScheduled != "Appointment Date *"){
 
                 //Add a preview page
-
                 formatterClass.saveSharedPref("appointmentListData", selectedItemList.joinToString(","), this)
                 formatterClass.saveSharedPref("appointmentDateScheduled", dateScheduled, this)
+                formatterClass.saveSharedPref("appointmentVaccineTitle", selectedItemValue!!, this)
 
                 val intent = Intent(this, AppointmentDetails::class.java)
                 startActivity(intent)
                 finish()
 
             }else{
-                if (TextUtils.isEmpty(dateScheduled)) binding.tvDatePicker.error = "Field cannot be empty.."
+                if (TextUtils.isEmpty(dateScheduled) ) binding.tvDatePicker.error = "Field cannot be empty.."
+                if (selectedItemList.isEmpty()) Toast.makeText(this, "Vaccine list is empty..", Toast.LENGTH_SHORT).show()
+                if (dateScheduled == "Appointment Date *") binding.tvDatePicker.error = "Select an appointment date."
             }
 
         }
@@ -163,88 +167,9 @@ class AddAppointment : AppCompatActivity() {
     }
 
     private fun createSpinner() {
-        val recommendationList = ArrayList<BasicVaccine>()
-
-        val patientDob = formatterClass.getSharedPref("patientDob", this)
-//        if (patientDob != null){
-
-//            val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
-//            if (ageInWeeks != null){
-
-//                val administeredList = ArrayList<BasicVaccine>()
-//                val vaccineList = patientDetailsViewModel.getVaccineList()
-//                vaccineList.forEach {
-//                    val vaccineName = it.vaccineName
-//                    val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
-//                    if (basicVaccine != null) {
-//                        administeredList.add(basicVaccine)
-//                    }
-//                }
-
-//                val weeksList = ArrayList<Double>()
-//                recommendationList.add(
-//                    BasicVaccine(
-//                        "",
-//                        "",
-//                        "",
-//                        0,
-//                        weeksList,
-//                        "",
-//                        "",
-//                        )
-//                )
-//                val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
-//                    immunizationHandler.getAllVaccineList(administeredList, ageInWeeks, this)
-//
-//
-//
-//                routineList.forEach { routineVaccine ->
-//                    val basicVaccineList = routineVaccine.vaccineList
-//                    recommendationList += ArrayList(basicVaccineList)
-//                }
-//                nonRoutineVaccineList.forEach {nonRoutineVaccine ->
-//                    val routineVaccineList = nonRoutineVaccine.vaccineList
-//                    routineVaccineList.forEach {routineVaccine ->
-//                        val basicVaccineList = routineVaccine.vaccineList
-//                        recommendationList += ArrayList(basicVaccineList)
-//                    }
-//                }
-//                pregnancyVaccineList.forEach {pregnancyVaccine ->
-//                    val basicVaccineList = pregnancyVaccine.vaccineList
-//                    recommendationList += ArrayList(basicVaccineList)
-//                }
-
-//            }
-
-//        }
-
-
-
-//        val itemList = ArrayList<String>()
-//        //Remove the vaccines in an appointment
-//        val givenRecommendationList = ArrayList<String>()
-//
-//        val appointmentList = patientDetailsViewModel.getAppointmentList()
-//        appointmentList.forEach {
-//            it.recommendationList?.forEach {dbAppointmentDetails ->
-//                val vaccineName = dbAppointmentDetails.vaccineName
-//                givenRecommendationList.add(vaccineName)
-//            }
-//        }
-//
-//        recommendationList.forEach {
-//            itemList.add(it.vaccineName)
-//        }
-
-        // Convert strings and remove extra whitespaces
-//        val recommendationListLower = givenRecommendationList.map { it.trim() }
-//        val itemListLower = itemList.map { it.trim() }
-
-        // Remove common elements
-//        val uniqueRecommendations = givenRecommendationList.filter { it.trim() !in itemListLower }
-//        val uniqueItemsList = itemList.filter { it.trim() !in recommendationListLower }
 
         val expandableListDetail = immunizationHandler.generateDbVaccineSchedule()
+        val entryList = expandableListDetail.entries.toList()
 
         val spinnerList = getSpinnerList(expandableListDetail)
 
@@ -263,12 +188,13 @@ class AddAppointment : AppCompatActivity() {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item
                 val selectedItem = spinnerList[position]
+                selectedItemValue = selectedItem
+                selectedItemList.clear()
 
-//                val selectedVaccine = recommendationList.find { it.vaccineName == selectedItem }
-//                if (selectedVaccine != null) {
-//                    val selectedVaccineName = selectedVaccine.vaccineName
-//                    createAppointment(selectedVaccineName)
-//                }
+                val entryAtIndex0List = entryList[position]
+                entryAtIndex0List.value.forEach {
+                    createAppointment(it.vaccineName)
+                }
 
             }
 

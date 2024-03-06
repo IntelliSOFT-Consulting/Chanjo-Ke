@@ -1045,11 +1045,11 @@ class AdministerVaccineViewModel(
     }
 
     //Create an appointment
-    fun createAppointment(pairRecommendation: Pair<ArrayList<DbAppointmentDetails>, String>) {
+    fun createAppointment(pairRecommendation: Triple<ArrayList<DbAppointmentDetails>, String, String>) {
         CoroutineScope(Dispatchers.IO).launch { generateAppointment(pairRecommendation) }
     }
 
-    private suspend fun generateAppointment(pairRecommendation: Pair<ArrayList<DbAppointmentDetails>, String>) {
+    private suspend fun generateAppointment(pairRecommendation: Triple<ArrayList<DbAppointmentDetails>, String, String>) {
 
         val immunizationHandler = ImmunizationHandler()
         val formatterClass = FormatterClass()
@@ -1061,6 +1061,7 @@ class AdministerVaccineViewModel(
         val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
 
         val recommendationList = pairRecommendation.first
+        val title = pairRecommendation.third
         recommendationList.forEach {
 
             val vaccineName = it.vaccineName
@@ -1127,6 +1128,8 @@ class AdministerVaccineViewModel(
             appointment.basedOn = referenceList
         }
 
+        //desc
+        appointment.description = title
 
         /**
          * TODO: Change the patient resource from this

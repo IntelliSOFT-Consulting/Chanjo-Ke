@@ -390,7 +390,7 @@ class PatientDetailsViewModel(
 
         val id = if (it.hasId()) it.id else ""
         val status = if (it.hasStatus()) it.status else ""
-//        val input = if (it.hasDescription()) it.description else ""
+        val title = if (it.hasDescription()) it.description else ""
         val start = if (it.hasStart()) it.start else ""
 
         val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
@@ -398,7 +398,6 @@ class PatientDetailsViewModel(
         } else {
             emptyList()
         }
-        var title = ""
         var description = ""
         var dateScheduled = ""
         var recommendationSavedList = ArrayList<DbAppointmentDetails>()

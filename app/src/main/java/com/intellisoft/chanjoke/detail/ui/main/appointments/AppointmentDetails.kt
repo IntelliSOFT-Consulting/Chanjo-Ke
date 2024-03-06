@@ -73,8 +73,8 @@ class AppointmentDetails : AppCompatActivity() {
 
             CoroutineScope(Dispatchers.IO).launch {
 
-                val pairRecommendation = getAppointmentDetails()
-                administerVaccineViewModel.createAppointment(pairRecommendation)
+                val tripleRecommendation = getAppointmentDetails()
+                administerVaccineViewModel.createAppointment(tripleRecommendation)
 
 
             }
@@ -168,14 +168,16 @@ class AppointmentDetails : AppCompatActivity() {
 
     }
 
-    private fun getAppointmentDetails():Pair<ArrayList<DbAppointmentDetails>, String> {
+    private fun getAppointmentDetails():Triple<ArrayList<DbAppointmentDetails>, String,String> {
         // This will handle the Preview data
+        val appointmentVaccineTitle = formatterClass.getSharedPref("appointmentVaccineTitle",this)
         val appointmentListData = formatterClass.getSharedPref("appointmentListData",this)
         val appointmentDateScheduled = formatterClass.getSharedPref("appointmentDateScheduled",this)
         val recommendationList = ArrayList<DbAppointmentDetails>()
 
 
         val dateScheduled = appointmentDateScheduled ?: ""
+        val title = appointmentVaccineTitle ?: ""
         if (appointmentListData != null && appointmentDateScheduled != null){
 
             val stringList = appointmentListData.split(",").toMutableList()
@@ -192,7 +194,7 @@ class AppointmentDetails : AppCompatActivity() {
                 recommendationList.add(dbAppointmentDetails)
             }
         }
-        return Pair(recommendationList, dateScheduled)
+        return Triple(recommendationList, dateScheduled,title)
 
 
 
