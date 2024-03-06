@@ -8,10 +8,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.ActivityRegistrationBinding
@@ -24,7 +26,8 @@ import com.intellisoft.chanjoke.utils.ActivityBlurBackground
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import timber.log.Timber
 
-class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
+class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
+    AdministrativeFragment.OnNextButtonClickListener {
 
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
@@ -34,6 +37,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
     private val viewModel: AddPatientViewModel by viewModels()
     private lateinit var progressDialog: ProgressDialog
     private var isClientUpdate: Boolean = false
+    private lateinit var liveData: AdminLiveData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +45,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         observeSubmission()
-
+        liveData = ViewModelProvider(this).get(AdminLiveData::class.java)
         val update = intent.extras?.getString("update")
         if (update == "true") {
             isClientUpdate = true
@@ -88,7 +92,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
         pagerAdapter.addFragment(PersonalFragment(), "Fragment 1")
         pagerAdapter.addFragment(CaregiverFragment(), "Fragment 2")
         pagerAdapter.addFragment(AdministrativeFragment(), "Fragment 3")
-        pagerAdapter.addFragment(PreviewFragment(), "Fragment 4")
+        pagerAdapter.addFragment(PreviewFragment(), "Fragment 5")
         viewPager.adapter = pagerAdapter
     }
 
@@ -106,6 +110,11 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
             // Move to the next page in ViewPager
             val nextPageIndex = viewPager.currentItem + 1
             viewPager.setCurrentItem(nextPageIndex, true)
+
+            val administrative = formatter.getSharedPref("administrative", this)
+            if (administrative != null) {
+                liveData.updatePatientDetails(administrative)
+            }
         } else {
 
             val personal = formatter.getSharedPref("personal", this)
@@ -115,12 +124,15 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
             if (personal != null && caregiver != null && administrative != null) {
 
                 val refinedPersonal = Gson().fromJson(personal, CustomPatient::class.java)
-                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
+//                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
                 val refinedAdministrative =
                     Gson().fromJson(administrative, Administrative::class.java)
+
+                val type = object : TypeToken<List<CareGiver>>() {}.type
+                val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
                 val caregivers = ArrayList<CareGiver>()
                 caregivers.clear()
-                caregivers.add(refinedCaregiver)
+                caregivers.addAll(caregiverList)
                 var completePatient = CompletePatient(
                     personal = refinedPersonal,
                     caregivers = caregivers,
@@ -157,5 +169,10 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener {
         } else {
             Timber.e("TAG: First Item")
         }
+    }
+
+    override fun onNextButtonClicked(admin: String) {
+        formatter.saveSharedPref("administrative", admin, this)
+        liveData.updatePatientDetails(admin)
     }
 }

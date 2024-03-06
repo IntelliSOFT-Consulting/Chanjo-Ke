@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
@@ -54,6 +56,8 @@ class CaregiverFragment : Fragment() {
         }
     }
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: CareGiverAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,12 +68,21 @@ class CaregiverFragment : Fragment() {
         return binding.root
     }
 
+    private val careGivers = ArrayList<CareGiver>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
         if (isUpdate != null) {
             displayInitialData()
         }
+        careGivers.clear()
+        adapter = CareGiverAdapter(ArrayList(), requireContext()) // Initialize with an empty list
+
+        binding.apply {
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.adapter = adapter
+        }
+
         val isAbove = formatter.getSharedPref("isAbove", requireContext())
         if (isAbove != null) {
             if (isAbove == "true") {
@@ -99,8 +112,36 @@ class CaregiverFragment : Fragment() {
             }
             nextButton.apply {
                 setOnClickListener {
-                    if (validData()) {
+                    if (careGivers.isNotEmpty()) {
+                        formatter.saveSharedPref(
+                            "caregiver",
+                            Gson().toJson(careGivers),
+                            requireContext()
+                        )
                         mListener?.onNextPageRequested()
+                    }
+                }
+            }
+
+            addBtn.apply {
+                setOnClickListener {
+                    if (validData()) {
+                        val kinType = binding.identificationType.text.toString()
+                        val kinName = binding.name.text.toString()
+                        val kinPhone = binding.phone.text.toString()
+                        val careGiver = CareGiver(
+                            phone = kinPhone,
+                            name = kinName,
+                            type = kinType
+                        )
+                        careGivers.add(careGiver)
+                        adapter.addItem(careGiver)
+                        binding.apply {
+                            identificationType.text = null
+                            name.text = null
+                            phone.text = null
+                            nextButton.isEnabled = true
+                        }
                     }
                 }
             }
@@ -142,8 +183,8 @@ class CaregiverFragment : Fragment() {
             Toast.makeText(requireContext(), "Please enter phone", Toast.LENGTH_SHORT).show()
             return false
         }
-        val payload = CareGiver(kinType, kinName, kinPhone)
-        formatter.saveSharedPref("caregiver", Gson().toJson(payload), requireContext())
+//        val payload = CareGiver(kinType, kinName, kinPhone)
+//        formatter.saveSharedPref("caregiver", Gson().toJson(payload), requireContext())
         return true
 
     }

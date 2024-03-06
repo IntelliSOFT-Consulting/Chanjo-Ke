@@ -81,10 +81,22 @@ class VaccineScheduleAdapter(
         val tvScheduleStatus = convertView!!.findViewById<TextView>(R.id.tvScheduleStatus)
         val checkBox = convertView.findViewById<CheckBox>(R.id.checkbox)
         val checked = convertView.findViewById<ImageButton>(R.id.checked)
+        val imgBtnView = convertView.findViewById<ImageButton>(R.id.imgBtnView)
         val linearVaccineName = convertView.findViewById<LinearLayout>(R.id.linearVaccineName)
         val vaccineName = expandedListText.vaccineName
 
         linearVaccineName.setOnClickListener {
+            val formatterClass = FormatterClass()
+            formatterClass.saveSharedPref("vaccineNameDetails", vaccineName, context)
+
+            val patientId = FormatterClass().getSharedPref("patientId", context)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.VACCINE_DETAILS.name)
+            intent.putExtra("patientId", patientId)
+            context.startActivity(intent)
+        }
+
+        imgBtnView.setOnClickListener {
             val formatterClass = FormatterClass()
             formatterClass.saveSharedPref("vaccineNameDetails", vaccineName, context)
 
@@ -127,7 +139,6 @@ class VaccineScheduleAdapter(
             println(administeredVaccine)
             Log.e(">>>>>>", "<<<<<<")
 
-            val administered = ArrayList<String>()
 
             var displayDate = ""
             if (vaccineName == administeredVaccine.vaccineName) {
@@ -140,7 +151,6 @@ class VaccineScheduleAdapter(
                     tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
                     checkBox.visibility = View.INVISIBLE
                     checked.visibility = View.VISIBLE
-                    administered.add(administeredVaccine.vaccineName)
 
                 } else if ("NOTDONE" == status) {
                     vaccineStatus = "contraindicated"
@@ -158,7 +168,6 @@ class VaccineScheduleAdapter(
             }
             tvVaccineDate.text = displayDate
 
-            Timber.e("Administered **** $administered")
 
         }
 

@@ -150,9 +150,12 @@ class PatientDetailsViewModel(
 
             if (it.hasIdentifier()) {
                 it.identifier.forEach { identifier ->
+
                     try {
-                        systemId = identifier.value
-                        type = identifier.system
+                        if (identifier.system.toString() != "system-creation") {
+                            systemId = identifier.value
+                            type = identifier.system
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

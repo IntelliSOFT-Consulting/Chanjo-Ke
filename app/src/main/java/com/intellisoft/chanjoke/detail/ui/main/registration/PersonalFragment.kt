@@ -83,6 +83,8 @@ class PersonalFragment : Fragment() {
         AppUtils().disableEditing(binding.dateOfBirth)
         AppUtils().disableEditing(binding.calculatedAge)
 
+        updateMandatoryFields()
+
 
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
         if (isUpdate != null) {
@@ -267,6 +269,10 @@ class PersonalFragment : Fragment() {
                 setOnClickListener { }
             }
         }
+
+    }
+
+    private fun updateMandatoryFields() {
 
     }
 

@@ -106,7 +106,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             }
             .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
             .let {
-                val sortedPatientItems = it.sortedBy { q ->
+                val sortedPatientItems = it.sortedByDescending { q ->
                     q.lastUpdated // Assuming lastUpdated is a property of PatientItem
                 }
 
@@ -272,7 +272,16 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
     val html: String = if (hasText()) text.div.valueAsString else ""
 
     val identification: String = if (hasIdentifier()) identifier[0].value else "N/A"
-    val lastUpdated: String = if (hasMeta()) meta.lastUpdated.toString() else ""
+    var lastUpdated = ""
+    if (hasIdentifier()) {
+        val id = identifier.find { it.system == "system-creation" }
+        if (id != null) {
+            lastUpdated = id.value
+        }
+    } else {
+        lastUpdated = ""
+    }
+
 
     var contact_name = ""
     var contact_phone = ""
