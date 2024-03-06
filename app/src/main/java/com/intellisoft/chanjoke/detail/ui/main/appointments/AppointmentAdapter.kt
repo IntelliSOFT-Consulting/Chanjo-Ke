@@ -45,6 +45,8 @@ class AppointmentAdapter(
             val pos = adapterPosition
             val id = entryList[pos].id
 
+            formatterClass.saveSharedPref("appointmentFlow", "viewAppointment", context)
+
             formatterClass.saveSharedPref("appointmentId",id.toString(), context)
 
             val intent = Intent(context, AppointmentDetails::class.java)

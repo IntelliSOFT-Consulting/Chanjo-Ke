@@ -52,7 +52,10 @@ class AppointmentDetails : AppCompatActivity() {
         }
         appointmentId = formatterClass.getSharedPref("appointmentId", this)
         val appointmentFlow = formatterClass.getSharedPref("appointmentFlow", this)
-        if (appointmentFlow != null && appointmentFlow == "addAppointment") binding.btnCloseAppointment.text = "Save" else "Close"
+        if (appointmentFlow != null){
+            if (appointmentFlow == "addAppointment") binding.btnCloseAppointment.text = "Save"
+            if (appointmentFlow == "viewAppointment") binding.btnCloseAppointment.text = "Close"
+        } else binding.btnCloseAppointment.text = "Close"
 
         fhirEngine = FhirApplication.fhirEngine(this)
         patientDetailsViewModel =
@@ -72,14 +75,15 @@ class AppointmentDetails : AppCompatActivity() {
 
         binding.btnCloseAppointment.setOnClickListener {
 
-            if (appointmentFlow != null && appointmentFlow == "addAppointment"){
-                CoroutineScope(Dispatchers.IO).launch {
-
-                    val tripleRecommendation = getAppointmentDetails()
-                    administerVaccineViewModel.createAppointment(tripleRecommendation)
-
+            if (appointmentFlow != null ){
+                if (appointmentFlow == "addAppointment"){
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val tripleRecommendation = getAppointmentDetails()
+                        administerVaccineViewModel.createAppointment(tripleRecommendation)
+                    }
+                    Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
                 }
-                Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
+
                 formatterClass.deleteSharedPref("appointmentFlow", this)
             }
 
