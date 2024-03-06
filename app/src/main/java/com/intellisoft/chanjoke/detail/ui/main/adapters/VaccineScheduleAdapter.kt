@@ -173,7 +173,7 @@ class VaccineScheduleAdapter(
     // Method to update the tvAdministerVaccine TextView with the number of selected checkboxes
     private fun updateAdministerVaccineText() {
         val selectedCount = checkedStates.count { it.value }
-        val value = "Administer Vaccine ($selectedCount)"
+        val value = "Administer ($selectedCount)"
         tvAdministerVaccine.text = value
     }
 
