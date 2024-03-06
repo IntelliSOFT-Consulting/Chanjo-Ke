@@ -110,6 +110,8 @@ class AppointmentsFragment : Fragment() {
 
     private fun getAppointments() {
 
+        formatterClass.deleteSharedPref("appointmentId", requireContext())
+
         val appointmentList = patientDetailsViewModel.getAppointmentList()
 //
         val vaccineAdapter = AppointmentAdapter(appointmentList, requireContext())

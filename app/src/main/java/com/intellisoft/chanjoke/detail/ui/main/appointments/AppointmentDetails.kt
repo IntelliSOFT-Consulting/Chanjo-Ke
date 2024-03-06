@@ -1,10 +1,11 @@
 package com.intellisoft.chanjoke.detail.ui.main.appointments
 
+import android.R.string
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,12 +16,17 @@ import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAppointmentDetailsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
-import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.Arrays
+
 
 class AppointmentDetails : AppCompatActivity() {
     private lateinit var binding: ActivityAppointmentDetailsBinding
@@ -30,6 +36,8 @@ class AppointmentDetails : AppCompatActivity() {
     private var formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private var appointmentId:String? = null
+    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAppointmentDetailsBinding.inflate(layoutInflater)
@@ -62,6 +70,23 @@ class AppointmentDetails : AppCompatActivity() {
         binding.recyclerView.setHasFixedSize(true)
 
         binding.btnCloseAppointment.setOnClickListener {
+
+            CoroutineScope(Dispatchers.IO).launch {
+
+                val recommendationList = getAppointmentDetails().first
+
+                recommendationList.forEach {
+
+                    val dbAppointmentData = DbAppointmentDataDetails(
+                        null,
+                        it.vaccineName,
+                        it.dateScheduled
+                    )
+                    administerVaccineViewModel.createAppointment(dbAppointmentData)
+                }
+
+            }
+            Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
             onSupportNavigateUp()
         }
         binding.btnEditAppointment.setOnClickListener {
@@ -121,23 +146,62 @@ class AppointmentDetails : AppCompatActivity() {
 
     private fun getAppointments() {
 
-        val appointmentList = patientDetailsViewModel.getAppointmentList()
-        val recommendationList: ArrayList<DbAppointmentDetails>
+        if (appointmentId != null){
+            val appointmentList = patientDetailsViewModel.getAppointmentList()
+            val recommendationList: ArrayList<DbAppointmentDetails>
+            val dbAppointmentData = appointmentList.find { it.id == appointmentId }
 
-        val dbAppointmentData = appointmentList.find { it.id == appointmentId }
+            if (dbAppointmentData != null){
+                recommendationList = dbAppointmentData.recommendationList!!
 
-        if (dbAppointmentData != null){
-            recommendationList = dbAppointmentData.recommendationList!!
+                val dateScheduled = dbAppointmentData.dateScheduled
 
-            val dateScheduled = dbAppointmentData.dateScheduled
+                binding.tvDateScheduled.text = dateScheduled
 
-            binding.tvDateScheduled.text = dateScheduled
+                val appointmentDetailsAdapter = AppointmentDetailsAdapter(recommendationList, this)
+                binding.recyclerView.adapter = appointmentDetailsAdapter
+            }
+        }else{
+
+            val recommendationList = getAppointmentDetails().first
 
             val appointmentDetailsAdapter = AppointmentDetailsAdapter(recommendationList, this)
             binding.recyclerView.adapter = appointmentDetailsAdapter
 
 
         }
+
+
+
+
+
+    }
+
+    private fun getAppointmentDetails():Pair<ArrayList<DbAppointmentDetails>, String> {
+        // This will handle the Preview data
+        val appointmentListData = formatterClass.getSharedPref("appointmentListData",this)
+        val appointmentDateScheduled = formatterClass.getSharedPref("appointmentDateScheduled",this)
+        val recommendationList = ArrayList<DbAppointmentDetails>()
+
+
+        val dateScheduled = appointmentDateScheduled ?: ""
+        if (appointmentListData != null && appointmentDateScheduled != null){
+
+            val stringList = appointmentListData.split(", ").toMutableList()
+            val charList = ArrayList<String>(stringList)
+            charList.forEach {
+                val dbAppointmentDetails = DbAppointmentDetails(
+                    "",
+                    appointmentDateScheduled,
+                    "",
+                    "",
+                    it,
+                    ""
+                )
+                recommendationList.add(dbAppointmentDetails)
+            }
+        }
+        return Pair(recommendationList, dateScheduled)
 
 
 

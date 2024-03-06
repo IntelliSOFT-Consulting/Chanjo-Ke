@@ -46,7 +46,6 @@ class AddAppointment : AppCompatActivity() {
 //    private var selectedVaccineName = ""
     private lateinit var fhirEngine: FhirEngine
 
-    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
     private val formatterClass = FormatterClass()
     private val immunizationHandler = ImmunizationHandler()
@@ -97,24 +96,12 @@ class AddAppointment : AppCompatActivity() {
             val dateScheduled = binding.tvDatePicker.text.toString()
             if (!TextUtils.isEmpty(dateScheduled)){
 
-                CoroutineScope(Dispatchers.IO).launch {
+                //Add a preview page
 
-                    selectedItemList.forEach {
-                        val dbAppointmentData = DbAppointmentDataDetails(
-                            null,
-                            it,
-                            dateScheduled
-                        )
-                        administerVaccineViewModel.createAppointment(dbAppointmentData)
-                    }
+                formatterClass.saveSharedPref("appointmentListData", selectedItemList.joinToString(","), this)
+                formatterClass.saveSharedPref("appointmentDateScheduled", dateScheduled, this)
 
-                }
-
-
-
-                Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
-
-                val intent = Intent(this, PatientDetailActivity::class.java)
+                val intent = Intent(this, AppointmentDetails::class.java)
                 startActivity(intent)
                 finish()
 
