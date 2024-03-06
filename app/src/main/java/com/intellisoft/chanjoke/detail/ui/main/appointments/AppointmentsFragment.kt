@@ -65,8 +65,8 @@ class AppointmentsFragment : Fragment() {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             title = "Administer Vaccine"
-            setDisplayShowHomeEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
+//            setDisplayShowHomeEnabled(true)
+//            setDisplayHomeAsUpEnabled(true)
         }
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
