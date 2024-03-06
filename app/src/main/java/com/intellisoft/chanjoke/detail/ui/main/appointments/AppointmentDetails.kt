@@ -73,17 +73,9 @@ class AppointmentDetails : AppCompatActivity() {
 
             CoroutineScope(Dispatchers.IO).launch {
 
-                val recommendationList = getAppointmentDetails().first
+                val pairRecommendation = getAppointmentDetails()
+                administerVaccineViewModel.createAppointment(pairRecommendation)
 
-                recommendationList.forEach {
-
-                    val dbAppointmentData = DbAppointmentDataDetails(
-                        null,
-                        it.vaccineName,
-                        it.dateScheduled
-                    )
-                    administerVaccineViewModel.createAppointment(dbAppointmentData)
-                }
 
             }
             Toast.makeText(this, "Please wait as we create the appointment", Toast.LENGTH_SHORT).show()
@@ -162,12 +154,11 @@ class AppointmentDetails : AppCompatActivity() {
                 binding.recyclerView.adapter = appointmentDetailsAdapter
             }
         }else{
-
-            val recommendationList = getAppointmentDetails().first
-
-            val appointmentDetailsAdapter = AppointmentDetailsAdapter(recommendationList, this)
+            val pairRecommendation = getAppointmentDetails()
+            val appointmentDetailsAdapter = AppointmentDetailsAdapter(pairRecommendation.first, this)
             binding.recyclerView.adapter = appointmentDetailsAdapter
 
+            binding.tvDateScheduled.text = pairRecommendation.second
 
         }
 
@@ -187,7 +178,7 @@ class AppointmentDetails : AppCompatActivity() {
         val dateScheduled = appointmentDateScheduled ?: ""
         if (appointmentListData != null && appointmentDateScheduled != null){
 
-            val stringList = appointmentListData.split(", ").toMutableList()
+            val stringList = appointmentListData.split(",").toMutableList()
             val charList = ArrayList<String>(stringList)
             charList.forEach {
                 val dbAppointmentDetails = DbAppointmentDetails(

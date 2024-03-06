@@ -146,7 +146,10 @@ class FormatterClass {
             "selectedUnContraindicatedVaccine",
 //            "selectedVaccinationVenue" ,
 //            "isSelectedVaccinationVenue" ,
-            "administeredProduct"
+            "administeredProduct",
+
+            "appointmentListData",
+            "appointmentDateScheduled"
         )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
