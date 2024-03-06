@@ -390,8 +390,9 @@ class PatientDetailsViewModel(
 
         val id = if (it.hasId()) it.id else ""
         val status = if (it.hasStatus()) it.status else ""
-        val input = if (it.hasDescription()) it.description else ""
+//        val input = if (it.hasDescription()) it.description else ""
         val start = if (it.hasStart()) it.start else ""
+
         val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
             it.basedOn
         } else {
@@ -402,13 +403,13 @@ class PatientDetailsViewModel(
         var dateScheduled = ""
         var recommendationSavedList = ArrayList<DbAppointmentDetails>()
 
-        val pattern = Regex("Title: (.*?) Description:(.*)")
-        // Match the pattern in the input text
-        val matchResult = pattern.find(input)
-        matchResult?.let {
-            title = it.groupValues[1].trim()
-            description = it.groupValues[2].trim()
-        }
+//        val pattern = Regex("Title: (.*?) Description:(.*)")
+//        // Match the pattern in the input text
+//        val matchResult = pattern.find(input)
+//        matchResult?.let {
+//            title = it.groupValues[1].trim()
+//            description = it.groupValues[2].trim()
+//        }
 
 
         val startDate = FormatterClass().convertDateFormat(start.toString())

@@ -5,38 +5,27 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAddAppointmentBinding
-import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
-import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
-import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.Calendar
+import kotlin.math.round
 
 class AddAppointment : AppCompatActivity() {
 
@@ -177,86 +166,91 @@ class AddAppointment : AppCompatActivity() {
         val recommendationList = ArrayList<BasicVaccine>()
 
         val patientDob = formatterClass.getSharedPref("patientDob", this)
-        if (patientDob != null){
+//        if (patientDob != null){
 
-            val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
-            if (ageInWeeks != null){
+//            val ageInWeeks = formatterClass.calculateWeeksFromDate(patientDob)
+//            if (ageInWeeks != null){
 
-                val administeredList = ArrayList<BasicVaccine>()
-                val vaccineList = patientDetailsViewModel.getVaccineList()
-                vaccineList.forEach {
-                    val vaccineName = it.vaccineName
-                    val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
-                    if (basicVaccine != null) {
-                        administeredList.add(basicVaccine)
-                    }
-                }
+//                val administeredList = ArrayList<BasicVaccine>()
+//                val vaccineList = patientDetailsViewModel.getVaccineList()
+//                vaccineList.forEach {
+//                    val vaccineName = it.vaccineName
+//                    val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+//                    if (basicVaccine != null) {
+//                        administeredList.add(basicVaccine)
+//                    }
+//                }
 
-                val weeksList = ArrayList<Double>()
-                recommendationList.add(
-                    BasicVaccine(
-                        "",
-                        "",
-                        "",
-                        0,
-                        weeksList,
-                        "",
-                        "",
-                        )
-                )
-                val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
-                    immunizationHandler.getAllVaccineList(administeredList, ageInWeeks, this)
+//                val weeksList = ArrayList<Double>()
+//                recommendationList.add(
+//                    BasicVaccine(
+//                        "",
+//                        "",
+//                        "",
+//                        0,
+//                        weeksList,
+//                        "",
+//                        "",
+//                        )
+//                )
+//                val (routineList, nonRoutineVaccineList,  pregnancyVaccineList) =
+//                    immunizationHandler.getAllVaccineList(administeredList, ageInWeeks, this)
+//
+//
+//
+//                routineList.forEach { routineVaccine ->
+//                    val basicVaccineList = routineVaccine.vaccineList
+//                    recommendationList += ArrayList(basicVaccineList)
+//                }
+//                nonRoutineVaccineList.forEach {nonRoutineVaccine ->
+//                    val routineVaccineList = nonRoutineVaccine.vaccineList
+//                    routineVaccineList.forEach {routineVaccine ->
+//                        val basicVaccineList = routineVaccine.vaccineList
+//                        recommendationList += ArrayList(basicVaccineList)
+//                    }
+//                }
+//                pregnancyVaccineList.forEach {pregnancyVaccine ->
+//                    val basicVaccineList = pregnancyVaccine.vaccineList
+//                    recommendationList += ArrayList(basicVaccineList)
+//                }
+
+//            }
+
+//        }
 
 
 
-                routineList.forEach { routineVaccine ->
-                    val basicVaccineList = routineVaccine.vaccineList
-                    recommendationList += ArrayList(basicVaccineList)
-                }
-                nonRoutineVaccineList.forEach {nonRoutineVaccine ->
-                    val routineVaccineList = nonRoutineVaccine.vaccineList
-                    routineVaccineList.forEach {routineVaccine ->
-                        val basicVaccineList = routineVaccine.vaccineList
-                        recommendationList += ArrayList(basicVaccineList)
-                    }
-                }
-                pregnancyVaccineList.forEach {pregnancyVaccine ->
-                    val basicVaccineList = pregnancyVaccine.vaccineList
-                    recommendationList += ArrayList(basicVaccineList)
-                }
-
-            }
-
-        }
-
-
-
-        val itemList = ArrayList<String>()
-        //Remove the vaccines in an appointment
-        val givenRecommendationList = ArrayList<String>()
-        val appointmentList = patientDetailsViewModel.getAppointmentList()
-        appointmentList.forEach {
-            it.recommendationList?.forEach {dbAppointmentDetails ->
-                val vaccineName = dbAppointmentDetails.vaccineName
-                givenRecommendationList.add(vaccineName)
-            }
-        }
-
-        recommendationList.forEach {
-            itemList.add(it.vaccineName)
-        }
+//        val itemList = ArrayList<String>()
+//        //Remove the vaccines in an appointment
+//        val givenRecommendationList = ArrayList<String>()
+//
+//        val appointmentList = patientDetailsViewModel.getAppointmentList()
+//        appointmentList.forEach {
+//            it.recommendationList?.forEach {dbAppointmentDetails ->
+//                val vaccineName = dbAppointmentDetails.vaccineName
+//                givenRecommendationList.add(vaccineName)
+//            }
+//        }
+//
+//        recommendationList.forEach {
+//            itemList.add(it.vaccineName)
+//        }
 
         // Convert strings and remove extra whitespaces
-        val recommendationListLower = givenRecommendationList.map { it.trim() }
-        val itemListLower = itemList.map { it.trim() }
+//        val recommendationListLower = givenRecommendationList.map { it.trim() }
+//        val itemListLower = itemList.map { it.trim() }
 
         // Remove common elements
 //        val uniqueRecommendations = givenRecommendationList.filter { it.trim() !in itemListLower }
 //        val uniqueItemsList = itemList.filter { it.trim() !in recommendationListLower }
 
+        val expandableListDetail = immunizationHandler.generateDbVaccineSchedule()
+
+        val spinnerList = getSpinnerList(expandableListDetail)
+
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, itemListLower)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, spinnerList)
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -268,12 +262,13 @@ class AddAppointment : AppCompatActivity() {
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item
-                val selectedItem = itemListLower[position]
-                val selectedVaccine = recommendationList.find { it.vaccineName == selectedItem }
-                if (selectedVaccine != null) {
-                    val selectedVaccineName = selectedVaccine.vaccineName
-                    createAppointment(selectedVaccineName)
-                }
+                val selectedItem = spinnerList[position]
+
+//                val selectedVaccine = recommendationList.find { it.vaccineName == selectedItem }
+//                if (selectedVaccine != null) {
+//                    val selectedVaccineName = selectedVaccine.vaccineName
+//                    createAppointment(selectedVaccineName)
+//                }
 
             }
 
@@ -281,6 +276,33 @@ class AddAppointment : AppCompatActivity() {
                 // Do nothing here
             }
         }
+
+    }
+
+    private fun getSpinnerList(expandableListDetail: HashMap<String, List<BasicVaccine>>): ArrayList<String> {
+
+        val keysList = ArrayList<String>()
+        val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
+        expandableListTitle.forEach {
+            val listTitle = it
+            var weekNo = ""
+            weekNo = if (listTitle.toIntOrNull() != null) {
+                if (listTitle == "0") {
+                    "At Birth"
+                } else if (listTitle.toInt() in 1..15){
+                    "$listTitle weeks"
+                }else if (listTitle.toInt() in 15..105){
+                    "${(round(listTitle.toInt() * 0.230137)).toString().replace(".0","")} months"
+                }else{
+                    "${(round(listTitle.toInt() * 0.019)).toString().replace(".0","")} years"
+                }
+            } else {
+                listTitle
+            }
+            keysList.add(weekNo)
+        }
+        return keysList
+
 
     }
 }

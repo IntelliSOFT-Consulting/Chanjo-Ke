@@ -135,11 +135,6 @@ class VaccineScheduleAdapter(
         //Check vaccine status
         for (administeredVaccine in administeredList) {
 
-            Log.e(">>>>>>", "<<<<<<")
-            println(administeredVaccine)
-            Log.e(">>>>>>", "<<<<<<")
-
-
             var displayDate = ""
             if (vaccineName == administeredVaccine.vaccineName) {
                 val status = administeredVaccine.status
