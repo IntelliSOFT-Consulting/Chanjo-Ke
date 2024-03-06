@@ -149,7 +149,9 @@ class FormatterClass {
             "administeredProduct",
 
             "appointmentListData",
-            "appointmentDateScheduled"
+            "appointmentDateScheduled",
+            "appointmentVaccineTitle",
+            "appointmentFlow",
         )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)

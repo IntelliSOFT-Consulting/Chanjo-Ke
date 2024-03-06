@@ -75,13 +75,11 @@ class AppointmentAdapter(
         val dateScheduled = entryList[position].dateScheduled
         val status = entryList[position].status
 
-
         holder.tvAppointment.text = title
 //        holder.tvDescription.text = description
 
         holder.tvStatus.text = status.lowercase()
         holder.tvAppointmentDate.text = dateScheduled
-
 
         if (status.equals(AppointmentStatus.BOOKED.name, ignoreCase = true)){
             holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))

@@ -91,6 +91,7 @@ class AddAppointment : AppCompatActivity() {
                 formatterClass.saveSharedPref("appointmentListData", selectedItemList.joinToString(","), this)
                 formatterClass.saveSharedPref("appointmentDateScheduled", dateScheduled, this)
                 formatterClass.saveSharedPref("appointmentVaccineTitle", selectedItemValue!!, this)
+                formatterClass.saveSharedPref("appointmentFlow", "addAppointment", this)
 
                 val intent = Intent(this, AppointmentDetails::class.java)
                 startActivity(intent)

@@ -113,7 +113,7 @@ class AppointmentsFragment : Fragment() {
         formatterClass.deleteSharedPref("appointmentId", requireContext())
 
         val appointmentList = patientDetailsViewModel.getAppointmentList()
-//
+
         val vaccineAdapter = AppointmentAdapter(appointmentList, requireContext())
         binding.recyclerView.adapter = vaccineAdapter
     }
