@@ -274,8 +274,6 @@ class PatientDetailsViewModel(
 
     private suspend fun getRecommendationList(): ArrayList<DbAppointmentDetails> {
         val recommendationList = ArrayList<DbAppointmentDetails>()
-
-
         fhirEngine
             .search<ImmunizationRecommendation> {
                 filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
@@ -283,9 +281,6 @@ class PatientDetailsViewModel(
             }
             .map { createRecommendation(it) }
             .let { recommendationList.addAll(it) }
-
-
-
 
         return recommendationList
     }

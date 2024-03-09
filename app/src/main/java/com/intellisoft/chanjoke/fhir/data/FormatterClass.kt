@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
@@ -22,6 +21,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import kotlin.math.abs
+import kotlin.math.round
 import kotlin.random.Random
 
 class FormatterClass {
@@ -862,6 +862,52 @@ class FormatterClass {
         } catch (e: Exception) {
             0
         }
+    }
+
+    fun getVaccineScheduleValue(keyValue:String):String{
+        var weekNo = ""
+        weekNo = if (keyValue.toIntOrNull() != null) {
+            if (keyValue == "0") {
+                "At Birth"
+            } else if (keyValue.toInt() in 1..15){
+                "$keyValue weeks"
+            }else if (keyValue.toInt() in 15..105){
+                "${(round(keyValue.toInt() * 0.230137)).toString().replace(".0","")} months"
+            }else{
+                "${(round(keyValue.toInt() * 0.019)).toString().replace(".0","")} years"
+            }
+        } else {
+            keyValue
+        }
+        return weekNo
+    }
+
+    fun getVaccineStatus(
+        vaccineName: String,
+        administeredList: List<DbVaccineData>
+    ): DbVaccineScheduleChild {
+
+        var dateScheduled = administeredList.filter { it.vaccineName == vaccineName }
+            .map { it.dateAdministered }
+            .firstOrNull()
+        if (dateScheduled == null) dateScheduled = ""
+
+        val administeredVaccineNamesList = administeredList.map { it.vaccineName }
+
+        val statusColor = if (administeredVaccineNamesList.contains(vaccineName)){
+            StatusColors.GREEN.name
+        }else{
+            StatusColors.NORMAL.name
+        }
+
+        val isVaccinated = statusColor == StatusColors.GREEN.name
+
+        return DbVaccineScheduleChild(
+            vaccineName,
+            dateScheduled,
+            statusColor,
+            isVaccinated
+        )
     }
 
 }

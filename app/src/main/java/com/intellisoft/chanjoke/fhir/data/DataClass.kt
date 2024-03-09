@@ -2,7 +2,6 @@ package com.intellisoft.chanjoke.fhir.data
 
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
-import org.hl7.fhir.r4.model.ImmunizationRecommendation
 
 enum class UrlData(var message: Int) {
     BASE_URL(R.string.base_url),
@@ -239,3 +238,15 @@ data class Ward(
     val name: String,
 
     )
+data class DbVaccineScheduleGroup(
+    val vaccineSchedule:String,
+    val colorCode: String,
+    val aefiValue: String?,
+    val dbVaccineScheduleChildList: ArrayList<DbVaccineScheduleChild>
+)
+data class DbVaccineScheduleChild(
+    val vaccineName:String,
+    val date: String,
+    val status: String,
+    val isVaccinated: Boolean
+)

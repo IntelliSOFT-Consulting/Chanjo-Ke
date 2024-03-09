@@ -14,9 +14,12 @@ import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbStatusColor
+import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
+import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleGroup
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -25,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
+import kotlin.math.round
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -84,6 +88,68 @@ class RoutineFragment : Fragment() {
 
             val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
             val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
+//            Get the administered list
+            val recommendationList = patientDetailsViewModel.recommendationList()
+
+            val administeredList = patientDetailsViewModel.getVaccineList()
+
+            val dbVaccineScheduleGroupList = ArrayList<DbVaccineScheduleGroup>()
+            expandableListTitle.forEach {keyValue->
+
+                val vaccineList = expandableListDetail[keyValue]
+
+                val weekNo = formatterClass.getVaccineScheduleValue(keyValue)
+
+                val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
+                if (!vaccineList.isNullOrEmpty()){
+                    vaccineList.forEach {basicVaccine: BasicVaccine ->
+                        val vaccineName = basicVaccine.vaccineName
+
+                        /**
+                         * Check if the vaccine has already been vaccinated and get the color and the date administered
+                         */
+                        val dbVaccineScheduleChild =  formatterClass.getVaccineStatus(vaccineName, administeredList)
+                        dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
+                    }
+                }
+
+                val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
+                    weekNo,
+                    "",
+                    "",
+                    dbVaccineScheduleChildList
+                )
+                dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
+
+            }
+
+            Log.e("^^^^^^^","^^^^^^^^")
+
+            dbVaccineScheduleGroupList.forEach {
+                println("it.vaccineSchedule ${it.vaccineSchedule}")
+
+                it.dbVaccineScheduleChildList.forEach {child->
+                    Log.e("----->","<-------")
+                    println("child.vaccineName ${child.vaccineName}")
+                    println("child.status ${child.status}")
+                    Log.e("----->","<-------")
+                }
+            }
+            Log.e("^^^^^^^","^^^^^^^^")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //        var  daysToValue = 0
 //        val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
@@ -94,98 +160,93 @@ class RoutineFragment : Fragment() {
 //            }
 //        }
 
-            //Get the administered list
-            val recommendationList = patientDetailsViewModel.recommendationList()
 
-            val administeredList = patientDetailsViewModel.getVaccineList()
-            val statusColorsList = ArrayList<DbStatusColor>()
-            for (keys in expandableListTitle){
+//            val statusColorsList = ArrayList<DbStatusColor>()
+//            for (keys in expandableListTitle){
+//
+//                val vaccines = expandableListDetail[keys]
+//                val administeredVaccineNames = administeredList.map { it.vaccineName }
+//
+//                var statusColor = ""
+//                if (vaccines != null) {
+//                    statusColor = if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+//                        //Checks if all have been vaccinated
+//                        StatusColors.GREEN.name
+//                    }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+//                        //Checks if there's any that has been vaccinated
+//                        StatusColors.AMBER.name
+//                    }else{
+//                        //Everything under here does not have any vaccines
+//                        StatusColors.NORMAL.name
+//                    }
+//                }
+//
+//                val dbStatusColor = DbStatusColor(keys, statusColor)
+//                statusColorsList.add(dbStatusColor)
+//            }
+//
+//            val patientDob = formatterClass.getSharedPref("patientDob",requireContext())
+//            var years = 0
+//            if (patientDob != null) {
+//
+//                val dob = formatterClass.convertDateFormat(patientDob)
+//                if (dob != null){
+//                    val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
+//                    if (dobDate != null) {
+//                        val finalDate = formatterClass.convertDateToLocalDate(dobDate)
+//                        val period = Period.between(finalDate, LocalDate.now())
+//                        years = period.years
+//
+//                    }
+//                }
+//            }
+//
+//            //Convert to weeks
+//            val weeks = years * 52
+//
+//            val vaccineScheduleAdapter = VaccineScheduleAdapter(
+//                requireContext(),
+//                administeredList,
+//                recommendationList,
+//                statusColorsList,
+//                expandableListTitle,
+//                expandableListDetail,
+//                patientDetailsViewModel,
+//                binding.tvAdministerVaccine, weeks)
+//
+//            if (years < 16){
+//                binding.expandableListView.setAdapter(vaccineScheduleAdapter)
+//            }
+//
+//            binding.tvAdministerVaccine.setOnClickListener {
+//
+//                val checkedStates = vaccineScheduleAdapter.getCheckedStates()
+//                val vaccineNameList = ArrayList<String>()
+//                if (vaccineNameList.isNotEmpty()){
+//                    checkedStates.forEach {
+//                        val vaccineName = it.vaccineName
+//                        vaccineNameList.add(vaccineName)
+//                    }
+//                    formatterClass.saveSharedPref(
+//                        "selectedVaccineName",
+//                        vaccineNameList.joinToString(","),
+//                        requireContext())
+//                    formatterClass.saveSharedPref(
+//                        "selectedUnContraindicatedVaccine",
+//                        vaccineNameList.joinToString(","),
+//                        requireContext())
+//
+//                    val bottomSheet = BottomSheetDialog()
+//                    fragmentManager?.let { it1 ->
+//                        bottomSheet.show(it1,
+//                            "ModalBottomSheet") }
+//                }else{
+//                    Toast.makeText(requireContext(), "You have not selected any vaccines", Toast.LENGTH_SHORT).show()
+//                }
+//
+//
 
-                val vaccines = expandableListDetail[keys]
-                val administeredVaccineNames = administeredList.map { it.vaccineName }
-
-                var statusColor = ""
-                if (vaccines != null) {
-                    statusColor = if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
-                        //Checks if all have been vaccinated
-                        StatusColors.GREEN.name
-                    }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
-                        //Checks if there's any that has been vaccinated
-                        StatusColors.AMBER.name
-                    }else{
-                        //Everything under here does not have any vaccines
-                        StatusColors.NORMAL.name
-                    }
-                }
-
-                val dbStatusColor = DbStatusColor(keys, statusColor)
-                statusColorsList.add(dbStatusColor)
-            }
-
-            val patientDob = formatterClass.getSharedPref("patientDob",requireContext())
-            var years = 0
-            if (patientDob != null) {
-
-                val dob = formatterClass.convertDateFormat(patientDob)
-                if (dob != null){
-                    val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
-                    if (dobDate != null) {
-                        val finalDate = formatterClass.convertDateToLocalDate(dobDate)
-                        val period = Period.between(finalDate, LocalDate.now())
-                        years = period.years
-
-                    }
-                }
-            }
-
-            //Convert to weeks
-            val weeks = years * 52
-
-            val vaccineScheduleAdapter = VaccineScheduleAdapter(
-                requireContext(),
-                administeredList,
-                recommendationList,
-                statusColorsList,
-                expandableListTitle,
-                expandableListDetail,
-                patientDetailsViewModel,
-                binding.tvAdministerVaccine, weeks)
-
-            if (years < 16){
-
-
-                binding.expandableListView.setAdapter(vaccineScheduleAdapter)
-            }
-
-            binding.tvAdministerVaccine.setOnClickListener {
-
-                val checkedStates = vaccineScheduleAdapter.getCheckedStates()
-                val vaccineNameList = ArrayList<String>()
-                if (vaccineNameList.isNotEmpty()){
-                    checkedStates.forEach {
-                        val vaccineName = it.vaccineName
-                        vaccineNameList.add(vaccineName)
-                    }
-                    formatterClass.saveSharedPref(
-                        "selectedVaccineName",
-                        vaccineNameList.joinToString(","),
-                        requireContext())
-                    formatterClass.saveSharedPref(
-                        "selectedUnContraindicatedVaccine",
-                        vaccineNameList.joinToString(","),
-                        requireContext())
-
-                    val bottomSheet = BottomSheetDialog()
-                    fragmentManager?.let { it1 ->
-                        bottomSheet.show(it1,
-                            "ModalBottomSheet") }
-                }else{
-                    Toast.makeText(requireContext(), "You have not selected any vaccines", Toast.LENGTH_SHORT).show()
-                }
-
-
-
-            }
+//            }
 
         }
 
