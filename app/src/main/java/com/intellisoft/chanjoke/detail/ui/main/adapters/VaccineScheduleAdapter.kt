@@ -35,7 +35,8 @@ class VaccineScheduleAdapter(
     private val expandableListTitle: List<String>,
     private val expandableListDetail: Map<String, List<BasicVaccine>>,
     private val patientDetailsViewModel: PatientDetailsViewModel,
-    private val tvAdministerVaccine: TextView
+    private val tvAdministerVaccine: TextView,
+    private val dobWeeks:Int
 ) : BaseExpandableListAdapter() {
 
     // Maintain a map to store the checked state of each checkbox
@@ -83,7 +84,9 @@ class VaccineScheduleAdapter(
         val checked = convertView.findViewById<ImageButton>(R.id.checked)
         val imgBtnView = convertView.findViewById<ImageButton>(R.id.imgBtnView)
         val linearVaccineName = convertView.findViewById<LinearLayout>(R.id.linearVaccineName)
+
         val vaccineName = expandedListText.vaccineName
+        val administrativeWeeksSinceDOB = expandedListText.administrativeWeeksSinceDOB
 
         linearVaccineName.setOnClickListener {
             val formatterClass = FormatterClass()
@@ -113,6 +116,8 @@ class VaccineScheduleAdapter(
         // Set checkbox state based on stored checked state
         val key = Pair(listPosition, expandedListPosition)
         checkBox.isChecked = checkedStates[key] ?: false
+
+
 
         // Update checked state when checkbox state changes
         checkBox.setOnCheckedChangeListener { _, isChecked ->

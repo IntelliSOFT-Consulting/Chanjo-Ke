@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
@@ -121,6 +122,24 @@ class RoutineFragment : Fragment() {
                 statusColorsList.add(dbStatusColor)
             }
 
+            val patientDob = formatterClass.getSharedPref("patientDob",requireContext())
+            var years = 0
+            if (patientDob != null) {
+
+                val dob = formatterClass.convertDateFormat(patientDob)
+                if (dob != null){
+                    val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
+                    if (dobDate != null) {
+                        val finalDate = formatterClass.convertDateToLocalDate(dobDate)
+                        val period = Period.between(finalDate, LocalDate.now())
+                        years = period.years
+
+                    }
+                }
+            }
+
+            //Convert to weeks
+            val weeks = years * 52
 
             val vaccineScheduleAdapter = VaccineScheduleAdapter(
                 requireContext(),
@@ -130,46 +149,40 @@ class RoutineFragment : Fragment() {
                 expandableListTitle,
                 expandableListDetail,
                 patientDetailsViewModel,
-                binding.tvAdministerVaccine)
+                binding.tvAdministerVaccine, weeks)
 
-            val patientDob = formatterClass.getSharedPref("patientDob",requireContext())
-            if (patientDob != null) {
+            if (years < 16){
 
-                val dob = formatterClass.convertDateFormat(patientDob)
-                if (dob != null){
-                    val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
-                    if (dobDate != null) {
-                        val finalDate = formatterClass.convertDateToLocalDate(dobDate)
-                        val period = Period.between(finalDate, LocalDate.now())
-                        val years = period.years
-                        if (years < 16){
-                            binding.expandableListView.setAdapter(vaccineScheduleAdapter)
-                        }
-                    }
-                }
+
+                binding.expandableListView.setAdapter(vaccineScheduleAdapter)
             }
 
             binding.tvAdministerVaccine.setOnClickListener {
 
                 val checkedStates = vaccineScheduleAdapter.getCheckedStates()
                 val vaccineNameList = ArrayList<String>()
-                checkedStates.forEach {
-                    val vaccineName = it.vaccineName
-                    vaccineNameList.add(vaccineName)
-                }
-                formatterClass.saveSharedPref(
-                    "selectedVaccineName",
-                    vaccineNameList.joinToString(","),
-                    requireContext())
-                formatterClass.saveSharedPref(
-                    "selectedUnContraindicatedVaccine",
-                    vaccineNameList.joinToString(","),
-                    requireContext())
+                if (vaccineNameList.isNotEmpty()){
+                    checkedStates.forEach {
+                        val vaccineName = it.vaccineName
+                        vaccineNameList.add(vaccineName)
+                    }
+                    formatterClass.saveSharedPref(
+                        "selectedVaccineName",
+                        vaccineNameList.joinToString(","),
+                        requireContext())
+                    formatterClass.saveSharedPref(
+                        "selectedUnContraindicatedVaccine",
+                        vaccineNameList.joinToString(","),
+                        requireContext())
 
-                val bottomSheet = BottomSheetDialog()
-                fragmentManager?.let { it1 ->
-                    bottomSheet.show(it1,
-                        "ModalBottomSheet") }
+                    val bottomSheet = BottomSheetDialog()
+                    fragmentManager?.let { it1 ->
+                        bottomSheet.show(it1,
+                            "ModalBottomSheet") }
+                }else{
+                    Toast.makeText(requireContext(), "You have not selected any vaccines", Toast.LENGTH_SHORT).show()
+                }
+
 
 
             }

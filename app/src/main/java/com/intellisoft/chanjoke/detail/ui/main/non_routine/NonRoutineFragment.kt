@@ -18,6 +18,8 @@ import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import java.time.LocalDate
+import java.time.Period
 
 /**
  * A simple [Fragment] subclass.
@@ -67,6 +69,8 @@ class NonRoutineFragment : Fragment() {
 
     private fun getNonRoutine() {
 
+
+
         val expandableListDetail = ImmunizationHandler().generateNonRoutineVaccineSchedule()
         val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
@@ -95,6 +99,23 @@ class NonRoutineFragment : Fragment() {
             statusColorsList.add(dbStatusColor)
         }
 
+        val patientDob = formatterClass.getSharedPref("patientDob",requireContext())
+        var years = 0
+        if (patientDob != null) {
+
+            val dob = formatterClass.convertDateFormat(patientDob)
+            if (dob != null){
+                val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
+                if (dobDate != null) {
+                    val finalDate = formatterClass.convertDateToLocalDate(dobDate)
+                    val period = Period.between(finalDate, LocalDate.now())
+                    years = period.years
+
+                }
+            }
+        }
+        //Convert to weeks
+        val weeks = years * 52
 
         val vaccineScheduleAdapter = VaccineScheduleAdapter(
             requireContext(),
@@ -104,7 +125,8 @@ class NonRoutineFragment : Fragment() {
             expandableListTitle,
             expandableListDetail,
             patientDetailsViewModel,
-            binding.tvAdministerVaccine
+            binding.tvAdministerVaccine,
+            weeks
         )
         binding.expandableListView.setAdapter(vaccineScheduleAdapter)
 
