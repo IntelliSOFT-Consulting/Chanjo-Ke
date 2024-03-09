@@ -186,20 +186,20 @@ class VaccineScheduleAdapter(
 
     // Method to get the checked states
     // Method to get the list of selected BasicVaccine items
-//    fun getCheckedStates(): List<BasicVaccine> {
-//        val selectedVaccines = mutableListOf<BasicVaccine>()
-//        for ((positionPair, isChecked) in checkedStates) {
-//            if (isChecked) {
-//                val (groupPosition, childPosition) = positionPair
-//                val vaccine =
-//                    expandableListDetail[expandableListTitle[groupPosition]]?.get(childPosition)
-//                vaccine?.let {
-//                    selectedVaccines.add(it)
-//                }
-//            }
-//        }
-//        return selectedVaccines
-//    }
+    fun getCheckedStates(): List<String> {
+        val selectedVaccines = mutableListOf<String>()
+        for ((positionPair, isChecked) in checkedStates) {
+            if (isChecked) {
+                val (groupPosition, childPosition) = positionPair
+                val vaccine =
+                    expandableListDetail[expandableListTitle[groupPosition]]?.get(childPosition)
+                vaccine?.let {
+                    selectedVaccines.add(it.vaccineName)
+                }
+            }
+        }
+        return selectedVaccines
+    }
 
     override fun getChildrenCount(listPosition: Int): Int {
         return expandableListDetail[expandableListTitle[listPosition]]!!.size
@@ -240,21 +240,6 @@ class VaccineScheduleAdapter(
         listTitleTextView.setTypeface(null, Typeface.BOLD)
         listTitleTextView.text = title
 
-
-//        var weekNo = ""
-//        weekNo = if (listTitle.toIntOrNull() != null) {
-//            if (listTitle == "0") {
-//                "At Birth"
-//            } else if (listTitle.toInt() in 1..15){
-//                "$listTitle weeks"
-//            }else if (listTitle.toInt() in 15..105){
-//                "${(round(listTitle.toInt() * 0.230137)).toString().replace(".0","")} months"
-//            }else{
-//                "${(round(listTitle.toInt() * 0.019)).toString().replace(".0","")} years"
-//            }
-//        } else {
-//            listTitle
-//        }
 
 //        val patientId = FormatterClass().getSharedPref("patientId", context)
 //        val counter = patientDetailsViewModel.generateCurrentCount(

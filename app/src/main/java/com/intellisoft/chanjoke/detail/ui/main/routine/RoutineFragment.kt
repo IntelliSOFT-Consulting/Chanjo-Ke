@@ -162,8 +162,6 @@ class RoutineFragment : Fragment() {
 
 
 
-
-
 //        var  daysToValue = 0
 //        val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
 //        if (patientDob != null){
@@ -231,35 +229,30 @@ class RoutineFragment : Fragment() {
 //                binding.expandableListView.setAdapter(vaccineScheduleAdapter)
 //            }
 //
-//            binding.tvAdministerVaccine.setOnClickListener {
-//
-//                val checkedStates = vaccineScheduleAdapter.getCheckedStates()
-//                val vaccineNameList = ArrayList<String>()
-//                if (vaccineNameList.isNotEmpty()){
-//                    checkedStates.forEach {
-//                        val vaccineName = it.vaccineName
-//                        vaccineNameList.add(vaccineName)
-//                    }
-//                    formatterClass.saveSharedPref(
-//                        "selectedVaccineName",
-//                        vaccineNameList.joinToString(","),
-//                        requireContext())
-//                    formatterClass.saveSharedPref(
-//                        "selectedUnContraindicatedVaccine",
-//                        vaccineNameList.joinToString(","),
-//                        requireContext())
-//
-//                    val bottomSheet = BottomSheetDialog()
-//                    fragmentManager?.let { it1 ->
-//                        bottomSheet.show(it1,
-//                            "ModalBottomSheet") }
-//                }else{
-//                    Toast.makeText(requireContext(), "You have not selected any vaccines", Toast.LENGTH_SHORT).show()
-//                }
-//
-//
+            binding.tvAdministerVaccine.setOnClickListener {
 
-//            }
+                val checkedStates = vaccineScheduleAdapter.getCheckedStates()
+                if (checkedStates.isNotEmpty()){
+                    formatterClass.saveSharedPref(
+                        "selectedVaccineName",
+                        checkedStates.joinToString(","),
+                        requireContext())
+                    formatterClass.saveSharedPref(
+                        "selectedUnContraindicatedVaccine",
+                        checkedStates.joinToString(","),
+                        requireContext())
+
+                    val bottomSheet = BottomSheetDialog()
+                    fragmentManager?.let { it1 ->
+                        bottomSheet.show(it1,
+                            "ModalBottomSheet") }
+                }else{
+                    Toast.makeText(requireContext(), "You have not selected any vaccines", Toast.LENGTH_SHORT).show()
+                }
+
+
+
+            }
 
         }
 
