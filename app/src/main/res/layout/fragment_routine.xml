@@ -69,7 +69,22 @@
 
         </LinearLayout>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+        </ScrollView>
+
+
+
         <ExpandableListView
+            android:visibility="gone"
             android:id="@+id/expandableListView"
             android:layout_height="match_parent"
             android:layout_width="match_parent"

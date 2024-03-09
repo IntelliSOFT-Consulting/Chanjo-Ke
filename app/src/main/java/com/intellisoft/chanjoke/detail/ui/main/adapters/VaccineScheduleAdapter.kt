@@ -72,6 +72,7 @@ class VaccineScheduleAdapter(
         convertView: View?,
         parent: ViewGroup?
     ): View {
+
         var convertView = convertView
         val expandedListText = getChild(listPosition, expandedListPosition) as DbVaccineScheduleChild
         if (convertView == null) {
@@ -88,6 +89,7 @@ class VaccineScheduleAdapter(
         val linearVaccineName = convertView.findViewById<LinearLayout>(R.id.linearVaccineName)
 
         val vaccineName = expandedListText.vaccineName
+        val isVaccinated = expandedListText.isVaccinated
 //        val administrativeWeeksSinceDOB = expandedListText.administrativeWeeksSinceDOB
 
         linearVaccineName.setOnClickListener {
@@ -115,17 +117,28 @@ class VaccineScheduleAdapter(
         expandedListTextView.text = vaccineName
 
 
+
+
         // Set checkbox state based on stored checked state
         val key = Pair(listPosition, expandedListPosition)
         checkBox.isChecked = checkedStates[key] ?: false
-
-
 
         // Update checked state when checkbox state changes
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             checkedStates[key] = isChecked
             updateAdministerVaccineText()
         }
+
+        if (isVaccinated){
+            tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
+            checkBox.visibility = View.INVISIBLE
+            checked.visibility = View.VISIBLE
+        }
+
+
+
+
+
         // Check if the vaccineName exists in recommendationList
 //        val recommendationDetails = recommendationList.find { it.vaccineName == vaccineName }
 //        if (recommendationDetails != null){

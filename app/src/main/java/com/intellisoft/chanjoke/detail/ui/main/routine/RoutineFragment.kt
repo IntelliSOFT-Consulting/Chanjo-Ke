@@ -1,15 +1,22 @@
 package com.intellisoft.chanjoke.detail.ui.main.routine
 
 import android.app.Application
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
+import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
@@ -142,14 +149,47 @@ class RoutineFragment : Fragment() {
                 }
             }
 
-            val vaccineScheduleAdapter = VaccineScheduleAdapter(
-                requireContext(),
-                sortedExpandableListTitle,
-                newExpandableListDetail,
-                binding.tvAdministerVaccine)
+
 
             CoroutineScope(Dispatchers.Main).launch {
-                binding.expandableListView.setAdapter(vaccineScheduleAdapter)
+
+                for (group in sortedExpandableListTitle){
+                    val groupLayout = layoutInflater.inflate(R.layout.vaccination_schedule, null) as RelativeLayout
+                    val tvScheduleTime = groupLayout.findViewById<TextView>(R.id.tvScheduleTime)
+                    val tvAefi = groupLayout.findViewById<TextView>(R.id.tvAefi)
+                    val imageViewSchedule = groupLayout.findViewById<ImageView>(R.id.imageViewSchedule)
+
+                    // Populate views with data from DbVaccineScheduleGroup
+                    tvScheduleTime.text = group.vaccineSchedule
+                    tvAefi.text = "Aefi(0)"
+                    when (group.colorCode) {
+                        StatusColors.GREEN.name -> {
+                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
+                        }
+
+                        StatusColors.AMBER.name -> {
+                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
+                        }
+
+                        StatusColors.RED.name -> {
+                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
+                        }
+
+                        else -> {
+                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
+                        }
+                    }
+
+                    // Add the cardview_item to linearLayoutId2
+                    binding.mainLayout.addView(groupLayout)
+
+                }
+
+
+
+
+
+
             }
 
 
@@ -229,30 +269,7 @@ class RoutineFragment : Fragment() {
 //                binding.expandableListView.setAdapter(vaccineScheduleAdapter)
 //            }
 //
-            binding.tvAdministerVaccine.setOnClickListener {
 
-                val checkedStates = vaccineScheduleAdapter.getCheckedStates()
-                if (checkedStates.isNotEmpty()){
-                    formatterClass.saveSharedPref(
-                        "selectedVaccineName",
-                        checkedStates.joinToString(","),
-                        requireContext())
-                    formatterClass.saveSharedPref(
-                        "selectedUnContraindicatedVaccine",
-                        checkedStates.joinToString(","),
-                        requireContext())
-
-                    val bottomSheet = BottomSheetDialog()
-                    fragmentManager?.let { it1 ->
-                        bottomSheet.show(it1,
-                            "ModalBottomSheet") }
-                }else{
-                    Toast.makeText(requireContext(), "You have not selected any vaccines", Toast.LENGTH_SHORT).show()
-                }
-
-
-
-            }
 
         }
 
