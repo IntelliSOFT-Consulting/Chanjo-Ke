@@ -5,6 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -882,7 +883,28 @@ class FormatterClass {
         return weekNo
     }
 
-    fun getVaccineStatus(
+    fun getVaccineGroupDetails(
+        vaccines:  List<BasicVaccine>?,
+        administeredList: List<DbVaccineData>): String{
+        val administeredVaccineNames = administeredList.map { it.vaccineName }
+
+        var statusColor = ""
+        if (vaccines != null) {
+            statusColor = if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+                //Checks if all have been vaccinated
+                StatusColors.GREEN.name
+            }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
+                //Checks if there's any that has been vaccinated
+                StatusColors.AMBER.name
+            }else{
+                //Everything under here does not have any vaccines
+                StatusColors.NORMAL.name
+            }
+        }
+
+        return statusColor
+    }
+    fun getVaccineChildStatus(
         vaccineName: String,
         administeredList: List<DbVaccineData>
     ): DbVaccineScheduleChild {

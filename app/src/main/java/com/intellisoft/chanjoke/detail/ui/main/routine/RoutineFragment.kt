@@ -94,10 +94,9 @@ class RoutineFragment : Fragment() {
             val administeredList = patientDetailsViewModel.getVaccineList()
 
             val dbVaccineScheduleGroupList = ArrayList<DbVaccineScheduleGroup>()
-            expandableListTitle.forEach {keyValue->
+            expandableListTitle.forEach { keyValue->
 
                 val vaccineList = expandableListDetail[keyValue]
-
                 val weekNo = formatterClass.getVaccineScheduleValue(keyValue)
 
                 val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
@@ -108,14 +107,17 @@ class RoutineFragment : Fragment() {
                         /**
                          * Check if the vaccine has already been vaccinated and get the color and the date administered
                          */
-                        val dbVaccineScheduleChild =  formatterClass.getVaccineStatus(vaccineName, administeredList)
+                        val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(vaccineName, administeredList)
                         dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
                     }
                 }
 
+                //Get the group color Code
+                val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList)
+
                 val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
                     weekNo,
-                    "",
+                    statusColor,
                     "",
                     dbVaccineScheduleChildList
                 )
