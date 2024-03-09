@@ -117,43 +117,43 @@ class NonRoutineFragment : Fragment() {
         //Convert to weeks
         val weeks = years * 52
 
-        val vaccineScheduleAdapter = VaccineScheduleAdapter(
-            requireContext(),
-            administeredList,
-            recommendationList,
-            statusColorsList,
-            expandableListTitle,
-            expandableListDetail,
-            patientDetailsViewModel,
-            binding.tvAdministerVaccine,
-            weeks
-        )
-        binding.expandableListView.setAdapter(vaccineScheduleAdapter)
-
-        binding.tvAdministerVaccine.setOnClickListener {
-
-            val checkedStates = vaccineScheduleAdapter.getCheckedStates()
-            val vaccineNameList = ArrayList<String>()
-            checkedStates.forEach {
-                val vaccineName = it.vaccineName
-                vaccineNameList.add(vaccineName)
-            }
-            formatterClass.saveSharedPref(
-                "selectedVaccineName",
-                vaccineNameList.joinToString(","),
-                requireContext())
-            formatterClass.saveSharedPref(
-                "selectedUnContraindicatedVaccine",
-                vaccineNameList.joinToString(","),
-                requireContext())
-
-            val bottomSheet = BottomSheetDialog()
-            fragmentManager?.let { it1 ->
-                bottomSheet.show(it1,
-                    "ModalBottomSheet") }
-
-
-        }
+//        val vaccineScheduleAdapter = VaccineScheduleAdapter(
+//            requireContext(),
+//            administeredList,
+//            recommendationList,
+//            statusColorsList,
+//            expandableListTitle,
+//            expandableListDetail,
+//            patientDetailsViewModel,
+//            binding.tvAdministerVaccine,
+//            weeks
+//        )
+//        binding.expandableListView.setAdapter(vaccineScheduleAdapter)
+//
+//        binding.tvAdministerVaccine.setOnClickListener {
+//
+//            val checkedStates = vaccineScheduleAdapter.getCheckedStates()
+//            val vaccineNameList = ArrayList<String>()
+//            checkedStates.forEach {
+//                val vaccineName = it.vaccineName
+//                vaccineNameList.add(vaccineName)
+//            }
+//            formatterClass.saveSharedPref(
+//                "selectedVaccineName",
+//                vaccineNameList.joinToString(","),
+//                requireContext())
+//            formatterClass.saveSharedPref(
+//                "selectedUnContraindicatedVaccine",
+//                vaccineNameList.joinToString(","),
+//                requireContext())
+//
+//            val bottomSheet = BottomSheetDialog()
+//            fragmentManager?.let { it1 ->
+//                bottomSheet.show(it1,
+//                    "ModalBottomSheet") }
+//
+//
+//        }
 
     }
 

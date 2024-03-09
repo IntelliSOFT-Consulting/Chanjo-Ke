@@ -125,21 +125,32 @@ class RoutineFragment : Fragment() {
 
             }
 
-            Log.e("^^^^^^^","^^^^^^^^")
+            val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
 
-            dbVaccineScheduleGroupList.forEach {
-                println("it.vaccineSchedule ${it.vaccineSchedule}")
+            for (group in dbVaccineScheduleGroupList) {
+                newExpandableListDetail[group] = group.dbVaccineScheduleChildList
+            }
 
-                it.dbVaccineScheduleChildList.forEach {child->
-                    Log.e("----->","<-------")
-                    println("child.vaccineName ${child.vaccineName}")
-                    println("child.status ${child.status}")
-                    Log.e("----->","<-------")
+            val newExpandableListTitle = ArrayList(newExpandableListDetail.keys)
+            val sortedExpandableListTitle = newExpandableListTitle.sortedBy {
+                when{
+                    it.vaccineSchedule.startsWith("At Birth") -> 1
+                    it.vaccineSchedule.endsWith("weeks") -> 2
+                    it.vaccineSchedule.endsWith("months") -> 3
+                    it.vaccineSchedule.endsWith("years") -> 4
+                    else -> 5
                 }
             }
-            Log.e("^^^^^^^","^^^^^^^^")
 
+            val vaccineScheduleAdapter = VaccineScheduleAdapter(
+                requireContext(),
+                sortedExpandableListTitle,
+                newExpandableListDetail,
+                binding.tvAdministerVaccine)
 
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.expandableListView.setAdapter(vaccineScheduleAdapter)
+            }
 
 
 
