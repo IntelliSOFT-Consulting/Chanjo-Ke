@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.fhir.data
 
+import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 
@@ -249,4 +250,8 @@ data class DbVaccineScheduleChild(
     val date: String,
     val status: String,
     var isVaccinated: Boolean
+)
+data class DbRecycler(
+    val recyclerView:RecyclerView,
+    val vaccineSchedule: String
 )

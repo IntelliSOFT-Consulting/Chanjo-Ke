@@ -21,6 +21,7 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.VaccineDetailsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.DbRecycler
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleGroup
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -55,6 +56,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private val formatterClass = FormatterClass()
     private var patientYears:String? = null
     private var selectedVaccineList = ArrayList<String>()
+    private var dbRecyclerList = HashSet<DbRecycler>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -197,6 +199,9 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     val vaccineSchedule = group.vaccineSchedule
                     val colorCode = group.colorCode
 
+                    val dbRecycler = DbRecycler(recyclerView, vaccineSchedule)
+                    dbRecyclerList.add(dbRecycler)
+
                     // Populate views with data from DbVaccineScheduleGroup
                     tvScheduleTime.text = vaccineSchedule
                     when (colorCode) {
@@ -230,6 +235,8 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     }
 
                     groupLayout.setOnClickListener {
+
+                        performVisibility(vaccineSchedule)
 
                         val vaccineList = ArrayList<DbVaccineScheduleChild>()
 
@@ -315,6 +322,21 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 //            }
 //
 
+
+        }
+
+    }
+
+    private fun performVisibility(vaccineSchedule:String) {
+
+        dbRecyclerList.forEach {
+            val recyclerView = it.recyclerView
+            val dbVaccineSchedule = it.vaccineSchedule
+            if (vaccineSchedule == dbVaccineSchedule){
+                recyclerView.visibility = View.VISIBLE
+            }else{
+                recyclerView.visibility = View.GONE
+            }
 
         }
 
