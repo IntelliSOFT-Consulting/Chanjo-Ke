@@ -3,6 +3,7 @@
     app:cardCornerRadius="7dp"
     app:cardElevation="5dp"
     android:layout_width="match_parent"
+    android:layout_margin="10dp"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -34,7 +35,7 @@
 
                 <TextView
                     android:id="@+id/tvVaccineDate"
-                    android:text=""
+                    android:text="2 march 2033"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -42,7 +43,7 @@
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:id="@+id/tvScheduleStatus"
-                    android:text=""
+                    android:text="Administered"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 

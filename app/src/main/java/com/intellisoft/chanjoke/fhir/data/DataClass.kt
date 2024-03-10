@@ -248,5 +248,5 @@ data class DbVaccineScheduleChild(
     val vaccineName:String,
     val date: String,
     val status: String,
-    val isVaccinated: Boolean
+    var isVaccinated: Boolean
 )

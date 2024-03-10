@@ -1,10 +1,8 @@
 package com.intellisoft.chanjoke.detail.ui.main.routine
 
 import android.app.Application
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +10,19 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
-import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineScheduleAdapter
+import com.intellisoft.chanjoke.detail.ui.main.VaccineDetailsAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
-import com.intellisoft.chanjoke.fhir.data.DbStatusColor
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleGroup
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.StatusColors
-import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -33,9 +30,6 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.Period
-import kotlin.math.round
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -48,7 +42,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [RoutineFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RoutineFragment : Fragment() {
+class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -149,18 +143,30 @@ class RoutineFragment : Fragment() {
                 }
             }
 
-
-
             CoroutineScope(Dispatchers.Main).launch {
 
+                val inflater = LayoutInflater.from(requireContext())
+
                 for (group in sortedExpandableListTitle){
-                    val groupLayout = layoutInflater.inflate(R.layout.vaccination_schedule, null) as RelativeLayout
+
+                    val groupLayout = inflater.inflate(R.layout.vaccination_schedule, null) as RelativeLayout
                     val tvScheduleTime = groupLayout.findViewById<TextView>(R.id.tvScheduleTime)
                     val tvAefi = groupLayout.findViewById<TextView>(R.id.tvAefi)
                     val imageViewSchedule = groupLayout.findViewById<ImageView>(R.id.imageViewSchedule)
+                    val recyclerView = groupLayout.findViewById<RecyclerView>(R.id.recyclerView)
+
+                    groupLayout.setOnClickListener {
+                        Log.e("---->","<----")
+                        println(group.vaccineSchedule)
+                        Log.e("---->","<----")
+                    }
+
+                    val vaccineSchedule = group.vaccineSchedule
+                    val colorCode = group.colorCode
+                    val dbVaccineScheduleChildList = group.dbVaccineScheduleChildList
 
                     // Populate views with data from DbVaccineScheduleGroup
-                    tvScheduleTime.text = group.vaccineSchedule
+                    tvScheduleTime.text = vaccineSchedule
                     tvAefi.text = "Aefi(0)"
                     when (group.colorCode) {
                         StatusColors.GREEN.name -> {
@@ -180,15 +186,14 @@ class RoutineFragment : Fragment() {
                         }
                     }
 
+                    recyclerView.setHasFixedSize(true)
+                    val adapter = VaccineDetailsAdapter(dbVaccineScheduleChildList, this@RoutineFragment)
+                    recyclerView.adapter = adapter
+
                     // Add the cardview_item to linearLayoutId2
-                    binding.mainLayout.addView(groupLayout)
+                    binding.groupLayout.addView(groupLayout)
 
                 }
-
-
-
-
-
 
             }
 
@@ -293,5 +298,18 @@ class RoutineFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onCheckBoxSelected(position: Int, isChecked: Boolean) {
+
+        binding.tvAdministerVaccine.text = "$position"
+
+//        val vaccineName = vaccineDetailsList[position].vaccineName
+//        if (isChecked) {
+//            textViewToUpdate.text = "$vaccineName is selected"
+//        } else {
+//            textViewToUpdate.text = "$vaccineName is unselected"
+//        }
+
     }
 }
