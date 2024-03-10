@@ -764,7 +764,7 @@ class ImmunizationHandler() {
 
         return listOf(
             routineList.flatMap { it.vaccineList },
-            nonRoutineList.flatMap { it.vaccineList.flatMap { it.vaccineList } },
+            nonRoutineList.flatMap { it.vaccineList.flatMap { nonRoutine ->  nonRoutine.vaccineList } },
             pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
             .firstOrNull { it.matchesVaccineName(vaccineName) }
 

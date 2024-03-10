@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -146,12 +147,14 @@ class ContraindicationsFragment : Fragment() {
                                 if (forecastReason == ""){
                                     Toast.makeText(requireContext(), "Please select a reason!", Toast.LENGTH_SHORT).show()
                                 }else{
+
                                     administerVaccineViewModel.createManualContraindication(
                                         selectedItemList.toList(),
                                         patientId,
                                         dobDate,
                                         status,
-                                        null, forecastReason)
+                                        null,
+                                        forecastReason)
 
                                     if (vaccineList.isNotEmpty()){
                                         findNavController().navigate(R.id.administerNewFragment)
@@ -165,8 +168,9 @@ class ContraindicationsFragment : Fragment() {
 
 
                             }
+
                         }
-                    }
+                    }else Toast.makeText(requireContext(), "Select a date", Toast.LENGTH_SHORT).show()
                 }
 
 

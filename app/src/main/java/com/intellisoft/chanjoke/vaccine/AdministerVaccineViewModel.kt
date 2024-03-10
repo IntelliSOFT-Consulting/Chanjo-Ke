@@ -543,7 +543,7 @@ class AdministerVaccineViewModel(
 
                 if (vaccineBasicVaccine != null) {
                     val seriesVaccine =
-                        immunizationHandler.getRoutineSeriesByBasicVaccine(vaccineBasicVaccine)
+                        immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
                     val targetDisease = seriesVaccine?.targetDisease
 
                     val job = Job()
@@ -610,6 +610,7 @@ class AdministerVaccineViewModel(
         val codeableConceptTargetDisease = CodeableConcept()
         codeableConceptTargetDisease.text = targetDisease
         immunizationRequest.targetDisease = codeableConceptTargetDisease
+
 
         //Status
         val codeableConceptStatus = CodeableConcept()
@@ -682,6 +683,7 @@ class AdministerVaccineViewModel(
                 "administeredProduct",
                 getApplication<Application>().applicationContext
             )
+
             if (administeredProduct != null) {
                 val baseVaccineDetails =
                     immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
@@ -692,12 +694,11 @@ class AdministerVaccineViewModel(
                     contraindicationCodeableConceptList.add(
                         codeableConceptContraindicatedVaccineCode
                     )
+
                     immunizationRequest.contraindicatedVaccineCode =
                         contraindicationCodeableConceptList
                 }
             }
-
-
         }
 
         //Supporting Patient Information
