@@ -176,12 +176,21 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             val sortedExpandableListTitle = newExpandableListTitle.sortedBy {
                 when{
                     it.vaccineSchedule.startsWith("At Birth") -> 1
-                    it.vaccineSchedule.endsWith("weeks") -> 2
-                    it.vaccineSchedule.endsWith("months") -> 3
-                    it.vaccineSchedule.endsWith("years") -> 4
-                    else -> 5
+                    it.vaccineSchedule.endsWith("6 weeks") -> 2
+                    it.vaccineSchedule.endsWith("10 weeks") -> 3
+                    it.vaccineSchedule.endsWith("14 weeks") -> 4
+                    it.vaccineSchedule.endsWith("6 months") -> 5
+                    it.vaccineSchedule.endsWith("7 months") -> 6
+                    it.vaccineSchedule.endsWith("9 months") -> 7
+                    it.vaccineSchedule.endsWith("12 months") -> 8
+                    it.vaccineSchedule.endsWith("18 months") -> 9
+                    it.vaccineSchedule.endsWith("24 months") -> 10
+                    it.vaccineSchedule.endsWith("10 years") -> 11
+                    it.vaccineSchedule.endsWith("14 years") -> 12
+                    else -> 13
                 }
             }
+
 
             CoroutineScope(Dispatchers.Main).launch {
 
@@ -262,69 +271,8 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     binding.groupLayout.addView(groupLayout)
 
                 }
-
             }
-
-
-
-
-//        var  daysToValue = 0
-//        val patientDob = FormatterClass().getSharedPref("patientDob", requireContext())
-//        if (patientDob != null){
-//            val daysTo = FormatterClass().daysBetweenTodayAndGivenDate(patientDob)
-//            if (daysTo != null){
-//                daysToValue = daysTo.toInt()
-//            }
-//        }
-
-
-//            val statusColorsList = ArrayList<DbStatusColor>()
-//            for (keys in expandableListTitle){
-//
-//                val vaccines = expandableListDetail[keys]
-//                val administeredVaccineNames = administeredList.map { it.vaccineName }
-//
-//                var statusColor = ""
-//                if (vaccines != null) {
-//                    statusColor = if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
-//                        //Checks if all have been vaccinated
-//                        StatusColors.GREEN.name
-//                    }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
-//                        //Checks if there's any that has been vaccinated
-//                        StatusColors.AMBER.name
-//                    }else{
-//                        //Everything under here does not have any vaccines
-//                        StatusColors.NORMAL.name
-//                    }
-//                }
-//
-//                val dbStatusColor = DbStatusColor(keys, statusColor)
-//                statusColorsList.add(dbStatusColor)
-//            }
-//
-
-//
-//            //Convert to weeks
-//            val weeks = years * 52
-//
-//            val vaccineScheduleAdapter = VaccineScheduleAdapter(
-//                requireContext(),
-//                administeredList,
-//                recommendationList,
-//                statusColorsList,
-//                expandableListTitle,
-//                expandableListDetail,
-//                patientDetailsViewModel,
-//                binding.tvAdministerVaccine, weeks)
-//
-//            if (years < 16){
-//                binding.expandableListView.setAdapter(vaccineScheduleAdapter)
-//            }
-//
-
-
         }
-
     }
 
     private fun performVisibility(vaccineSchedule:String) {
@@ -337,7 +285,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             }else{
                 recyclerView.visibility = View.GONE
             }
-
         }
 
     }

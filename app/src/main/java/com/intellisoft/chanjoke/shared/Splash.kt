@@ -79,17 +79,9 @@ class Splash : AppCompatActivity() {
                 editor.apply();
             }
 
-
-//            FormatterClass().saveSharedPref("expandableListDetail",expandableListDetail.toString(),this@Splash)
-//            FormatterClass().saveSharedPref("expandableListTitle",expandableListTitle.toString(),this@Splash)
-//
-//            val xxx = FormatterClass().getSharedPref("expandableListDetail",this@Splash) as HashMap<String, List<BasicVaccine>>
-//            val yyy = FormatterClass().getSharedPref("expandableListTitle",this@Splash) as  ArrayList<String>
-//
-//            Log.e("*******","******")
-//            println(xxx)
-//            println(yyy)
-//            Log.e("*******","******")
+            Log.e("*******","******")
+            println(expandableListTitle)
+            Log.e("*******","******")
         }
 
 
