@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main.routine
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
 import com.intellisoft.chanjoke.detail.ui.main.VaccineDetailsAdapter
@@ -22,6 +24,7 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleGroup
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -196,7 +199,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
                     // Populate views with data from DbVaccineScheduleGroup
                     tvScheduleTime.text = vaccineSchedule
-                    tvAefi.text = "Aefi(0)"
                     when (colorCode) {
                         StatusColors.GREEN.name -> {
                             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
@@ -210,6 +212,21 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                         else -> {
                             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
                         }
+                    }
+                    tvAefi.text = "Aefi(0)"
+                    val counter = patientDetailsViewModel.generateCurrentCount(
+                        vaccineSchedule,
+                        patientId
+                    )
+                    tvAefi.text = "AEFIs ($counter)"
+
+                    tvAefi.setOnClickListener {
+                        FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
+
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
+                        intent.putExtra("patientId", patientId)
+                        startActivity(intent)
                     }
 
                     groupLayout.setOnClickListener {

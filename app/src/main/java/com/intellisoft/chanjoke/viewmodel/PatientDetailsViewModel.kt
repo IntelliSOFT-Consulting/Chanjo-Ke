@@ -910,7 +910,6 @@ class PatientDetailsViewModel(
                 }
             }
 
-        Log.e("TAG", "Counter **** Final $weekNo Current Counter $counter")
         return "$counter"
     }
 }
