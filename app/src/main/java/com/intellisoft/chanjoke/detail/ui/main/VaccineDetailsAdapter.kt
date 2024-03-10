@@ -37,6 +37,7 @@ class VaccineDetailsAdapter(
         val isVaccinated = currentItem.isVaccinated
         val status = currentItem.status
         val date = currentItem.date
+        val canBeVaccinated = currentItem.canBeVaccinated
 
         var vaccineStatus = ""
         if (status == StatusColors.NORMAL.name){
@@ -48,22 +49,23 @@ class VaccineDetailsAdapter(
             vaccineStatus = "Contraindicated"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
             val daysTo = formatterClass.daysBetweenTodayAndGivenDate(date)
-            Log.e("----->","<-----")
             if (daysTo != null){
-                println(daysTo)
                 val daysToInt = daysTo.toInt()
-                println(daysToInt)
                 if (daysToInt != 0){
                     holder.checkBox.isEnabled = false
                 }
             }
-            Log.e("----->","<-----")
         }else if (status == StatusColors.RED.name){
             vaccineStatus = "Missed"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
         }else{
             vaccineStatus = ""
         }
+        if (canBeVaccinated != null) {
+            holder.checkBox.isEnabled = canBeVaccinated
+        }
+
+
         holder.tvScheduleStatus.text = vaccineStatus
         holder.tvVaccineName.text = vaccineName
         holder.tvVaccineDate.text = date

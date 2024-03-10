@@ -920,6 +920,8 @@ class FormatterClass {
         return statusColor
     }
     fun getVaccineChildStatus(
+        context: Context,
+        weekNumber: String,
         vaccineName: String,
         administeredList: List<DbVaccineData>,
         recommendationList: ArrayList<DbAppointmentDetails>
@@ -948,11 +950,29 @@ class FormatterClass {
 
         val isVaccinated = statusColor == StatusColors.GREEN.name
 
+        /**
+         * Use the week number to check eligibility of the vaccine
+         */
+        val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
+        var canBeVaccinated:Boolean? = null
+        val patientDob = getSharedPref("patientDob",context)
+        if (patientDob != null){
+            val numberOfWeek = calculateWeeksFromDate(patientDob)
+            if (numberOfWeek != null &&  basicVaccine != null){
+                val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
+                if (administrativeWeeksSinceDOB > 0){
+                    canBeVaccinated = administrativeWeeksSinceDOB < numberOfWeek
+                }
+            }
+        }
+
+
         return DbVaccineScheduleChild(
             vaccineName,
             dateSchedule,
             statusColor,
-            isVaccinated
+            isVaccinated,
+            canBeVaccinated
         )
     }
 

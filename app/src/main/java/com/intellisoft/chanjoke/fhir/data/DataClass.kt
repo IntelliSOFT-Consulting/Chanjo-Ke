@@ -249,7 +249,8 @@ data class DbVaccineScheduleChild(
     val vaccineName:String,
     val date: String,
     val status: String,
-    var isVaccinated: Boolean
+    var isVaccinated: Boolean,
+    var canBeVaccinated: Boolean?,
 )
 data class DbRecycler(
     val recyclerView:RecyclerView,
