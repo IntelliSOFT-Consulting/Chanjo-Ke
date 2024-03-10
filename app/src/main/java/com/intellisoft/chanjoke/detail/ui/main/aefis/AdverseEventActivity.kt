@@ -1,12 +1,16 @@
 package com.intellisoft.chanjoke.detail.ui.main.aefis
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.databinding.ActivityAdverseEventBinding
+import com.intellisoft.chanjoke.detail.ui.main.aefis.edit.EditAefiActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.AEFIData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -15,6 +19,7 @@ import timber.log.Timber
 class AdverseEventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdverseEventBinding
     private lateinit var fhirEngine: FhirEngine
+    private val formatter = FormatterClass()
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +29,24 @@ class AdverseEventActivity : AppCompatActivity() {
 
         binding.apply {
             btnClose.setOnClickListener {
-                onBackPressed()
+//                onBackPressed()
+                val data = AEFIData(
+                    type = binding.typeOfAEFITextView.text.toString(),
+                    brief = binding.briefDetailsTextView.text.toString(),
+                    onset = binding.onsetOfEventTextView.text.toString(),
+                    history = binding.pastMedicalHistoryTextView.text.toString(),
+                    severity = binding.reactionSeverityTextView.text.toString(),
+                    action = binding.actionTakenTextView.text.toString(),
+                    outcome = binding.aefiOutcomeTextView.text.toString(),
+                    reporter = binding.nameOfPersonTextView.text.toString(),
+                    phone = binding.contactTextView.text.toString()
+                )
+                formatter.saveSharedPref(
+                    "aefi_data",
+                    Gson().toJson(data),
+                    this@AdverseEventActivity
+                )
+                startActivity(Intent(this@AdverseEventActivity, EditAefiActivity::class.java))
             }
         }
 
@@ -47,6 +69,24 @@ class AdverseEventActivity : AppCompatActivity() {
                     patientId.toString()
                 ),
             ).get(PatientDetailsViewModel::class.java)
+        loadAEFIData()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        try {
+            loadAEFIData()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun loadAEFIData() {
+
+        val patientId = FormatterClass().getSharedPref("patientId", this@AdverseEventActivity)
+        val encounterId =
+            FormatterClass().getSharedPref("encounter_logical", this@AdverseEventActivity)
         binding.apply {
             val type = extractAefiData(patientId.toString(), encounterId.toString(), "882-22")
 
@@ -120,7 +160,6 @@ class AdverseEventActivity : AppCompatActivity() {
                 "882-22"
             )
         }
-
     }
 
     private fun extractAefiOccuranceData(
