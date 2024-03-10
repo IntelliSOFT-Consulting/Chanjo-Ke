@@ -65,7 +65,7 @@ class CompleteDetailsActivity : AppCompatActivity() {
 
                 val dob = formatterClass.convertDateFormat(patientDetail.dob)
                 val age =
-                    formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources)
+                    formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources, this@CompleteDetailsActivity)
                 val ageYears =
                     formatterClass.getFormattedAgeYears(patientDetail.dob, tvAge.context.resources)
                 if (ageYears >= 18) {

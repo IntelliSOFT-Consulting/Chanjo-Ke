@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -192,23 +193,6 @@ class PatientDetailActivity : AppCompatActivity() {
 
             formatterClass.clearVaccineShared(this@PatientDetailActivity)
 
-            val patientDob = formatterClass.getSharedPref("patientDob",this@PatientDetailActivity)
-            var years = 0
-            if (patientDob != null) {
-
-                val dob = formatterClass.convertDateFormat(patientDob)
-                if (dob != null){
-                    val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
-                    if (dobDate != null) {
-                        val finalDate = formatterClass.convertDateToLocalDate(dobDate)
-                        val period = Period.between(finalDate, LocalDate.now())
-                        years = period.years
-                        formatterClass.saveSharedPref("patientYears",years.toString(), this@PatientDetailActivity)
-                    }
-                }
-            }
-
-
             formatterClass.saveSharedPref("isPaged", "false", this@PatientDetailActivity)
 
             val observationDateValue =
@@ -226,8 +210,7 @@ class PatientDetailActivity : AppCompatActivity() {
                     tvSystemId.text = patientDetail.systemId
 
                     val dob = formatterClass.convertDateFormat(patientDetail.dob)
-                    val age =
-                        formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources)
+                    val age = formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources, this@PatientDetailActivity)
 //                    val dobAge = "$dob ($age old)"
 
                     tvDob.text = dob

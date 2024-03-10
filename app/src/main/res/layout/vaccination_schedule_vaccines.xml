@@ -64,6 +64,7 @@
 
             <ImageButton
                 android:visibility="gone"
+                android:padding="15dp"
                 android:layout_marginEnd="10dp"
                 android:layout_gravity="center"
                 android:id="@+id/checked"
@@ -73,6 +74,7 @@
 
 
             <ImageButton
+                android:visibility="gone"
                 android:backgroundTint="@color/colorPrimary"
                 android:layout_gravity="center"
                 android:background="@drawable/ic_action_info_test"

@@ -108,7 +108,7 @@ class AppointmentsFragment : Fragment() {
         getAppointments()
     }
     private fun onBackPressed() {
-        val intent = Intent(context, PatientDetailActivity::class.java)
+        val intent = Intent(requireContext(), PatientDetailActivity::class.java)
         intent.putExtra("patientId", patientId)
         startActivity(intent)
     }

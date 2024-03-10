@@ -81,6 +81,7 @@ class ContraindicationsFragment : Fragment() {
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
+
         administrationFlowTitle = formatterClass.getSharedPref("administrationFlowTitle", requireContext())
 
 
@@ -180,17 +181,16 @@ class ContraindicationsFragment : Fragment() {
 
 
         }
+        binding.btnBack.setOnClickListener { onBackPressed() }
 
     }
 
 
 
     private fun onBackPressed() {
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-
-            NavHostFragment.findNavController(this@ContraindicationsFragment)
-                .navigateUp()
-        }
+        val intent = Intent(requireContext(), PatientDetailActivity::class.java)
+        intent.putExtra("patientId", patientId)
+        startActivity(intent)
     }
 
     private fun updateUI() {
@@ -218,8 +218,8 @@ class ContraindicationsFragment : Fragment() {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             title = titleString
-            setDisplayShowHomeEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
+//            setDisplayShowHomeEnabled(true)
+//            setDisplayHomeAsUpEnabled(true)
         }
 
 
@@ -261,7 +261,7 @@ class ContraindicationsFragment : Fragment() {
             "Caregiver refusal",
             "Expired product",
             "Client acquired the disease",
-            "Immunization not carried out for other reasons",
+//            "Immunization not carried out for other reasons",
             )
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)

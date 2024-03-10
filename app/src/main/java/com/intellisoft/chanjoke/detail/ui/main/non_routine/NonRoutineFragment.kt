@@ -82,16 +82,16 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
+
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
         if (patientYears != null){
             val patientYearsInt = patientYears!!.toIntOrNull()
             if (patientYearsInt != null){
                 if (patientYearsInt > 12){
-//                    getNonRoutine()
+                    getNonRoutine()
                 }
             }
         }
-        getNonRoutine()
 
 
         binding.tvAdministerVaccine.setOnClickListener {
@@ -112,9 +112,6 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                         "ModalBottomSheet") }
             }else
                 Toast.makeText(requireContext(), "Please select a vaccine", Toast.LENGTH_SHORT).show()
-
-
-
 
         }
 

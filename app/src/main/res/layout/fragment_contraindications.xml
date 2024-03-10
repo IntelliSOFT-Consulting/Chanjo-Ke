@@ -7,22 +7,39 @@
     android:layout_height="match_parent"
     tools:context=".detail.ui.main.contraindications.ContraindicationsFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <LinearLayout
         android:id="@+id/layout"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.Zanzibar.AppBarOverlay">
+        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_margin="@dimen/_10dp"
+            android:layout_gravity="center"
+            android:padding="15dp"
+            android:background="@drawable/ic_action_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="Contraindications"
-            app:titleTextColor="@android:color/white" />
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.Zanzibar.AppBarOverlay">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="Contraindication"
+                app:titleTextColor="@android:color/white" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_below="@+id/layout"

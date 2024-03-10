@@ -274,6 +274,7 @@ class FormatterClass {
     fun getFormattedAge(
         dob: String?,
         resources: Resources,
+        context: Context
     ): String {
         if (dob == null) return ""
 
@@ -287,6 +288,10 @@ class FormatterClass {
                 val years = period.years
                 val months = period.months
                 val days = period.days
+
+                saveSharedPref("patientYears",years.toString(), context)
+                saveSharedPref("patientMonth",months.toString(), context)
+                saveSharedPref("patientDays",days.toString(), context)
 
                 val ageStringBuilder = StringBuilder()
 
