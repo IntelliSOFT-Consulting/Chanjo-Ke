@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.detail.ui.main
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +9,11 @@ import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 
 class VaccineDetailsAdapter(
@@ -66,12 +70,33 @@ class VaccineDetailsAdapter(
         return vaccineDetailsList.size
     }
 
-    inner class VaccineDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class VaccineDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         val tvScheduleStatus: TextView = itemView.findViewById(R.id.tvScheduleStatus)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
         val tvVaccineDate: TextView = itemView.findViewById(R.id.tvVaccineDate)
         val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
         val checked: ImageButton = itemView.findViewById(R.id.checked)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+
+            val pos = adapterPosition
+            val vaccineName = vaccineDetailsList[pos].vaccineName
+
+            val formatterClass = FormatterClass()
+            formatterClass.saveSharedPref("vaccineNameDetails", vaccineName, context)
+
+            val patientId = FormatterClass().getSharedPref("patientId", context)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.VACCINE_DETAILS.name)
+            intent.putExtra("patientId", patientId)
+            context.startActivity(intent)
+
+        }
     }
 
     // Function to clear the data set

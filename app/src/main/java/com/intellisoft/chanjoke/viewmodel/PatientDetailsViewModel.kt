@@ -587,11 +587,13 @@ class PatientDetailsViewModel(
             logicalId = data.id
         }
         if (data.hasRecommendation()) {
-            vaccineCode = data.recommendationFirstRep.contraindicatedVaccineCodeFirstRep.text
-            vaccineName = data.recommendationFirstRep.targetDisease.text
-            nextDate = data.recommendationFirstRep.dateCriterionFirstRep.value.toString()
-            contraDetail = data.recommendationFirstRep.forecastReasonFirstRep.text
-            status = data.recommendationFirstRep.forecastStatus.text
+
+            if (data.recommendation[0].hasContraindicatedVaccineCode()) vaccineCode = data.recommendationFirstRep.contraindicatedVaccineCodeFirstRep.text
+            if (data.recommendation[0].hasDateCriterion()) nextDate = data.recommendationFirstRep.dateCriterionFirstRep.value.toString()
+            if (data.recommendation[0].hasForecastReason()) contraDetail = data.recommendationFirstRep.forecastReasonFirstRep.text
+            if (data.recommendation[0].hasForecastStatus())  status = data.recommendationFirstRep.forecastStatus.text
+            if (data.recommendation[0].hasTargetDisease()) vaccineName = data.recommendationFirstRep.targetDisease.text
+
         }
 
 
