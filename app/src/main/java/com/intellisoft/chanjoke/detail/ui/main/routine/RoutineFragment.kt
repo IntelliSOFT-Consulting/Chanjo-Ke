@@ -1,16 +1,16 @@
 package com.intellisoft.chanjoke.detail.ui.main.routine
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.cardview.widget.CardView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -23,8 +23,7 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleGroup
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.StatusColors
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
-import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +50,8 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private lateinit var patientId: String
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
+    private var patientYears:String? = null
+    private var selectedVaccineList = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,8 +76,41 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
 
+        patientYears = formatterClass.getSharedPref("patientYears", requireContext())
+        if (patientYears != null){
+            val patientYearsInt = patientYears!!.toIntOrNull()
+            if (patientYearsInt != null){
+                if (patientYearsInt < 16){
+                    getRoutine()
+                }
+            }
+        }
 
-        getRoutine()
+        binding.tvAdministerVaccine.setOnClickListener {
+
+            if (selectedVaccineList.isNotEmpty()){
+                formatterClass.saveSharedPref(
+                    "selectedVaccineName",
+                    selectedVaccineList.joinToString(","),
+                    requireContext())
+                formatterClass.saveSharedPref(
+                    "selectedUnContraindicatedVaccine",
+                    selectedVaccineList.joinToString(","),
+                    requireContext())
+
+                val bottomSheet = BottomSheetDialog()
+                fragmentManager?.let { it1 ->
+                    bottomSheet.show(it1,
+                        "ModalBottomSheet") }
+            }else
+                Toast.makeText(requireContext(), "Please select a vaccine", Toast.LENGTH_SHORT).show()
+
+
+
+
+        }
+
+
 
         return binding.root
 
@@ -87,30 +121,30 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
-            val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
+            val sharedPreferences: SharedPreferences = requireContext()
+                .getSharedPreferences(getString(R.string.vaccineList),
+                    Context.MODE_PRIVATE
+                )
+
+            val routineKeyList = sharedPreferences.getString("routineList", null)
+            val expandableListTitle = routineKeyList!!.split(",").toList()
+
 //            Get the administered list
-            val recommendationList = patientDetailsViewModel.recommendationList()
+//            val recommendationList = patientDetailsViewModel.recommendationList()
 
             val administeredList = patientDetailsViewModel.getVaccineList()
+            val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
 
             val dbVaccineScheduleGroupList = ArrayList<DbVaccineScheduleGroup>()
             expandableListTitle.forEach { keyValue->
 
-                val vaccineList = expandableListDetail[keyValue]
                 val weekNo = formatterClass.getVaccineScheduleValue(keyValue)
+                val weekNoList = sharedPreferences.getStringSet(weekNo, null)
+                val vaccineList = weekNoList?.toList()
+                vaccineList?.forEach { vaccineName ->
 
-                val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
-                if (!vaccineList.isNullOrEmpty()){
-                    vaccineList.forEach {basicVaccine: BasicVaccine ->
-                        val vaccineName = basicVaccine.vaccineName
-
-                        /**
-                         * Check if the vaccine has already been vaccinated and get the color and the date administered
-                         */
-                        val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(vaccineName, administeredList)
-                        dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
-                    }
+                    val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(vaccineName, administeredList)
+                    dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
                 }
 
                 //Get the group color Code
@@ -154,55 +188,53 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     val tvAefi = groupLayout.findViewById<TextView>(R.id.tvAefi)
                     val imageViewSchedule = groupLayout.findViewById<ImageView>(R.id.imageViewSchedule)
                     val recyclerView = groupLayout.findViewById<RecyclerView>(R.id.recyclerView)
-
-                    groupLayout.setOnClickListener {
-                        Log.e("---->","<----")
-                        println(group.vaccineSchedule)
-                        Log.e("---->","<----")
-                    }
+                    recyclerView.setHasFixedSize(true)
 
                     val vaccineSchedule = group.vaccineSchedule
                     val colorCode = group.colorCode
-                    val dbVaccineScheduleChildList = group.dbVaccineScheduleChildList
 
                     // Populate views with data from DbVaccineScheduleGroup
                     tvScheduleTime.text = vaccineSchedule
                     tvAefi.text = "Aefi(0)"
-                    when (group.colorCode) {
+                    when (colorCode) {
                         StatusColors.GREEN.name -> {
                             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
                         }
-
                         StatusColors.AMBER.name -> {
                             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
                         }
-
                         StatusColors.RED.name -> {
                             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
                         }
-
                         else -> {
                             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
                         }
                     }
 
-                    recyclerView.setHasFixedSize(true)
-                    val adapter = VaccineDetailsAdapter(dbVaccineScheduleChildList, this@RoutineFragment)
-                    recyclerView.adapter = adapter
+                    groupLayout.setOnClickListener {
 
+                        val vaccineList = ArrayList<DbVaccineScheduleChild>()
+
+                        val weekNoList = sharedPreferences.getStringSet(vaccineSchedule, null)
+                        if (weekNoList != null){
+                            val savedVaccineList = weekNoList.toList()
+                            for (dbVaccineScheduleChild in dbVaccineScheduleChildList) {
+                                if (savedVaccineList.contains(dbVaccineScheduleChild.vaccineName)){
+                                    vaccineList.add(dbVaccineScheduleChild)
+                                }
+                            }
+                        }
+
+                        val adapter = VaccineDetailsAdapter(vaccineList, this@RoutineFragment)
+                        recyclerView.adapter = adapter
+
+                    }
                     // Add the cardview_item to linearLayoutId2
                     binding.groupLayout.addView(groupLayout)
 
                 }
 
             }
-
-
-
-
-
-
-
 
 
 
@@ -241,21 +273,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 //                statusColorsList.add(dbStatusColor)
 //            }
 //
-//            val patientDob = formatterClass.getSharedPref("patientDob",requireContext())
-//            var years = 0
-//            if (patientDob != null) {
-//
-//                val dob = formatterClass.convertDateFormat(patientDob)
-//                if (dob != null){
-//                    val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
-//                    if (dobDate != null) {
-//                        val finalDate = formatterClass.convertDateToLocalDate(dobDate)
-//                        val period = Period.between(finalDate, LocalDate.now())
-//                        years = period.years
-//
-//                    }
-//                }
-//            }
+
 //
 //            //Convert to weeks
 //            val weeks = years * 52
@@ -300,16 +318,16 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             }
     }
 
-    override fun onCheckBoxSelected(position: Int, isChecked: Boolean) {
+    override fun onCheckBoxSelected(position: Int, isChecked: Boolean, vaccineName: String) {
 
-        binding.tvAdministerVaccine.text = "$position"
+        if (isChecked){
+            selectedVaccineList.add(vaccineName)
+        }else{
+            selectedVaccineList.remove(vaccineName)
+        }
 
-//        val vaccineName = vaccineDetailsList[position].vaccineName
-//        if (isChecked) {
-//            textViewToUpdate.text = "$vaccineName is selected"
-//        } else {
-//            textViewToUpdate.text = "$vaccineName is unselected"
-//        }
+        val administerText = "Administer (${selectedVaccineList.size})"
+        binding.tvAdministerVaccine.text = administerText
 
     }
 }

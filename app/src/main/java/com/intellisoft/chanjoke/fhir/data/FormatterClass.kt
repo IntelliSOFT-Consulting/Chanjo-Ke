@@ -884,20 +884,20 @@ class FormatterClass {
     }
 
     fun getVaccineGroupDetails(
-        vaccines:  List<BasicVaccine>?,
+        vaccines:  List<String>?,
         administeredList: List<DbVaccineData>): String{
         val administeredVaccineNames = administeredList.map { it.vaccineName }
 
         var statusColor = ""
         if (vaccines != null) {
-            statusColor = if (vaccines.all { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
-                //Checks if all have been vaccinated
+            statusColor = if (vaccines.all { administeredVaccineNames.contains(it) }) {
+                // Checks if all have been vaccinated
                 StatusColors.GREEN.name
-            }else if (vaccines.any { basicVaccine -> administeredVaccineNames.contains(basicVaccine.vaccineName) }){
-                //Checks if there's any that has been vaccinated
+            } else if (vaccines.any { administeredVaccineNames.contains(it) }) {
+                // Checks if there's any that has been vaccinated
                 StatusColors.AMBER.name
-            }else{
-                //Everything under here does not have any vaccines
+            } else {
+                // Everything under here does not have any vaccines
                 StatusColors.NORMAL.name
             }
         }

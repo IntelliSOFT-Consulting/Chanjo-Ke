@@ -35,6 +35,8 @@ import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.Period
 import java.util.ArrayList
 
 class PatientDetailActivity : AppCompatActivity() {
@@ -188,6 +190,22 @@ class PatientDetailActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
 
             formatterClass.clearVaccineShared(this@PatientDetailActivity)
+
+            val patientDob = formatterClass.getSharedPref("patientDob",this@PatientDetailActivity)
+            var years = 0
+            if (patientDob != null) {
+
+                val dob = formatterClass.convertDateFormat(patientDob)
+                if (dob != null){
+                    val dobDate = formatterClass.convertStringToDate(dob, "MMM d yyyy")
+                    if (dobDate != null) {
+                        val finalDate = formatterClass.convertDateToLocalDate(dobDate)
+                        val period = Period.between(finalDate, LocalDate.now())
+                        years = period.years
+                        formatterClass.saveSharedPref("patientYears",years.toString(), this@PatientDetailActivity)
+                    }
+                }
+            }
 
 
             formatterClass.saveSharedPref("isPaged", "false", this@PatientDetailActivity)

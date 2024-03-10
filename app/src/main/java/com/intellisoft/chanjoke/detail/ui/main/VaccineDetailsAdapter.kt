@@ -31,7 +31,7 @@ class VaccineDetailsAdapter(
         }
 
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            onCheckBoxSelectedListener.onCheckBoxSelected(position, isChecked)
+            onCheckBoxSelectedListener.onCheckBoxSelected(position, isChecked,currentItem.vaccineName)
         }
     }
 
@@ -45,8 +45,13 @@ class VaccineDetailsAdapter(
         val checked: ImageButton = itemView.findViewById(R.id.checked)
     }
 
+    // Function to clear the data set
+    fun clear() {
+        vaccineDetailsList.clear()
+    }
+
     interface OnCheckBoxSelectedListener {
-        fun onCheckBoxSelected(position: Int, isChecked: Boolean)
+        fun onCheckBoxSelected(position: Int, isChecked: Boolean, vaccineName: String)
     }
 
 
