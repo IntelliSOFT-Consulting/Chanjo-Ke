@@ -267,12 +267,12 @@ class PatientDetailsViewModel(
         return getString(R.string.none)
     }
 
-    fun recommendationList() = runBlocking {
-        getRecommendationList()
+    fun recommendationList(status:String?) = runBlocking {
+        getRecommendationList(status)
     }
 
 
-    private suspend fun getRecommendationList(): ArrayList<DbAppointmentDetails> {
+    private suspend fun getRecommendationList(status:String?): ArrayList<DbAppointmentDetails> {
         val recommendationList = ArrayList<DbAppointmentDetails>()
         fhirEngine
             .search<ImmunizationRecommendation> {
@@ -282,7 +282,19 @@ class PatientDetailsViewModel(
             .map { createRecommendation(it) }
             .let { recommendationList.addAll(it) }
 
-        return recommendationList
+
+        var newRecommendationList = ArrayList<DbAppointmentDetails>()
+        if (status != null){
+            val newVaccineList = recommendationList.filter {
+                it.appointmentStatus == status
+            }
+            newRecommendationList = ArrayList(newVaccineList)
+        }else{
+            newRecommendationList = recommendationList
+        }
+
+
+        return newRecommendationList
     }
 
 
@@ -381,7 +393,7 @@ class PatientDetailsViewModel(
 
     private suspend fun createAppointment(it: Appointment): DbAppointmentData {
 
-        val recommendationList = getRecommendationList()
+        val recommendationList = getRecommendationList(null)
 
         val id = if (it.hasId()) it.id else ""
         val status = if (it.hasStatus()) it.status else ""

@@ -5,7 +5,6 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
 import com.intellisoft.chanjoke.R
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -906,27 +905,36 @@ class FormatterClass {
     }
     fun getVaccineChildStatus(
         vaccineName: String,
-        administeredList: List<DbVaccineData>
+        administeredList: List<DbVaccineData>,
+        recommendationList: ArrayList<DbAppointmentDetails>
     ): DbVaccineScheduleChild {
 
-        var dateScheduled = administeredList.filter { it.vaccineName == vaccineName }
-            .map { it.dateAdministered }
-            .firstOrNull()
-        if (dateScheduled == null) dateScheduled = ""
+        var dateSchedule: String? = null
 
+        val contraindicatedList = recommendationList.map { it.vaccineName }
         val administeredVaccineNamesList = administeredList.map { it.vaccineName }
 
-        val statusColor = if (administeredVaccineNamesList.contains(vaccineName)){
-            StatusColors.GREEN.name
-        }else{
-            StatusColors.NORMAL.name
+        var statusColor = ""
+        if (contraindicatedList.contains(vaccineName)){
+            statusColor = StatusColors.AMBER.name
+            dateSchedule = recommendationList.filter { it.vaccineName == vaccineName }
+                .map { it.dateScheduled }
+                .firstOrNull()
         }
+        if (administeredVaccineNamesList.contains(vaccineName)){
+            statusColor = StatusColors.GREEN.name
+            dateSchedule = administeredList.filter { it.vaccineName == vaccineName }
+                .map { it.dateAdministered }
+                .firstOrNull()
+        }
+
+        if (dateSchedule == null) dateSchedule = ""
 
         val isVaccinated = statusColor == StatusColors.GREEN.name
 
         return DbVaccineScheduleChild(
             vaccineName,
-            dateScheduled,
+            dateSchedule,
             statusColor,
             isVaccinated
         )

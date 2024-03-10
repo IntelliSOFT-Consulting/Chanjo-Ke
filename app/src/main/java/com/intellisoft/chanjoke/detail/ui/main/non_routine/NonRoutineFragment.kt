@@ -76,7 +76,7 @@ class NonRoutineFragment : Fragment() {
 
         //Get the administered list
         val administeredList = patientDetailsViewModel.getVaccineList()
-        val recommendationList = patientDetailsViewModel.recommendationList()
+        val recommendationList = patientDetailsViewModel.recommendationList(null)
 
         val statusColorsList = ArrayList<DbStatusColor>()
         for (keys in expandableListTitle){

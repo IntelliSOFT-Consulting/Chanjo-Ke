@@ -130,7 +130,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             val expandableListTitle = routineKeyList!!.split(",").toList()
 
 //            Get the administered list
-//            val recommendationList = patientDetailsViewModel.recommendationList()
+            val recommendationList = patientDetailsViewModel.recommendationList("Contraindicated")
 
             val administeredList = patientDetailsViewModel.getVaccineList()
             val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
@@ -143,7 +143,8 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 val vaccineList = weekNoList?.toList()
                 vaccineList?.forEach { vaccineName ->
 
-                    val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(vaccineName, administeredList)
+                    val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
+                        vaccineName, administeredList, recommendationList)
                     dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
                 }
 
@@ -225,7 +226,11 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                             }
                         }
 
-                        val adapter = VaccineDetailsAdapter(vaccineList, this@RoutineFragment)
+                        val adapter = VaccineDetailsAdapter(
+                            vaccineList,
+                            this@RoutineFragment,
+                            requireContext())
+
                         recyclerView.adapter = adapter
 
                     }
