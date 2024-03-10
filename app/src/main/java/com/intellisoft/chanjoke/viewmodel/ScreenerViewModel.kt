@@ -12,10 +12,14 @@ import com.intellisoft.chanjoke.detail.ui.main.UpdateFragment
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
+import com.google.common.collect.MapDifference.ValueDifference
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import java.util.UUID
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Condition
+import org.hl7.fhir.r4.model.DateTimeType
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Questionnaire
@@ -74,6 +78,7 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
                         saveResourceToDatabase(resource)
                     }
                 }
+
                 is Condition -> {
                     if (resource.hasCode()) {
                         resource.id = generateUuid()
@@ -82,6 +87,7 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
                         saveResourceToDatabase(resource)
                     }
                 }
+
                 is Encounter -> {
                     resource.subject = subjectReference
                     resource.id = encounterId
@@ -128,6 +134,15 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
         return UUID.randomUUID().toString()
     }
 
+    fun updateObservation(it: Observation) = runBlocking {
+        updateObservationData(it)
+
+    }
+
+    private suspend fun updateObservationData(it: Observation) {
+        fhirEngine.update(it)
+
+    }
 
 
     private companion object {

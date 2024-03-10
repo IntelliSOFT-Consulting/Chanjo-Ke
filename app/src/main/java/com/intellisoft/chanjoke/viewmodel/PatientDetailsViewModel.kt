@@ -775,6 +775,14 @@ class PatientDetailsViewModel(
     }
 
 
+    fun getObservationByEncounter(
+        patientId: String,
+        encounterId: String,
+    ) = runBlocking {
+        getObservationDataByEncounterId(patientId, encounterId)
+    }
+
+
     private suspend fun getObservationDataByCode(
         patientId: String,
         encounterId: String?,
@@ -808,6 +816,27 @@ class PatientDetailsViewModel(
             date,
             dataValue,
         )
+
+    }
+
+    private suspend fun getObservationDataByEncounterId(
+        patientId: String,
+        encounterId: String,
+    ): List<Observation> {
+        val obs = ArrayList<Observation>()
+        fhirEngine
+            .search<Observation> {
+                filter(Observation.SUBJECT, { value = "Patient/$patientId" })
+                filter(
+                    Observation.ENCOUNTER,
+                    { value = "Encounter/$encounterId" })
+                sort(Observation.DATE, Order.ASCENDING)
+            }
+//            .map { createObservationItem(it, getApplication<Application>().resources) }
+            .let {
+                obs.addAll(it)
+            }
+        return obs
 
     }
 
@@ -913,6 +942,8 @@ class PatientDetailsViewModel(
         Log.e("TAG", "Counter **** Final $weekNo Current Counter $counter")
         return "$counter"
     }
+
+
 }
 
 class PatientDetailsViewModelFactory(

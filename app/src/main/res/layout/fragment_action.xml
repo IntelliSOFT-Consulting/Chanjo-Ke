@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="15dp"
-    tools:context=".detail.ui.main.registration.AdministrativeFragment">
+    tools:context=".detail.ui.main.aefis.edit.ActionFragment">
 
+    <!-- TODO: Update blank fragment layout -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -18,102 +19,101 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_10dp"
-                android:text="@string/administrative_area"
-                android:textAlignment="center"
-                android:textStyle="bold" />
-
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tel_county"
+                android:id="@+id/tel_reaction"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_10dp"
-                android:hint="County *"
+                android:hint="Reaction severity *"
                 app:boxBackgroundMode="outline">
 
                 <AutoCompleteTextView
-                    android:id="@+id/county"
+                    android:id="@+id/reaction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tel_sub_county"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_10dp"
-                android:hint="Sub County *"
-                app:boxBackgroundMode="outline">
-
-                <AutoCompleteTextView
-                    android:id="@+id/sub_county"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapSentences" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tel_ward"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_10dp"
-                android:hint="Ward *"
-                app:boxBackgroundMode="outline">
-
-                <AutoCompleteTextView
-                    android:id="@+id/ward"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapSentences" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tel_trading"
+                android:id="@+id/tel_action"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_10dp"
-                android:hint="Trading Center"
+                android:hint="Action taken *"
                 app:boxBackgroundMode="outline">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/trading"
+                    android:id="@+id/action_taken"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:minLines="5"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tel_outcome"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10dp"
+                android:hint="AEFI Outcome *"
+                app:boxBackgroundMode="outline">
+
+                <AutoCompleteTextView
+                    android:id="@+id/outcome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tel_reporter"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10dp"
+                android:hint="Name of the person reporting *"
+                app:boxBackgroundMode="outline">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reporter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences"
                     android:textSize="12sp" />
 
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tel_estate"
+                android:id="@+id/tel_phone"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_10dp"
-                android:hint="Estate/Village"
+                android:hint="Phone Number *"
                 app:boxBackgroundMode="outline">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/estate"
+                    android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapSentences"
+                    android:inputType="phone"
                     android:textSize="12sp" />
 
+
             </com.google.android.material.textfield.TextInputLayout>
+
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -141,8 +141,9 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/next"
+            android:text="@string/button_review"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </RelativeLayout>
+
 </LinearLayout>

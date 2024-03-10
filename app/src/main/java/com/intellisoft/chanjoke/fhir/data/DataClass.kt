@@ -239,3 +239,31 @@ data class Ward(
     val name: String,
 
     )
+
+data class AEFIData(
+    val type: String,
+    val brief: String,
+    val onset: String,
+    val history: String,
+    val severity: String,
+    val action: String,
+    val outcome: String,
+    val reporter: String,
+    val phone: String
+)
+
+data class Parent(
+    val type: String,
+    val brief: String,
+    val onset: String,
+    val history: String,
+)
+
+data class Child(
+    val severity: String,
+    val action: String,
+    val outcome: String,
+    val reporter: String,
+    val phone: String
+
+)

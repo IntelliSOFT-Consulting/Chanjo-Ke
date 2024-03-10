@@ -2,6 +2,8 @@ package com.intellisoft.chanjoke.detail.ui.main.registration
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -103,7 +105,6 @@ class CaregiverFragment : Fragment() {
         binding.apply {
             identificationType.apply {
                 setAdapter(adapterType)
-//                adapter = adapterType
             }
             previousButton.apply {
                 setOnClickListener {
@@ -134,8 +135,15 @@ class CaregiverFragment : Fragment() {
                             name = kinName,
                             type = kinType
                         )
-                        careGivers.add(careGiver)
-                        adapter.addItem(careGiver)
+                        val existingCareGiverIndex = careGivers.indexOfFirst { it.type == kinType }
+                        if (existingCareGiverIndex != -1) {
+                            binding.apply {
+                                nextButton.isEnabled = true
+                            }
+                        } else {
+                            careGivers.add(careGiver)
+                            adapter.addItem(careGiver)
+                        }
                         binding.apply {
                             identificationType.text = null
                             name.text = null
@@ -146,6 +154,66 @@ class CaregiverFragment : Fragment() {
                 }
             }
 
+            phone.apply {
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                        val value = s.toString()
+                        if (value.isNotEmpty()) {
+                            // check if length is greater/equal to 10
+                            if (value.length >= 10) {
+                                updateCareGiver()
+                            }
+
+                        }
+                    }
+                })
+
+            }
+
+        }
+    }
+
+    private fun updateCareGiver() {
+        if (validData()) {
+            val kinType = binding.identificationType.text.toString()
+            val kinName = binding.name.text.toString()
+            val kinPhone = binding.phone.text.toString()
+            val careGiver = CareGiver(
+                phone = kinPhone,
+                name = kinName,
+                type = kinType
+            )
+            //only add if there is no caregiver type, else update that index
+            val existingCareGiverIndex = careGivers.indexOfFirst { it.type == kinType }
+            if (existingCareGiverIndex != -1) {
+                // Update existing caregiver
+                careGivers[existingCareGiverIndex] = careGiver
+//                adapter.updateItem(existingCareGiverIndex, careGiver)
+            } else {
+                // Add new caregiver
+                careGivers.add(careGiver)
+                adapter.addItem(careGiver)
+            }
+            binding.apply {
+                nextButton.isEnabled = true
+            }
         }
     }
 
@@ -163,6 +231,18 @@ class CaregiverFragment : Fragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val isAbove = formatter.getSharedPref("isAbove", requireContext())
+        if (isAbove != null) {
+            if (isAbove == "true") {
+                binding.apply {
+                    tvTitleName.text = "Next of Kin Details"
+                }
+            }
         }
     }
 

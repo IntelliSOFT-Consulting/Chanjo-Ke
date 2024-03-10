@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -108,27 +109,94 @@ class AefisFragment : Fragment() {
 
         binding.btnAdd.apply {
             setOnClickListener {
-                val patientId = FormatterClass().getSharedPref("patientId", context)
 
-                FormatterClass().saveSharedPref(
-                    "questionnaireJson",
-                    "adverse_effects.json", context
-                )
-                FormatterClass().saveSharedPref(
-                    "title",
-                    "AEFI", context
-                )
+                if (hasReceivedImmunizationAtGivenAge()) {
+                    val patientId = FormatterClass().getSharedPref("patientId", context)
 
-                FormatterClass().saveSharedPref("vaccinationFlow", "addAefi", context)
-//                FormatterClass().saveSharedPref(
-//                    "encounter_logical_id", logicalId.text.toString(), context
-//                )
-                val intent = Intent(context, MainActivity::class.java)
-                intent.putExtra("functionToCall", NavigationDetails.ADD_AEFI.name)
-                intent.putExtra("patientId", patientId)
-                context.startActivity(intent)
+                    FormatterClass().saveSharedPref(
+                        "questionnaireJson",
+                        "adverse_effects.json", context
+                    )
+                    FormatterClass().saveSharedPref(
+                        "title",
+                        "AEFI", context
+                    )
+
+                    FormatterClass().saveSharedPref("vaccinationFlow", "addAefi", context)
+
+                    val intent = Intent(context, MainActivity::class.java)
+                    intent.putExtra("functionToCall", NavigationDetails.ADD_AEFI.name)
+                    intent.putExtra("patientId", patientId)
+                    context.startActivity(intent)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Please administer vaccine first",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
+    }
+
+    private fun hasReceivedImmunizationAtGivenAge(): Boolean {
+        val age = formatterClass.getSharedPref("current_age", requireContext())
+        var hasReceived = false
+        if (age != null) {
+            val vaccineList = retrieveAdministered(age)
+            if (vaccineList.isNotEmpty()) {
+                hasReceived = true
+            }
+        } else {
+            hasReceived = false
+        }
+        return hasReceived
+    }
+
+    private fun retrieveAdministered(status: String): ArrayList<String> {
+        val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
+        val administeredVaccines = patientDetailsViewModel.getAllImmunizationDetails()
+        val alreadyAdministered = ArrayList<String>()
+
+        try {
+            if (status == "At Birth") {
+
+                alreadyAdministered.clear()
+                val basic = expandableListDetail.entries.firstOrNull { it.key == "0" }?.value
+                basic?.forEach { q ->
+                    val administered = administeredVaccines.find { it.vaccineName == q.vaccineName }
+                    if (administered != null) {
+                        alreadyAdministered.add(q.vaccineName)
+                    }
+                }
+
+            } else {
+                val weeks: Int = when {
+                    status.endsWith("weeks") -> status.replace(" weeks", "").toIntOrNull() ?: 0
+                    status.endsWith("months") -> (status.replace(" months", "")
+                        .toDouble() / 0.230137).toInt()
+
+                    status.endsWith("years") -> (status.replace(" years", "")
+                        .toDouble() / 0.019).toInt()
+
+                    else -> 0
+                }
+
+                val basic = expandableListDetail.entries.firstOrNull { it.key == "$weeks" }?.value
+                alreadyAdministered.clear()
+                basic?.forEach { q ->
+                    val administered = administeredVaccines.find { it.vaccineName == q.vaccineName }
+                    if (administered != null) {
+                        alreadyAdministered.add(q.vaccineName)
+                    }
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return alreadyAdministered
     }
 
     private fun pullVaccinesWithAefis() {
@@ -167,20 +235,18 @@ class AefisFragment : Fragment() {
 
         var administeredVaccines = patientDetailsViewModel.getAllImmunizationDetails()
 
-        /****
-         * status At Birth --- weeks -> 0
-         ***/
-
-        Timber.e("Data ***** $status $expandableListDetail")
+        val alreadyAdministered = ArrayList<String>()
 
         try {
             if (status == "At Birth") {
                 var commaSeparatedString = ""
+                alreadyAdministered.clear()
                 val basic = expandableListDetail.entries.firstOrNull { it.key == "0" }?.value
                 basic?.forEach { q ->
                     val administered = administeredVaccines.find { it.vaccineName == q.vaccineName }
                     if (administered != null) {
                         commaSeparatedString += "${q.vaccineName},"
+                        alreadyAdministered.add(q.vaccineName)
                     }
                 }
 
@@ -200,10 +266,13 @@ class AefisFragment : Fragment() {
 
                 var commaSeparatedString = ""
                 val basic = expandableListDetail.entries.firstOrNull { it.key == "$weeks" }?.value
-                basic?.forEach {q->
+                alreadyAdministered.clear()
+                basic?.forEach { q ->
                     val administered = administeredVaccines.find { it.vaccineName == q.vaccineName }
                     if (administered != null) {
-                    commaSeparatedString += "${q.vaccineName},"}
+                        commaSeparatedString += "${q.vaccineName},"
+                        alreadyAdministered.add(q.vaccineName)
+                    }
                 }
 
                 return commaSeparatedString
