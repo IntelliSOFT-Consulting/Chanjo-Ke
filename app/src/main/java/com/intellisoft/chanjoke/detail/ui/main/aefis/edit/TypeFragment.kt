@@ -83,7 +83,7 @@ class TypeFragment : Fragment() {
             "BCG Lymphadenitis",
             "Encaphalopathy, Encephalitis/menengitis",
 
-        )
+            )
         // Create ArrayAdapter with the array of strings
         val adapterType =
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, types)
@@ -166,7 +166,9 @@ class TypeFragment : Fragment() {
                 binding.apply {
                     type.setText(refinedData.type.trim(), false)
                     brief.setText(refinedData.brief.trim())
-                    eventDate.setText(refinedData.onset.trim())
+                    if (refinedData.onset.isNotEmpty()) {
+                        eventDate.setText(FormatterClass().convertChildDateFormat(refinedData.onset.trim()))
+                    }
                     history.setText(refinedData.history.trim())
                 }
             } catch (e: Exception) {

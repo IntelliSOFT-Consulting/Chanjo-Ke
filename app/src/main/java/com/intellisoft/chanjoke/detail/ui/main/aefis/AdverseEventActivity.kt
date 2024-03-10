@@ -69,6 +69,24 @@ class AdverseEventActivity : AppCompatActivity() {
                     patientId.toString()
                 ),
             ).get(PatientDetailsViewModel::class.java)
+        loadAEFIData()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        try {
+            loadAEFIData()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun loadAEFIData() {
+
+        val patientId = FormatterClass().getSharedPref("patientId", this@AdverseEventActivity)
+        val encounterId =
+            FormatterClass().getSharedPref("encounter_logical", this@AdverseEventActivity)
         binding.apply {
             val type = extractAefiData(patientId.toString(), encounterId.toString(), "882-22")
 
@@ -142,7 +160,6 @@ class AdverseEventActivity : AppCompatActivity() {
                 "882-22"
             )
         }
-
     }
 
     private fun extractAefiOccuranceData(
