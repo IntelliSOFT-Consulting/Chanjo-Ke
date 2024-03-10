@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,14 +31,12 @@ class VaccineDetailsAdapter(
 
     override fun onBindViewHolder(holder: VaccineDetailsViewHolder, position: Int) {
         val currentItem = vaccineDetailsList[position]
+        val formatterClass = FormatterClass()
 //        holder.checkBox.isChecked = currentItem.isVaccinated
         val vaccineName = currentItem.vaccineName
         val isVaccinated = currentItem.isVaccinated
         val status = currentItem.status
         val date = currentItem.date
-
-        holder.tvVaccineName.text = vaccineName
-        holder.tvVaccineDate.text = date
 
         var vaccineStatus = ""
         if (status == StatusColors.NORMAL.name){
@@ -48,6 +47,17 @@ class VaccineDetailsAdapter(
         }else if (status == StatusColors.AMBER.name){
             vaccineStatus = "Contraindicated"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
+            val daysTo = formatterClass.daysBetweenTodayAndGivenDate(date)
+            Log.e("----->","<-----")
+            if (daysTo != null){
+                println(daysTo)
+                val daysToInt = daysTo.toInt()
+                println(daysToInt)
+                if (daysToInt != 0){
+                    holder.checkBox.isEnabled = false
+                }
+            }
+            Log.e("----->","<-----")
         }else if (status == StatusColors.RED.name){
             vaccineStatus = "Missed"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
@@ -55,6 +65,8 @@ class VaccineDetailsAdapter(
             vaccineStatus = ""
         }
         holder.tvScheduleStatus.text = vaccineStatus
+        holder.tvVaccineName.text = vaccineName
+        holder.tvVaccineDate.text = date
 
         if(isVaccinated){
             holder.checkBox.visibility = View.INVISIBLE

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
@@ -91,6 +92,7 @@ class FormatterClass {
             "yyyy/MM/dd",
             "MM-dd-yyyy",
             "dd/MM/yyyy",
+            "MMM d yyyy",
             "yyyyMMddHHmmss",
             "yyyy-MM-dd HH:mm:ss",
             "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
@@ -412,8 +414,12 @@ class FormatterClass {
     }
 
     fun daysBetweenTodayAndGivenDate(inputDate: String): Long? {
+        Log.e("----->","<-----")
+
         try {
-            val dobFormat = FormatterClass().convertDateFormat(inputDate)
+            val dobFormat = convertDateFormat(inputDate)
+            println("inputDate $inputDate")
+            println("dobFormat $dobFormat")
 
             // Parse the input date
             if (dobFormat != null) {
@@ -426,14 +432,19 @@ class FormatterClass {
                 // Calculate the difference in days
                 if (parsedDate != null) {
                     val diffInMillis = abs(parsedDate.time - currentDate.time)
+                    println("currentDate $currentDate")
+                    println("parsedDate $parsedDate")
+                    println("diffInMillis $diffInMillis")
                     return diffInMillis / (24 * 60 * 60 * 1000)
                 }
             }
 
         } catch (e: Exception) {
+            println("e $e")
             // Handle parsing errors or other exceptions
             e.printStackTrace()
         }
+        Log.e("----->","<-----")
 
         // Return null if there's an error
         return null

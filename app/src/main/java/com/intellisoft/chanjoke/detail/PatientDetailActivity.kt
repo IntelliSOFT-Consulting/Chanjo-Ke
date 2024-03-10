@@ -127,8 +127,6 @@ class PatientDetailActivity : AppCompatActivity() {
             }
         }
 
-        getPatientDetails()
-
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -168,6 +166,9 @@ class PatientDetailActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        getPatientDetails()
+
 
         val patientListAction = formatterClass.getSharedPref("patientListAction", this)
         if (patientListAction != null && patientListAction == NavigationDetails.APPOINTMENT.name) {
