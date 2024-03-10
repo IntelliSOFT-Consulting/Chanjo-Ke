@@ -814,7 +814,7 @@ class FormatterClass {
         return FormatterClass().formatCurrentDate(date)
     }
 
-    fun formatCurrentDate(date: Date): String {
+    private fun formatCurrentDate(date: Date): String {
         return dateInverseFormat.format(date)
     }
 

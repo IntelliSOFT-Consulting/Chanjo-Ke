@@ -430,7 +430,7 @@
           "display": "Adverse Event Following Immunisation"
         }
       ],
-      "text": "Adverse Event Following Immunization",
+      "text": "",
       "required": false
     },
     {
@@ -899,7 +899,7 @@
           "display": "Adverse Event Following Immunisation"
         }
       ],
-      "text": "Adverse Event Following Immunisation",
+      "text": "",
       "required": false,
       "extension": [
         {
