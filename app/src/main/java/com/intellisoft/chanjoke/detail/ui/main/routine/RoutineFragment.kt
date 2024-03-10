@@ -85,7 +85,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
         if (patientYears != null){
             val patientYearsInt = patientYears!!.toIntOrNull()
             if (patientYearsInt != null){
-                if (patientYearsInt < 16){
+                if (patientYearsInt < 14){
                     getRoutine()
                 }
             }

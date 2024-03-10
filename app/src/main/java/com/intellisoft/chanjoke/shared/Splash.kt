@@ -27,6 +27,7 @@ import java.util.Arrays
 class Splash : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
     private val formatterClass = FormatterClass()
+    private val immunizationHandler = ImmunizationHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,21 +57,23 @@ class Splash : AppCompatActivity() {
         super.onStart()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
-            val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
 
             val sharedPreferences: SharedPreferences =
                 getSharedPreferences(getString(R.string.vaccineList), MODE_PRIVATE)
             val editor = sharedPreferences.edit()
 
-            editor.putString("routineList",expandableListTitle.joinToString(","))
+            //Routine Vaccine
+            val expandableListDetailRoutine = immunizationHandler.generateDbVaccineSchedule()
+            val expandableListTitleRoutine = ArrayList<String>(expandableListDetailRoutine.keys)
+
+            editor.putString("routineList",expandableListTitleRoutine.joinToString(","))
             editor.apply()
 
-            expandableListTitle.forEach { keyValue ->
+            expandableListTitleRoutine.forEach { keyValue ->
                 val weekNo = formatterClass.getVaccineScheduleValue(keyValue)
 
                 val setVaccineNameList = HashSet<String>()
-                val vaccineList = expandableListDetail[keyValue]
+                val vaccineList = expandableListDetailRoutine[keyValue]
                 vaccineList?.forEach {basicVaccine ->
                     val vaccineName = basicVaccine.vaccineName
                     setVaccineNameList.add(vaccineName)
@@ -79,9 +82,27 @@ class Splash : AppCompatActivity() {
                 editor.apply();
             }
 
-            Log.e("*******","******")
-            println(expandableListTitle)
-            Log.e("*******","******")
+            //Non Routine Vaccine
+            val expandableListDetailNonRoutine = ImmunizationHandler().generateNonRoutineVaccineSchedule()
+            val expandableListTitleNonRoutine = ArrayList<String>(expandableListDetailNonRoutine.keys)
+
+            editor.putString("nonRoutineList",expandableListTitleNonRoutine.joinToString(","))
+            editor.apply()
+
+            expandableListTitleNonRoutine.forEach { keyValue ->
+
+                val setVaccineNameList = HashSet<String>()
+                val vaccineList = expandableListDetailNonRoutine[keyValue]
+                vaccineList?.forEach {basicVaccine ->
+                    val vaccineName = basicVaccine.vaccineName
+                    setVaccineNameList.add(vaccineName)
+                }
+                editor.putStringSet(keyValue,setVaccineNameList)
+                editor.apply();
+
+            }
+
+
         }
 
 
