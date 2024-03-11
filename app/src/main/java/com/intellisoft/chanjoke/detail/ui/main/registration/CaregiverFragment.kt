@@ -74,12 +74,12 @@ class CaregiverFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
+
+        careGivers.clear()
+        adapter = CareGiverAdapter(ArrayList(), requireContext()) // Initialize with an empty list
         if (isUpdate != null) {
             displayInitialData()
         }
-        careGivers.clear()
-        adapter = CareGiverAdapter(ArrayList(), requireContext()) // Initialize with an empty list
-
         binding.apply {
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.adapter = adapter
@@ -226,6 +226,16 @@ class CaregiverFragment : Fragment() {
                     identificationType.setText(data.type)
                     name.setText(data.name)
                     phone.setText(data.phone)
+                }
+
+                //add initial caregiver
+
+                try {
+                    if (data.phone.length >= 10) {
+                        updateCareGiver()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
 
             }

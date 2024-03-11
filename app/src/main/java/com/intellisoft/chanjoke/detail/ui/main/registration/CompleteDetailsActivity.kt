@@ -3,11 +3,15 @@ package com.intellisoft.chanjoke.detail.ui.main.registration
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
+import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
@@ -54,7 +58,8 @@ class CompleteDetailsActivity : AppCompatActivity() {
         binding.apply {
             btnClose.apply {
                 setOnClickListener {
-                    onBackPressed()
+//                    onBackPressed()
+                    createDialog()
                 }
             }
         }
@@ -65,7 +70,11 @@ class CompleteDetailsActivity : AppCompatActivity() {
 
                 val dob = formatterClass.convertDateFormat(patientDetail.dob)
                 val age =
-                    formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources, this@CompleteDetailsActivity)
+                    formatterClass.getFormattedAge(
+                        patientDetail.dob,
+                        tvAge.context.resources,
+                        this@CompleteDetailsActivity
+                    )
                 val ageYears =
                     formatterClass.getFormattedAgeYears(patientDetail.dob, tvAge.context.resources)
                 if (ageYears >= 18) {
@@ -86,6 +95,75 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 tvVillage.text = patientDetail.estate
 
             }
+        }
+    }
+
+    private fun createDialog() {
+
+        val customDialogView =
+            LayoutInflater.from(this).inflate(R.layout.custom_dialog_layout, null)
+
+        // Find views within the custom layout
+        val vaccineDetails: MaterialButton = customDialogView.findViewById(R.id.vaccineDetails)
+        val clientDetails: MaterialButton = customDialogView.findViewById(R.id.clientDetails)
+        val cancelButton: ImageButton = customDialogView.findViewById(R.id.cancel_button)
+
+        // Set up the AlertDialog
+        val builder = AlertDialog.Builder(this)
+        builder.setView(customDialogView)
+        // Set up any other UI interactions or logic here
+
+        // Create and show the AlertDialog
+        val customDialog = builder.create()
+        customDialog.show()
+
+        // Example: Set an onClickListener for the "Close" button
+        vaccineDetails.setOnClickListener {
+            formatterClass.saveSharedPref(
+                "questionnaireJson",
+                "update_history_specifics.json",
+                this
+            )
+            formatterClass.saveSharedPref(
+                "vaccinationFlow",
+                "updateVaccineDetails",
+                this
+            )
+            FormatterClass().saveSharedPref(
+                "title",
+                "Update Vaccine Details", this
+            )
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("patientId", patientId)
+            startActivity(intent)
+            customDialog.dismiss() // Close the dialog
+        }
+
+        clientDetails.setOnClickListener {
+            formatterClass.saveSharedPref(
+                "questionnaireJson",
+                "update_history.json",
+                this
+            )
+            FormatterClass().saveSharedPref(
+                "title",
+                "Update Client Details", this
+            )
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("patientId", patientId)
+            startActivity(intent)
+            customDialog.dismiss() // Close the dialog
+        }
+
+        // Example: Set a dismiss listener for additional actions when the dialog is dismissed
+        customDialog.setOnDismissListener {
+            // Additional actions when the dialog is dismissed
+        }
+        cancelButton.setOnClickListener {
+            // Additional actions when the dialog is dismissed
+            customDialog.dismiss()
         }
     }
 
