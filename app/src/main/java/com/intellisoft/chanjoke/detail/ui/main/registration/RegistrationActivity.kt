@@ -138,11 +138,10 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
                     caregivers = caregivers,
                     administrative = refinedAdministrative
                 )
-                progressDialog.show()
 
                 val fhirPractitionerId = formatter.getSharedPref("fhirPractitionerId", this)
-                if (fhirPractitionerId != null) {
-
+//                if (fhirPractitionerId != null) {
+                    progressDialog.show()
                     viewModel.saveCustomPatient(
                         this,
                         completePatient,
@@ -150,9 +149,9 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
                         isClientUpdate
                     )
 
-                } else {
-                    Toast.makeText(this, "Please contact administrator", Toast.LENGTH_SHORT).show()
-                }
+//                } else {
+//                    Toast.makeText(this, "Please contact administrator", Toast.LENGTH_SHORT).show()
+//                }
 
             } else {
                 Toast.makeText(this, "Please enter all details", Toast.LENGTH_SHORT).show()
