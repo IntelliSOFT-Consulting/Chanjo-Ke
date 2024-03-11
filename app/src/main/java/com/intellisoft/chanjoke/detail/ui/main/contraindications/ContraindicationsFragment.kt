@@ -94,7 +94,7 @@ class ContraindicationsFragment : Fragment() {
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
-        onBackPressed()
+
         layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
