@@ -2,536 +2,1166 @@
   {
     "name": "Baringo",
     "sub_counties": [
-      {"name": "Baringo central"},
-      {"name": "Baringo north"},
-      {"name": "Baringo south"},
-      {"name": "Eldama ravine"},
-      {"name": "Mogotio"},
-      {"name": "Tiaty"}
+      {
+        "name": "Baringo central"
+      },
+      {
+        "name": "Baringo north"
+      },
+      {
+        "name": "Baringo south"
+      },
+      {
+        "name": "Eldama ravine"
+      },
+      {
+        "name": "Mogotio"
+      },
+      {
+        "name": "Tiaty"
+      }
     ]
   },
   {
     "name": "Bomet",
     "sub_counties": [
-      {"name": "Bomet central"},
-      {"name": "Bomet east"},
-      {"name": "Chepalungu"},
-      {"name": "Konoin"},
-      {"name": "Sotik"}
+      {
+        "name": "Bomet central"
+      },
+      {
+        "name": "Bomet east"
+      },
+      {
+        "name": "Chepalungu"
+      },
+      {
+        "name": "Konoin"
+      },
+      {
+        "name": "Sotik"
+      }
     ]
   },
   {
     "name": "Bungoma",
     "sub_counties": [
-      {"name": "Bumula"},
-      {"name": "Kabuchai"},
-      {"name": "Kanduyi"},
-      {"name": "Kimilil"},
-      {"name": "Mt Elgon"},
-      {"name": "Sirisia"},
-      {"name": "Tongaren"},
-      {"name": "Webuye east"},
-      {"name": "Webuye west"}
+      {
+        "name": "Bumula"
+      },
+      {
+        "name": "Kabuchai"
+      },
+      {
+        "name": "Kanduyi"
+      },
+      {
+        "name": "Kimilil"
+      },
+      {
+        "name": "Mt Elgon"
+      },
+      {
+        "name": "Sirisia"
+      },
+      {
+        "name": "Tongaren"
+      },
+      {
+        "name": "Webuye east"
+      },
+      {
+        "name": "Webuye west"
+      }
     ]
   },
   {
     "name": "Busia",
     "sub_counties": [
-      {"name": "Budalangi"},
-      {"name": "Butula"},
-      {"name": "Funyula"},
-      {"name": "Nambele"},
-      {"name": "Teso North"},
-      {"name": "Teso South"}
+      {
+        "name": "Budalangi"
+      },
+      {
+        "name": "Butula"
+      },
+      {
+        "name": "Funyula"
+      },
+      {
+        "name": "Nambele"
+      },
+      {
+        "name": "Teso North"
+      },
+      {
+        "name": "Teso South"
+      }
     ]
   },
   {
     "name": "Elgeyo-Marakwet",
     "sub_counties": [
-      {"name": "Keiyo north"},
-      {"name": "Keiyo south"},
-      {"name": "Marakwet east"},
-      {"name": "Marakwet west"}
+      {
+        "name": "Keiyo north"
+      },
+      {
+        "name": "Keiyo south"
+      },
+      {
+        "name": "Marakwet east"
+      },
+      {
+        "name": "Marakwet west"
+      }
     ]
   },
   {
     "name": "Embu",
     "sub_counties": [
-      {"name": "Manyatta"},
-      {"name": "Mbeere north"},
-      {"name": "Mbeere south"},
-      {"name": "Runyenjes"}
+      {
+        "name": "Manyatta"
+      },
+      {
+        "name": "Mbeere north"
+      },
+      {
+        "name": "Mbeere south"
+      },
+      {
+        "name": "Runyenjes"
+      }
     ]
   },
   {
     "name": "Garissa",
     "sub_counties": [
-      {"name": "Daadab"},
-      {"name": "Fafi"},
-      {"name": "Garissa"},
-      {"name": "Hulugho"},
-      {"name": "Ijara"},
-      {"name": "Lagdera balambala"}
+      {
+        "name": "Daadab"
+      },
+      {
+        "name": "Fafi"
+      },
+      {
+        "name": "Garissa"
+      },
+      {
+        "name": "Hulugho"
+      },
+      {
+        "name": "Ijara"
+      },
+      {
+        "name": "Lagdera balambala"
+      }
     ]
   },
   {
     "name": "Homa Bay",
     "sub_counties": [
-      {"name": "Homabay town"},
-      {"name": "Kabondo"},
-      {"name": "Karachwonyo"},
-      {"name": "Kasipul"},
-      {"name": "Mbita"},
-      {"name": "Ndhiwa"},
-      {"name": "Rangwe"},
-      {"name": "Suba"}
+      {
+        "name": "Homabay town"
+      },
+      {
+        "name": "Kabondo"
+      },
+      {
+        "name": "Karachwonyo"
+      },
+      {
+        "name": "Kasipul"
+      },
+      {
+        "name": "Mbita"
+      },
+      {
+        "name": "Ndhiwa"
+      },
+      {
+        "name": "Rangwe"
+      },
+      {
+        "name": "Suba"
+      }
     ]
   },
   {
     "name": "Isiolo",
     "sub_counties": [
-      {"name": "Central"},
-      {"name": "Garba tula"},
-      {"name": "Kina"},
-      {"name": "Merit"},
-      {"name": "Oldonyiro"},
-      {"name": "Sericho"}
+      {
+        "name": "Central"
+      },
+      {
+        "name": "Garba tula"
+      },
+      {
+        "name": "Kina"
+      },
+      {
+        "name": "Merit"
+      },
+      {
+        "name": "Oldonyiro"
+      },
+      {
+        "name": "Sericho"
+      }
     ]
   },
   {
     "name": "Kajiado",
     "sub_counties": [
-      {"name": "Isinya."},
-      {"name": "Kajiado Central."},
-      {"name": "Kajiado North."},
-      {"name": "Loitokitok."},
-      {"name": "Mashuuru."}
+      {
+        "name": "Isinya"
+      },
+      {
+        "name": "Kajiado Central"
+      },
+      {
+        "name": "Kajiado North"
+      },
+      {
+        "name": "Loitokitok"
+      },
+      {
+        "name": "Mashuuru"
+      }
     ]
   },
   {
     "name": "Kakamega",
     "sub_counties": [
-      {"name": "Butere"},
-      {"name": "Kakamega central"},
-      {"name": "Kakamega east"},
-      {"name": "Kakamega north"},
-      {"name": "Kakamega south"},
-      {"name": "Khwisero"},
-      {"name": "Lugari"},
-      {"name": "Lukuyani"},
-      {"name": "Lurambi"},
-      {"name": "Matete"},
-      {"name": "Mumias"},
-      {"name": "Mutungu"},
-      {"name": "Navakholo"}
+      {
+        "name": "Butere"
+      },
+      {
+        "name": "Kakamega central"
+      },
+      {
+        "name": "Kakamega east"
+      },
+      {
+        "name": "Kakamega north"
+      },
+      {
+        "name": "Kakamega south"
+      },
+      {
+        "name": "Khwisero"
+      },
+      {
+        "name": "Lugari"
+      },
+      {
+        "name": "Lukuyani"
+      },
+      {
+        "name": "Lurambi"
+      },
+      {
+        "name": "Matete"
+      },
+      {
+        "name": "Mumias"
+      },
+      {
+        "name": "Mutungu"
+      },
+      {
+        "name": "Navakholo"
+      }
     ]
   },
   {
     "name": "Kericho",
     "sub_counties": [
-      {"name": "Ainamoi"},
-      {"name": "Belgut"},
-      {"name": "Bureti"},
-      {"name": "Kipkelion east"},
-      {"name": "Kipkelion west"},
-      {"name": "Soin sigowet"}
+      {
+        "name": "Ainamoi"
+      },
+      {
+        "name": "Belgut"
+      },
+      {
+        "name": "Bureti"
+      },
+      {
+        "name": "Kipkelion east"
+      },
+      {
+        "name": "Kipkelion west"
+      },
+      {
+        "name": "Soin sigowet"
+      }
     ]
   },
   {
     "name": "Kiambu",
     "sub_counties": [
-      {"name": "Gatundu north"},
-      {"name": "Gatundu south"},
-      {"name": "Githunguri"},
-      {"name": "Juja"},
-      {"name": "Kabete"},
-      {"name": "Kiambaa"},
-      {"name": "Kiambu"},
-      {"name": "Kikuyu"},
-      {"name": "Limuru"},
-      {"name": "Ruiru"},
-      {"name": "Thika town"},
-      {"name": "lari"}
+      {
+        "name": "Gatundu north"
+      },
+      {
+        "name": "Gatundu south"
+      },
+      {
+        "name": "Githunguri"
+      },
+      {
+        "name": "Juja"
+      },
+      {
+        "name": "Kabete"
+      },
+      {
+        "name": "Kiambaa"
+      },
+      {
+        "name": "Kiambu"
+      },
+      {
+        "name": "Kikuyu"
+      },
+      {
+        "name": "Limuru"
+      },
+      {
+        "name": "Ruiru"
+      },
+      {
+        "name": "Thika town"
+      },
+      {
+        "name": "lari"
+      }
     ]
   },
   {
     "name": "Kilifi",
     "sub_counties": [
-      {"name": "Genzw"},
-      {"name": "Kaloleni"},
-      {"name": "Kilifi north"},
-      {"name": "Kilifi south"},
-      {"name": "Magarini"},
-      {"name": "Malindi"},
-      {"name": "Rabai"}
+      {
+        "name": "Genzw"
+      },
+      {
+        "name": "Kaloleni"
+      },
+      {
+        "name": "Kilifi north"
+      },
+      {
+        "name": "Kilifi south"
+      },
+      {
+        "name": "Magarini"
+      },
+      {
+        "name": "Malindi"
+      },
+      {
+        "name": "Rabai"
+      }
     ]
   },
   {
     "name": "Kirinyaga",
     "sub_counties": [
-      {"name": "Kirinyaga central"},
-      {"name": "Kirinyaga east"},
-      {"name": "Kirinyaga west"},
-      {"name": "Mwea east"},
-      {"name": "Mwea west"}
+      {
+        "name": "Kirinyaga central"
+      },
+      {
+        "name": "Kirinyaga east"
+      },
+      {
+        "name": "Kirinyaga west"
+      },
+      {
+        "name": "Mwea east"
+      },
+      {
+        "name": "Mwea west"
+      }
     ]
   },
   {
     "name": "Kisii",
-    "sub_counties": []
+    "sub_counties": [
+      {
+        "name": "Bonchari"
+      },
+      {
+        "name": "South Mugirango"
+      },
+      {
+        "name": "Bomachoge Borabu"
+      },
+      {
+        "name": "Bobasi"
+      },
+      {
+        "name": "Bomachoge Chache"
+      },
+      {
+        "name": "Nyaribari Masaba"
+      },
+      {
+        "name": "Nyaribari Chache"
+      },
+      {
+        "name": "Kitutu Chache North"
+      },
+      {
+        "name": "Kitutu Chache South"
+      }
+    ]
   },
   {
     "name": "Kisumu",
     "sub_counties": [
-      {"name": "Kisumu central"},
-      {"name": "Kisumu east "},
-      {"name": "Kisumu west"},
-      {"name": "Mohoroni"},
-      {"name": "Nyakach"},
-      {"name": "Nyando"},
-      {"name": "Seme"}
+      {
+        "name": "Kisumu central"
+      },
+      {
+        "name": "Kisumu east "
+      },
+      {
+        "name": "Kisumu west"
+      },
+      {
+        "name": "Mohoroni"
+      },
+      {
+        "name": "Nyakach"
+      },
+      {
+        "name": "Nyando"
+      },
+      {
+        "name": "Seme"
+      }
     ]
   },
   {
     "name": "Kitui",
     "sub_counties": [
-      {"name": "Ikutha"},
-      {"name": "Katulani"},
-      {"name": "Kisasi"},
-      {"name": "Kitui central"},
-      {"name": "Kitui west "},
-      {"name": "Lower yatta"},
-      {"name": "Matiyani"},
-      {"name": "Migwani"},
-      {"name": "Mutitu"},
-      {"name": "Mutomo"},
-      {"name": "Muumonikyusu"},
-      {"name": "Mwingi central"},
-      {"name": "Mwingi east"},
-      {"name": "Nzambani"},
-      {"name": "Tseikuru"}
+      {
+        "name": "Ikutha"
+      },
+      {
+        "name": "Katulani"
+      },
+      {
+        "name": "Kisasi"
+      },
+      {
+        "name": "Kitui central"
+      },
+      {
+        "name": "Kitui west "
+      },
+      {
+        "name": "Lower yatta"
+      },
+      {
+        "name": "Matiyani"
+      },
+      {
+        "name": "Migwani"
+      },
+      {
+        "name": "Mutitu"
+      },
+      {
+        "name": "Mutomo"
+      },
+      {
+        "name": "Muumonikyusu"
+      },
+      {
+        "name": "Mwingi central"
+      },
+      {
+        "name": "Mwingi east"
+      },
+      {
+        "name": "Nzambani"
+      },
+      {
+        "name": "Tseikuru"
+      }
     ]
   },
   {
     "name": "Kwale",
     "sub_counties": [
-      {"name": "Kinango"},
-      {"name": "Lungalunga"},
-      {"name": "Msambweni"},
-      {"name": "Mutuga"}
+      {
+        "name": "Kinango"
+      },
+      {
+        "name": "Lungalunga"
+      },
+      {
+        "name": "Msambweni"
+      },
+      {
+        "name": "Mutuga"
+      }
     ]
   },
   {
     "name": "Laikipia",
     "sub_counties": [
-      {"name": "Laikipia central"},
-      {"name": "Laikipia east"},
-      {"name": "Laikipia north"},
-      {"name": "Laikipia west "},
-      {"name": "Nyahururu"}
+      {
+        "name": "Laikipia central"
+      },
+      {
+        "name": "Laikipia east"
+      },
+      {
+        "name": "Laikipia north"
+      },
+      {
+        "name": "Laikipia west "
+      },
+      {
+        "name": "Nyahururu"
+      }
     ]
   },
   {
     "name": "Lamu",
     "sub_counties": [
-      {"name": "Lamu East"},
-      {"name": "Lamu West"}
+      {
+        "name": "Lamu East"
+      },
+      {
+        "name": "Lamu West"
+      }
     ]
   },
   {
     "name": "Machakos",
     "sub_counties": [
-      {"name": "Kathiani"},
-      {"name": "Machakos town"},
-      {"name": "Masinga"},
-      {"name": "Matungulu"},
-      {"name": "Mavoko"},
-      {"name": "Mwala"},
-      {"name": "Yatta"}
+      {
+        "name": "Kathiani"
+      },
+      {
+        "name": "Machakos town"
+      },
+      {
+        "name": "Masinga"
+      },
+      {
+        "name": "Matungulu"
+      },
+      {
+        "name": "Mavoko"
+      },
+      {
+        "name": "Mwala"
+      },
+      {
+        "name": "Yatta"
+      }
     ]
   },
   {
     "name": "Makueni",
     "sub_counties": [
-      {"name": "Kaiti"},
-      {"name": "Kibwei west"},
-      {"name": "Kibwezi east"},
-      {"name": "Kilome"},
-      {"name": "Makueni"},
-      {"name": "Mbooni"}
+      {
+        "name": "Kaiti"
+      },
+      {
+        "name": "Kibwei west"
+      },
+      {
+        "name": "Kibwezi east"
+      },
+      {
+        "name": "Kilome"
+      },
+      {
+        "name": "Makueni"
+      },
+      {
+        "name": "Mbooni"
+      }
     ]
   },
   {
     "name": "Mandera",
     "sub_counties": [
-      {"name": "Banissa"},
-      {"name": "Lafey"},
-      {"name": "Mandera East"},
-      {"name": "Mandera North"},
-      {"name": "Mandera South"},
-      {"name": "Mandera West"}
+      {
+        "name": "Banissa"
+      },
+      {
+        "name": "Lafey"
+      },
+      {
+        "name": "Mandera East"
+      },
+      {
+        "name": "Mandera North"
+      },
+      {
+        "name": "Mandera South"
+      },
+      {
+        "name": "Mandera West"
+      }
     ]
   },
   {
     "name": "Marsabit",
     "sub_counties": [
-      {"name": "Laisamis"},
-      {"name": "Moyale"},
-      {"name": "North hor"},
-      {"name": "Saku"}
+      {
+        "name": "Laisamis"
+      },
+      {
+        "name": "Moyale"
+      },
+      {
+        "name": "North hor"
+      },
+      {
+        "name": "Saku"
+      }
     ]
   },
   {
     "name": "Meru",
     "sub_counties": [
-      {"name": "Buuri"},
-      {"name": "Igembe central"},
-      {"name": "Igembe north"},
-      {"name": "Igembe south"},
-      {"name": "Imenti central"},
-      {"name": "Imenti north"},
-      {"name": "Imenti south"},
-      {"name": "Tigania east"},
-      {"name": "Tigania west"}
+      {
+        "name": "Buuri"
+      },
+      {
+        "name": "Igembe central"
+      },
+      {
+        "name": "Igembe north"
+      },
+      {
+        "name": "Igembe south"
+      },
+      {
+        "name": "Imenti central"
+      },
+      {
+        "name": "Imenti north"
+      },
+      {
+        "name": "Imenti south"
+      },
+      {
+        "name": "Tigania east"
+      },
+      {
+        "name": "Tigania west"
+      }
     ]
   },
   {
     "name": "Migori",
     "sub_counties": [
-      {"name": "Awendo"},
-      {"name": "Kuria east"},
-      {"name": "Kuria west"},
-      {"name": "Mabera"},
-      {"name": "Ntimaru"},
-      {"name": "Rongo"},
-      {"name": "Suna east"},
-      {"name": "Suna west"},
-      {"name": "Uriri"}
+      {
+        "name": "Awendo"
+      },
+      {
+        "name": "Kuria east"
+      },
+      {
+        "name": "Kuria west"
+      },
+      {
+        "name": "Mabera"
+      },
+      {
+        "name": "Ntimaru"
+      },
+      {
+        "name": "Rongo"
+      },
+      {
+        "name": "Suna east"
+      },
+      {
+        "name": "Suna west"
+      },
+      {
+        "name": "Uriri"
+      }
     ]
   },
   {
     "name": "Mombasa",
     "sub_counties": [
-      {"name": "Changamwe"},
-      {"name": "Jomvu"},
-      {"name": "Kisauni"},
-      {"name": "Likoni"},
-      {"name": "Mvita"},
-      {"name": "Nyali"}
+      {
+        "name": "Changamwe"
+      },
+      {
+        "name": "Jomvu"
+      },
+      {
+        "name": "Kisauni"
+      },
+      {
+        "name": "Likoni"
+      },
+      {
+        "name": "Mvita"
+      },
+      {
+        "name": "Nyali"
+      }
     ]
   },
   {
     "name": "Murang'a",
     "sub_counties": [
-      {"name": "Gatanga"},
-      {"name": "Kahuro"},
-      {"name": "Kandara"},
-      {"name": "Kangema"},
-      {"name": "Kigumo"},
-      {"name": "Kiharu"},
-      {"name": "Mathioya"},
-      {"name": "Murang’a south"}
+      {
+        "name": "Gatanga"
+      },
+      {
+        "name": "Kahuro"
+      },
+      {
+        "name": "Kandara"
+      },
+      {
+        "name": "Kangema"
+      },
+      {
+        "name": "Kigumo"
+      },
+      {
+        "name": "Kiharu"
+      },
+      {
+        "name": "Mathioya"
+      },
+      {
+        "name": "Murang’a south"
+      }
     ]
   },
   {
     "name": "Nairobi",
     "sub_counties": [
-      {"name": "Dagoretti North Sub County"},
-      {"name": "Dagoretti South Sub County "},
-      {"name": "Embakasi Central Sub Count"},
-      {"name": "Embakasi East Sub County"},
-      {"name": "Embakasi North Sub County "},
-      {"name": "Embakasi South Sub County"},
-      {"name": "Embakasi West Sub County"},
-      {"name": "Kamukunji Sub County"},
-      {"name": "Kasarani Sub County "},
-      {"name": "Kibra Sub County "},
-      {"name": "Lang'ata Sub County "},
-      {"name": "Makadara Sub County"},
-      {"name": "Mathare Sub County "},
-      {"name": "Roysambu Sub County "},
-      {"name": "Ruaraka Sub County "},
-      {"name": "Starehe Sub County "},
-      {"name": "Westlands Sub County "}
+      {
+        "name": "Dagoretti North Sub County"
+      },
+      {
+        "name": "Dagoretti South Sub County "
+      },
+      {
+        "name": "Embakasi Central Sub Count"
+      },
+      {
+        "name": "Embakasi East Sub County"
+      },
+      {
+        "name": "Embakasi North Sub County "
+      },
+      {
+        "name": "Embakasi South Sub County"
+      },
+      {
+        "name": "Embakasi West Sub County"
+      },
+      {
+        "name": "Kamukunji Sub County"
+      },
+      {
+        "name": "Kasarani Sub County "
+      },
+      {
+        "name": "Kibra Sub County "
+      },
+      {
+        "name": "Lang'ata Sub County "
+      },
+      {
+        "name": "Makadara Sub County"
+      },
+      {
+        "name": "Mathare Sub County "
+      },
+      {
+        "name": "Roysambu Sub County "
+      },
+      {
+        "name": "Ruaraka Sub County "
+      },
+      {
+        "name": "Starehe Sub County "
+      },
+      {
+        "name": "Westlands Sub County "
+      }
     ]
   },
   {
     "name": "Nakuru",
     "sub_counties": [
-      {"name": "Bahati"},
-      {"name": "Gilgil"},
-      {"name": "Kuresoi north"},
-      {"name": "Kuresoi south"},
-      {"name": "Molo"},
-      {"name": "Naivasha"},
-      {"name": "Nakuru town east"},
-      {"name": "Nakuru town west"},
-      {"name": "Njoro"},
-      {"name": "Rongai"},
-      {"name": "Subukia"}
+      {
+        "name": "Bahati"
+      },
+      {
+        "name": "Gilgil"
+      },
+      {
+        "name": "Kuresoi north"
+      },
+      {
+        "name": "Kuresoi south"
+      },
+      {
+        "name": "Molo"
+      },
+      {
+        "name": "Naivasha"
+      },
+      {
+        "name": "Nakuru town east"
+      },
+      {
+        "name": "Nakuru town west"
+      },
+      {
+        "name": "Njoro"
+      },
+      {
+        "name": "Rongai"
+      },
+      {
+        "name": "Subukia"
+      }
     ]
   },
   {
     "name": "Nandi",
     "sub_counties": [
-      {"name": "Aldai"},
-      {"name": "Chesumei"},
-      {"name": "Emgwen"},
-      {"name": "Mosop"},
-      {"name": "Namdi hills"},
-      {"name": "Tindiret"}
+      {
+        "name": "Aldai"
+      },
+      {
+        "name": "Chesumei"
+      },
+      {
+        "name": "Emgwen"
+      },
+      {
+        "name": "Mosop"
+      },
+      {
+        "name": "Namdi hills"
+      },
+      {
+        "name": "Tindiret"
+      }
     ]
   },
   {
     "name": "Narok",
     "sub_counties": [
-      {"name": "Narok east"},
-      {"name": "Narok north"},
-      {"name": "Narok south"},
-      {"name": "Narok west"},
-      {"name": "Transmara east"},
-      {"name": "Transmara west"}
+      {
+        "name": "Narok east"
+      },
+      {
+        "name": "Narok north"
+      },
+      {
+        "name": "Narok south"
+      },
+      {
+        "name": "Narok west"
+      },
+      {
+        "name": "Transmara east"
+      },
+      {
+        "name": "Transmara west"
+      }
     ]
   },
   {
     "name": "Nyamira",
     "sub_counties": [
-      {"name": "Borabu"},
-      {"name": "Manga"},
-      {"name": "Masaba north"},
-      {"name": "Nyamira north"},
-      {"name": "Nyamira south"}
+      {
+        "name": "Borabu"
+      },
+      {
+        "name": "Manga"
+      },
+      {
+        "name": "Masaba north"
+      },
+      {
+        "name": "Nyamira north"
+      },
+      {
+        "name": "Nyamira south"
+      }
     ]
   },
   {
     "name": "Nyandarua",
     "sub_counties": [
-      {"name": "Kinangop"},
-      {"name": "Kipipiri"},
-      {"name": "Ndaragwa"},
-      {"name": "Ol Kalou"},
-      {"name": "Ol joro orok"}
+      {
+        "name": "Kinangop"
+      },
+      {
+        "name": "Kipipiri"
+      },
+      {
+        "name": "Ndaragwa"
+      },
+      {
+        "name": "Ol Kalou"
+      },
+      {
+        "name": "Ol joro orok"
+      }
     ]
   },
   {
     "name": "Nyeri",
     "sub_counties": [
-      {"name": "Kieni east"},
-      {"name": "Kieni west"},
-      {"name": "Mathira east"},
-      {"name": "Mathira west"},
-      {"name": "Mkurweni"},
-      {"name": "Nyeri town"},
-      {"name": "Othaya"},
-      {"name": "Tetu"}
+      {
+        "name": "Kieni east"
+      },
+      {
+        "name": "Kieni west"
+      },
+      {
+        "name": "Mathira east"
+      },
+      {
+        "name": "Mathira west"
+      },
+      {
+        "name": "Mkurweni"
+      },
+      {
+        "name": "Nyeri town"
+      },
+      {
+        "name": "Othaya"
+      },
+      {
+        "name": "Tetu"
+      }
     ]
   },
   {
     "name": "Samburu",
     "sub_counties": [
-      {"name": "Samburu east"},
-      {"name": "Samburu north"},
-      {"name": "Samburu west"}
+      {
+        "name": "Samburu east"
+      },
+      {
+        "name": "Samburu north"
+      },
+      {
+        "name": "Samburu west"
+      }
     ]
   },
   {
     "name": "Siaya",
     "sub_counties": [
-      {"name": "Alego usonga"},
-      {"name": "Bondo"},
-      {"name": "Gem"},
-      {"name": "Rarieda"},
-      {"name": "Ugenya"},
-      {"name": "Unguja"}
+      {
+        "name": "Alego usonga"
+      },
+      {
+        "name": "Bondo"
+      },
+      {
+        "name": "Gem"
+      },
+      {
+        "name": "Rarieda"
+      },
+      {
+        "name": "Ugenya"
+      },
+      {
+        "name": "Unguja"
+      }
     ]
   },
   {
     "name": "Taita-Taveta",
     "sub_counties": [
-      {"name": "Mwatate"},
-      {"name": "Taveta"},
-      {"name": "Voi"},
-      {"name": "Wundanyi"}
+      {
+        "name": "Mwatate"
+      },
+      {
+        "name": "Taveta"
+      },
+      {
+        "name": "Voi"
+      },
+      {
+        "name": "Wundanyi"
+      }
     ]
   },
   {
     "name": "Tana River",
     "sub_counties": [
-      {"name": "Bura"},
-      {"name": "Galole"},
-      {"name": "Garsen"}
+      {
+        "name": "Bura"
+      },
+      {
+        "name": "Galole"
+      },
+      {
+        "name": "Garsen"
+      }
     ]
   },
   {
     "name": "Tharaka-Nithi",
     "sub_counties": [
-      {"name": "Chuka"},
-      {"name": "Igambangobe"},
-      {"name": "Maara"},
-      {"name": "Muthambi"},
-      {"name": "Tharak north"},
-      {"name": "Tharaka south"}
+      {
+        "name": "Chuka"
+      },
+      {
+        "name": "Igambangobe"
+      },
+      {
+        "name": "Maara"
+      },
+      {
+        "name": "Muthambi"
+      },
+      {
+        "name": "Tharak north"
+      },
+      {
+        "name": "Tharaka south"
+      }
     ]
   },
   {
     "name": "Trans-Nzoia",
     "sub_counties": [
-      {"name": "Cherangany"},
-      {"name": "Endebess"},
-      {"name": "Kiminini"},
-      {"name": "Kwanza"},
-      {"name": "Saboti"}
+      {
+        "name": "Cherangany"
+      },
+      {
+        "name": "Endebess"
+      },
+      {
+        "name": "Kiminini"
+      },
+      {
+        "name": "Kwanza"
+      },
+      {
+        "name": "Saboti"
+      }
     ]
   },
   {
     "name": "Turkana",
     "sub_counties": [
-      {"name": "Loima"},
-      {"name": "Turkana central"},
-      {"name": "Turkana east"},
-      {"name": "Turkana north"},
-      {"name": "Turkana south"}
+      {
+        "name": "Loima"
+      },
+      {
+        "name": "Turkana central"
+      },
+      {
+        "name": "Turkana east"
+      },
+      {
+        "name": "Turkana north"
+      },
+      {
+        "name": "Turkana south"
+      }
     ]
   },
   {
     "name": "Uasin Gishu",
     "sub_counties": [
-      {"name": "Ainabkoi"},
-      {"name": "Kapseret"},
-      {"name": "Kesses"},
-      {"name": "Moiben"},
-      {"name": "Soy"},
-      {"name": "Turbo"}
+      {
+        "name": "Ainabkoi"
+      },
+      {
+        "name": "Kapseret"
+      },
+      {
+        "name": "Kesses"
+      },
+      {
+        "name": "Moiben"
+      },
+      {
+        "name": "Soy"
+      },
+      {
+        "name": "Turbo"
+      }
     ]
   },
   {
     "name": "Vihiga",
     "sub_counties": [
-      {"name": "Emuhaya"},
-      {"name": "Hamisi"},
-      {"name": "Luanda"},
-      {"name": "Sabatia"},
-      {"name": "vihiga"}
+      {
+        "name": "Emuhaya"
+      },
+      {
+        "name": "Hamisi"
+      },
+      {
+        "name": "Luanda"
+      },
+      {
+        "name": "Sabatia"
+      },
+      {
+        "name": "vihiga"
+      }
     ]
   },
   {
     "name": "Wajir",
     "sub_counties": [
-      {"name": "Eldas"},
-      {"name": "Tarbaj"},
-      {"name": "Wajir East"},
-      {"name": "Wajir North"},
-      {"name": "Wajir South"},
-      {"name": "Wajir West"}
+      {
+        "name": "Eldas"
+      },
+      {
+        "name": "Tarbaj"
+      },
+      {
+        "name": "Wajir East"
+      },
+      {
+        "name": "Wajir North"
+      },
+      {
+        "name": "Wajir South"
+      },
+      {
+        "name": "Wajir West"
+      }
     ]
   },
   {
     "name": "West Pokot",
     "sub_counties": [
-      {"name": "Central Pokot"},
-      {"name": "North Pokot"},
-      {"name": "Pokot South"},
-      {"name": "West Pokot"}
+      {
+        "name": "Central Pokot"
+      },
+      {
+        "name": "North Pokot"
+      },
+      {
+        "name": "Pokot South"
+      },
+      {
+        "name": "West Pokot"
+      }
     ]
   }
 ]
