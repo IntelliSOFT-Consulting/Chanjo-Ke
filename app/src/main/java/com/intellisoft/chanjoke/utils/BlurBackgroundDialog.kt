@@ -53,6 +53,9 @@ class BlurBackgroundDialog(
             "updateVaccineDetails" -> {
                 "Record has been updated successfully!"
             }
+            NavigationDetails.NOT_ADMINISTER_VACCINE.name -> {
+                "The vaccine(s) was not administered!"
+            }
 
             else -> {
                 "Record has been captured successfully!"

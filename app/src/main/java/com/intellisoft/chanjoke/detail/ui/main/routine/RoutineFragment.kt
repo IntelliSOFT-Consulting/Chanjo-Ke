@@ -135,7 +135,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             val expandableListTitle = routineKeyList!!.split(",").toList()
 
 //            Get the administered list
-            val recommendationList = patientDetailsViewModel.recommendationList("Contraindicated")
+            val recommendationList = patientDetailsViewModel.recommendationList(null)
 
             val administeredList = patientDetailsViewModel.getVaccineList()
             val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()

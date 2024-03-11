@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentAdministerNewBinding
-import com.intellisoft.chanjoke.databinding.FragmentContraindicationsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbBatchNumbers
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -97,7 +96,11 @@ class AdministerNewFragment : Fragment() {
 
         binding.btnAdministerVaccine.setOnClickListener {
             if (resultList.isNotEmpty()){
-                administerVaccineViewModel.createManualImmunizationResource(resultList, formatterClass.generateUuid(), patientId)
+                administerVaccineViewModel.createManualImmunizationResource(
+                    resultList,
+                    formatterClass.generateUuid(),
+                    patientId,
+                    requireContext())
                 val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                 blurBackgroundDialog.show()
             }

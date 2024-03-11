@@ -31,6 +31,7 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -127,6 +128,9 @@ class ContraindicationsFragment : Fragment() {
                         "selectedUnContraindicatedVaccine",
                         vaccineList.joinToString(","),
                         requireContext())
+                    if (administrationFlowTitle != null)
+                        formatterClass.saveSharedPref("vaccinationFlow",
+                            administrationFlowTitle!!, requireContext())
 
                     val datePicker =  binding.tvDatePicker.text.toString()
                     val description =  binding.etDescription.text.toString()
@@ -138,8 +142,10 @@ class ContraindicationsFragment : Fragment() {
                             val dobDate = formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")
                             if (dobDate != null) {
 
+                                var toastMessage = ""
                                 var  forecastReason = ""
                                 if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
+                                    toastMessage = "The contraindication has been saved successfully."
                                     if (TextUtils.isEmpty(description)) binding.etDescription.error = "Field cannot be empty" else forecastReason = description
                                 }
                                 if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
@@ -157,12 +163,13 @@ class ContraindicationsFragment : Fragment() {
                                         null,
                                         forecastReason)
 
-                                    if (vaccineList.isNotEmpty()){
+
+                                    if (vaccineList.isNotEmpty() && administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
+                                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
                                         findNavController().navigate(R.id.administerNewFragment)
                                     }else{
-                                        val intent = Intent(context, PatientDetailActivity::class.java)
-                                        intent.putExtra("patientId", patientId)
-                                        startActivity(intent)
+                                        val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
+                                        blurBackgroundDialog.show()
                                     }
                                 }
 
@@ -261,7 +268,7 @@ class ContraindicationsFragment : Fragment() {
             "Caregiver refusal",
             "Expired product",
             "Client acquired the disease",
-//            "Immunization not carried out for other reasons",
+            "Immunization not carried out for other reasons",
             )
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)

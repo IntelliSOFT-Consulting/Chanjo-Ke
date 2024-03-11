@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
@@ -55,6 +56,9 @@ class VaccineDetailsAdapter(
                     holder.checkBox.isEnabled = false
                 }
             }
+        }else if (status == StatusColors.NORMAL.name){
+            vaccineStatus = "Due"
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
         }else if (status == StatusColors.RED.name){
             vaccineStatus = "Missed"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
@@ -64,7 +68,6 @@ class VaccineDetailsAdapter(
         if (canBeVaccinated != null) {
             holder.checkBox.isEnabled = canBeVaccinated
         }
-
 
         holder.tvScheduleStatus.text = vaccineStatus
         holder.tvVaccineName.text = vaccineName

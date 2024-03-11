@@ -309,17 +309,13 @@ class PatientDetailsViewModel(
         if (it.hasRecommendation() && it.recommendation.isNotEmpty()) {
             if (it.recommendation[0].hasDateCriterion() &&
                 it.recommendation[0].dateCriterion.isNotEmpty() &&
-                it.recommendation[0].dateCriterion[0].hasValue()
-            ) {
+                it.recommendation[0].dateCriterion[0].hasValue()) {
                 val dateCriterion = it.recommendation[0].dateCriterion[0].value.toString()
                 val dobFormat = FormatterClass().convertDateFormat(dateCriterion)
                 if (dobFormat != null) {
                     date = dobFormat.toString()
                 }
-
-
             }
-
         }
         var targetDisease = ""
         var doseNumber: String? = ""
