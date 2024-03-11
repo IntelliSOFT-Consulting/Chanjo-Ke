@@ -143,6 +143,7 @@
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:visibility="gone"
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
