@@ -5818,34 +5818,165 @@
   },
   {
     "subCounty": "South Mugirango",
-    "wards": []
+    "wards": [
+      {
+        "name": "Tabaka"
+      },
+      {
+        "name": "Boikang'a"
+      },
+      {
+        "name": "Bogetenga"
+      },
+      {
+        "name": "Borabu Chitago"
+      },
+      {
+        "name": "Moticho"
+      },
+      {
+        "name": "Getenga"
+      }
+    ]
   },
   {
     "subCounty": "Bomachoge Borabu",
-    "wards": []
+    "wards": [
+      {
+        "name": "Bombaba Borabu"
+      },
+      {
+        "name": "Boochi Borabu"
+      },
+      {
+        "name": "Bokimonge"
+      },
+      {
+        "name": "Magenche"
+      }
+    ]
   },
   {
     "subCounty": "Bobasi",
-    "wards": []
+    "wards": [
+      {
+        "name": "Masige West"
+      },
+      {
+        "name": "Masige East"
+      },
+      {
+        "name": "Bobasi Central"
+      },
+      {
+        "name": "Nyacheki"
+      },
+      {
+        "name": "Bobasi Bogetaorio"
+      },
+      {
+        "name": "Bobasi Chache"
+      },
+      {
+        "name": "Sameta Mokwerero"
+      },
+      {
+        "name": "Bobasi Boitangare"
+      }
+    ]
   },
   {
     "subCounty": "Bomachoge Chache",
-    "wards": []
+    "wards": [
+      {
+        "name": "Majoge"
+      },
+      {
+        "name": "Boochi Tendere"
+      },
+      {
+        "name": "Bosoti Sengera"
+      }
+    ]
   },
   {
     "subCounty": "Nyaribari Masaba",
-    "wards": []
+    "wards": [
+      {
+        "name": "Ichuni"
+      },
+      {
+        "name": "Nyamasibi"
+      },
+      {
+        "name": "Masimba"
+      },
+      {
+        "name": "Gesusu"
+      },
+      {
+        "name": "Kiamokama"
+      }
+    ]
   },
   {
     "subCounty": "Nyaribari Chache",
-    "wards": []
+    "wards": [
+      {
+        "name": "Bobaracho"
+      },
+      {
+        "name": "Kisii Central"
+      },
+      {
+        "name": "Keumbu"
+      },
+      {
+        "name": "Kiogoro"
+      },
+      {
+        "name": "Birongo"
+      },
+      {
+        "name": "Ibeno"
+      }
+    ]
   },
   {
     "subCounty": "Kitutu Chache North",
-    "wards": []
+    "wards": [
+      {
+        "name": "Monyerero"
+      },
+      {
+        "name": "Sensi"
+      },
+      {
+        "name": "Marani"
+      },
+      {
+        "name": "Kegogi"
+      }
+    ]
   },
   {
     "subCounty": "Kitutu Chache South",
-    "wards": []
+    "wards": [
+      {
+        "name": "Bogusero"
+      },
+      {
+        "name": "Bogeka"
+      },
+      {
+        "name": "Nyakoe"
+      },
+      {
+        "name": "Kitutu Central"
+      },
+      {
+        "name": "Nyatieko"
+      }
+    ]
   }
 ]
