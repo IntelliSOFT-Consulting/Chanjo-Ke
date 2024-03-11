@@ -98,7 +98,7 @@ class RecommendationFragment : Fragment() {
 
     private fun getImmunisationRecommendations() {
  
-        val recommendationList = patientDetailsViewModel.recommendationList()
+        val recommendationList = patientDetailsViewModel.recommendationList(null)
 
         println(recommendationList)
 

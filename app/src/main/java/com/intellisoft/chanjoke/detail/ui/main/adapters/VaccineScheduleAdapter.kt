@@ -19,6 +19,8 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbStatusColor
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
+import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
+import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleGroup
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
@@ -29,13 +31,14 @@ import kotlin.math.round
 
 class VaccineScheduleAdapter(
     private val context: Context,
-    private val administeredList: ArrayList<DbVaccineData>,
-    private val recommendationList: ArrayList<DbAppointmentDetails>,
-    private val dbStatusColorList: ArrayList<DbStatusColor>,
-    private val expandableListTitle: List<String>,
-    private val expandableListDetail: Map<String, List<BasicVaccine>>,
-    private val patientDetailsViewModel: PatientDetailsViewModel,
-    private val tvAdministerVaccine: TextView
+//    private val administeredList: ArrayList<DbVaccineData>,
+//    private val recommendationList: ArrayList<DbAppointmentDetails>,
+//    private val dbStatusColorList: ArrayList<DbStatusColor>,
+    private val expandableListTitle: List<DbVaccineScheduleGroup>,
+    private val expandableListDetail: Map<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>,
+//    private val patientDetailsViewModel: PatientDetailsViewModel,
+    private val tvAdministerVaccine: TextView,
+//    private val dobWeeks:Int
 ) : BaseExpandableListAdapter() {
 
     // Maintain a map to store the checked state of each checkbox
@@ -53,14 +56,14 @@ class VaccineScheduleAdapter(
         return expandedListPosition.toLong()
     }
 
-    private fun findDateAdministered(previousVaccineName: BasicVaccine?): String? {
-        for (item in administeredList) {
-            if (item.previousVaccineName == previousVaccineName) {
-                return item.dateAdministered
-            }
-        }
-        return null // If previousVaccineName is not found in administeredList
-    }
+//    private fun findDateAdministered(previousVaccineName: BasicVaccine?): String? {
+//        for (item in administeredList) {
+//            if (item.previousVaccineName == previousVaccineName) {
+//                return item.dateAdministered
+//            }
+//        }
+//        return null // If previousVaccineName is not found in administeredList
+//    }
     // Modify getChildView to handle checkbox state
     override fun getChildView(
         listPosition: Int,
@@ -69,8 +72,9 @@ class VaccineScheduleAdapter(
         convertView: View?,
         parent: ViewGroup?
     ): View {
+
         var convertView = convertView
-        val expandedListText = getChild(listPosition, expandedListPosition) as BasicVaccine
+        val expandedListText = getChild(listPosition, expandedListPosition) as DbVaccineScheduleChild
         if (convertView == null) {
             val layoutInflater =
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -83,7 +87,10 @@ class VaccineScheduleAdapter(
         val checked = convertView.findViewById<ImageButton>(R.id.checked)
         val imgBtnView = convertView.findViewById<ImageButton>(R.id.imgBtnView)
         val linearVaccineName = convertView.findViewById<LinearLayout>(R.id.linearVaccineName)
+
         val vaccineName = expandedListText.vaccineName
+        val isVaccinated = expandedListText.isVaccinated
+//        val administrativeWeeksSinceDOB = expandedListText.administrativeWeeksSinceDOB
 
         linearVaccineName.setOnClickListener {
             val formatterClass = FormatterClass()
@@ -110,6 +117,8 @@ class VaccineScheduleAdapter(
         expandedListTextView.text = vaccineName
 
 
+
+
         // Set checkbox state based on stored checked state
         val key = Pair(listPosition, expandedListPosition)
         checkBox.isChecked = checkedStates[key] ?: false
@@ -119,57 +128,63 @@ class VaccineScheduleAdapter(
             checkedStates[key] = isChecked
             updateAdministerVaccineText()
         }
-        // Check if the vaccineName exists in recommendationList
-        val recommendationDetails = recommendationList.find { it.vaccineName == vaccineName }
-        if (recommendationDetails != null){
-            val dateScheduled = recommendationDetails.dateScheduled
-            val status = recommendationDetails.appointmentStatus
-            if (status == "Contraindicated"){
-                tvScheduleStatus.text = status
-                tvVaccineDate.text = dateScheduled
-                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
-            }
 
+        if (isVaccinated){
+            tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
+            checkBox.visibility = View.INVISIBLE
+            checked.visibility = View.VISIBLE
         }
+
+
+
+
+
+        // Check if the vaccineName exists in recommendationList
+//        val recommendationDetails = recommendationList.find { it.vaccineName == vaccineName }
+//        if (recommendationDetails != null){
+//            val dateScheduled = recommendationDetails.dateScheduled
+//            val status = recommendationDetails.appointmentStatus
+//            if (status == "Contraindicated"){
+//                tvScheduleStatus.text = status
+//                tvVaccineDate.text = dateScheduled
+//                tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
+//            }
+//
+//        }
 
         //Check vaccine status
-        for (administeredVaccine in administeredList) {
-
-            Log.e(">>>>>>", "<<<<<<")
-            println(administeredVaccine)
-            Log.e(">>>>>>", "<<<<<<")
-
-
-            var displayDate = ""
-            if (vaccineName == administeredVaccine.vaccineName) {
-                val status = administeredVaccine.status
-
-                var vaccineStatus = ""
-                if ("COMPLETED" == status) {
-                    displayDate = administeredVaccine.dateAdministered
-                    vaccineStatus = "administered"
-                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
-                    checkBox.visibility = View.INVISIBLE
-                    checked.visibility = View.VISIBLE
-
-                } else if ("NOTDONE" == status) {
-                    vaccineStatus = "contraindicated"
-                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
-                } else {
-                    tvScheduleStatus.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.darker_gray
-                        )
-                    )
-                }
-                tvScheduleStatus.text = vaccineStatus
-
-            }
-            tvVaccineDate.text = displayDate
-
-
-        }
+//        for (administeredVaccine in administeredList) {
+//
+//            var displayDate = ""
+//            if (vaccineName == administeredVaccine.vaccineName) {
+//                val status = administeredVaccine.status
+//
+//                var vaccineStatus = ""
+//                if ("COMPLETED" == status) {
+//                    displayDate = administeredVaccine.dateAdministered
+//                    vaccineStatus = "administered"
+//                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
+//                    checkBox.visibility = View.INVISIBLE
+//                    checked.visibility = View.VISIBLE
+//
+//                } else if ("NOTDONE" == status) {
+//                    vaccineStatus = "contraindicated"
+//                    tvScheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.amber))
+//                } else {
+//                    tvScheduleStatus.setTextColor(
+//                        ContextCompat.getColor(
+//                            context,
+//                            R.color.darker_gray
+//                        )
+//                    )
+//                }
+//                tvScheduleStatus.text = vaccineStatus
+//
+//            }
+//            tvVaccineDate.text = displayDate
+//
+//
+//        }
 
 
         return convertView
@@ -178,21 +193,21 @@ class VaccineScheduleAdapter(
     // Method to update the tvAdministerVaccine TextView with the number of selected checkboxes
     private fun updateAdministerVaccineText() {
         val selectedCount = checkedStates.count { it.value }
-        val value = "Administer Vaccine ($selectedCount)"
+        val value = "Administer ($selectedCount)"
         tvAdministerVaccine.text = value
     }
 
     // Method to get the checked states
     // Method to get the list of selected BasicVaccine items
-    fun getCheckedStates(): List<BasicVaccine> {
-        val selectedVaccines = mutableListOf<BasicVaccine>()
+    fun getCheckedStates(): List<String> {
+        val selectedVaccines = mutableListOf<String>()
         for ((positionPair, isChecked) in checkedStates) {
             if (isChecked) {
                 val (groupPosition, childPosition) = positionPair
                 val vaccine =
                     expandableListDetail[expandableListTitle[groupPosition]]?.get(childPosition)
                 vaccine?.let {
-                    selectedVaccines.add(it)
+                    selectedVaccines.add(it.vaccineName)
                 }
             }
         }
@@ -222,7 +237,10 @@ class VaccineScheduleAdapter(
         parent: ViewGroup?
     ): View {
         var convertView = convertView
-        val listTitle = getGroup(listPosition) as String
+        val listTitle = getGroup(listPosition) as DbVaccineScheduleGroup
+        val title = listTitle.vaccineSchedule
+        val statusColorValue = listTitle.colorCode
+
         if (convertView == null) {
             val layoutInflater =
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -233,49 +251,35 @@ class VaccineScheduleAdapter(
         val aefiTextview = convertView!!.findViewById<TextView>(R.id.tvAefi)
 
         listTitleTextView.setTypeface(null, Typeface.BOLD)
+        listTitleTextView.text = title
 
 
-        var weekNo = ""
-        weekNo = if (listTitle.toIntOrNull() != null) {
-            if (listTitle == "0") {
-                "At Birth"
-            } else if (listTitle.toInt() in 1..15){
-                "$listTitle weeks"
-            }else if (listTitle.toInt() in 15..105){
-                "${(round(listTitle.toInt() * 0.230137)).toString().replace(".0","")} months"
-            }else{
-                "${(round(listTitle.toInt() * 0.019)).toString().replace(".0","")} years"
-            }
-        } else {
-            listTitle
-        }
-
-        val patientId = FormatterClass().getSharedPref("patientId", context)
-        val counter = patientDetailsViewModel.generateCurrentCount(
-            weekNo,
-            patientId.toString()
-        )
-
-        aefiTextview.text = "AEFIs ($counter)"
-        aefiTextview.setOnClickListener {
-            FormatterClass().saveSharedPref("current_age", weekNo, context)
-
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
-            intent.putExtra("patientId", patientId)
-            context.startActivity(intent)
-        }
-        listTitleTextView.text = weekNo
+//        val patientId = FormatterClass().getSharedPref("patientId", context)
+//        val counter = patientDetailsViewModel.generateCurrentCount(
+//            weekNo,
+//            patientId.toString()
+//        )
+//
+//        aefiTextview.text = "AEFIs ($counter)"
+//        aefiTextview.setOnClickListener {
+//            FormatterClass().saveSharedPref("current_age", weekNo, context)
+//
+//            val intent = Intent(context, MainActivity::class.java)
+//            intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
+//            intent.putExtra("patientId", patientId)
+//            context.startActivity(intent)
+//        }
+//        listTitleTextView.text = weekNo
         //Check if its immunised
 
-        var statusColorValue = StatusColors.NORMAL.name
-        var isStatusDue = false
-        for (dbStatusColor in dbStatusColorList) {
-            isStatusDue = dbStatusColor.isStatusDue
-            if (dbStatusColor.keyTitle == listTitle) {
-                statusColorValue = dbStatusColor.statusColor
-            }
-        }
+//        var statusColorValue = StatusColors.NORMAL.name
+//        var isStatusDue = false
+//        for (dbStatusColor in dbStatusColorList) {
+//            isStatusDue = dbStatusColor.isStatusDue
+//            if (dbStatusColor.keyTitle == listTitle) {
+//                statusColorValue = dbStatusColor.statusColor
+//            }
+//        }
 
 
 

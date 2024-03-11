@@ -190,7 +190,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val rotaVirus = "IMROTA-"
     val rotaSeries = RoutineVaccine(
         rotaVirus,
-        "Rota Virus",
+        "Diarrhea",
         3,
         listOf(
            BasicVaccine(rotaVirus+"1", "Rota Virus 1st Dose", "Oral", 6, arrayListOf(), "0.5ml","1"),
@@ -233,7 +233,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         2,
         listOf(
             BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, arrayListOf(), "0.5ml","1"),
-            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 842, arrayListOf(26.07), "0.5ml","2")
+            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 730, arrayListOf(26.07), "0.5ml","2")
        )
     )
 
@@ -316,6 +316,45 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
             )
         )
     )
+    //INFLUENZA
+    val influenza = "IMINFLU-"
+    val influenzaSeries = NonRoutineVaccine(
+        influenza,
+        "Influenza",
+        listOf(
+            RoutineVaccine(
+                influenza+"YELLOWFEVER",
+                "Influenza",
+                2,
+                listOf(
+                    BasicVaccine(influenza+"1", "Influenza 1st Dose", "Intramuscular Injection", 0, arrayListOf(), "0.5ml","1"),
+                    BasicVaccine(influenza+"1", "Influenza 2nd Dose", "Intramuscular Injection", 0, arrayListOf(4.0), "0.5ml","2"),
+                )
+            )
+        )
+    )
+
+    //TETANUS TOXOID
+    val td = "IMTD-"
+    val tetanusToxoidSeries = NonRoutineVaccine(
+        td,
+        "Tetanus",
+        listOf(
+            RoutineVaccine(
+                td+"TD",
+                "Tetanus",
+                1,
+                listOf(
+                    BasicVaccine(td+"I", "Tetanus 1st Dose", "Intramuscular (IM)", 625, arrayListOf(), "0.5ml","1"),
+                    BasicVaccine(td+"II", "Tetanus 2nd Dose", "Intramuscular (IM)", 625, arrayListOf(4.0), "0.5ml","2"),
+                    BasicVaccine(td+"III", "Tetanus 3rd Dose", "Intramuscular (IM)", 625, arrayListOf(26.0), "0.5ml","3"),
+                    BasicVaccine(td+"IV", "Tetanus 4th Dose", "Intramuscular (IM)", 625, arrayListOf(52.0), "0.5ml","4"),
+                    BasicVaccine(td+"V", "Tetanus 5th Dose", "Intramuscular (IM)", 625, arrayListOf(52.0), "0.5ml","5"),
+                )
+            )
+        )
+    )
+
     //YELLOW FEVER
     val yellowFever = "IMYF-"
     val yellowFeverSeries = NonRoutineVaccine(
@@ -352,20 +391,11 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         )
     )
 
-    //Influenza
-    val influenza = "IMINFLU-"
-    val influenzaSeries = PregnancyVaccine(
-        influenza,
-        "Influenza",
-        1,
-        listOf(
-            BasicVaccine(influenza+"1", "Influenza", "Intramuscular Injection", 0, arrayListOf(), "0.5ml","1"),
-        )
-    )
+
 
     val routineList = listOf(polioSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries,hpvSeries)
-    val nonRoutineList = listOf(covidMainSeries, rabiesMainSeries, yellowFeverSeries)
-    val pregnancyList = listOf(tetanusSeries, influenzaSeries)
+    val nonRoutineList = listOf(covidMainSeries, rabiesMainSeries, yellowFeverSeries, influenzaSeries, tetanusToxoidSeries)
+    val pregnancyList = listOf(tetanusSeries)
 
     return Triple(routineList, nonRoutineList, pregnancyList)
 }
@@ -734,7 +764,7 @@ class ImmunizationHandler() {
 
         return listOf(
             routineList.flatMap { it.vaccineList },
-            nonRoutineList.flatMap { it.vaccineList.flatMap { it.vaccineList } },
+            nonRoutineList.flatMap { it.vaccineList.flatMap { nonRoutine ->  nonRoutine.vaccineList } },
             pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
             .firstOrNull { it.matchesVaccineName(vaccineName) }
 

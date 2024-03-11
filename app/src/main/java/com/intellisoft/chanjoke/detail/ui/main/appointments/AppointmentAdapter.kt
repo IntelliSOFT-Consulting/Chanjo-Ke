@@ -45,6 +45,8 @@ class AppointmentAdapter(
             val pos = adapterPosition
             val id = entryList[pos].id
 
+            formatterClass.saveSharedPref("appointmentFlow", "viewAppointment", context)
+
             formatterClass.saveSharedPref("appointmentId",id.toString(), context)
 
             val intent = Intent(context, AppointmentDetails::class.java)
@@ -74,20 +76,12 @@ class AppointmentAdapter(
         val description = entryList[position].description
         val dateScheduled = entryList[position].dateScheduled
         val status = entryList[position].status
-        val recommendationList = entryList[position].recommendationList
 
-        val text = if (recommendationList.isNullOrEmpty()){
-            title
-        }else{
-            recommendationList[0].vaccineName
-        }
-
-        holder.tvAppointment.text = text
-        holder.tvDescription.text = description
+        holder.tvAppointment.text = title
+//        holder.tvDescription.text = description
 
         holder.tvStatus.text = status.lowercase()
         holder.tvAppointmentDate.text = dateScheduled
-
 
         if (status.equals(AppointmentStatus.BOOKED.name, ignoreCase = true)){
             holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))

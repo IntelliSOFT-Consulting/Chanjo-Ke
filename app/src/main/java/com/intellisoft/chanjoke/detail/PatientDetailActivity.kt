@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -35,6 +36,8 @@ import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.Period
 import java.util.ArrayList
 
 class PatientDetailActivity : AppCompatActivity() {
@@ -125,8 +128,6 @@ class PatientDetailActivity : AppCompatActivity() {
             }
         }
 
-        getPatientDetails()
-
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -167,6 +168,9 @@ class PatientDetailActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        getPatientDetails()
+
+
         val patientListAction = formatterClass.getSharedPref("patientListAction", this)
         if (patientListAction != null && patientListAction == NavigationDetails.APPOINTMENT.name) {
             formatterClass.deleteSharedPref("patientListAction", this)
@@ -189,7 +193,6 @@ class PatientDetailActivity : AppCompatActivity() {
 
             formatterClass.clearVaccineShared(this@PatientDetailActivity)
 
-
             formatterClass.saveSharedPref("isPaged", "false", this@PatientDetailActivity)
 
             val observationDateValue =
@@ -207,8 +210,7 @@ class PatientDetailActivity : AppCompatActivity() {
                     tvSystemId.text = patientDetail.systemId
 
                     val dob = formatterClass.convertDateFormat(patientDetail.dob)
-                    val age =
-                        formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources)
+                    val age = formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources, this@PatientDetailActivity)
 //                    val dobAge = "$dob ($age old)"
 
                     tvDob.text = dob

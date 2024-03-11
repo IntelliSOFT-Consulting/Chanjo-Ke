@@ -127,7 +127,7 @@
                 android:id="@+id/btnCloseAppointment"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
-                android:text="Close"
+                android:text="Save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

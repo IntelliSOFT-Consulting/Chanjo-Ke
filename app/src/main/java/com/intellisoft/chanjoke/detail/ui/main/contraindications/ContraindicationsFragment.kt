@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -80,6 +81,7 @@ class ContraindicationsFragment : Fragment() {
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
+
         administrationFlowTitle = formatterClass.getSharedPref("administrationFlowTitle", requireContext())
 
 
@@ -146,12 +148,14 @@ class ContraindicationsFragment : Fragment() {
                                 if (forecastReason == ""){
                                     Toast.makeText(requireContext(), "Please select a reason!", Toast.LENGTH_SHORT).show()
                                 }else{
+
                                     administerVaccineViewModel.createManualContraindication(
                                         selectedItemList.toList(),
                                         patientId,
                                         dobDate,
                                         status,
-                                        null, forecastReason)
+                                        null,
+                                        forecastReason)
 
                                     if (vaccineList.isNotEmpty()){
                                         findNavController().navigate(R.id.administerNewFragment)
@@ -165,8 +169,9 @@ class ContraindicationsFragment : Fragment() {
 
 
                             }
+
                         }
-                    }
+                    }else Toast.makeText(requireContext(), "Select a date", Toast.LENGTH_SHORT).show()
                 }
 
 
@@ -176,17 +181,16 @@ class ContraindicationsFragment : Fragment() {
 
 
         }
+        binding.btnBack.setOnClickListener { onBackPressed() }
 
     }
 
 
 
     private fun onBackPressed() {
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-
-            NavHostFragment.findNavController(this@ContraindicationsFragment)
-                .navigateUp()
-        }
+        val intent = Intent(requireContext(), PatientDetailActivity::class.java)
+        intent.putExtra("patientId", patientId)
+        startActivity(intent)
     }
 
     private fun updateUI() {
@@ -214,8 +218,8 @@ class ContraindicationsFragment : Fragment() {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             title = titleString
-            setDisplayShowHomeEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
+//            setDisplayShowHomeEnabled(true)
+//            setDisplayHomeAsUpEnabled(true)
         }
 
 
@@ -257,7 +261,7 @@ class ContraindicationsFragment : Fragment() {
             "Caregiver refusal",
             "Expired product",
             "Client acquired the disease",
-            "Immunization not carried out for other reasons",
+//            "Immunization not carried out for other reasons",
             )
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)

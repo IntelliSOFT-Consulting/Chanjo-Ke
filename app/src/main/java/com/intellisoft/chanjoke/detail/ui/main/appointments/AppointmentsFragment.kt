@@ -27,6 +27,9 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AppointmentsFragment : Fragment() {
 
@@ -65,8 +68,8 @@ class AppointmentsFragment : Fragment() {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             title = "Administer Vaccine"
-            setDisplayShowHomeEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
+//            setDisplayShowHomeEnabled(true)
+//            setDisplayHomeAsUpEnabled(true)
         }
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
@@ -93,6 +96,8 @@ class AppointmentsFragment : Fragment() {
 
         binding.addAppointment.setOnClickListener {
 
+            formatterClass.deleteSharedPref("addAppointment",requireContext())
+
             val intent = Intent(requireContext(), AddAppointment::class.java)
             startActivity(intent)
 
@@ -103,17 +108,26 @@ class AppointmentsFragment : Fragment() {
         getAppointments()
     }
     private fun onBackPressed() {
-        val intent = Intent(context, PatientDetailActivity::class.java)
+        val intent = Intent(requireContext(), PatientDetailActivity::class.java)
         intent.putExtra("patientId", patientId)
         startActivity(intent)
     }
 
     private fun getAppointments() {
 
-        val appointmentList = patientDetailsViewModel.getAppointmentList()
-//
-        val vaccineAdapter = AppointmentAdapter(appointmentList, requireContext())
-        binding.recyclerView.adapter = vaccineAdapter
+        CoroutineScope(Dispatchers.IO).launch {
+            formatterClass.deleteSharedPref("appointmentId", requireContext())
+
+            val appointmentList = patientDetailsViewModel.getAppointmentList()
+
+            val vaccineAdapter = AppointmentAdapter(appointmentList, requireContext())
+            CoroutineScope(Dispatchers.Main)
+                .launch {
+                    binding.recyclerView.adapter = vaccineAdapter
+                }
+        }
+
+
     }
 
 

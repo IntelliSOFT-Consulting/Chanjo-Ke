@@ -267,15 +267,13 @@ class PatientDetailsViewModel(
         return getString(R.string.none)
     }
 
-    fun recommendationList() = runBlocking {
-        getRecommendationList()
+    fun recommendationList(status:String?) = runBlocking {
+        getRecommendationList(status)
     }
 
 
-    private suspend fun getRecommendationList(): ArrayList<DbAppointmentDetails> {
+    private suspend fun getRecommendationList(status:String?): ArrayList<DbAppointmentDetails> {
         val recommendationList = ArrayList<DbAppointmentDetails>()
-
-
         fhirEngine
             .search<ImmunizationRecommendation> {
                 filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
@@ -285,9 +283,18 @@ class PatientDetailsViewModel(
             .let { recommendationList.addAll(it) }
 
 
+        var newRecommendationList = ArrayList<DbAppointmentDetails>()
+        if (status != null){
+            val newVaccineList = recommendationList.filter {
+                it.appointmentStatus == status
+            }
+            newRecommendationList = ArrayList(newVaccineList)
+        }else{
+            newRecommendationList = recommendationList
+        }
 
 
-        return recommendationList
+        return newRecommendationList
     }
 
 
@@ -386,36 +393,29 @@ class PatientDetailsViewModel(
 
     private suspend fun createAppointment(it: Appointment): DbAppointmentData {
 
-        val recommendationList = getRecommendationList()
+        val recommendationList = getRecommendationList(null)
 
         val id = if (it.hasId()) it.id else ""
         val status = if (it.hasStatus()) it.status else ""
-        val input = if (it.hasDescription()) it.description else ""
+        val title = if (it.hasDescription()) it.description else ""
         val start = if (it.hasStart()) it.start else ""
-        val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
-            it.basedOn
-        } else {
-            emptyList()
-        }
-        var title = ""
-        var description = ""
         var dateScheduled = ""
-        var recommendationSavedList = ArrayList<DbAppointmentDetails>()
-
-        val pattern = Regex("Title: (.*?) Description:(.*)")
-        // Match the pattern in the input text
-        val matchResult = pattern.find(input)
-        matchResult?.let {
-            title = it.groupValues[1].trim()
-            description = it.groupValues[2].trim()
-        }
-
 
         val startDate = FormatterClass().convertDateFormat(start.toString())
         if (startDate != null) {
             dateScheduled = startDate
         }
 
+        Log.e(">>>>>>>>>","<<<<<<<<")
+        println("title $title")
+        Log.e(">>>>>>>>>","<<<<<<<<")
+
+        var recommendationSavedList = ArrayList<DbAppointmentDetails>()
+        val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
+            it.basedOn
+        } else {
+            emptyList()
+        }
         basedOnImmunizationRecommendationList.forEach { ref ->
             val immunizationRecommendation = ref.reference
             val recommendationId =
@@ -430,7 +430,7 @@ class PatientDetailsViewModel(
         return DbAppointmentData(
             id,
             title,
-            description,
+            "",
             null,
             dateScheduled,
             recommendationSavedList,
@@ -587,11 +587,13 @@ class PatientDetailsViewModel(
             logicalId = data.id
         }
         if (data.hasRecommendation()) {
-            vaccineCode = data.recommendationFirstRep.contraindicatedVaccineCodeFirstRep.text
-            vaccineName = data.recommendationFirstRep.targetDisease.text
-            nextDate = data.recommendationFirstRep.dateCriterionFirstRep.value.toString()
-            contraDetail = data.recommendationFirstRep.forecastReasonFirstRep.text
-            status = data.recommendationFirstRep.forecastStatus.text
+
+            if (data.recommendation[0].hasContraindicatedVaccineCode()) vaccineCode = data.recommendationFirstRep.contraindicatedVaccineCodeFirstRep.text
+            if (data.recommendation[0].hasDateCriterion()) nextDate = data.recommendationFirstRep.dateCriterionFirstRep.value.toString()
+            if (data.recommendation[0].hasForecastReason()) contraDetail = data.recommendationFirstRep.forecastReasonFirstRep.text
+            if (data.recommendation[0].hasForecastStatus())  status = data.recommendationFirstRep.forecastStatus.text
+            if (data.recommendation[0].hasTargetDisease()) vaccineName = data.recommendationFirstRep.targetDisease.text
+
         }
 
 
@@ -939,7 +941,6 @@ class PatientDetailsViewModel(
                 }
             }
 
-        Log.e("TAG", "Counter **** Final $weekNo Current Counter $counter")
         return "$counter"
     }
 

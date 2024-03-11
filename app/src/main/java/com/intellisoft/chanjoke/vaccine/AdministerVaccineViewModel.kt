@@ -34,6 +34,7 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
+import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import kotlinx.coroutines.CoroutineScope
@@ -542,7 +543,7 @@ class AdministerVaccineViewModel(
 
                 if (vaccineBasicVaccine != null) {
                     val seriesVaccine =
-                        immunizationHandler.getRoutineSeriesByBasicVaccine(vaccineBasicVaccine)
+                        immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
                     val targetDisease = seriesVaccine?.targetDisease
 
                     val job = Job()
@@ -609,6 +610,7 @@ class AdministerVaccineViewModel(
         val codeableConceptTargetDisease = CodeableConcept()
         codeableConceptTargetDisease.text = targetDisease
         immunizationRequest.targetDisease = codeableConceptTargetDisease
+
 
         //Status
         val codeableConceptStatus = CodeableConcept()
@@ -681,6 +683,7 @@ class AdministerVaccineViewModel(
                 "administeredProduct",
                 getApplication<Application>().applicationContext
             )
+
             if (administeredProduct != null) {
                 val baseVaccineDetails =
                     immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
@@ -691,12 +694,11 @@ class AdministerVaccineViewModel(
                     contraindicationCodeableConceptList.add(
                         codeableConceptContraindicatedVaccineCode
                     )
+
                     immunizationRequest.contraindicatedVaccineCode =
                         contraindicationCodeableConceptList
                 }
             }
-
-
         }
 
         //Supporting Patient Information
@@ -706,7 +708,6 @@ class AdministerVaccineViewModel(
 
         recommendationList.add(immunizationRequest)
         immunizationRecommendation.recommendation = recommendationList
-        Log.e("----->", "------6")
         return immunizationRecommendation
     }
 
@@ -1045,11 +1046,11 @@ class AdministerVaccineViewModel(
     }
 
     //Create an appointment
-    fun createAppointment(dbAppointmentData: DbAppointmentDataDetails) {
-        CoroutineScope(Dispatchers.IO).launch { generateAppointment(dbAppointmentData) }
+    fun createAppointment(pairRecommendation: Triple<ArrayList<DbAppointmentDetails>, String, String>) {
+        CoroutineScope(Dispatchers.IO).launch { generateAppointment(pairRecommendation) }
     }
 
-    private suspend fun generateAppointment(dbAppointmentData: DbAppointmentDataDetails) {
+    private suspend fun generateAppointment(pairRecommendation: Triple<ArrayList<DbAppointmentDetails>, String, String>) {
 
         val immunizationHandler = ImmunizationHandler()
         val formatterClass = FormatterClass()
@@ -1058,64 +1059,58 @@ class AdministerVaccineViewModel(
             getApplication<Application>().applicationContext
         )
 
-        val dateScheduled = dbAppointmentData.dateScheduled
-//        val vaccineName = dbAppointmentData.vaccineName
+        val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
 
-        val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
-        val selectedDate = if (dobFormat != null) {
-            FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
-        } else {
-            null
-        }
+        val recommendationList = pairRecommendation.first
+        val title = pairRecommendation.third
+        recommendationList.forEach {
 
-        /**
-         * TODO: Create a recommendation
-         */
-
-        var recommendationId = ""
-        //1. Get the basic vaccine from the vaccineName
-        val vaccineName = dbAppointmentData.vaccineName
-
-        if (vaccineName != null && vaccineName != "") {
-
+            val vaccineName = it.vaccineName
+            val dateScheduled = it.dateScheduled
+            val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
+            val selectedDate = if (dobFormat != null) {
+                FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
+            } else {
+                null
+            }
             val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
             if (basicVaccine != null) {
-
                 //This works for Routine and non-routine alone
                 val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(basicVaccine)
                 if (seriesVaccine != null && patientId != null && selectedDate != null) {
                     val targetDisease = seriesVaccine.targetDisease
                     val administeredProduct = basicVaccine.vaccineName
 
-                    val job = Job()
-                    CoroutineScope(Dispatchers.IO + job).launch {
-                        //Save resources to Shared preference
-                        FormatterClass().saveStockValue(
-                            administeredProduct,
-                            targetDisease,
-                            getApplication<Application>().applicationContext
-                        )
+                    FormatterClass().saveStockValue(
+                        administeredProduct,
+                        targetDisease,
+                        getApplication<Application>().applicationContext
+                    )
 
-                        val recommendation = createImmunizationRecommendationResource(
-                            patientId,
-                            selectedDate,
-                            "Due",
-                            "Next Immunization date",
-                            null
-                        )
-
-                        recommendationId = recommendation.id
-                        saveResourceToDatabase(recommendation, "ImmRec")
-                    }.join()
-
+                    val immunizationRecommendation = createImmunizationRecommendationResource(
+                        patientId,
+                        selectedDate,
+                        "Due",
+                        "Next Immunization date",
+                        null
+                    )
+                    immunizationRecommendationList.add(immunizationRecommendation)
                 }
-
-
             }
         }
 
-        val patientReference = Reference("Patient/$patientId")
+        /**
+         * TODO: Create Appointment
+         */
 
+        val immunizationRecommendationIdList = ArrayList<String>()
+        immunizationRecommendationList.forEach {
+            saveResourceToDatabase(it, "immRecomm")
+            val id = it.id
+            immunizationRecommendationIdList.add(id)
+        }
+
+        val patientReference = Reference("Patient/$patientId")
         val appointment = Appointment()
 
         val id = generateUuid()
@@ -1125,12 +1120,17 @@ class AdministerVaccineViewModel(
         appointment.setStatus(Appointment.AppointmentStatus.BOOKED)
 
         //List of based on references
-        if (recommendationId != "") {
-            val recommendationReference = Reference("ImmunizationRecommendation/$recommendationId")
-            val referenceList = ArrayList<Reference>()
+        val referenceList = ArrayList<Reference>()
+        immunizationRecommendationIdList.forEach {
+            val recommendationReference = Reference("ImmunizationRecommendation/$it")
             referenceList.add(recommendationReference)
+        }
+        if (referenceList.isNotEmpty()){
             appointment.basedOn = referenceList
         }
+
+        //desc
+        appointment.description = title
 
         /**
          * TODO: Change the patient resource from this
@@ -1142,15 +1142,16 @@ class AdministerVaccineViewModel(
         //Created
         appointment.created = Date()
 
-        //start and end
-        if (selectedDate != null) {
-            appointment.start = selectedDate
-            saveResourceToDatabase(appointment, "appointment")
+        val dateScheduled = pairRecommendation.second
+        val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
+        if (dobFormat != null){
+            val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
+            if (dobDate != null) {
+                appointment.start = dobDate
+            }
         }
+        saveResourceToDatabase(appointment, "appointment")
 
-        /**
-         * TODO: Add Participants
-         */
 
 
     }

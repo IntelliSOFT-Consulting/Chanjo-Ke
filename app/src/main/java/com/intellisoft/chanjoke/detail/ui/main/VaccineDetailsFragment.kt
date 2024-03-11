@@ -34,6 +34,7 @@ class VaccineDetailsFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private val immunizationHandler = ImmunizationHandler()
+    private var patientId = ""
 
     /**/
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +49,7 @@ class VaccineDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentVaccineDetailsBinding.inflate(inflater, container, false)
         fhirEngine = FhirApplication.fhirEngine(requireContext())
-        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+        patientId = FormatterClass().getSharedPref("patientId", requireContext()).toString()
 
         patientDetailsViewModel =
             ViewModelProvider(
@@ -80,12 +81,17 @@ class VaccineDetailsFragment : Fragment() {
                 setOnClickListener {
                     val vaccineCode =
                         FormatterClass().getSharedPref("vaccineCode", requireContext())
-                    if (vaccineCode != null) {
-                        startActivity(Intent(requireContext(), ContrasActivity::class.java))
-                    } else {
-                        Toast.makeText(requireContext(), "Please wait...", Toast.LENGTH_SHORT)
-                            .show()
+
+                    if(vaccineCode != null){
+                        val contras = patientDetailsViewModel.loadContraindications(vaccineCode)
+                        if (contras.isNotEmpty()){
+                            startActivity(Intent(requireContext(), ContrasActivity::class.java))
+                        }else {
+                            Toast.makeText(requireContext(), "No contraindications found.", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     }
+
                 }
             }
         }
@@ -106,6 +112,7 @@ class VaccineDetailsFragment : Fragment() {
                 FormatterClass().saveSharedPref("vaccineCode", vaccineCode, requireContext())
                 val immunizationDetails =
                     patientDetailsViewModel.getImmunizationDataDetails(vaccineCode)
+
                 if (immunizationDetails.isNotEmpty()) {
 
                     val logicalId = immunizationDetails[0].logicalId
@@ -136,6 +143,10 @@ class VaccineDetailsFragment : Fragment() {
 
                     }
 
+                }else{
+                    val intent = Intent(context, PatientDetailActivity::class.java)
+                    intent.putExtra("patientId", patientId)
+                    startActivity(intent)
                 }
 
             }

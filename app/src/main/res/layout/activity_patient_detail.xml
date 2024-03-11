@@ -53,6 +53,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:layout_marginTop="@dimen/_10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -66,12 +67,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="DOB:"
+                                android:text="DOB: "
                                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                                 android:textStyle="bold" />
 
 
                             <TextView
+                                android:layout_marginStart="5dp"
                                 android:id="@+id/tvDob"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -88,12 +90,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Gender:"
+                                android:text="Gender: "
                                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                                 android:textStyle="bold" />
 
 
                             <TextView
+                                android:layout_marginStart="5dp"
                                 android:id="@+id/tvGender"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -117,20 +120,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Age"
+                            android:text="Age:"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textStyle="bold" />
 
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text=":"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-
-                        <TextView
+                            android:layout_marginStart="5dp"
                             android:id="@+id/tvAge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

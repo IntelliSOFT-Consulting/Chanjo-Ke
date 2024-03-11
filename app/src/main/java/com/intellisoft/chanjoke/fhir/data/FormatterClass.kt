@@ -22,6 +22,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import kotlin.math.abs
+import kotlin.math.round
 import kotlin.random.Random
 
 class FormatterClass {
@@ -91,6 +92,7 @@ class FormatterClass {
             "yyyy/MM/dd",
             "MM-dd-yyyy",
             "dd/MM/yyyy",
+            "MMM d yyyy",
             "yyyyMMddHHmmss",
             "yyyy-MM-dd HH:mm:ss",
             "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
@@ -185,7 +187,12 @@ class FormatterClass {
             "selectedUnContraindicatedVaccine",
 //            "selectedVaccinationVenue" ,
 //            "isSelectedVaccinationVenue" ,
-            "administeredProduct"
+            "administeredProduct",
+
+            "appointmentListData",
+            "appointmentDateScheduled",
+            "appointmentVaccineTitle",
+            "appointmentFlow",
         )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
@@ -306,6 +313,7 @@ class FormatterClass {
     fun getFormattedAge(
         dob: String?,
         resources: Resources,
+        context: Context
     ): String {
         if (dob == null) return ""
 
@@ -319,6 +327,10 @@ class FormatterClass {
                 val years = period.years
                 val months = period.months
                 val days = period.days
+
+                saveSharedPref("patientYears",years.toString(), context)
+                saveSharedPref("patientMonth",months.toString(), context)
+                saveSharedPref("patientDays",days.toString(), context)
 
                 val ageStringBuilder = StringBuilder()
 
@@ -446,8 +458,12 @@ class FormatterClass {
     }
 
     fun daysBetweenTodayAndGivenDate(inputDate: String): Long? {
+        Log.e("----->","<-----")
+
         try {
-            val dobFormat = FormatterClass().convertDateFormat(inputDate)
+            val dobFormat = convertDateFormat(inputDate)
+            println("inputDate $inputDate")
+            println("dobFormat $dobFormat")
 
             // Parse the input date
             if (dobFormat != null) {
@@ -460,14 +476,19 @@ class FormatterClass {
                 // Calculate the difference in days
                 if (parsedDate != null) {
                     val diffInMillis = abs(parsedDate.time - currentDate.time)
+                    println("currentDate $currentDate")
+                    println("parsedDate $parsedDate")
+                    println("diffInMillis $diffInMillis")
                     return diffInMillis / (24 * 60 * 60 * 1000)
                 }
             }
 
         } catch (e: Exception) {
+            println("e $e")
             // Handle parsing errors or other exceptions
             e.printStackTrace()
         }
+        Log.e("----->","<-----")
 
         // Return null if there's an error
         return null
@@ -896,6 +917,102 @@ class FormatterClass {
         } catch (e: Exception) {
             0
         }
+    }
+
+    fun getVaccineScheduleValue(keyValue:String):String{
+        var weekNo = ""
+        weekNo = if (keyValue.toIntOrNull() != null) {
+            if (keyValue == "0") {
+                "At Birth"
+            } else if (keyValue.toInt() in 1..15){
+                "$keyValue weeks"
+            }else if (keyValue.toInt() in 15..105){
+                "${(round(keyValue.toInt() * 0.230137)).toString().replace(".0","")} months"
+            }else{
+                "${(round(keyValue.toInt() * 0.019)).toString().replace(".0","")} years"
+            }
+        } else {
+            keyValue
+        }
+        return weekNo
+    }
+
+    fun getVaccineGroupDetails(
+        vaccines:  List<String>?,
+        administeredList: List<DbVaccineData>): String{
+        val administeredVaccineNames = administeredList.map { it.vaccineName }
+
+        var statusColor = ""
+        if (vaccines != null) {
+            statusColor = if (vaccines.all { administeredVaccineNames.contains(it) }) {
+                // Checks if all have been vaccinated
+                StatusColors.GREEN.name
+            } else if (vaccines.any { administeredVaccineNames.contains(it) }) {
+                // Checks if there's any that has been vaccinated
+                StatusColors.AMBER.name
+            } else {
+                // Everything under here does not have any vaccines
+                StatusColors.NORMAL.name
+            }
+        }
+
+        return statusColor
+    }
+    fun getVaccineChildStatus(
+        context: Context,
+        weekNumber: String,
+        vaccineName: String,
+        administeredList: List<DbVaccineData>,
+        recommendationList: ArrayList<DbAppointmentDetails>
+    ): DbVaccineScheduleChild {
+
+        var dateSchedule: String? = null
+
+        val contraindicatedList = recommendationList.map { it.vaccineName }
+        val administeredVaccineNamesList = administeredList.map { it.vaccineName }
+
+        var statusColor = ""
+        if (contraindicatedList.contains(vaccineName)){
+            statusColor = StatusColors.AMBER.name
+            dateSchedule = recommendationList.filter { it.vaccineName == vaccineName }
+                .map { it.dateScheduled }
+                .firstOrNull()
+        }
+        if (administeredVaccineNamesList.contains(vaccineName)){
+            statusColor = StatusColors.GREEN.name
+            dateSchedule = administeredList.filter { it.vaccineName == vaccineName }
+                .map { it.dateAdministered }
+                .firstOrNull()
+        }
+
+        if (dateSchedule == null) dateSchedule = ""
+
+        val isVaccinated = statusColor == StatusColors.GREEN.name
+
+        /**
+         * Use the week number to check eligibility of the vaccine
+         */
+        val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
+        var canBeVaccinated:Boolean? = null
+        val patientDob = getSharedPref("patientDob",context)
+        if (patientDob != null){
+            val numberOfWeek = calculateWeeksFromDate(patientDob)
+            if (numberOfWeek != null &&  basicVaccine != null){
+                val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
+                if (administrativeWeeksSinceDOB > 0){
+                    canBeVaccinated = administrativeWeeksSinceDOB < numberOfWeek
+                }
+            }
+        }
+
+
+        return DbVaccineScheduleChild(
+            vaccineName,
+            dateSchedule,
+            statusColor,
+            isVaccinated,
+            canBeVaccinated
+        )
     }
 
 }
