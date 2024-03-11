@@ -5798,5 +5798,54 @@
         "name": "kiamaiko"
       }
     ]
+  },
+  {
+    "subCounty": "Bonchari",
+    "wards": [
+      {
+        "name": "Bomariba"
+      },
+      {
+        "name": "Bogiakumu"
+      },
+      {
+        "name": "Bomorenda"
+      },
+      {
+        "name": "Riana"
+      }
+    ]
+  },
+  {
+    "subCounty": "South Mugirango",
+    "wards": []
+  },
+  {
+    "subCounty": "Bomachoge Borabu",
+    "wards": []
+  },
+  {
+    "subCounty": "Bobasi",
+    "wards": []
+  },
+  {
+    "subCounty": "Bomachoge Chache",
+    "wards": []
+  },
+  {
+    "subCounty": "Nyaribari Masaba",
+    "wards": []
+  },
+  {
+    "subCounty": "Nyaribari Chache",
+    "wards": []
+  },
+  {
+    "subCounty": "Kitutu Chache North",
+    "wards": []
+  },
+  {
+    "subCounty": "Kitutu Chache South",
+    "wards": []
   }
 ]
