@@ -458,12 +458,9 @@ class FormatterClass {
     }
 
     fun daysBetweenTodayAndGivenDate(inputDate: String): Long? {
-        Log.e("----->","<-----")
 
         try {
             val dobFormat = convertDateFormat(inputDate)
-            println("inputDate $inputDate")
-            println("dobFormat $dobFormat")
 
             // Parse the input date
             if (dobFormat != null) {
@@ -476,19 +473,14 @@ class FormatterClass {
                 // Calculate the difference in days
                 if (parsedDate != null) {
                     val diffInMillis = abs(parsedDate.time - currentDate.time)
-                    println("currentDate $currentDate")
-                    println("parsedDate $parsedDate")
-                    println("diffInMillis $diffInMillis")
                     return diffInMillis / (24 * 60 * 60 * 1000)
                 }
             }
 
         } catch (e: Exception) {
-            println("e $e")
             // Handle parsing errors or other exceptions
             e.printStackTrace()
         }
-        Log.e("----->","<-----")
 
         // Return null if there's an error
         return null

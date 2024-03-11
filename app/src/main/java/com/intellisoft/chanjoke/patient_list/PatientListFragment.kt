@@ -256,8 +256,7 @@ class PatientListFragment : Fragment() {
         _binding = null
     }
 
-
-
+    
     private fun onPatientItemClicked(patientItem: PatientListViewModel.PatientItem) {
 
         formatterClass.saveSharedPref("patientId", patientItem.resourceId, requireContext())

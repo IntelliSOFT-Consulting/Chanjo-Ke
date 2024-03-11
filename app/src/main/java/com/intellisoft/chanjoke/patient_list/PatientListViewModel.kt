@@ -27,6 +27,7 @@ import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.AppUtils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -254,6 +255,8 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
 
 internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientItem {
     // Show nothing if no values available for gender and date of birth.
+    val formatterClass = FormatterClass()
+
     val patientId = if (hasIdElement()) idElement.idPart else ""
     val name = if (hasName()) {
         "${name[0].family} ${name[0].givenAsSingleString}"
@@ -261,17 +264,32 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
     val gender = if (hasGenderElement()) genderElement.valueAsString else ""
     val dob =
         if (hasBirthDateElement()) {
-            LocalDate.parse(birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
-        } else {
-            null
-        }
+            val birthElement = birthDateElement.valueAsString
+            val dobFormat = formatterClass.convertDateFormat(birthElement)
+            if (dobFormat != null) {
+                val dobDate = formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")
+                if (dobDate != null) {
+                    formatterClass.convertDateToLocalDate(dobDate)
+                }else null
+            }else null
+
+//            LocalDate.parse(birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
+        } else null
+
     val phone = if (hasTelecom()) telecom[0].value else ""
     val city = if (hasAddress()) address[0].city else ""
     val country = if (hasAddress()) address[0].country else ""
     val isActive = active
     val html: String = if (hasText()) text.div.valueAsString else ""
 
-    val identification: String = if (hasIdentifier()) identifier[0].value else "N/A"
+    val identification: String = if (hasIdentifier()) {
+        if (identifier.isNotEmpty()){
+            if (identifier[0].hasValue()){
+                identifier[0].value
+            }else "N/A"
+        }else "N/A"
+    } else "N/A"
+
     var lastUpdated = ""
     if (hasIdentifier()) {
         val id = identifier.find { it.system == "system-creation" }
