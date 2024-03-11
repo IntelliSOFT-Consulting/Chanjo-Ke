@@ -104,9 +104,9 @@ class LandingPage : Fragment() {
                     "new-patient-registration-paginated.json"
                 )
 //                findNavController().navigate(R.id.addPatientFragment, bundle)
-                formatterClass.deleteSharedPref("personal",requireContext())
-                formatterClass.deleteSharedPref("caregiver",requireContext())
-                formatterClass.deleteSharedPref("administrative",requireContext())
+                formatterClass.deleteSharedPref("personal", requireContext())
+                formatterClass.deleteSharedPref("caregiver", requireContext())
+                formatterClass.deleteSharedPref("administrative", requireContext())
                 startActivity(Intent(requireContext(), RegistrationActivity::class.java))
             }
 
@@ -116,6 +116,7 @@ class LandingPage : Fragment() {
                     "patientListAction",
                     NavigationDetails.UPDATE_CLIENT_HISTORY.name, requireContext()
                 )
+                formatterClass.saveSharedPref("ready_to_update", "true", requireContext())
             }
 
             "Administer vaccine" -> {
@@ -131,8 +132,10 @@ class LandingPage : Fragment() {
             }
 
             "Appointments" -> {
-                formatterClass.saveSharedPref("patientListAction",
-                    NavigationDetails.APPOINTMENT.name, requireContext())
+                formatterClass.saveSharedPref(
+                    "patientListAction",
+                    NavigationDetails.APPOINTMENT.name, requireContext()
+                )
                 findNavController().navigate(R.id.patient_list)
             }
         }
