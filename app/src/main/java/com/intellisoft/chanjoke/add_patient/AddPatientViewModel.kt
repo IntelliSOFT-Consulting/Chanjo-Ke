@@ -347,7 +347,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
     fun saveCustomPatient(
         context: Context,
         payload: CompletePatient,
-        practitioner: String,
+        practitioner: String?,
         boolean: Boolean
     ) {
         viewModelScope.launch {
@@ -425,9 +425,11 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             patient.telecom = contacts
             patient.contact = relatives
 
-            val subjectReference = Reference("Practitioner/$practitioner")
-            generalPractitioner.add(subjectReference)
-            patient.generalPractitioner = generalPractitioner
+            if (practitioner != null) {
+                val subjectReference = Reference("Practitioner/$practitioner")
+                generalPractitioner.add(subjectReference)
+                patient.generalPractitioner = generalPractitioner
+            }
             patient.active = true
 
             var patientId = generateUuid()
