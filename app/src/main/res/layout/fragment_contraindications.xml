@@ -117,7 +117,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
+
             </LinearLayout>
+
+            <EditText
+                android:visibility="gone"
+                android:layout_marginTop="20dp"
+                android:id="@+id/etOtherReasons"
+                android:background="@drawable/edittext_border"
+                android:hint="Enter other reasons *"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <EditText
                 android:paddingBottom="80dp"

@@ -65,6 +65,16 @@ class ContraindicationsFragment : Fragment() {
     private var administrationFlowTitle :String? = null
     private var status :String = ""
     private var spinnerReasons = ""
+    val resultList = listOf<String>(
+        "Product out of stock",
+        "Contraindication",
+        "Cold chain break",
+        "Client objection",
+        "Caregiver refusal",
+        "Expired product",
+        "Client acquired the disease",
+        "Immunization not carried out for other reasons",
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -134,6 +144,7 @@ class ContraindicationsFragment : Fragment() {
 
                     val datePicker =  binding.tvDatePicker.text.toString()
                     val description =  binding.etDescription.text.toString()
+                    val otherReasons =  binding.etOtherReasons.text.toString()
 
                     if (!TextUtils.isEmpty(datePicker)){
 
@@ -149,7 +160,18 @@ class ContraindicationsFragment : Fragment() {
                                     if (TextUtils.isEmpty(description)) binding.etDescription.error = "Field cannot be empty" else forecastReason = description
                                 }
                                 if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
-                                    if (spinnerReasons == "") Toast.makeText(requireContext(), "Please select a reason", Toast.LENGTH_SHORT).show() else forecastReason = spinnerReasons
+                                    if (spinnerReasons == "") {
+                                        Toast.makeText(requireContext(), "Please select a reason", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        if (resultList.last() == spinnerReasons){
+                                            if (!TextUtils.isEmpty(otherReasons)){
+                                                forecastReason = otherReasons
+                                            }else{
+                                                binding.etOtherReasons.error = "Field cannot be empty.."
+                                            }
+                                        }else
+                                            forecastReason = spinnerReasons
+                                    }
                                 }
                                 if (forecastReason == ""){
                                     Toast.makeText(requireContext(), "Please select a reason!", Toast.LENGTH_SHORT).show()
@@ -260,16 +282,7 @@ class ContraindicationsFragment : Fragment() {
 
     // Handle back press in the fragment
     private fun createReasonsSpinner() {
-        val resultList = listOf<String>(
-            "Product out of stock",
-            "Contraindication",
-            "Cold chain break",
-            "Client objection",
-            "Caregiver refusal",
-            "Expired product",
-            "Client acquired the disease",
-            "Immunization not carried out for other reasons",
-            )
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)
 
@@ -284,6 +297,11 @@ class ContraindicationsFragment : Fragment() {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item
                 val selectedItem = parentView.getItemAtPosition(position).toString()
+                if (selectedItem == resultList.last()){
+                    binding.etOtherReasons.visibility = View.VISIBLE
+                }else{
+                    binding.etOtherReasons.visibility = View.GONE
+                }
                 spinnerReasons = selectedItem
             }
 
