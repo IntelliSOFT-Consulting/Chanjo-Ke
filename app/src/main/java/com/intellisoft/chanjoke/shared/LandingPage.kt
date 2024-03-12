@@ -46,9 +46,16 @@ class LandingPage : Fragment() {
 
         createSpinner()
         formatterClass.deleteSharedPref("patientListAction", requireContext())
+        formatterClass.deleteSharedPref("ready_to_update", requireContext())
+
 
         return _binding.root
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        formatterClass.deleteSharedPref("ready_to_update", requireContext())
     }
 
     private fun createSpinner() {
