@@ -695,9 +695,10 @@ class AdministerVaccineViewModel(
                 val baseVaccineDetails =
                     immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
                 if (baseVaccineDetails != null) {
+                    val vaccineCode = baseVaccineDetails.vaccineCode
                     val contraindicationCodeableConceptList = ArrayList<CodeableConcept>()
                     val codeableConceptContraindicatedVaccineCode = CodeableConcept()
-                    codeableConceptContraindicatedVaccineCode.text = administeredProduct
+                    codeableConceptContraindicatedVaccineCode.text = vaccineCode
                     contraindicationCodeableConceptList.add(
                         codeableConceptContraindicatedVaccineCode
                     )
