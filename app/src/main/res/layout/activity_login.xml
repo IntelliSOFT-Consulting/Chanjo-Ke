@@ -105,12 +105,11 @@
                         <LinearLayout
                             android:layout_marginTop="15dp"
                             android:gravity="center"
-                            android:background="@color/bac_trans_color"
+                            android:background="@drawable/edittext_border"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <LinearLayout
-                                android:padding="20dp"
                                 android:orientation="horizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
@@ -118,7 +117,7 @@
                                 <TextView
                                     android:layout_marginStart="5dp"
                                     android:layout_weight="1"
-                                    android:text="Your current location is set to:"
+                                    android:text="Location:"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"/>
 
