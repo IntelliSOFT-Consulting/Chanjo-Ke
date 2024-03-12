@@ -380,10 +380,6 @@ class PatientDetailsViewModel(
 
                         if (seriesDoses != null){
                             vaccineName = seriesDoses.vaccineName
-
-                            Log.e("*****","*****")
-                            println(vaccineName)
-                            Log.e("*****","*****")
                         }
 
                     }
