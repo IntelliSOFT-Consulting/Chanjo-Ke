@@ -142,7 +142,6 @@ class VaccineDetailsFragment : Fragment() {
                         tvAgeThen.text = age
 
                     }
-
                 }
 
             }
