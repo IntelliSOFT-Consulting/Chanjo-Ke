@@ -128,10 +128,10 @@ class LandingPage : Fragment() {
 
             "Administer vaccine" -> {
                 findNavController().navigate(R.id.patient_list)
-                formatterClass.saveSharedPref(
-                    "patientListAction",
-                    NavigationDetails.ADMINISTER_VACCINE.name, requireContext()
-                )
+//                formatterClass.saveSharedPref(
+//                    "patientListAction",
+//                    NavigationDetails.ADMINISTER_VACCINE.name, requireContext()
+//                )
             }
 
             "Reports" -> {
