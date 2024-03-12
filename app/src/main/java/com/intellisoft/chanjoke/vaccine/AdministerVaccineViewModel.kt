@@ -33,7 +33,6 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
-import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -205,10 +204,12 @@ class AdministerVaccineViewModel(
     fun createManualImmunizationResource(
         immunizationList: List<String>,
         encounterId: String,
-        patientId: String
+        patientId: String,
+        context: Context
     ) {
         CoroutineScope(Dispatchers.IO).launch {
 
+            val formatterClass = FormatterClass()
             val immunizationHandler = ImmunizationHandler()
 
             for (vaccineNameValue in immunizationList) {
@@ -225,7 +226,7 @@ class AdministerVaccineViewModel(
                     CoroutineScope(Dispatchers.IO + job).launch {
                         //Save resources to Shared preference
                         if (targetDisease != null) {
-                            FormatterClass().saveStockValue(
+                            formatterClass.saveStockValue(
                                 vaccineNameValue,
                                 targetDisease,
                                 getApplication<Application>().applicationContext
@@ -238,6 +239,13 @@ class AdministerVaccineViewModel(
                         ImmunizationStatus.COMPLETED,
                         Date()
                     )
+
+                    //Create Immunization Recommendation
+                    formatterClass.saveSharedPref("immunizationId",immunization.id,context)
+                    formatterClass.saveSharedPref("administeredProduct",vaccineNameValue,context)
+                    formatterClass.saveSharedPref("patientId",patientId,context)
+
+                    createImmunizationRecommendation(context)
 
                     saveResourceToDatabase(immunization, "immunization")
                 }
@@ -456,7 +464,6 @@ class AdministerVaccineViewModel(
         val patientId = formatterClass.getSharedPref(
             "patientId", getApplication<Application>().applicationContext
         )
-        val currentDate = Date()
 
         /**
          * Get the current administered product and generate the next vaccine

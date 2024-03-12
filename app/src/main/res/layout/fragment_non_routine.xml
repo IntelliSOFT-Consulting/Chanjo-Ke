@@ -25,7 +25,7 @@
 
                 <LinearLayout
                     android:paddingBottom="10dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="5dp"
                     android:paddingEnd="20dp"
                     android:paddingStart="20dp"
                     android:orientation="vertical"
@@ -47,7 +47,6 @@
                         <Button
                             android:id="@+id/tvAdministerVaccine"
                             android:textStyle="bold"
-                            android:layout_weight="1"
                             android:text="@string/administer_vaccine_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>

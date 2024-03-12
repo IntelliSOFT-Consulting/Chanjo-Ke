@@ -30,12 +30,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
         <LinearLayout
+            android:layout_margin="20dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Current Weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <LinearLayout
-                android:layout_margin="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_border_less"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/etCurrentWeight"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_empty_border"
+                    android:layout_weight="1"
+                    android:hint="Current Weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

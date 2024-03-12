@@ -140,7 +140,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val bcg = "IMBCG-"
     val bcgSeries = RoutineVaccine(
         bcg,
-        "BCG",
+        "Tuberculosis",
         1,
         listOf(
             BasicVaccine(bcg+"I", "BCG", "Intradermal", 0, arrayListOf(), "0.5ml","1")
@@ -164,7 +164,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val pcv = "IMPCV10-"
     val pcvSeries = RoutineVaccine(
         pcv,
-        "PCV10",
+        "Pneumococcal",
         3,
         listOf(
             BasicVaccine(pcv+"1", "PCV10 1", "Intramuscular into the upper outer aspect of right thigh", 6, arrayListOf(), "0.5ml","1"),
@@ -203,7 +203,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val vitaminA = "IMVIT-"
     val vitaminASeries = RoutineVaccine(
         vitaminA,
-        "Vitamin A",
+        "Vit A Def",
         3,
         listOf(
            BasicVaccine(vitaminA+"1", "Vitamin A 1st Dose", "Oral", 27, arrayListOf(), "100,000OUI","1"),
@@ -216,7 +216,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val malaria = "IMMALA-"
     val malariaSeries = RoutineVaccine(
         malaria,
-        "RTS/AS01 (Malaria)",
+        "Malaria",
         4,
         listOf(
             BasicVaccine(malaria+"1", "RTS/AS01 (Malaria Vaccine - 1)", "Intramuscular left deltoid muscle", 27, arrayListOf(), "0.5ml","1"),
@@ -229,7 +229,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val hpvVaccine = "IMHPV-"
     val hpvSeries = RoutineVaccine(
         hpvVaccine,
-        "HPV",
+        "Cervical Cancer",
         2,
         listOf(
             BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, arrayListOf(), "0.5ml","1"),
@@ -247,11 +247,11 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val covidMain = "IMCOV-"
     val covidMainSeries = NonRoutineVaccine(
         covidMain,
-        "Covid",
+        "Covid 19",
         listOf(
             RoutineVaccine(
                 covidMain+"ASTR",
-                "Covid",
+                "Covid 19",
                 2,
                 listOf(
                     BasicVaccine(covidMain+"ASTR-"+"1", "Astrazeneca 1st Dose", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -260,7 +260,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
             ),
             RoutineVaccine(
                 covidMain+"JnJ",
-                "Covid",
+                "Covid 19",
                 1,
                 listOf(
                     BasicVaccine(covidMain+"JnJ-"+"0", "Johnson & Johnson", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -268,7 +268,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
             ),
             RoutineVaccine(
                 covidMain+"MOD-",
-                "Covid",
+                "Covid 19",
                 2,
                 listOf(
                     BasicVaccine(covidMain+"MOD-"+"1", "Moderna 1st Dose", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -277,7 +277,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
             ),
             RoutineVaccine(
                 covidMain+"SINO-",
-                "Covid",
+                "Covid 19",
                 2,
                 listOf(
                     BasicVaccine(covidMain+"SINO-"+"1", "Sinopharm 1st Dose", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -286,7 +286,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
             ),
             RoutineVaccine(
                 covidMain+"PFIZER-",
-                "Covid",
+                "Covid 19",
                 2,
                 listOf(
                     BasicVaccine(covidMain+"PFIZER-"+"1", "Pfizer-BioNTech 1st Dose", "Intramuscular Injection", 939, arrayListOf(), "0.5ml","1"),
@@ -300,7 +300,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val rabiesMain = "IMRABIES-"
     val rabiesMainSeries = NonRoutineVaccine(
         rabiesMain,
-        "Rabies Post Exposure",
+        "Rabies",
         listOf(
             RoutineVaccine(
                 rabiesMain+"RABIES",

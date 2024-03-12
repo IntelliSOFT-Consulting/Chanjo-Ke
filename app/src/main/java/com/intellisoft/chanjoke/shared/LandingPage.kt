@@ -46,9 +46,16 @@ class LandingPage : Fragment() {
 
         createSpinner()
         formatterClass.deleteSharedPref("patientListAction", requireContext())
+        formatterClass.deleteSharedPref("ready_to_update", requireContext())
+
 
         return _binding.root
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        formatterClass.deleteSharedPref("ready_to_update", requireContext())
     }
 
     private fun createSpinner() {
@@ -121,10 +128,10 @@ class LandingPage : Fragment() {
 
             "Administer vaccine" -> {
                 findNavController().navigate(R.id.patient_list)
-                formatterClass.saveSharedPref(
-                    "patientListAction",
-                    NavigationDetails.ADMINISTER_VACCINE.name, requireContext()
-                )
+//                formatterClass.saveSharedPref(
+//                    "patientListAction",
+//                    NavigationDetails.ADMINISTER_VACCINE.name, requireContext()
+//                )
             }
 
             "Reports" -> {

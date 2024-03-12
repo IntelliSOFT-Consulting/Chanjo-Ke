@@ -965,10 +965,25 @@ class FormatterClass {
 
         var statusColor = ""
         if (contraindicatedList.contains(vaccineName)){
-            statusColor = StatusColors.AMBER.name
-            dateSchedule = recommendationList.filter { it.vaccineName == vaccineName }
-                .map { it.dateScheduled }
-                .firstOrNull()
+
+            val dbAppointmentDetailsContra = recommendationList.filter {
+                it.vaccineName == vaccineName && it.appointmentStatus == "Contraindicated" }
+                .map { it }.firstOrNull()
+
+            val dbAppointmentDetailsDue = recommendationList.filter {
+                it.vaccineName == vaccineName && it.appointmentStatus == "Due" }
+                .map { it }.firstOrNull()
+
+            if (dbAppointmentDetailsContra != null){
+                dateSchedule = dbAppointmentDetailsContra.dateScheduled
+                statusColor = StatusColors.AMBER.name
+            }
+            if (dbAppointmentDetailsDue != null){
+                dateSchedule = dbAppointmentDetailsDue.dateScheduled
+                statusColor = StatusColors.NORMAL.name
+            }
+
+
         }
         if (administeredVaccineNamesList.contains(vaccineName)){
             statusColor = StatusColors.GREEN.name

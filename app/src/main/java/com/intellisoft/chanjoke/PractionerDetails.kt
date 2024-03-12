@@ -44,35 +44,35 @@ class PractionerDetails : Fragment() {
             startActivity(intent)
 
         }
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-
-                R.id.navigation_patient -> {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-
-                R.id.navigation_vaccine -> {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-
-                R.id.navigation_profile -> {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-
-                else -> false
-            }
-        }
+//        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.navigation_home -> {
+//                    val intent = Intent(requireContext(), MainActivity::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//
+//                R.id.navigation_patient -> {
+//                    val intent = Intent(requireContext(), MainActivity::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//
+//                R.id.navigation_vaccine -> {
+//                    val intent = Intent(requireContext(), MainActivity::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//
+//                R.id.navigation_profile -> {
+//                    val intent = Intent(requireContext(), MainActivity::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//
+//                else -> false
+//            }
+//        }
 
 
     }
