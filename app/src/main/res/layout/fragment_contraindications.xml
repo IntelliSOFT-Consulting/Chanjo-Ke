@@ -129,7 +129,9 @@
 
                     </LinearLayout>
 
+
                     <EditText
+                        android:paddingBottom="80dp"
                         android:visibility="gone"
                         android:layout_marginTop="20dp"
                         android:id="@+id/etOtherReasons"
