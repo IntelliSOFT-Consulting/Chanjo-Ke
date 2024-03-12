@@ -156,7 +156,7 @@ class ContraindicationsFragment : Fragment() {
                                 var toastMessage = ""
                                 var  forecastReason = ""
                                 if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
-                                    toastMessage = "The contraindication has been saved successfully."
+                                    toastMessage = "Contraindication has been saved successfully."
                                     if (TextUtils.isEmpty(description)) binding.etDescription.error = "Please enter the contraindication(s)" else forecastReason = description
                                 }
                                 if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
