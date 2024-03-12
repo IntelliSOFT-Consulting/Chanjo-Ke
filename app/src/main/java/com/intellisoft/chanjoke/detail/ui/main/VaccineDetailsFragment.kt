@@ -143,10 +143,6 @@ class VaccineDetailsFragment : Fragment() {
 
                     }
 
-                }else{
-                    val intent = Intent(context, PatientDetailActivity::class.java)
-                    intent.putExtra("patientId", patientId)
-                    startActivity(intent)
                 }
 
             }
