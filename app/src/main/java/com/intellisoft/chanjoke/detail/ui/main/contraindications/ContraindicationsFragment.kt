@@ -205,7 +205,7 @@ class ContraindicationsFragment : Fragment() {
 
 
             }else{
-                Toast.makeText(requireContext(), "There's no vaccine available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Select at least one vaccine", Toast.LENGTH_SHORT).show()
             }
 
 

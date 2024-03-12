@@ -129,7 +129,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
             BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, arrayListOf(), "2 drops","2"),
             BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, arrayListOf(10.0), "2 drops","3"),
             BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, arrayListOf(14.0), "2 drops","4"),
-            BasicVaccine(polio+"IPV I", "IPV I", "Oral", 14, arrayListOf(14.0), "2 drops","5")
+            BasicVaccine(polio+"IPV", "IPV", "Oral", 14, arrayListOf(14.0), "2 drops","5")
         )
     )
 
@@ -235,6 +235,16 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
             BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, arrayListOf(), "0.5ml","1"),
             BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 730, arrayListOf(26.07), "0.5ml","2")
        )
+    )
+    //YELLOW FEVER
+    val yellowFever = "IMYF-"
+    val yellowFeverSeries = RoutineVaccine(
+        yellowFever+"YELLOWFEVER",
+        "Yellow Fever",
+        1,
+        listOf(
+            BasicVaccine(yellowFever+"I", "Yellow Fever", "Subcutaneous left upper arm", 39, arrayListOf(), "0.5ml","1")
+        )
     )
 
     /**
@@ -356,21 +366,21 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     )
 
     //YELLOW FEVER
-    val yellowFever = "IMYF-"
-    val yellowFeverSeries = NonRoutineVaccine(
-        yellowFever,
-        "Yellow Fever",
-        listOf(
-            RoutineVaccine(
-                yellowFever+"YELLOWFEVER",
-                "Yellow Fever",
-                1,
-                listOf(
-                    BasicVaccine(yellowFever+"I", "Yellow Fever", "Subcutaneous left upper arm", 39, arrayListOf(), "0.5ml","1")
-                )
-            )
-        )
-    )
+//    val yellowFever = "IMYF-"
+//    val yellowFeverSeries = NonRoutineVaccine(
+//        yellowFever,
+//        "Yellow Fever",
+//        listOf(
+//            RoutineVaccine(
+//                yellowFever+"YELLOWFEVER",
+//                "Yellow Fever",
+//                1,
+//                listOf(
+//                    BasicVaccine(yellowFever+"I", "Yellow Fever", "Subcutaneous left upper arm", 39, arrayListOf(), "0.5ml","1")
+//                )
+//            )
+//        )
+//    )
 
     /**
      * PREGNANCY VACCINES
@@ -393,8 +403,8 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
 
 
 
-    val routineList = listOf(polioSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries,hpvSeries)
-    val nonRoutineList = listOf(covidMainSeries, rabiesMainSeries, yellowFeverSeries, influenzaSeries, tetanusToxoidSeries)
+    val routineList = listOf(polioSeries, bcgSeries, dptSeries, pcvSeries,yellowFeverSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries,hpvSeries)
+    val nonRoutineList = listOf(covidMainSeries, rabiesMainSeries, influenzaSeries, tetanusToxoidSeries)
     val pregnancyList = listOf(tetanusSeries)
 
     return Triple(routineList, nonRoutineList, pregnancyList)
