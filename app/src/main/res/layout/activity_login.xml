@@ -7,16 +7,16 @@
     android:background="@drawable/topper"
     tools:context=".shared.Login">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
+            android:layout_margin="60dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_margin="60dp"
             android:gravity="end"
             android:orientation="horizontal">
 
@@ -36,6 +36,8 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -182,6 +184,6 @@
         </ScrollView>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
