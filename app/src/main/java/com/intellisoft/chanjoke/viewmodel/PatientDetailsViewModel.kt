@@ -84,9 +84,10 @@ class PatientDetailsViewModel(
             fhirEngine.search<Patient> {
                 filter(Resource.RES_ID, { value = of(patientId) })
             }
+        val formatterClass = FormatterClass()
         var name = ""
         var phone = ""
-        var dob = ""
+        var dob  = ""
         var gender = ""
         var contact_name = ""
         var contact_phone = ""
@@ -117,9 +118,13 @@ class PatientDetailsViewModel(
             }
 
             if (it.hasBirthDateElement()) {
-                if (it.birthDateElement.hasValue()) dob =
-                    LocalDate.parse(it.birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
-                        .toString()
+                if (it.birthDateElement.hasValue()) {
+                    val birthDateElement =
+                        formatterClass.convertChildDateFormat(it.birthDateElement.valueAsString)
+                    if (birthDateElement != null) {
+                        dob = birthDateElement
+                    }
+                }
             }
 
             if (it.hasContact()) {
