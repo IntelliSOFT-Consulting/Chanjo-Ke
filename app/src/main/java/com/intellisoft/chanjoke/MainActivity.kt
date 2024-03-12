@@ -15,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.add_patient.AddPatientFragment
 import com.intellisoft.chanjoke.databinding.ActivityMainBinding
 import com.intellisoft.chanjoke.detail.ui.main.UpdateFragment
+import com.intellisoft.chanjoke.detail.ui.main.registration.RegistrationActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
@@ -258,10 +259,12 @@ class MainActivity : AppCompatActivity() {
             AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
             "new-patient-registration-paginated.json"
         )
-        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
-            R.id.addPatientFragment,
-            bundle
-        )
+
+        startActivity(Intent(this@MainActivity, RegistrationActivity::class.java))
+//        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
+//            R.id.addPatientFragment,
+//            bundle
+//        )
     }
 
 }
