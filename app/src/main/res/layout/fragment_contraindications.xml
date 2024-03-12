@@ -41,140 +41,159 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_below="@+id/layout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:background="@color/bac_trans_color"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_margin="10dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tvInstructions"
-                    android:layout_marginTop="10dp"
-                    android:text="Vaccines to Contraindicate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <LinearLayout
-                    android:background="@drawable/edittext_border"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <Spinner
-                        android:id="@+id/spinner"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:listitem="@layout/contraindications_list_item" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_margin="10dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/linearSpinner"
-                android:background="@drawable/edittext_border"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Spinner
-                    android:id="@+id/spinnerReasons"
-                    android:layout_marginTop="10dp"
+                <LinearLayout
+                    android:background="@color/bac_trans_color"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
 
+                    <LinearLayout
+                        android:layout_margin="10dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvInstructions"
+                            android:layout_marginTop="10dp"
+                            android:text="Vaccines to Contraindicate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                        <LinearLayout
+                            android:background="@drawable/edittext_border"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Spinner
+                                android:id="@+id/spinner"
+                                android:layout_marginTop="10dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                tools:listitem="@layout/contraindications_list_item" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/linearSpinner"
+                        android:background="@drawable/edittext_border"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Spinner
+                            android:id="@+id/spinnerReasons"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:visibility="gone"
+                        android:layout_marginTop="20dp"
+                        android:id="@+id/etOtherReasons"
+                        android:background="@drawable/edittext_border"
+                        android:hint="Enter other reasons *"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:paddingBottom="80dp"
+                        android:layout_marginTop="20dp"
+                        android:id="@+id/etDescription"
+                        android:background="@drawable/edittext_border"
+                        android:hint="Enter Contraindications *"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/tvDatePicker"
+                        android:drawableEnd="@drawable/ic_action_date"
+                        android:background="@drawable/edittext_border"
+                        android:layout_marginTop="20dp"
+                        android:text="Next Vaccination Date *"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:ignore="UseCompatTextViewDrawableXml" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <EditText
-                android:visibility="gone"
-                android:layout_marginTop="20dp"
-                android:id="@+id/etOtherReasons"
-                android:background="@drawable/edittext_border"
-                android:hint="Enter other reasons *"
+            <LinearLayout
+                android:layout_marginBottom="80dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:paddingBottom="80dp"
-                android:layout_marginTop="20dp"
-                android:id="@+id/etDescription"
-                android:background="@drawable/edittext_border"
-                android:hint="Enter Contraindications *"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/tvDatePicker"
-                android:drawableEnd="@drawable/ic_action_date"
-                android:background="@drawable/edittext_border"
-                android:layout_marginTop="20dp"
-                android:text="Next Vaccination Date *"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:ignore="UseCompatTextViewDrawableXml" />
+                <Button
+                    android:id="@+id/btnNext"
+                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:text="Next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_marginBottom="80dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    </ScrollView>
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_weight="1"
-            android:text="Cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btnNext"
-            android:layout_weight="1"
-            android:layout_marginStart="20dp"
-            android:text="Next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+
+
 
 </RelativeLayout>

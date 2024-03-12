@@ -157,7 +157,7 @@ class ContraindicationsFragment : Fragment() {
                                 var  forecastReason = ""
                                 if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
                                     toastMessage = "The contraindication has been saved successfully."
-                                    if (TextUtils.isEmpty(description)) binding.etDescription.error = "Field cannot be empty" else forecastReason = description
+                                    if (TextUtils.isEmpty(description)) binding.etDescription.error = "Please enter the contraindication(s)" else forecastReason = description
                                 }
                                 if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
                                     if (spinnerReasons == "") {
@@ -210,7 +210,7 @@ class ContraindicationsFragment : Fragment() {
 
 
         }
-        binding.btnBack.setOnClickListener { onBackPressed() }
+        binding.btnCancel.setOnClickListener { onBackPressed() }
 
     }
 
