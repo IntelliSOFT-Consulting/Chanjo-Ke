@@ -146,7 +146,7 @@ class ContraindicationsFragment : Fragment() {
                     val description =  binding.etDescription.text.toString()
                     val otherReasons =  binding.etOtherReasons.text.toString()
 
-                    if (!TextUtils.isEmpty(datePicker)){
+                    if (!TextUtils.isEmpty(datePicker) && datePicker != "Next Vaccination Date *"){
 
                         val dobFormat = formatterClass.convertDateFormat(datePicker)
                         if (dobFormat != null) {
