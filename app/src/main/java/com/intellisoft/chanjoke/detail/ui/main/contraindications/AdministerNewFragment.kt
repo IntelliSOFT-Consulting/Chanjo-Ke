@@ -2,9 +2,13 @@ package com.intellisoft.chanjoke.detail.ui.main.contraindications
 
 import android.app.Application
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -48,6 +52,8 @@ class AdministerNewFragment : Fragment() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
     private val immunizationHandler = ImmunizationHandler()
+    private var selectedItem = ""
+    val weightList = listOf<String>("Select Weight", "Kg", "g")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +101,9 @@ class AdministerNewFragment : Fragment() {
         binding.recyclerView.setHasFixedSize(true)
 
         binding.btnAdministerVaccine.setOnClickListener {
-            if (resultList.isNotEmpty()){
+
+            val currentWeight = binding.etCurrentWeight.text
+            if (resultList.isNotEmpty() && selectedItem != weightList.first() && !TextUtils.isEmpty(currentWeight)){
                 administerVaccineViewModel.createManualImmunizationResource(
                     resultList,
                     formatterClass.generateUuid(),
@@ -103,13 +111,46 @@ class AdministerNewFragment : Fragment() {
                     requireContext())
                 val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                 blurBackgroundDialog.show()
+            }else{
+                if(resultList.isEmpty()) Toast.makeText(requireContext(), "Please select a vaccine to proceed", Toast.LENGTH_SHORT).show()
+                if(selectedItem == weightList.first()) Toast.makeText(requireContext(), "Please select g/kg to proceed", Toast.LENGTH_SHORT).show()
+                if(TextUtils.isEmpty(currentWeight)) Toast.makeText(requireContext(), "Kindly add the client's weight", Toast.LENGTH_SHORT).show()
             }
 
         }
+        createSpinner()
 
         getBatchNumbers()
 
     }
+
+    private fun createSpinner() {
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, weightList)
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Apply the adapter to the spinner
+        binding.spinner.adapter = adapter
+
+        // Set a listener to handle the item selection
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
+                // Get the selected item
+                selectedItem = parentView.getItemAtPosition(position).toString()
+
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {
+                // Do nothing here
+            }
+        }
+
+
+    }
+
 
     private fun onBackPressed() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
