@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -98,8 +99,10 @@ class VaccineDetailsAdapter(
         val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
         val checked: ImageButton = itemView.findViewById(R.id.checked)
 
+
         init {
             itemView.setOnClickListener(this)
+
         }
 
         override fun onClick(v: View?) {
