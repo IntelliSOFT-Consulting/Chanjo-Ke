@@ -210,7 +210,10 @@ class PatientDetailActivity : AppCompatActivity() {
                     tvSystemId.text = patientDetail.systemId
 
                     val dob = formatterClass.convertDateFormat(patientDetail.dob)
-                    val age = formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources, this@PatientDetailActivity)
+                    val age = formatterClass.getFormattedAge(
+                        patientDetail.dob,
+                        tvAge.context.resources,
+                        this@PatientDetailActivity)
 //                    val dobAge = "$dob ($age old)"
 
                     val dobFormatted = dob?.let { formatterClass.convertViewDateFormats(it) }

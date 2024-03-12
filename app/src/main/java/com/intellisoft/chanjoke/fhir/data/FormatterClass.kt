@@ -31,7 +31,7 @@ class FormatterClass {
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
     private val dateInverseFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     private val dateInverseFormatSeconds: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
-    val inputDateFormats = arrayOf(
+    private val inputDateFormats = arrayOf(
         "yyyy-MM-dd",
         "MM/dd/yyyy",
         "yyyyMMdd",
