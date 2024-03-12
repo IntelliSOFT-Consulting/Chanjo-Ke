@@ -237,6 +237,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                         }
 
                         val adapter = VaccineDetailsAdapter(
+                            patientDetailsViewModel,
                             vaccineList,
                             this@NonRoutineFragment,
                             requireContext())

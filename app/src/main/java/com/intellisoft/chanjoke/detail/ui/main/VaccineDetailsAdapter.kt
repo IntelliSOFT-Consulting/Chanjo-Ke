@@ -17,8 +17,11 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 
 class VaccineDetailsAdapter(
+    private var patientDetailsViewModel: PatientDetailsViewModel,
     private val vaccineDetailsList: ArrayList<DbVaccineScheduleChild>,
     private val onCheckBoxSelectedListener: OnCheckBoxSelectedListener,
     private val context: Context
@@ -101,10 +104,13 @@ class VaccineDetailsAdapter(
 
         override fun onClick(v: View?) {
 
+            val immunizationHandler = ImmunizationHandler()
+
             val pos = adapterPosition
             val vaccineName = vaccineDetailsList[pos].vaccineName
 
             val formatterClass = FormatterClass()
+
             formatterClass.saveSharedPref("vaccineNameDetails", vaccineName, context)
 
             val patientId = FormatterClass().getSharedPref("patientId", context)

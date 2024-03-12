@@ -65,9 +65,9 @@ class Login : AppCompatActivity() {
                 retrofitCallsAuthentication.loginUser(this, dbSignIn)
 
             } else {
-                etUsername.error = "Please Enter Username"
-                etPassword.error = "Please Enter Password"
-                if (selectedItem == "") Toast.makeText(this, "Kindly select a Facility", Toast.LENGTH_SHORT).show()
+                if (TextUtils.isEmpty(username)) etUsername.error = "Please Enter Username"
+                if (TextUtils.isEmpty(password)) etPassword.error = "Please Enter Password"
+                if (selectedItem == "") Toast.makeText(this, "Kindly select a Location", Toast.LENGTH_SHORT).show()
             }
 
 

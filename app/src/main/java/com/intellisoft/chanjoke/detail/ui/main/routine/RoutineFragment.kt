@@ -235,12 +235,18 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     tvAefi.text = "AEFIs ($counter)"
 
                     tvAefi.setOnClickListener {
-                        FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
 
-                        val intent = Intent(context, MainActivity::class.java)
-                        intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
-                        intent.putExtra("patientId", patientId)
-                        startActivity(intent)
+                        val counterInt = counter.toIntOrNull()
+                        if (counterInt != null && counterInt > 0){
+                            FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
+                            val intent = Intent(context, MainActivity::class.java)
+                            intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
+                            intent.putExtra("patientId", patientId)
+                            startActivity(intent)
+                        }else{
+                            Toast.makeText(requireContext(), "The schedule does not have any AEFI(s)", Toast.LENGTH_SHORT).show()
+                        }
+
                     }
 
                     groupLayout.setOnClickListener {
@@ -260,6 +266,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                         }
 
                         val adapter = VaccineDetailsAdapter(
+                            patientDetailsViewModel,
                             vaccineList,
                             this@RoutineFragment,
                             requireContext())
