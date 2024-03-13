@@ -284,6 +284,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10dp"
+            android:visibility="gone"
+            android:id="@+id/tel_telephone"
             android:layout_marginBottom="@dimen/_10dp"
             android:hint="Telephone Number"
             app:boxBackgroundMode="outline">

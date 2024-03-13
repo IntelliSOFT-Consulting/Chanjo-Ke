@@ -328,4 +328,8 @@ class EditAefiActivity : AppCompatActivity(), OnButtonClickListener {
             Timber.e("TAG: First Item")
         }
     }
+
+    override fun onCancelPageRequested() {
+        Timber.e("Prepare to cancel the process")
+    }
 }

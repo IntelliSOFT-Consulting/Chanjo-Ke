@@ -28,6 +28,7 @@ import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.utils.AppUtils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -204,6 +205,8 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         val contact_name: String?,
         val contact_phone: String?,
         val contact_gender: String?,
+        val document: String,
+        val number: String
     ) {
         override fun toString(): String = name
     }
@@ -270,8 +273,8 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
                 val dobDate = formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")
                 if (dobDate != null) {
                     formatterClass.convertDateToLocalDate(dobDate)
-                }else null
-            }else null
+                } else null
+            } else null
 
 //            LocalDate.parse(birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
         } else null
@@ -283,11 +286,11 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
     val html: String = if (hasText()) text.div.valueAsString else ""
 
     val identification: String = if (hasIdentifier()) {
-        if (identifier.isNotEmpty()){
-            if (identifier[0].hasValue()){
+        if (identifier.isNotEmpty()) {
+            if (identifier[0].hasValue()) {
                 identifier[0].value
-            }else "N/A"
-        }else "N/A"
+            } else "N/A"
+        } else "N/A"
     } else "N/A"
 
     var lastUpdated = ""
@@ -329,6 +332,32 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
         }
     }
 
+    // identification details
+
+    var document = ""
+    var number = ""
+
+    if (hasIdentifier()) {
+        identifier.forEach { identifier ->
+
+            try {
+                if (identifier.system.toString() != "system-creation") {
+                    number = identifier.value
+                    document = identifier.system
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            val codeableConceptType = identifier.type
+            if (codeableConceptType.hasText() && codeableConceptType.text.contains(
+                    Identifiers.SYSTEM_GENERATED.name
+                )
+            ) {
+
+
+            }
+        }
+    }
 
     return PatientListViewModel.PatientItem(
         id = position.toString(),
@@ -346,6 +375,8 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
         contact_name = contact_name,
         contact_phone = contact_phone,
         contact_gender = contact_type,
+        document = document,
+        number = number
     )
 }
 

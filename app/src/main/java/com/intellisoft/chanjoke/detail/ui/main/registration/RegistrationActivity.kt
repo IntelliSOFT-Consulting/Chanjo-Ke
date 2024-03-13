@@ -1,12 +1,14 @@
 package com.intellisoft.chanjoke.detail.ui.main.registration
 
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -22,6 +24,7 @@ import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.CompletePatient
 import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.PatientIdentification
 import com.intellisoft.chanjoke.utils.ActivityBlurBackground
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import timber.log.Timber
@@ -38,6 +41,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
     private lateinit var progressDialog: ProgressDialog
     private var isClientUpdate: Boolean = false
     private lateinit var liveData: AdminLiveData
+    private var allPatients = mutableListOf<PatientIdentification>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +49,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         observeSubmission()
+
         liveData = ViewModelProvider(this).get(AdminLiveData::class.java)
         val update = intent.extras?.getString("update")
         if (update == "true") {
@@ -68,6 +73,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
         setupViewPager(viewPager)
 
         tabLayout.setupWithViewPager(viewPager)
+        allPatients = viewModel.loadRegisteredClients()
 
     }
 
@@ -141,6 +147,13 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
 
                 val fhirPractitionerId = formatter.getSharedPref("fhirPractitionerId", this)
 //                if (fhirPractitionerId != null) {
+
+                if (noSimilarDocumentNumbers(
+                        refinedPersonal.identification,
+                        refinedPersonal.identificationNumber
+                    )
+                ) {
+
                     progressDialog.show()
                     viewModel.saveCustomPatient(
                         this,
@@ -148,6 +161,13 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
                         fhirPractitionerId,
                         isClientUpdate
                     )
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Client Identification Document Number already exists",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
 //                } else {
 //                    Toast.makeText(this, "Please contact administrator", Toast.LENGTH_SHORT).show()
@@ -160,6 +180,31 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
         }
     }
 
+    private fun noSimilarDocumentNumbers(type: String, number: String): Boolean {
+        val similarIdentificationNumbers = arrayListOf<String>()
+        if (allPatients.isEmpty()) {
+            //No Patient record -> return true
+            return true
+        } else {
+            similarIdentificationNumbers.clear()
+            allPatients.forEach {
+                if (it.document.trim() == type.trim()) {
+                    similarIdentificationNumbers.add(it.number)
+                }
+            }
+            return if (similarIdentificationNumbers.isEmpty()) {
+                // no matching doc type -> return true
+                true
+            } else {
+                // the doc exist
+                val hasSimilar = similarIdentificationNumbers.contains(number)
+                !hasSimilar
+
+            }
+        }
+
+    }
+
     override fun onPreviousPageRequested() {
         if (viewPager.currentItem > 0) {
             // Move to the previous page in ViewPager
@@ -168,6 +213,21 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
         } else {
             Timber.e("TAG: First Item")
         }
+    }
+
+    override fun onCancelPageRequested() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Confirmation")
+        builder.setMessage("Are you sure you want to cancel registration?")
+        builder.setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
+            dialogInterface.dismiss()
+            finish() // Exit the activity
+        }
+        builder.setNegativeButton("No") { dialogInterface: DialogInterface, _: Int ->
+            dialogInterface.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     override fun onNextButtonClicked(admin: String) {
