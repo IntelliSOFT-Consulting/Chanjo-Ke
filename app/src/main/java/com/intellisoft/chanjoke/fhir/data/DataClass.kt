@@ -267,20 +267,29 @@ data class Child(
     val phone: String
 
 )
+
 data class DbVaccineScheduleGroup(
-    val vaccineSchedule:String,
+    val vaccineSchedule: String,
     val colorCode: String,
     val aefiValue: String?,
     val dbVaccineScheduleChildList: ArrayList<DbVaccineScheduleChild>
 )
+
 data class DbVaccineScheduleChild(
-    val vaccineName:String,
+    val vaccineName: String,
     val date: String,
     val status: String,
     var isVaccinated: Boolean,
     var canBeVaccinated: Boolean?,
 )
+
 data class DbRecycler(
-    val recyclerView:RecyclerView,
+    val recyclerView: RecyclerView,
     val vaccineSchedule: String
+)
+
+data class PatientIdentification(
+    val document: String,
+    val number: String
+
 )

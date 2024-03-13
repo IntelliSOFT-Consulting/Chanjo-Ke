@@ -31,12 +31,17 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
+import com.google.android.fhir.search.StringFilterModifier
+import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.CompletePatient
 import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
+import com.intellisoft.chanjoke.fhir.data.PatientIdentification
+import com.intellisoft.chanjoke.patient_list.toPatientItem
 import java.util.UUID
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.ContactPoint
@@ -449,6 +454,36 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
             isPatientSaved.value = true
         }
+
+    }
+
+    fun loadRegisteredClients() = runBlocking {
+
+        loadRegisteredClientsRefined()
+
+    }
+
+    private suspend fun loadRegisteredClientsRefined(): MutableList<PatientIdentification> {
+        val documents = mutableListOf<PatientIdentification>()
+        fhirEngine
+            .search<Patient> {
+                count = 1000
+                from = 0
+            }
+            .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
+            .let {
+                it.forEach { q ->
+                    Timber.e("Registered Clients ******* Loop${q.document} ${q.number}")
+                    documents.add(
+                        PatientIdentification(
+                            document = q.document,
+                            number = q.number
+                        )
+                    )
+                }
+            }
+        Timber.e("Registered Clients ******* All $documents")
+        return documents
 
     }
 }

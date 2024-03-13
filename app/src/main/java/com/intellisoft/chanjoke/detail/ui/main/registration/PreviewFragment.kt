@@ -96,7 +96,7 @@ class PreviewFragment : Fragment() {
             nextButton.apply {
                 setOnClickListener {
                     formatter.deleteSharedPref("isAbove", requireContext())
-                    isEnabled = false
+//                    isEnabled = false
                     mListener?.onNextPageRequested()
 
                 }
