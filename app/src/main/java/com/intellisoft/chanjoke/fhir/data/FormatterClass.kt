@@ -29,7 +29,8 @@ class FormatterClass {
 
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
     private val dateInverseFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    private val dateInverseFormatSeconds: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    private val dateInverseFormatSeconds: SimpleDateFormat =
+        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
 
     fun saveSharedPref(key: String, value: String, context: Context) {
@@ -121,6 +122,7 @@ class FormatterClass {
         // If none of the formats match, return an error message or handle it as needed
         return null
     }
+
     fun convertChildDateFormat(inputDate: String): String? {
         // Define the input date formats to check
         val inputDateFormats = arrayOf(
@@ -151,6 +153,46 @@ class FormatterClass {
                 // If parsing succeeds, format and return the date in the desired format
                 parsedDate?.let {
                     return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+                }
+            } catch (e: ParseException) {
+                // Continue to the next format if parsing fails
+            }
+        }
+
+        // If none of the formats match, return an error message or handle it as needed
+        return null
+    }
+
+    fun convertDateFormatWithDesiredFormat(inputDate: String, finalFormat: String): String? {
+        // Define the input date formats to check
+        val inputDateFormats = arrayOf(
+            "yyyy-MM-dd",
+            "MM/dd/yyyy",
+            "yyyyMMdd",
+            "dd-MM-yyyy",
+            "yyyy/MM/dd",
+            "MM-dd-yyyy",
+            "dd/MM/yyyy",
+            "MMM d yyyy",
+            "yyyyMMddHHmmss",
+            "yyyy-MM-dd HH:mm:ss",
+            "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
+            "yyyy-MM-dd'T'HH:mm:ssXXX",     // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
+            "EEE MMM dd HH:mm:ss zzz yyyy", // Example: "Sun Jan 01 00:00:00 GMT+03:00 2023"
+
+            // Add more formats as needed
+        )
+
+        // Try parsing the input date with each format
+        for (format in inputDateFormats) {
+            try {
+                val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+                dateFormat.isLenient = false // Set lenient to false
+                val parsedDate = dateFormat.parse(inputDate)
+
+                // If parsing succeeds, format and return the date in the desired format
+                parsedDate?.let {
+                    return SimpleDateFormat(finalFormat, Locale.getDefault()).format(it)
                 }
             } catch (e: ParseException) {
                 // Continue to the next format if parsing fails
@@ -328,9 +370,9 @@ class FormatterClass {
                 val months = period.months
                 val days = period.days
 
-                saveSharedPref("patientYears",years.toString(), context)
-                saveSharedPref("patientMonth",months.toString(), context)
-                saveSharedPref("patientDays",days.toString(), context)
+                saveSharedPref("patientYears", years.toString(), context)
+                saveSharedPref("patientMonth", months.toString(), context)
+                saveSharedPref("patientDays", days.toString(), context)
 
                 val ageStringBuilder = StringBuilder()
 
@@ -911,17 +953,17 @@ class FormatterClass {
         }
     }
 
-    fun getVaccineScheduleValue(keyValue:String):String{
+    fun getVaccineScheduleValue(keyValue: String): String {
         var weekNo = ""
         weekNo = if (keyValue.toIntOrNull() != null) {
             if (keyValue == "0") {
                 "At Birth"
-            } else if (keyValue.toInt() in 1..15){
+            } else if (keyValue.toInt() in 1..15) {
                 "$keyValue weeks"
-            }else if (keyValue.toInt() in 15..105){
-                "${(round(keyValue.toInt() * 0.230137)).toString().replace(".0","")} months"
-            }else{
-                "${(round(keyValue.toInt() * 0.019)).toString().replace(".0","")} years"
+            } else if (keyValue.toInt() in 15..105) {
+                "${(round(keyValue.toInt() * 0.230137)).toString().replace(".0", "")} months"
+            } else {
+                "${(round(keyValue.toInt() * 0.019)).toString().replace(".0", "")} years"
             }
         } else {
             keyValue
@@ -930,8 +972,9 @@ class FormatterClass {
     }
 
     fun getVaccineGroupDetails(
-        vaccines:  List<String>?,
-        administeredList: List<DbVaccineData>): String{
+        vaccines: List<String>?,
+        administeredList: List<DbVaccineData>
+    ): String {
         val administeredVaccineNames = administeredList.map { it.vaccineName }
 
         var statusColor = ""
@@ -950,6 +993,7 @@ class FormatterClass {
 
         return statusColor
     }
+
     fun getVaccineChildStatus(
         context: Context,
         weekNumber: String,
@@ -964,28 +1008,30 @@ class FormatterClass {
         val administeredVaccineNamesList = administeredList.map { it.vaccineName }
 
         var statusColor = ""
-        if (contraindicatedList.contains(vaccineName)){
+        if (contraindicatedList.contains(vaccineName)) {
 
             val dbAppointmentDetailsContra = recommendationList.filter {
-                it.vaccineName == vaccineName && it.appointmentStatus == "Contraindicated" }
+                it.vaccineName == vaccineName && it.appointmentStatus == "Contraindicated"
+            }
                 .map { it }.firstOrNull()
 
             val dbAppointmentDetailsDue = recommendationList.filter {
-                it.vaccineName == vaccineName && it.appointmentStatus == "Due" }
+                it.vaccineName == vaccineName && it.appointmentStatus == "Due"
+            }
                 .map { it }.firstOrNull()
 
-            if (dbAppointmentDetailsContra != null){
+            if (dbAppointmentDetailsContra != null) {
                 dateSchedule = dbAppointmentDetailsContra.dateScheduled
                 statusColor = StatusColors.AMBER.name
             }
-            if (dbAppointmentDetailsDue != null){
+            if (dbAppointmentDetailsDue != null) {
                 dateSchedule = dbAppointmentDetailsDue.dateScheduled
                 statusColor = StatusColors.NORMAL.name
             }
 
 
         }
-        if (administeredVaccineNamesList.contains(vaccineName)){
+        if (administeredVaccineNamesList.contains(vaccineName)) {
             statusColor = StatusColors.GREEN.name
             dateSchedule = administeredList.filter { it.vaccineName == vaccineName }
                 .map { it.dateAdministered }
@@ -1000,13 +1046,13 @@ class FormatterClass {
          * Use the week number to check eligibility of the vaccine
          */
         val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
-        var canBeVaccinated:Boolean? = null
-        val patientDob = getSharedPref("patientDob",context)
-        if (patientDob != null){
+        var canBeVaccinated: Boolean? = null
+        val patientDob = getSharedPref("patientDob", context)
+        if (patientDob != null) {
             val numberOfWeek = calculateWeeksFromDate(patientDob)
-            if (numberOfWeek != null &&  basicVaccine != null){
+            if (numberOfWeek != null && basicVaccine != null) {
                 val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
-                if (administrativeWeeksSinceDOB > 0){
+                if (administrativeWeeksSinceDOB > 0) {
                     canBeVaccinated = administrativeWeeksSinceDOB < numberOfWeek
                 }
             }
