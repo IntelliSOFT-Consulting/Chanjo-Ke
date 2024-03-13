@@ -1,12 +1,14 @@
 package com.intellisoft.chanjoke.detail.ui.main.registration
 
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -141,13 +143,13 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
 
                 val fhirPractitionerId = formatter.getSharedPref("fhirPractitionerId", this)
 //                if (fhirPractitionerId != null) {
-                    progressDialog.show()
-                    viewModel.saveCustomPatient(
-                        this,
-                        completePatient,
-                        fhirPractitionerId,
-                        isClientUpdate
-                    )
+                progressDialog.show()
+                viewModel.saveCustomPatient(
+                    this,
+                    completePatient,
+                    fhirPractitionerId,
+                    isClientUpdate
+                )
 
 //                } else {
 //                    Toast.makeText(this, "Please contact administrator", Toast.LENGTH_SHORT).show()
@@ -168,6 +170,21 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
         } else {
             Timber.e("TAG: First Item")
         }
+    }
+
+    override fun onCancelPageRequested() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Confirmation")
+        builder.setMessage("Are you sure you want to cancel registration?")
+        builder.setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
+            dialogInterface.dismiss()
+            finish() // Exit the activity
+        }
+        builder.setNegativeButton("No") { dialogInterface: DialogInterface, _: Int ->
+            dialogInterface.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     override fun onNextButtonClicked(admin: String) {

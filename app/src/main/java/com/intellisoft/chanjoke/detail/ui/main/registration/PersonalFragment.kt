@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.detail.ui.main.registration
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
@@ -236,7 +238,6 @@ class PersonalFragment : Fragment() {
 
                 }
             }
-
             dateOfBirth.apply {
 
                 setOnClickListener {
@@ -256,7 +257,6 @@ class PersonalFragment : Fragment() {
                     datePickerDialog.show()
                 }
             }
-
             identificationType.apply {
                 setAdapter(adapterType)
             }
@@ -266,11 +266,15 @@ class PersonalFragment : Fragment() {
                 }
             }
             previousButton.apply {
-                setOnClickListener { }
+                setOnClickListener {
+                    mListener?.onCancelPageRequested()
+                }
             }
         }
 
     }
+
+
 
     private fun updateMandatoryFields() {
 
@@ -334,6 +338,7 @@ class PersonalFragment : Fragment() {
             if (enteredYear >= 18) {
                 formatter.saveSharedPref("isAbove", "true", requireContext())
 
+
             } else {
                 formatter.saveSharedPref("isAbove", "false", requireContext())
 
@@ -382,7 +387,14 @@ class PersonalFragment : Fragment() {
             identificationType.apply {
                 setAdapter(adapterType)
             }
+            if (age >= 18) {
+                telTelephone.visibility = View.VISIBLE
+            } else {
+                telTelephone.visibility = View.GONE
+
+            }
         }
+
 
     }
 
