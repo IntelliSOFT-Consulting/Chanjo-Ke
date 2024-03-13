@@ -275,7 +275,6 @@ class PersonalFragment : Fragment() {
     }
 
 
-
     private fun updateMandatoryFields() {
 
     }
@@ -523,6 +522,12 @@ class PersonalFragment : Fragment() {
             }
         }
 
+        var estimate = true
+
+        if (binding.radioButtonYesDob.isChecked) {
+            estimate = false
+        }
+
         val payload = CustomPatient(
             firstname = firstName,
             middlename = middleName,
@@ -532,8 +537,10 @@ class PersonalFragment : Fragment() {
             dateOfBirth = dateOfBirthString,
             identification = identificationType,
             identificationNumber = identificationNumberString,
-            telephone = telephone
-        )
+            telephone = telephone,
+            estimate = estimate,
+
+            )
 
         formatter.saveSharedPref("personal", Gson().toJson(payload), requireContext())
 

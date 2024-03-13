@@ -378,14 +378,89 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             name.given = givens
             names.add(name)
 
-            val singleIdentifier = Identifier()
-            singleIdentifier.system = payload.personal.identification
-            singleIdentifier.value = payload.personal.identificationNumber
-            identifier.add(singleIdentifier)
-            val singleIdentifier1 = Identifier()
-            singleIdentifier1.system = "system-creation"
-            singleIdentifier1.value = FormatterClass().formatCurrentDateTime(Date())
-            identifier.add(singleIdentifier1)
+            /*Estimated dob*/
+
+
+            val identifierSystem1x = Identifier()
+            val typeCodeableConcept1x = CodeableConcept()
+
+            val codingList1x = ArrayList<Coding>()
+            val coding1x = Coding()
+            coding1x.system = "estimated-age"
+            coding1x.code = "estimated-age"
+            coding1x.display = "Estimated Age"
+            codingList1x.add(coding1x)
+            typeCodeableConcept1x.coding = codingList1x
+            typeCodeableConcept1x.text = payload.personal.estimate.toString()
+
+            identifierSystem1x.value = payload.personal.estimate.toString()
+            identifierSystem1x.system = "estimated-age"
+            identifierSystem1x.type = typeCodeableConcept1x
+            identifier.add(identifierSystem1x)
+
+
+            /* Identification Document*/
+
+            val identifierSystem1 = Identifier()
+            val typeCodeableConcept1 = CodeableConcept()
+
+            val codingList1 = ArrayList<Coding>()
+            val coding1 = Coding()
+            coding1.system = payload.personal.identification
+            coding1.code = payload.personal.identification
+            coding1.display = payload.personal.identification
+            codingList1.add(coding1)
+            typeCodeableConcept1.coding = codingList1
+            typeCodeableConcept1.text = payload.personal.identificationNumber
+
+            identifierSystem1.value = payload.personal.identificationNumber
+            identifierSystem1.system = "identification_type"
+            identifierSystem1.type = typeCodeableConcept1
+            identifier.add(identifierSystem1)
+
+            /*Creation Time*/
+
+            val identifierSystem0 = Identifier()
+
+            val typeCodeableConcept0 = CodeableConcept()
+
+            val codingList0 = ArrayList<Coding>()
+            val coding0 = Coding()
+            coding0.system = "system-creation"
+            coding0.code = "system-creation"
+            coding0.display = "System Creation"
+            codingList0.add(coding0)
+            typeCodeableConcept0.coding = codingList0
+            typeCodeableConcept0.text = FormatterClass().formatCurrentDateTime(Date())
+
+            identifierSystem0.value = FormatterClass().formatCurrentDateTime(Date())
+            identifierSystem0.system = "identification"
+            identifierSystem0.type = typeCodeableConcept0
+            identifier.add(identifierSystem0)
+
+
+            /*System Generated Identifier*/
+
+            val identifierSystem = Identifier()
+
+            val typeCodeableConcept = CodeableConcept()
+
+            val codingList = ArrayList<Coding>()
+            val coding = Coding()
+            coding.system = "http://hl7.org/fhir/administrative-identifier"
+            coding.code = Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-", "")
+            coding.display =
+                Identifiers.SYSTEM_GENERATED.name.lowercase().replace("-", " ").uppercase()
+            codingList.add(coding)
+            typeCodeableConcept.coding = codingList
+            typeCodeableConcept.text = Identifiers.SYSTEM_GENERATED.name
+
+            identifierSystem.value = FormatterClass().generateRandomCode()
+            identifierSystem.system = "system-identification"
+            identifierSystem.type = typeCodeableConcept
+            identifier.add(identifierSystem)
+
+
 
             payload.caregivers.forEach {
                 val rName = HumanName()

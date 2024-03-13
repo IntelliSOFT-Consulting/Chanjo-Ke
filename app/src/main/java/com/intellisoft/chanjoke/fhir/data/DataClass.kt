@@ -194,6 +194,7 @@ data class CustomPatient(
     val gender: String,
     val dateOfBirth: String,
     val age: String,
+    val estimate: Boolean,
     val identification: String,
     val identificationNumber: String,
     val telephone: String

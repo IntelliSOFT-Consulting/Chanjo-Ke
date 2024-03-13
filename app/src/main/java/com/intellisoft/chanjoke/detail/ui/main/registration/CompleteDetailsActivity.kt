@@ -214,7 +214,8 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 dateOfBirth = data.dob,
                 identification = data.type.toString(),
                 identificationNumber = data.systemId.toString(),
-                telephone = data.phone
+                telephone = data.phone,
+                estimate =false
             )
             saveTempData("personal", Gson().toJson(payload))
             val careGiver = CareGiver(
