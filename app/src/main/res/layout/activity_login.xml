@@ -7,16 +7,16 @@
     android:background="@drawable/topper"
     tools:context=".shared.Login">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
+            android:layout_margin="60dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_margin="60dp"
             android:gravity="end"
             android:orientation="horizontal">
 
@@ -36,6 +36,8 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -102,6 +104,38 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
+                        <LinearLayout
+                            android:layout_marginTop="15dp"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_border"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:layout_marginStart="5dp"
+                                    android:layout_weight="1"
+                                    android:text="Location:"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"/>
+
+                                <Spinner
+                                    android:id="@+id/spinnerLocation"
+                                    android:tooltipText="Select location"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+
+
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
 
 
                     </LinearLayout>
@@ -150,6 +184,6 @@
         </ScrollView>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -75,6 +75,18 @@ class ReportsFragment : Fragment() {
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
+
+        getStats()
+    }
+
+    private fun getStats() {
+        val rnds = (0..100).random()
+
+        binding.tvScheduledVaccinations.text = "${(0..100).random()}"
+        binding.tvAppointments.text = "${(0..100).random()}"
+        binding.tvMissedVaccinations.text = "${(0..100).random()}"
+        binding.tvVaccinatedClients.text = "${(0..100).random()}"
+        binding.tvMissedVaccines.text = "${(0..100).random()}"
     }
 
     private fun onBackPressed() {
