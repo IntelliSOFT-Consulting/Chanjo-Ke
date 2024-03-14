@@ -111,7 +111,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                     bottomSheet.show(it1,
                         "ModalBottomSheet") }
             }else
-                Toast.makeText(requireContext(), "Please select a vaccine", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Select at least one vaccine", Toast.LENGTH_SHORT).show()
 
         }
 

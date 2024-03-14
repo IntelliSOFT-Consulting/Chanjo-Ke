@@ -82,7 +82,15 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 }
                 tvFirstname.text = patientDetail.name
                 tvGender.text = AppUtils().capitalizeFirstLetter(patientDetail.gender)
-                tvDateOfBirth.text = dob
+                try {
+                    tvDateOfBirth.text =
+                        formatterClass.convertDateFormatWithDesiredFormat(
+                            dob.toString(),
+                            "dd/MM/yyyy"
+                        )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 tvAge.text = "$age old"
                 tvIdNumber.text = patientDetail.systemId
                 tvCname.text = patientDetail.contact_name
@@ -206,7 +214,8 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 dateOfBirth = data.dob,
                 identification = data.type.toString(),
                 identificationNumber = data.systemId.toString(),
-                telephone = data.phone
+                telephone = data.phone,
+                estimate =false
             )
             saveTempData("personal", Gson().toJson(payload))
             val careGiver = CareGiver(

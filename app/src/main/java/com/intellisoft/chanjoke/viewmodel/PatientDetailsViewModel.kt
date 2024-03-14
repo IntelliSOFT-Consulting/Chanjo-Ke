@@ -159,7 +159,7 @@ class PatientDetailsViewModel(
                 it.identifier.forEach { identifier ->
 
                     try {
-                        if (identifier.system.toString() != "system-creation") {
+                        if (identifier.system.toString() == "identification_type") {
                             systemId = identifier.value
                             type = identifier.system
                         }

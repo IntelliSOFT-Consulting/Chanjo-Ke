@@ -96,7 +96,7 @@ class PreviewFragment : Fragment() {
             nextButton.apply {
                 setOnClickListener {
                     formatter.deleteSharedPref("isAbove", requireContext())
-                    isEnabled = false
+//                    isEnabled = false
                     mListener?.onNextPageRequested()
 
                 }
@@ -116,8 +116,12 @@ class PreviewFragment : Fragment() {
                 tvFirstname.text = refinedPersonal.firstname
                 tvLastname.text = refinedPersonal.lastname
                 tvMiddlename.text = refinedPersonal.middlename
+                tvDateOfBirth.text =
+                    formatter.convertDateFormatWithDesiredFormat(
+                        refinedPersonal.dateOfBirth,
+                        "dd/MM/yyyy"
+                    )
                 tvGender.text = refinedPersonal.gender
-                tvDateOfBirth.text = refinedPersonal.dateOfBirth
                 tvAge.text = refinedPersonal.age
                 tvIdNumber.text = refinedPersonal.identificationNumber
             }

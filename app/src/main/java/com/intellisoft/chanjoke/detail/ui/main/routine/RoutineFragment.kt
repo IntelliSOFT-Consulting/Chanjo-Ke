@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -108,7 +109,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     bottomSheet.show(it1,
                         "ModalBottomSheet") }
             }else
-                Toast.makeText(requireContext(), "Please select a vaccine", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Select at least one vaccine", Toast.LENGTH_SHORT).show()
 
 
 
@@ -125,6 +126,8 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private fun getRoutine() {
 
         CoroutineScope(Dispatchers.IO).launch {
+
+            checkCurrentVaccination()
 
             val sharedPreferences: SharedPreferences = requireContext()
                 .getSharedPreferences(getString(R.string.vaccineList),
@@ -274,6 +277,20 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
                 }
             }
+        }
+    }
+
+    private fun checkCurrentVaccination(){
+        CoroutineScope(Dispatchers.IO).launch {
+
+//            val administeredList = patientDetailsViewModel.getVaccineList().toSet()
+//            if (administeredList.isNotEmpty()){
+//                val vaccineList = administeredList.maxByOrNull { it.dateAdministered }!!
+//                Log.e("----->","<-----")
+//                println("administeredList $administeredList")
+//                println("vaccineList $vaccineList")
+//                Log.e("----->","<-----")
+//            }
         }
     }
 
