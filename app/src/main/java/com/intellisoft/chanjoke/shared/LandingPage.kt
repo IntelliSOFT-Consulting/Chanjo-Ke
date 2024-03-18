@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientFragment
 import com.intellisoft.chanjoke.databinding.FragmentLandingPageBinding
@@ -98,7 +99,7 @@ class LandingPage : Fragment() {
     }
 
     private fun onItemClick(layout: LayoutListViewModel.Layout) {
-        Timber.e("***** ${layout.textId}")
+
         when (layout.textId) {
             "Search Client" -> {
                 findNavController().navigate(R.id.patient_list)
@@ -114,7 +115,11 @@ class LandingPage : Fragment() {
                 formatterClass.deleteSharedPref("personal", requireContext())
                 formatterClass.deleteSharedPref("caregiver", requireContext())
                 formatterClass.deleteSharedPref("administrative", requireContext())
-                startActivity(Intent(requireContext(), RegistrationActivity::class.java))
+
+                val intent = Intent(context, MainActivity::class.java)
+                intent.putExtra("functionToCall", "registerFunction")
+                startActivity(intent)
+//                startActivity(Intent(requireContext(), RegistrationActivity::class.java))
             }
 
             "Update Client History" -> {

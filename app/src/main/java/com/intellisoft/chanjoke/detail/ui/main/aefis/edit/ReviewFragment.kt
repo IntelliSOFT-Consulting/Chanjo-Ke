@@ -106,11 +106,13 @@ class ReviewFragment : Fragment() {
                     aefiOutcomeTextView.text = refinedChild.outcome
                     nameOfPersonTextView.text = refinedChild.reporter
                     contactTextView.text = refinedChild.phone
+                    specimenTextView.text = refinedChild.specimen
 
                 }
             }
             if (parentData != null && childData != null) {
                 val data = AEFIData(
+                    specimen = binding.specimenTextView.text.toString(),
                     type = binding.typeOfAEFITextView.text.toString(),
                     brief = binding.briefDetailsTextView.text.toString(),
                     onset = binding.onsetOfEventTextView.text.toString(),

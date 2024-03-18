@@ -103,12 +103,18 @@ class ActionFragment : Fragment() {
 
     private fun validateData(): Boolean {
 
+        val specimen = binding.specimen.text.toString()
         val reaction = binding.reaction.text.toString()
         val actionTaken = binding.actionTaken.text.toString()
         val outcome = binding.outcome.text.toString()
         val reporter = binding.reporter.text.toString()
         val phone = binding.phone.text.toString()
 
+        if (specimen.isEmpty()) {
+            Toast.makeText(requireContext(), "Please enter specimen collected", Toast.LENGTH_SHORT)
+                .show()
+            return false
+        }
         if (reaction.isEmpty()) {
             Toast.makeText(requireContext(), "Please select reaction severity", Toast.LENGTH_SHORT)
                 .show()
@@ -135,6 +141,7 @@ class ActionFragment : Fragment() {
             return false
         }
         val data = Child(
+            specimen = specimen,
             severity = reaction,
             action = actionTaken,
             outcome = outcome,

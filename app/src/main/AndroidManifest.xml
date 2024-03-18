@@ -18,6 +18,11 @@
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
         <activity
+            android:name=".detail.ui.main.aefis.AddAefiActivity"
+            android:exported="false"
+            android:label=""
+            android:theme="@style/Theme.Zanzibar.NoActionBar" />
+        <activity
             android:name=".detail.ui.main.aefis.edit.EditAefiActivity"
             android:exported="false"
             android:label=""

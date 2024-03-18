@@ -246,6 +246,7 @@ data class AEFIData(
     val brief: String,
     val onset: String,
     val history: String,
+    val specimen: String,
     val severity: String,
     val action: String,
     val outcome: String,
@@ -261,6 +262,7 @@ data class Parent(
 )
 
 data class Child(
+    val specimen: String,
     val severity: String,
     val action: String,
     val outcome: String,
