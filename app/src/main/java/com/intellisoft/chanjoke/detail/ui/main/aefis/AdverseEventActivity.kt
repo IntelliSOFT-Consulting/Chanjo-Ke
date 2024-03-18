@@ -31,6 +31,7 @@ class AdverseEventActivity : AppCompatActivity() {
             btnClose.setOnClickListener {
 //                onBackPressed()
                 val data = AEFIData(
+                    specimen = binding.specimenTextView.text.toString(),
                     type = binding.typeOfAEFITextView.text.toString(),
                     brief = binding.briefDetailsTextView.text.toString(),
                     onset = binding.onsetOfEventTextView.text.toString(),
@@ -119,6 +120,12 @@ class AdverseEventActivity : AppCompatActivity() {
                 patientId.toString(),
                 encounterId.toString(),
                 "833-23"
+            )
+            // Specimen
+            specimenTextView.text = extractAefiData(
+                patientId.toString(),
+                encounterId.toString(),
+                "886-1"
             )
             // Past Medical History
             pastMedicalHistoryTextView.text = extractAefiData(

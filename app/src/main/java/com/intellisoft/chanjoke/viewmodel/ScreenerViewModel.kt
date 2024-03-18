@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.viewmodel
 
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -17,6 +18,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import java.util.UUID
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Condition
 import org.hl7.fhir.r4.model.DateTimeType
@@ -144,6 +146,49 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
 
     }
 
+    fun addAeFi(
+        context: Context,
+        patientId: String,
+        encounterId: String,
+        observations: MutableList<Observation>
+    ) {
+        viewModelScope.launch {
+            val age = FormatterClass().getSharedPref(
+                "current_age",
+                getApplication<Application>().applicationContext
+            )
+
+            createAdverseEffects(encounterId, patientId, age.toString())
+
+            val subjectReference = Reference("Patient/$patientId")
+            val resource = Encounter()
+            resource.subject = subjectReference
+            resource.id = encounterId
+            saveResourceToDatabase(resource)
+            observations.forEach {
+                saveResourceToDatabase(it)
+            }
+            isResourcesSaved.value = true
+        }
+
+    }
+    private suspend fun createAdverseEffects(encounterId: String, patientId: String, age: String) {
+
+        val encounterReference = Reference("Encounter/$encounterId")
+        val patientReference = Reference("Patient/$patientId")
+
+        val allergyIntolerance = AllergyIntolerance()
+        allergyIntolerance.id = generateUuid()
+        allergyIntolerance.encounter = encounterReference
+        allergyIntolerance.patient = patientReference
+        allergyIntolerance.noteFirstRep.text = age
+
+        /**
+         * TODO: Add more details for the allergy intolerance
+         */
+        saveResourceToDatabase(allergyIntolerance)
+
+    }
 
     private companion object {
         const val ASTHMA = "161527007"

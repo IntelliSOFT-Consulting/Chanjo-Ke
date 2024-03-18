@@ -123,11 +123,13 @@ class AefisFragment : Fragment() {
                     )
 
                     FormatterClass().saveSharedPref("vaccinationFlow", "addAefi", context)
+                    FormatterClass().deleteSharedPref("updated_aefi_data", context)
 
-                    val intent = Intent(context, MainActivity::class.java)
-                    intent.putExtra("functionToCall", NavigationDetails.ADD_AEFI.name)
-                    intent.putExtra("patientId", patientId)
-                    context.startActivity(intent)
+//                    val intent = Intent(context, MainActivity::class.java)
+//                    intent.putExtra("functionToCall", NavigationDetails.ADD_AEFI.name)
+//                    intent.putExtra("patientId", patientId)
+//                    context.startActivity(intent)
+                    startActivity(Intent(requireContext(), AddAefiActivity::class.java))
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -136,6 +138,16 @@ class AefisFragment : Fragment() {
                     ).show()
                 }
             }
+        }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        try {
+            pullVaccinesWithAefis()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -287,20 +299,22 @@ class AefisFragment : Fragment() {
 
     private fun onBackPressed() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-
-            NavHostFragment.findNavController(this@AefisFragment)
-                .navigateUp()
+            navigateBackToProfile()
         }
+    }
+
+    private fun navigateBackToProfile() {
+        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+        val intent = Intent(context, PatientDetailActivity::class.java)
+        intent.putExtra("patientId", patientId)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        requireContext().startActivity(intent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                val patientId = FormatterClass().getSharedPref("patientId", requireContext())
-                val intent = Intent(context, PatientDetailActivity::class.java)
-                intent.putExtra("patientId", patientId)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                requireContext().startActivity(intent)
+                navigateBackToProfile()
 
                 true
             }

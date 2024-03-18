@@ -76,6 +76,8 @@
     <string name="edit_client_detail">Edit Client Detail</string>
     <string name="contraindications">Contraindications</string>
     <string name="next_vaccination_date">Next Vaccination Date</string>
+    <string name="specimen_collected">Speciment Collected</string>
+    <string name="preview">Preview</string>
 
 
 </resources>
