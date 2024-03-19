@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.widget.Button
+import android.widget.ImageButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
@@ -22,7 +23,9 @@ class NoPatientDialog(context: Context) : Dialog(context), View.OnClickListener 
 
         // Initialize and set up any buttons or other views in your custom layout
         val btnRegisterClient: Button = findViewById(R.id.btnRegisterClient)
+        val btnCancel: ImageButton = findViewById(R.id.btnCancel)
         btnRegisterClient.setOnClickListener(this)
+        btnCancel.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
@@ -33,6 +36,16 @@ class NoPatientDialog(context: Context) : Dialog(context), View.OnClickListener 
 
                 val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("functionToCall", "registerFunction")
+
+                context.startActivity(intent)
+
+            }
+            R.id.btnCancel -> {
+                // Handle the button click event
+                dismiss()
+
+                val intent = Intent(context, MainActivity::class.java)
+                intent.putExtra("functionToCall", "listClients")
                 context.startActivity(intent)
 
             }

@@ -154,15 +154,45 @@ class AdministerVaccineFragment : Fragment(R.layout.administer_vaccine) {
     }
 
     private fun addQuestionnaireFragment() {
-        childFragmentManager.commit {
-            replace(
-                R.id.administerVaccine,
-                QuestionnaireFragment.builder()
-                    .setQuestionnaire(viewModel.questionnaire)
-                    .showReviewPageBeforeSubmit(true) //Show preview page
-                    .build(),
-                QUESTIONNAIRE_FRAGMENT_TAG,
-            )
+        val title = FormatterClass().getSharedPref("title", requireContext())
+        if (title != null) {
+            if (title == "Update HIV Status") {
+                FormatterClass().saveSharedPref("vaccinationFlow", "hiv_status", requireContext())
+                childFragmentManager.commit {
+                    replace(
+                        R.id.administerVaccine,
+                        QuestionnaireFragment.builder()
+                            .setQuestionnaire(viewModel.questionnaire)
+                            .build(),
+                        QUESTIONNAIRE_FRAGMENT_TAG,
+                    )
+                }
+            } else {
+                childFragmentManager.commit {
+                    replace(
+                        R.id.administerVaccine,
+                        QuestionnaireFragment.builder()
+                            .setQuestionnaire(viewModel.questionnaire)
+                            .showReviewPageBeforeSubmit(true) //Show preview page
+                            .build(),
+                        QUESTIONNAIRE_FRAGMENT_TAG,
+                    )
+                }
+            }
+
+        } else {
+            childFragmentManager.commit {
+                replace(
+                    R.id.administerVaccine,
+                    QuestionnaireFragment.builder()
+                        .setQuestionnaire(viewModel.questionnaire)
+
+
+                        .showReviewPageBeforeSubmit(true) //Show preview page
+                        .build(),
+                    QUESTIONNAIRE_FRAGMENT_TAG,
+                )
+            }
         }
     }
 

@@ -1,0 +1,130 @@
+{
+  "title": "Screener",
+  "status": "active",
+  "version": "0.0.1",
+  "resourceType": "Questionnaire",
+  "subjectType": [
+    "Encounter"
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+      "valueExpression": {
+        "language": "application/x-fhir-query",
+        "expression": "Encounter",
+        "name": "encounter"
+      }
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-entryMode",
+      "valueCode": "prior-edit"
+    }
+  ],
+  "item": [
+    {
+      "text": "",
+      "type": "group",
+      "linkId": "1.0.0",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+          "valueExpression": {
+            "language": "application/x-fhir-query",
+            "expression": "Observation",
+            "name": "weight"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "hiv-group",
+          "type": "group",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemExtractionContext",
+              "valueExpression": {
+                "language": "application/x-fhir-query",
+                "expression": "Observation",
+                "name": "riskFactors"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "hiv-status-group",
+              "type": "group",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept",
+              "item": [
+                {
+                  "text": "HIV Status",
+                  "linkId": "hiv-status",
+                  "type": "choice",
+                  "required": true,
+                  "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.valueCodeableConcept.coding",
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "coding": [
+                          {
+                            "system": "http://hl7.org/fhir/questionnaire-item-control",
+                            "code": "drop-down",
+                            "display": "Drop down"
+                          }
+                        ],
+                        "text": "Drop down"
+                      }
+                    }
+                  ],
+                  "answerOption": [
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "55277-81",
+                        "display": "Positive"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "55277-82",
+                        "display": "Negative"
+                      }
+                    },
+                    {
+                      "valueCoding": {
+                        "system": "http://loinc.org",
+                        "code": "55277-83",
+                        "display": "Unknown"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "status-hiv",
+              "type": "choice",
+              "definition": "http://hl7.org/fhir/StructureDefinition/Observation#Observation.code",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-hidden",
+                  "valueBoolean": true
+                }
+              ],
+              "initial": [
+                {
+                  "valueCoding": {
+                    "code": "881-1",
+                    "display": "HIV Status",
+                    "system": "http://loinc.org"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
