@@ -57,6 +57,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
             binding.tvTitle.text = getString(R.string.edit_client_detail)
             formatter.saveSharedPref("isUpdate", "true", this@RegistrationActivity)
         }
+        formatter.deleteSharedPref("caregiver",this)
         progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Please wait")
         progressDialog.setMessage("Processing..")

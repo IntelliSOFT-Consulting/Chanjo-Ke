@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -128,13 +130,29 @@ class PreviewFragment : Fragment() {
 
             if (caregiver != null) {
 
-//                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
                 try {
                     val type = object : TypeToken<List<CareGiver>>() {}.type
                     val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
-                    tvCname.text = caregiverList[0].name
-                    tvCtype.text = caregiverList[0].type
-                    tvCphone.text = caregiverList[0].phone
+
+                    lnCaregiver.removeAllViews()
+                    // Assuming this code is inside a fragment or activity method
+                    caregiverList.forEach { caregiver ->
+                        val inflater = LayoutInflater.from(requireContext())
+                        val itemView = inflater.inflate(R.layout.caregiver, lnCaregiver, false) as LinearLayout
+
+                        val tvCname = itemView.findViewById<TextView>(R.id.tv_cname)
+                        val tvCtype = itemView.findViewById<TextView>(R.id.tv_ctype)
+                        val tvCphone = itemView.findViewById<TextView>(R.id.tv_cphone)
+
+                        // Set the text for each TextView with caregiver information
+                        tvCname.text = caregiver.name
+                        tvCtype.text = caregiver.type
+                        tvCphone.text = caregiver.phone
+
+                        // Add the itemView (LinearLayout) to lnCaregiver (LinearLayout)
+                        lnCaregiver.addView(itemView)
+                    }
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
