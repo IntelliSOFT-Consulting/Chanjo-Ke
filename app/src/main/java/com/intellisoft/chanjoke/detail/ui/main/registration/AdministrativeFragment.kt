@@ -415,16 +415,16 @@ class AdministrativeFragment : Fragment() {
             binding.ward.requestFocus()
             return false
         }
-        if (tradingString.isEmpty()) {
-            binding.telTrading.error = "Enter trading center"
-            binding.trading.requestFocus()
-            return false
-        }
-        if (estateString.isEmpty()) {
-            binding.telEstate.error = "Enter estate"
-            binding.estate.requestFocus()
-            return false
-        }
+//        if (tradingString.isEmpty()) {
+//            binding.telTrading.error = "Enter trading center"
+//            binding.trading.requestFocus()
+//            return false
+//        }
+//        if (estateString.isEmpty()) {
+//            binding.telEstate.error = "Enter estate"
+//            binding.estate.requestFocus()
+//            return false
+//        }
         val payload = Administrative(
             county = countyString,
             subCounty = subCountyString,

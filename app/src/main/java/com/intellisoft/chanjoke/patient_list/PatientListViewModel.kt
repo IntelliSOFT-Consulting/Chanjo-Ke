@@ -341,7 +341,7 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
         identifier.forEach { identifier ->
 
             try {
-                if (identifier.system.toString() != "system-creation") {
+                if (identifier.system.toString() != "system_creation") {
                     number = identifier.value
                     document = identifier.system
                 }
