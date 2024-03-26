@@ -86,6 +86,9 @@ class MainActivity : AppCompatActivity() {
             "registerFunction" -> {
                 registerFunction()
             }
+            "listClients" -> {
+                navController.navigate(R.id.patient_list)
+            }
 
             "updateFunction" -> {
                 val patientId = intent.getStringExtra("patientId")

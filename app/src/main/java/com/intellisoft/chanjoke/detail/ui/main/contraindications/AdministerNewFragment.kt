@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.detail.ui.main.contraindications
 
 import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentAdministerNewBinding
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbBatchNumbers
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -154,9 +156,14 @@ class AdministerNewFragment : Fragment() {
 
     private fun onBackPressed() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-
-            NavHostFragment.findNavController(this@AdministerNewFragment)
-                .navigateUp()
+//
+//            NavHostFragment.findNavController(this@AdministerNewFragment)
+//                .navigateUp()
+            val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+            val intent = Intent(context, PatientDetailActivity::class.java)
+            intent.putExtra("patientId", patientId)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            requireContext().startActivity(intent)
         }
     }
 

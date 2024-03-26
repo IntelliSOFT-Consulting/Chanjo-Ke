@@ -387,7 +387,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val codingList1x = ArrayList<Coding>()
             val coding1x = Coding()
             coding1x.system = "estimated-age"
-            coding1x.code = "estimated-age"
+            coding1x.code = "estimated_age"
             coding1x.display = "Estimated Age"
             codingList1x.add(coding1x)
             typeCodeableConcept1x.coding = codingList1x
@@ -407,7 +407,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val codingList1 = ArrayList<Coding>()
             val coding1 = Coding()
             coding1.system = payload.personal.identification
-            coding1.code = payload.personal.identification
+            coding1.code = "identification_type"
             coding1.display = payload.personal.identification
             codingList1.add(coding1)
             typeCodeableConcept1.coding = codingList1
@@ -427,14 +427,14 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val codingList0 = ArrayList<Coding>()
             val coding0 = Coding()
             coding0.system = "system-creation"
-            coding0.code = "system-creation"
+            coding0.code = "system_creation"
             coding0.display = "System Creation"
             codingList0.add(coding0)
             typeCodeableConcept0.coding = codingList0
             typeCodeableConcept0.text = FormatterClass().formatCurrentDateTime(Date())
 
             identifierSystem0.value = FormatterClass().formatCurrentDateTime(Date())
-            identifierSystem0.system = "identification"
+            identifierSystem0.system = "system-creation"
             identifierSystem0.type = typeCodeableConcept0
             identifier.add(identifierSystem0)
 
@@ -456,7 +456,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             typeCodeableConcept.text = Identifiers.SYSTEM_GENERATED.name
 
             identifierSystem.value = FormatterClass().generateRandomCode()
-            identifierSystem.system = "system-identification"
+            identifierSystem.system = "system-generated"
             identifierSystem.type = typeCodeableConcept
             identifier.add(identifierSystem)
 

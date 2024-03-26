@@ -151,12 +151,12 @@ class CompleteDetailsActivity : AppCompatActivity() {
         clientDetails.setOnClickListener {
             formatterClass.saveSharedPref(
                 "questionnaireJson",
-                "update_history.json",
+                "hiv.json",
                 this
             )
             FormatterClass().saveSharedPref(
                 "title",
-                "Update Client Details", this
+                "Update HIV Status", this
             )
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
@@ -165,10 +165,6 @@ class CompleteDetailsActivity : AppCompatActivity() {
             customDialog.dismiss() // Close the dialog
         }
 
-        // Example: Set a dismiss listener for additional actions when the dialog is dismissed
-        customDialog.setOnDismissListener {
-            // Additional actions when the dialog is dismissed
-        }
         cancelButton.setOnClickListener {
             // Additional actions when the dialog is dismissed
             customDialog.dismiss()

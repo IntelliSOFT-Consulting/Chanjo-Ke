@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentCaregiverBinding
@@ -252,6 +253,39 @@ class CaregiverFragment : Fragment() {
                 binding.apply {
                     tvTitleName.text = "Next of Kin Details"
                 }
+            }
+        }
+        try {
+
+            loadCareGivers()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun loadCareGivers() {
+        val caregiver = formatter.getSharedPref("caregiver", requireContext())
+        if (caregiver != null) {
+            try {
+                val type = object : TypeToken<List<CareGiver>>() {}.type
+                val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
+                caregiverList.forEach { data ->
+
+                    val careGiver = CareGiver(
+                        phone = data.phone,
+                        name = data.name,
+                        type = data.type
+                    )
+                    careGivers.add(careGiver)
+                    adapter.addItem(careGiver)
+
+                }
+                if (caregiverList.isNotEmpty()) {
+                    binding.nextButton.isEnabled = true
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

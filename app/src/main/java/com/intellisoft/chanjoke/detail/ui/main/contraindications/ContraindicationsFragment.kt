@@ -60,10 +60,10 @@ class ContraindicationsFragment : Fragment() {
     private val formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private val selectedItemList = ArrayList<String>()
-    private var selectedVaccineName:String? = null
+    private var selectedVaccineName: String? = null
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
-    private var administrationFlowTitle :String? = null
-    private var status :String = ""
+    private var administrationFlowTitle: String? = null
+    private var status: String = ""
     private var spinnerReasons = ""
     val resultList = listOf<String>(
         "Product out of stock",
@@ -92,8 +92,9 @@ class ContraindicationsFragment : Fragment() {
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
-
-        administrationFlowTitle = formatterClass.getSharedPref("administrationFlowTitle", requireContext())
+        onBackPressed()
+        administrationFlowTitle =
+            formatterClass.getSharedPref("administrationFlowTitle", requireContext())
 
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
@@ -102,8 +103,13 @@ class ContraindicationsFragment : Fragment() {
 
         updateUI()
 
-        patientDetailsViewModel = ViewModelProvider(this,
-            PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
+        patientDetailsViewModel = ViewModelProvider(
+            this,
+            PatientDetailsViewModelFactory(
+                requireContext().applicationContext as Application,
+                fhirEngine,
+                patientId
+            )
         )[PatientDetailsViewModel::class.java]
 
         layoutManager = LinearLayoutManager(
@@ -127,55 +133,74 @@ class ContraindicationsFragment : Fragment() {
              * save the new list to the shared pref
              */
 
-            if (selectedVaccineName != null){
+            if (selectedVaccineName != null) {
                 val allDropdownList = selectedVaccineName!!.split(",").toList()
                 val vaccineList = allDropdownList.subtract(selectedItemList.toSet())
 
-                if (selectedItemList.isEmpty()){
-                    Toast.makeText(requireContext(), "There's no vaccine available!", Toast.LENGTH_SHORT).show()
-                }else{
+                if (selectedItemList.isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "There's no vaccine available!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
                     formatterClass.saveSharedPref(
                         "selectedUnContraindicatedVaccine",
                         vaccineList.joinToString(","),
-                        requireContext())
+                        requireContext()
+                    )
                     if (administrationFlowTitle != null)
-                        formatterClass.saveSharedPref("vaccinationFlow",
-                            administrationFlowTitle!!, requireContext())
+                        formatterClass.saveSharedPref(
+                            "vaccinationFlow",
+                            administrationFlowTitle!!, requireContext()
+                        )
 
-                    val datePicker =  binding.tvDatePicker.text.toString()
-                    val description =  binding.etDescription.text.toString()
-                    val otherReasons =  binding.etOtherReasons.text.toString()
+                    val datePicker = binding.tvDatePicker.text.toString()
+                    val description = binding.etDescription.text.toString()
+                    val otherReasons = binding.etOtherReasons.text.toString()
 
-                    if (!TextUtils.isEmpty(datePicker) && datePicker != "Next Vaccination Date *"){
+                    if (!TextUtils.isEmpty(datePicker) && datePicker != "Next Vaccination Date *") {
 
                         val dobFormat = formatterClass.convertDateFormat(datePicker)
                         if (dobFormat != null) {
-                            val dobDate = formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")
+                            val dobDate =
+                                formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")
                             if (dobDate != null) {
 
                                 var toastMessage = ""
-                                var  forecastReason = ""
-                                if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
+                                var forecastReason = ""
+                                if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
                                     toastMessage = "Contraindication has been saved successfully."
-                                    if (TextUtils.isEmpty(description)) binding.etDescription.error = "Please enter the contraindication(s)" else forecastReason = description
+                                    if (TextUtils.isEmpty(description)) binding.etDescription.error =
+                                        "Please enter the contraindication(s)" else forecastReason =
+                                        description
                                 }
                                 if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
                                     if (spinnerReasons == "") {
-                                        Toast.makeText(requireContext(), "Please select a reason", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Please select a reason",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     } else {
-                                        if (resultList.last() == spinnerReasons){
-                                            if (!TextUtils.isEmpty(otherReasons)){
+                                        if (resultList.last() == spinnerReasons) {
+                                            if (!TextUtils.isEmpty(otherReasons)) {
                                                 forecastReason = otherReasons
-                                            }else{
-                                                binding.etOtherReasons.error = "Field cannot be empty.."
+                                            } else {
+                                                binding.etOtherReasons.error =
+                                                    "Field cannot be empty.."
                                             }
-                                        }else
+                                        } else
                                             forecastReason = spinnerReasons
                                     }
                                 }
-                                if (forecastReason == ""){
-                                    Toast.makeText(requireContext(), "Please select a reason!", Toast.LENGTH_SHORT).show()
-                                }else{
+                                if (forecastReason == "") {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Please select a reason!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
 
                                     administerVaccineViewModel.createManualContraindication(
                                         selectedItemList.toList(),
@@ -183,24 +208,30 @@ class ContraindicationsFragment : Fragment() {
                                         dobDate,
                                         status,
                                         null,
-                                        forecastReason)
+                                        forecastReason
+                                    )
 
 
-                                    if (vaccineList.isNotEmpty() && administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
-                                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                                    if (vaccineList.isNotEmpty() && administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            toastMessage,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                         findNavController().navigate(R.id.administerNewFragment)
-                                    }else{
-                                        val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
+                                    } else {
+                                        val blurBackgroundDialog =
+                                            BlurBackgroundDialog(this, requireContext())
                                         blurBackgroundDialog.show()
                                     }
                                 }
 
 
-
                             }
 
                         }
-                    }else Toast.makeText(requireContext(), "Select a date", Toast.LENGTH_SHORT).show()
+                    } else Toast.makeText(requireContext(), "Select a date", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
 
@@ -210,24 +241,31 @@ class ContraindicationsFragment : Fragment() {
 
 
         }
-        binding.btnCancel.setOnClickListener { onBackPressed() }
+        binding.btnCancel.setOnClickListener { cancelWorkflow() }
 
     }
 
-
-
-    private fun onBackPressed() {
-        val intent = Intent(requireContext(), PatientDetailActivity::class.java)
+    private fun cancelWorkflow() {
+        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+        val intent = Intent(context, PatientDetailActivity::class.java)
         intent.putExtra("patientId", patientId)
-        startActivity(intent)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        requireContext().startActivity(intent)
     }
+
+  private  fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
+            cancelWorkflow()
+        }
+    }
+
 
     private fun updateUI() {
 
-        formatterClass.deleteSharedPref("administrationFlowTitle",requireContext())
+        formatterClass.deleteSharedPref("administrationFlowTitle", requireContext())
 
         var titleString = ""
-        if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
+        if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
             binding.etDescription.setHint("Enter Contraindications")
 
             binding.etDescription.visibility = View.VISIBLE
@@ -237,7 +275,7 @@ class ContraindicationsFragment : Fragment() {
             titleString = "Contraindications"
             status = "Contraindicated"
         }
-        if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name){
+        if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
             binding.etDescription.visibility = View.GONE
             binding.linearSpinner.visibility = View.VISIBLE
             binding.tvInstructions.setText("Vaccines Not Administered")
@@ -274,7 +312,8 @@ class ContraindicationsFragment : Fragment() {
             month,
             day
         )
-        datePickerDialog.datePicker.minDate = System.currentTimeMillis() // Set the limit for the last date
+        datePickerDialog.datePicker.minDate =
+            System.currentTimeMillis() // Set the limit for the last date
 
         // Show the DatePickerDialog
         datePickerDialog.show()
@@ -284,7 +323,8 @@ class ContraindicationsFragment : Fragment() {
     private fun createReasonsSpinner() {
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -293,22 +333,28 @@ class ContraindicationsFragment : Fragment() {
         binding.spinnerReasons.adapter = adapter
 
         // Set a listener to handle the item selection
-        binding.spinnerReasons.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
-                // Get the selected item
-                val selectedItem = parentView.getItemAtPosition(position).toString()
-                if (selectedItem == resultList.last()){
-                    binding.etOtherReasons.visibility = View.VISIBLE
-                }else{
-                    binding.etOtherReasons.visibility = View.GONE
+        binding.spinnerReasons.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    // Get the selected item
+                    val selectedItem = parentView.getItemAtPosition(position).toString()
+                    if (selectedItem == resultList.last()) {
+                        binding.etOtherReasons.visibility = View.VISIBLE
+                    } else {
+                        binding.etOtherReasons.visibility = View.GONE
+                    }
+                    spinnerReasons = selectedItem
                 }
-                spinnerReasons = selectedItem
-            }
 
-            override fun onNothingSelected(parentView: AdapterView<*>) {
-                // Do nothing here
+                override fun onNothingSelected(parentView: AdapterView<*>) {
+                    // Do nothing here
+                }
             }
-        }
     }
 
     private fun createSpinner() {
@@ -316,11 +362,12 @@ class ContraindicationsFragment : Fragment() {
         formatterClass.deleteSharedPref("selectedUnContraindicatedVaccine", requireContext())
 
         selectedVaccineName = formatterClass.getSharedPref("selectedVaccineName", requireContext())
-        if (selectedVaccineName != null){
+        if (selectedVaccineName != null) {
             val resultList = selectedVaccineName!!.split(",").toList()
 
             // Create an ArrayAdapter using the string array and a default spinner layout
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resultList)
 
             // Specify the layout to use when the list of choices appears
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -330,7 +377,12 @@ class ContraindicationsFragment : Fragment() {
 
             // Set a listener to handle the item selection
             binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     // Get the selected item
                     val selectedItem = parentView.getItemAtPosition(position).toString()
 
@@ -353,7 +405,7 @@ class ContraindicationsFragment : Fragment() {
 
         selectedItemList.remove("")
 
-        val vaccineAdapter = ContraindicationsAdapter(selectedItemList,requireContext())
+        val vaccineAdapter = ContraindicationsAdapter(selectedItemList, requireContext())
         binding.recyclerView.adapter = vaccineAdapter
 
     }

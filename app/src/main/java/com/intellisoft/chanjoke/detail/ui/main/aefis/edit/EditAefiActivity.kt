@@ -106,7 +106,7 @@ class EditAefiActivity : AppCompatActivity(), OnButtonClickListener {
 
         } else {
             val data = formatter.getSharedPref("updated_aefi_data", this@EditAefiActivity)
-            Timber.e("End results *** $data")
+
             val patientId = FormatterClass().getSharedPref("patientId", this@EditAefiActivity)
             val encounterId =
                 FormatterClass().getSharedPref("encounter_logical", this@EditAefiActivity)
@@ -121,8 +121,7 @@ class EditAefiActivity : AppCompatActivity(), OnButtonClickListener {
                         encounterId.toString()
                     )
                 allObservations.forEach {
-                    Timber.e("End results *** Observation ${it.code.codingFirstRep.code} Value ${it.value}")
-                    when (it.code.codingFirstRep.code) {
+                     when (it.code.codingFirstRep.code) {
                         "833-23" -> {
                             updateDateObservation(
                                 it,
