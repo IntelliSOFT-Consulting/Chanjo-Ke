@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
@@ -21,7 +20,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
-import java.util.regex.Pattern
 import kotlin.math.abs
 import kotlin.math.round
 import kotlin.random.Random
@@ -86,6 +84,12 @@ class FormatterClass {
     fun convertDateToLocalDate(date: Date): LocalDate {
         val instant = date.toInstant()
         return instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+    }
+    fun convertLocalDateToDate(date: LocalDate?): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Define your desired date format
+        return if (date != null){
+            date.format(formatter)
+        } else ""
     }
 
     fun removeNonNumeric(input: String): String {

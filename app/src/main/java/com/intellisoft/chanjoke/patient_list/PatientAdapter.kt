@@ -47,6 +47,7 @@ class PatientAdapter(
 
             val pos = adapterPosition
             val id = dbPatientList[pos].resourceId
+            val dob = dbPatientList[pos].dob
 
             FormatterClass().saveSharedPref("patientId", id, context)
             val selectedVaccinationVenue =
@@ -55,6 +56,13 @@ class PatientAdapter(
                 FormatterClass().getSharedPref("isSelectedVaccinationVenue", context)
             val readyToUpdate =
                 FormatterClass().getSharedPref("ready_to_update", context)
+
+            val birthDateElement = FormatterClass().convertLocalDateToDate(dob)
+
+            FormatterClass().getFormattedAge(
+                birthDateElement,
+                context.resources,
+                context)
 
             if (readyToUpdate != null) {
                 createDialog()

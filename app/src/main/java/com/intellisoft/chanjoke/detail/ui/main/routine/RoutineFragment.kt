@@ -83,6 +83,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
         )[PatientDetailsViewModel::class.java]
 
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
+
         if (patientYears != null){
             val patientYearsInt = patientYears!!.toIntOrNull()
             if (patientYearsInt != null){
@@ -241,11 +242,11 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
                         val counterInt = counter.toIntOrNull()
 //                        if (counterInt != null && counterInt > 0){
-                            FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
-                            val intent = Intent(context, MainActivity::class.java)
-                            intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
-                            intent.putExtra("patientId", patientId)
-                            startActivity(intent)
+                        FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
+                        intent.putExtra("patientId", patientId)
+                        startActivity(intent)
 //                        }else{
 //                            Toast.makeText(requireContext(), "The schedule does not have any AEFI(s)", Toast.LENGTH_SHORT).show()
 //                        }
