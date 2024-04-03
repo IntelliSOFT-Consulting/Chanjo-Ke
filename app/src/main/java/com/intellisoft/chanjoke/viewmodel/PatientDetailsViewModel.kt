@@ -22,6 +22,7 @@ import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
+import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.Contraindication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
@@ -101,6 +102,7 @@ class PatientDetailsViewModel(
         var trading = ""
         var estate = ""
         var logicalId = ""
+        val kins = mutableListOf<CareGiver>()
         searchResult.first().let {
             logicalId = it.logicalId
             name = if (it.hasName()) {
@@ -128,6 +130,13 @@ class PatientDetailsViewModel(
             }
 
             if (it.hasContact()) {
+                it.contact.forEach {
+                    val name = it.name.nameAsSingleString
+                    val phone = it.telecomFirstRep.value
+                    val type = it.relationshipFirstRep.text
+                    kins.add(CareGiver(phone = phone, name = name, type = type))
+                }
+
                 if (it.contactFirstRep.hasName()) contact_name =
                     if (it.hasContact()) {
                         if (it.contactFirstRep.hasName()) {
@@ -179,7 +188,6 @@ class PatientDetailsViewModel(
                 }
             }
 
-
             if (it.hasAddress()) {
                 if (it.addressFirstRep.hasCity()) county = it.addressFirstRep.city
                 if (it.addressFirstRep.hasDistrict()) subCounty = it.addressFirstRep.district
@@ -206,6 +214,7 @@ class PatientDetailsViewModel(
             getApplication<Application>().applicationContext
         )
 
+
         return PatientData(
             logicalId = logicalId,
             name,
@@ -221,7 +230,8 @@ class PatientDetailsViewModel(
             subCounty = subCounty,
             ward = ward,
             trading = trading,
-            estate = estate
+            estate = estate,
+            kins = kins
         )
     }
 
@@ -241,8 +251,9 @@ class PatientDetailsViewModel(
         val ward: String?,
         val trading: String?,
         val estate: String?,
+        val kins: List<CareGiver>?
 
-        ) {
+    ) {
         override fun toString(): String = name
     }
 

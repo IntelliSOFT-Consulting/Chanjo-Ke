@@ -254,6 +254,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="2">
 
                 <TextView
@@ -273,6 +274,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/_10dp"
                 android:background="@color/darker_gray" />
 
@@ -280,6 +282,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="2">
 
                 <TextView
@@ -299,6 +302,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/_10dp"
                 android:background="@color/darker_gray" />
 
@@ -306,6 +310,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="2">
 
                 <TextView
@@ -325,9 +330,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/_10dp"
                 android:background="@color/darker_gray" />
-
+            <LinearLayout
+                android:id="@+id/ln_caregiver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
             <TextView
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="match_parent"

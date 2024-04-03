@@ -57,7 +57,7 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
             binding.tvTitle.text = getString(R.string.edit_client_detail)
             formatter.saveSharedPref("isUpdate", "true", this@RegistrationActivity)
         }
-        formatter.deleteSharedPref("caregiver",this)
+//        formatter.deleteSharedPref("caregiver",this)
         progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Please wait")
         progressDialog.setMessage("Processing..")
@@ -148,13 +148,8 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
 
                 val fhirPractitionerId = formatter.getSharedPref("fhirPractitionerId", this)
 //                if (fhirPractitionerId != null) {
-
-                if (noSimilarDocumentNumbers(
-                        refinedPersonal.identification,
-                        refinedPersonal.identificationNumber
-                    )
-                ) {
-
+                val isUpdate = formatter.getSharedPref("isUpdate", this@RegistrationActivity)
+                if (isUpdate != null) {
                     progressDialog.show()
                     viewModel.saveCustomPatient(
                         this,
@@ -163,17 +158,31 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
                         isClientUpdate
                     )
                 } else {
-                    Toast.makeText(
-                        this,
-                        "Client Identification Document Number already exists",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                    if (noSimilarDocumentNumbers(
+                            refinedPersonal.identification,
+                            refinedPersonal.identificationNumber
+                        )
+                    ) {
+
+                        progressDialog.show()
+                        viewModel.saveCustomPatient(
+                            this,
+                            completePatient,
+                            fhirPractitionerId,
+                            isClientUpdate
+                        )
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Client Identification Document Number already exists",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
 //                } else {
 //                    Toast.makeText(this, "Please contact administrator", Toast.LENGTH_SHORT).show()
 //                }
-
+                }
             } else {
                 Toast.makeText(this, "Please enter all details", Toast.LENGTH_SHORT).show()
             }
