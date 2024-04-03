@@ -105,7 +105,14 @@ class AdministerNewFragment : Fragment() {
         binding.btnAdministerVaccine.setOnClickListener {
 
             val currentWeight = binding.etCurrentWeight.text
-            if (resultList.isNotEmpty() && selectedItem != weightList.first() && !TextUtils.isEmpty(currentWeight)){
+            if (resultList.isNotEmpty()){
+
+                if (!TextUtils.isEmpty(currentWeight)){
+                    if (selectedItem == weightList.first()){
+                        Toast.makeText(requireContext(), "Please select g/kg to proceed", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
                 administerVaccineViewModel.createManualImmunizationResource(
                     resultList,
                     formatterClass.generateUuid(),
@@ -113,10 +120,9 @@ class AdministerNewFragment : Fragment() {
                     requireContext())
                 val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                 blurBackgroundDialog.show()
+
             }else{
-                if(resultList.isEmpty()) Toast.makeText(requireContext(), "Please select a vaccine to proceed", Toast.LENGTH_SHORT).show()
-                if(selectedItem == weightList.first()) Toast.makeText(requireContext(), "Please select g/kg to proceed", Toast.LENGTH_SHORT).show()
-                if(TextUtils.isEmpty(currentWeight)) Toast.makeText(requireContext(), "Kindly add the client's weight", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please select a vaccine to proceed", Toast.LENGTH_SHORT).show()
             }
 
         }
