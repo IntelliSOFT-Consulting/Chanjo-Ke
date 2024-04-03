@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
@@ -87,7 +88,15 @@ class PersonalFragment : Fragment() {
 
         updateMandatoryFields()
 
-
+        binding.telephone.apply {
+            setOnFocusChangeListener { _, hasFocus ->
+                hint = if (hasFocus) {
+                    "07xxxxxxxx"
+                } else {
+                    null
+                }
+            }
+        }
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
         if (isUpdate != null) {
             displayInitialData()
@@ -425,7 +434,7 @@ class PersonalFragment : Fragment() {
         val age = binding.calculatedAge.text.toString()
         val identificationType = binding.identificationType.text.toString()
         val identificationNumberString = binding.identificationNumber.text.toString()
-        val telephone = binding.telephone.text.toString()
+        val tel = binding.telephone.text.toString()
 
         if (firstName.isEmpty()) {
             binding.apply {
@@ -528,6 +537,16 @@ class PersonalFragment : Fragment() {
             estimate = false
         }
 
+        if (binding.telTelephone.isVisible) {
+            if (tel.length != 10) {
+                binding.apply {
+                    telTelephone.error = "Enter Valid phone number"
+                    telephone.requestFocus()
+                    return
+                }
+            }
+        }
+
         val payload = CustomPatient(
             firstname = firstName,
             middlename = middleName,
@@ -537,7 +556,7 @@ class PersonalFragment : Fragment() {
             dateOfBirth = dateOfBirthString,
             identification = identificationType,
             identificationNumber = identificationNumberString,
-            telephone = telephone,
+            telephone = tel,
             estimate = estimate,
 
             )

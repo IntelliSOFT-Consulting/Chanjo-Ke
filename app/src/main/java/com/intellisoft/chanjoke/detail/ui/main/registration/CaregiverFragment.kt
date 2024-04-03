@@ -86,6 +86,15 @@ class CaregiverFragment : Fragment() {
             recyclerView.adapter = adapter
         }
 
+        binding.phone.apply {
+            setOnFocusChangeListener { _, hasFocus ->
+                hint = if (hasFocus) {
+                    "07xxxxxxxx"
+                } else {
+                    null
+                }
+            }
+        }
         val isAbove = formatter.getSharedPref("isAbove", requireContext())
         if (isAbove != null) {
             if (isAbove == "true") {
@@ -305,6 +314,10 @@ class CaregiverFragment : Fragment() {
         }
         if (kinPhone.isEmpty()) {
             Toast.makeText(requireContext(), "Please enter phone", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (kinPhone.length != 10) {
+            Toast.makeText(requireContext(), "Please valid enter phone", Toast.LENGTH_SHORT).show()
             return false
         }
 //        val payload = CareGiver(kinType, kinName, kinPhone)
