@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,14 +85,8 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         )[PatientDetailsViewModel::class.java]
 
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
-        if (patientYears != null){
-            val patientYearsInt = patientYears!!.toIntOrNull()
-            if (patientYearsInt != null){
-                if (patientYearsInt > 12){
-                    getNonRoutine()
-                }
-            }
-        }
+        checkAge()
+
 
 
         binding.tvAdministerVaccine.setOnClickListener {
@@ -116,6 +111,22 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         }
 
         return binding.root
+    }
+
+    private fun checkAge() {
+        if (patientYears != null){
+            val patientYearsInt = patientYears!!.toIntOrNull()
+            if (patientYearsInt != null){
+                if (patientYearsInt > 12){
+                    getNonRoutine()
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkAge()
     }
 
     private fun getNonRoutine() {

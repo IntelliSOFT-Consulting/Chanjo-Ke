@@ -149,6 +149,19 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
              * Utilized patient's id for navigation
              * */
 
+            try {
+                val birthDateElement = FormatterClass().formatCurrentDateTime(patient.birthDate)
+
+                FormatterClass().getFormattedAge(
+                    birthDateElement,
+                    context.resources,
+                    context)
+            }catch (e:Exception){
+                println(e)
+            }
+
+
+
             FormatterClass().saveSharedPref("patientId", patientId, context)
             FormatterClass().saveSharedPref("isRegistration", "true", context)
 
