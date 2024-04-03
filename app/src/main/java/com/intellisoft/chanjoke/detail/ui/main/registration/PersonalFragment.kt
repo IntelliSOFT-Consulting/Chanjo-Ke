@@ -314,8 +314,10 @@ class PersonalFragment : Fragment() {
                             println("Invalid name format")
                         }
                     }
+
+                    Timber.e("Populated Gender ***** ${data.gender}")
                     val gender = data.gender
-                    if (gender == "Male") {
+                    if (gender.lowercase() == "male") {
                         radioButtonYes.isChecked = true
                     } else {
                         radioButtonNo.isChecked = true
