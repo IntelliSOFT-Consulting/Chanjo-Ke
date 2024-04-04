@@ -341,9 +341,13 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
         identifier.forEach { identifier ->
 
             try {
-                if (identifier.system.toString() != "system_creation") {
-                    number = identifier.value
-                    document = identifier.system
+                if (identifier.hasType()) {
+                    if (identifier.type.hasCoding()) {
+                        if (identifier.type.codingFirstRep.code == "identification_type") {
+                            document = identifier.type.codingFirstRep.display
+                            number = identifier.value
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

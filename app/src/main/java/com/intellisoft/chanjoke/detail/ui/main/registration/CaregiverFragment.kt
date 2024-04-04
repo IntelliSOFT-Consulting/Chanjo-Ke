@@ -20,6 +20,7 @@ import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentCaregiverBinding
 import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,10 +75,11 @@ class CaregiverFragment : Fragment() {
     private val careGivers = ArrayList<CareGiver>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
 
         careGivers.clear()
         adapter = CareGiverAdapter(ArrayList(), requireContext()) // Initialize with an empty list
+        val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
+        Timber.e("TAG******* Caregiver Message $isUpdate")
         if (isUpdate != null) {
             displayInitialData()
         }
@@ -86,6 +88,15 @@ class CaregiverFragment : Fragment() {
             recyclerView.adapter = adapter
         }
 
+        binding.phone.apply {
+            setOnFocusChangeListener { _, hasFocus ->
+                hint = if (hasFocus) {
+                    "07xxxxxxxx"
+                } else {
+                    null
+                }
+            }
+        }
         val isAbove = formatter.getSharedPref("isAbove", requireContext())
         if (isAbove != null) {
             if (isAbove == "true") {
@@ -209,8 +220,12 @@ class CaregiverFragment : Fragment() {
 //                adapter.updateItem(existingCareGiverIndex, careGiver)
             } else {
                 // Add new caregiver
-                careGivers.add(careGiver)
-                adapter.addItem(careGiver)
+                if (!careGivers.contains(careGiver)) {
+                    careGivers.add(careGiver)
+                    adapter.addItem(careGiver)
+                }
+
+
             }
             binding.apply {
                 nextButton.isEnabled = true
@@ -221,24 +236,30 @@ class CaregiverFragment : Fragment() {
     private fun displayInitialData() {
         try {
             val caregiver = formatter.getSharedPref("caregiver", requireContext())
+
             if (caregiver != null) {
-                val data = Gson().fromJson(caregiver, CareGiver::class.java)
-                binding.apply {
-                    identificationType.setText(data.type)
-                    name.setText(data.name)
-                    phone.setText(data.phone)
-                }
 
-                //add initial caregiver
+                val type = object : TypeToken<List<CareGiver>>() {}.type
+                val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
 
-                try {
-                    if (data.phone.length >= 10) {
-                        updateCareGiver()
+                caregiverList.forEach { data ->
+                    binding.apply {
+                        identificationType.setText(data.type)
+                        name.setText(data.name)
+                        phone.setText(data.phone)
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
 
+                    //add initial caregiver
+
+                    try {
+                        if (data.phone.length >= 10) {
+                            updateCareGiver()
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -256,39 +277,16 @@ class CaregiverFragment : Fragment() {
             }
         }
         try {
-
-            loadCareGivers()
+            val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
+            if (isUpdate != null) {
+                displayInitialData()
+            }
 
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun loadCareGivers() {
-        val caregiver = formatter.getSharedPref("caregiver", requireContext())
-        if (caregiver != null) {
-            try {
-                val type = object : TypeToken<List<CareGiver>>() {}.type
-                val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
-                caregiverList.forEach { data ->
-
-                    val careGiver = CareGiver(
-                        phone = data.phone,
-                        name = data.name,
-                        type = data.type
-                    )
-                    careGivers.add(careGiver)
-                    adapter.addItem(careGiver)
-
-                }
-                if (caregiverList.isNotEmpty()) {
-                    binding.nextButton.isEnabled = true
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
 
     private fun validData(): Boolean {
         val kinType = binding.identificationType.text.toString()
@@ -305,6 +303,10 @@ class CaregiverFragment : Fragment() {
         }
         if (kinPhone.isEmpty()) {
             Toast.makeText(requireContext(), "Please enter phone", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (kinPhone.length != 10) {
+            Toast.makeText(requireContext(), "Please valid enter phone", Toast.LENGTH_SHORT).show()
             return false
         }
 //        val payload = CareGiver(kinType, kinName, kinPhone)

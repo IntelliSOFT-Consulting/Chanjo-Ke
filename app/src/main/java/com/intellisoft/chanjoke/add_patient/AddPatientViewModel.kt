@@ -568,7 +568,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
             .let {
                 it.forEach { q ->
-                    Timber.e("Registered Clients ******* Loop${q.document} ${q.number}")
+                     
                     documents.add(
                         PatientIdentification(
                             document = q.document,
@@ -577,7 +577,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                     )
                 }
             }
-        Timber.e("Registered Clients ******* All $documents")
+    
         return documents
 
     }

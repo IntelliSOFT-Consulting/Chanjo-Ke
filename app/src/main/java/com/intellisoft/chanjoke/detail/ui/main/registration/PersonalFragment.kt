@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
@@ -87,7 +88,15 @@ class PersonalFragment : Fragment() {
 
         updateMandatoryFields()
 
-
+        binding.telephone.apply {
+            setOnFocusChangeListener { _, hasFocus ->
+                hint = if (hasFocus) {
+                    "07xxxxxxxx"
+                } else {
+                    null
+                }
+            }
+        }
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
         if (isUpdate != null) {
             displayInitialData()
@@ -286,6 +295,7 @@ class PersonalFragment : Fragment() {
             if (personal != null) {
                 val data = Gson().fromJson(personal, CustomPatient::class.java)
                 binding.apply {
+                    //remove commas
                     val parts = data.firstname.split(" ")
                     when (parts.size) {
                         2 -> {
@@ -300,13 +310,21 @@ class PersonalFragment : Fragment() {
                             lastname.setText(lastName)
                             middlename.setText(middleName)
                         }
+                        4 -> {
+                            val (firstName, middleName, lastName) = parts
+                            firstname.setText(firstName)
+                            lastname.setText(lastName)
+                            middlename.setText(middleName)
+                        }
 
                         else -> {
                             println("Invalid name format")
                         }
                     }
+
+                    Timber.e("Populated Gender ***** ${data.gender}")
                     val gender = data.gender
-                    if (gender == "Male") {
+                    if (gender.lowercase() == "male") {
                         radioButtonYes.isChecked = true
                     } else {
                         radioButtonNo.isChecked = true
@@ -425,7 +443,7 @@ class PersonalFragment : Fragment() {
         val age = binding.calculatedAge.text.toString()
         val identificationType = binding.identificationType.text.toString()
         val identificationNumberString = binding.identificationNumber.text.toString()
-        val telephone = binding.telephone.text.toString()
+        val tel = binding.telephone.text.toString()
 
         if (firstName.isEmpty()) {
             binding.apply {
@@ -528,6 +546,16 @@ class PersonalFragment : Fragment() {
             estimate = false
         }
 
+        if (binding.telTelephone.isVisible) {
+            if (tel.length != 10) {
+                binding.apply {
+                    telTelephone.error = "Enter Valid phone number"
+                    telephone.requestFocus()
+                    return
+                }
+            }
+        }
+
         val payload = CustomPatient(
             firstname = firstName,
             middlename = middleName,
@@ -537,7 +565,7 @@ class PersonalFragment : Fragment() {
             dateOfBirth = dateOfBirthString,
             identification = identificationType,
             identificationNumber = identificationNumberString,
-            telephone = telephone,
+            telephone = tel,
             estimate = estimate,
 
             )

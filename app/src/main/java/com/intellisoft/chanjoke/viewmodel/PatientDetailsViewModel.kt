@@ -22,6 +22,7 @@ import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
+import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.Contraindication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
@@ -89,7 +90,7 @@ class PatientDetailsViewModel(
         val formatterClass = FormatterClass()
         var name = ""
         var phone = ""
-        var dob  = ""
+        var dob = ""
         var gender = ""
         var contact_name = ""
         var contact_phone = ""
@@ -103,6 +104,7 @@ class PatientDetailsViewModel(
         var trading = ""
         var estate = ""
         var logicalId = ""
+        val kins = mutableListOf<CareGiver>()
         searchResult.first().let {
             logicalId = it.logicalId
             name = if (it.hasName()) {
@@ -130,6 +132,13 @@ class PatientDetailsViewModel(
             }
 
             if (it.hasContact()) {
+                it.contact.forEach {
+                    val name = it.name.nameAsSingleString
+                    val phone = it.telecomFirstRep.value
+                    val type = it.relationshipFirstRep.text
+                    kins.add(CareGiver(phone = phone, name = name, type = type))
+                }
+
                 if (it.contactFirstRep.hasName()) contact_name =
                     if (it.hasContact()) {
                         if (it.contactFirstRep.hasName()) {
@@ -159,9 +168,13 @@ class PatientDetailsViewModel(
                 it.identifier.forEach { identifier ->
 
                     try {
-                        if (identifier.system.toString() == "identification_type") {
-                            systemId = identifier.value
-                            type = identifier.system
+                        if (identifier.hasType()) {
+                            if (identifier.type.hasCoding()) {
+                                if (identifier.type.codingFirstRep.code == "identification_type") {
+                                    systemId = identifier.value
+                                    type = identifier.type.codingFirstRep.display
+                                }
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -176,7 +189,6 @@ class PatientDetailsViewModel(
                     }
                 }
             }
-
 
             if (it.hasAddress()) {
                 if (it.addressFirstRep.hasCity()) county = it.addressFirstRep.city
@@ -204,6 +216,7 @@ class PatientDetailsViewModel(
             getApplication<Application>().applicationContext
         )
 
+
         return PatientData(
             logicalId = logicalId,
             name,
@@ -219,7 +232,8 @@ class PatientDetailsViewModel(
             subCounty = subCounty,
             ward = ward,
             trading = trading,
-            estate = estate
+            estate = estate,
+            kins = kins
         )
     }
 
@@ -239,8 +253,9 @@ class PatientDetailsViewModel(
         val ward: String?,
         val trading: String?,
         val estate: String?,
+        val kins: List<CareGiver>?
 
-        ) {
+    ) {
         override fun toString(): String = name
     }
 
@@ -274,12 +289,12 @@ class PatientDetailsViewModel(
         return getString(R.string.none)
     }
 
-    fun recommendationList(status:String?) = runBlocking {
+    fun recommendationList(status: String?) = runBlocking {
         getRecommendationList(status)
     }
 
 
-    private suspend fun getRecommendationList(status:String?): ArrayList<DbAppointmentDetails> {
+    private suspend fun getRecommendationList(status: String?): ArrayList<DbAppointmentDetails> {
         val recommendationList = ArrayList<DbAppointmentDetails>()
         fhirEngine
             .search<ImmunizationRecommendation> {
@@ -291,12 +306,12 @@ class PatientDetailsViewModel(
 
 
         var newRecommendationList = ArrayList<DbAppointmentDetails>()
-        if (status != null){
+        if (status != null) {
             val newVaccineList = recommendationList.filter {
                 it.appointmentStatus == status
             }
             newRecommendationList = ArrayList(newVaccineList)
-        }else{
+        } else {
             newRecommendationList = recommendationList
         }
 
@@ -317,7 +332,8 @@ class PatientDetailsViewModel(
         if (it.hasRecommendation() && it.recommendation.isNotEmpty()) {
             if (it.recommendation[0].hasDateCriterion() &&
                 it.recommendation[0].dateCriterion.isNotEmpty() &&
-                it.recommendation[0].dateCriterion[0].hasValue()) {
+                it.recommendation[0].dateCriterion[0].hasValue()
+            ) {
                 val dateCriterion = it.recommendation[0].dateCriterion[0].value.toString()
                 val dobFormat = FormatterClass().convertDateFormat(dateCriterion)
                 if (dobFormat != null) {
@@ -439,9 +455,9 @@ class PatientDetailsViewModel(
             dateScheduled = startDate
         }
 
-        Log.e(">>>>>>>>>","<<<<<<<<")
+        Log.e(">>>>>>>>>", "<<<<<<<<")
         println("title $title")
-        Log.e(">>>>>>>>>","<<<<<<<<")
+        Log.e(">>>>>>>>>", "<<<<<<<<")
 
         var recommendationSavedList = ArrayList<DbAppointmentDetails>()
         val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
@@ -621,11 +637,16 @@ class PatientDetailsViewModel(
         }
         if (data.hasRecommendation()) {
 
-            if (data.recommendation[0].hasContraindicatedVaccineCode()) vaccineCode = data.recommendationFirstRep.contraindicatedVaccineCodeFirstRep.text
-            if (data.recommendation[0].hasDateCriterion()) nextDate = data.recommendationFirstRep.dateCriterionFirstRep.value.toString()
-            if (data.recommendation[0].hasForecastReason()) contraDetail = data.recommendationFirstRep.forecastReasonFirstRep.text
-            if (data.recommendation[0].hasForecastStatus())  status = data.recommendationFirstRep.forecastStatus.text
-            if (data.recommendation[0].hasTargetDisease()) vaccineName = data.recommendationFirstRep.targetDisease.text
+            if (data.recommendation[0].hasContraindicatedVaccineCode()) vaccineCode =
+                data.recommendationFirstRep.contraindicatedVaccineCodeFirstRep.text
+            if (data.recommendation[0].hasDateCriterion()) nextDate =
+                data.recommendationFirstRep.dateCriterionFirstRep.value.toString()
+            if (data.recommendation[0].hasForecastReason()) contraDetail =
+                data.recommendationFirstRep.forecastReasonFirstRep.text
+            if (data.recommendation[0].hasForecastStatus()) status =
+                data.recommendationFirstRep.forecastStatus.text
+            if (data.recommendation[0].hasTargetDisease()) vaccineName =
+                data.recommendationFirstRep.targetDisease.text
 
         }
 

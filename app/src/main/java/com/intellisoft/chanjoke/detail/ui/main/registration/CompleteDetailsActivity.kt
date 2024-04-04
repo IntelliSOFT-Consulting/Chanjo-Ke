@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityCompleteDetailsBinding
@@ -101,6 +104,34 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 tvWard.text = patientDetail.ward
                 tvTrading.text = patientDetail.trading
                 tvVillage.text = patientDetail.estate
+
+                try {
+                    if (patientDetail.kins != null) {
+                        // Assuming this code is inside a fragment or activity method
+                        patientDetail.kins.forEach { caregiver ->
+                            val inflater = LayoutInflater.from(this@CompleteDetailsActivity)
+                            val itemView = inflater.inflate(
+                                R.layout.caregiver,
+                                lnCaregiver,
+                                false
+                            ) as LinearLayout
+
+                            val tvCname = itemView.findViewById<TextView>(R.id.tv_cname)
+                            val tvCtype = itemView.findViewById<TextView>(R.id.tv_ctype)
+                            val tvCphone = itemView.findViewById<TextView>(R.id.tv_cphone)
+
+                            // Set the text for each TextView with caregiver information
+                            tvCname.text = caregiver.name
+                            tvCtype.text = caregiver.type
+                            tvCphone.text = caregiver.phone
+
+                            // Add the itemView (LinearLayout) to lnCaregiver (LinearLayout)
+                            lnCaregiver.addView(itemView)
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
 
             }
         }
@@ -200,6 +231,7 @@ class CompleteDetailsActivity : AppCompatActivity() {
 
     private fun handleClientDetailsEdit(data: PatientDetailsViewModel.PatientData) {
         try {
+            Timber.e("TAG **********Kins ${data.kins}")
             saveTempData("patientId", data.logicalId)
             val payload = CustomPatient(
                 firstname = data.name,
@@ -211,7 +243,7 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 identification = data.type.toString(),
                 identificationNumber = data.systemId.toString(),
                 telephone = data.phone,
-                estimate =false
+                estimate = false
             )
             saveTempData("personal", Gson().toJson(payload))
             val careGiver = CareGiver(
@@ -219,7 +251,8 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 data.contact_name.toString(),
                 data.contact_phone.toString()
             )
-            saveTempData("caregiver", Gson().toJson(careGiver))
+            val caregiver = Gson().toJson(data.kins)
+            saveTempData("caregiver", caregiver)
             val administrative = Administrative(
                 county = data.county.toString(),
                 subCounty = data.subCounty.toString(),
