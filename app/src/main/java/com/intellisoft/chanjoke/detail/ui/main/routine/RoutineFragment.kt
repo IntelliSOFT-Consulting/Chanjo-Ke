@@ -303,10 +303,17 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private fun performVisibility(vaccineSchedule:String) {
 
         dbRecyclerList.forEach {
+
             val recyclerView = it.recyclerView
             val dbVaccineSchedule = it.vaccineSchedule
+
             if (vaccineSchedule == dbVaccineSchedule){
-                recyclerView.visibility = View.VISIBLE
+                if (recyclerView.visibility == View.VISIBLE){
+                    recyclerView.visibility = View.GONE
+                }else{
+                    recyclerView.visibility = View.VISIBLE
+                }
+
             }else{
                 recyclerView.visibility = View.GONE
             }

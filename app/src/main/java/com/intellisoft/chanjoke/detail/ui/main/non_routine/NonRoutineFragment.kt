@@ -85,9 +85,6 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         )[PatientDetailsViewModel::class.java]
 
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
-        checkAge()
-
-
 
         binding.tvAdministerVaccine.setOnClickListener {
 
@@ -126,7 +123,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
     override fun onResume() {
         super.onResume()
-        checkAge()
+        getNonRoutine()
     }
 
     private fun getNonRoutine() {
@@ -250,9 +247,29 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                             }
                         }
 
+                        /**
+                         * Check if client is below 9 months; Maintain Yellow fever alone
+                         * Otherwise have all non routines
+                         */
+                        var newVaccineList = ArrayList<DbVaccineScheduleChild>()
+
+                        if (patientYears != null){
+                            val patientYearsInt = patientYears!!.toIntOrNull()
+                            if (patientYearsInt != null){
+                                if (patientYearsInt in 1..12){
+                                    //Return only Yellow fever
+                                    newVaccineList = ArrayList(vaccineList.filter { it.vaccineName == "Yellow Fever" }.toMutableList())
+                                }else {
+                                    //Return all non routines
+                                    newVaccineList = vaccineList
+                                }
+                            }
+                        }
+
+
                         val adapter = VaccineDetailsAdapter(
                             patientDetailsViewModel,
-                            vaccineList,
+                            newVaccineList,
                             this@NonRoutineFragment,
                             requireContext())
 
@@ -274,7 +291,12 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
             val recyclerView = it.recyclerView
             val dbVaccineSchedule = it.vaccineSchedule
             if (vaccineSchedule == dbVaccineSchedule){
-                recyclerView.visibility = View.VISIBLE
+                if (recyclerView.visibility == View.VISIBLE){
+                    recyclerView.visibility = View.GONE
+                }else{
+                    recyclerView.visibility = View.VISIBLE
+                }
+
             }else{
                 recyclerView.visibility = View.GONE
             }

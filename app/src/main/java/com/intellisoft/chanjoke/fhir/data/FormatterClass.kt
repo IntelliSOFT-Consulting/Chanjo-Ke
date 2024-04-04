@@ -1036,6 +1036,8 @@ class FormatterClass {
             if (numberOfWeek != null && basicVaccine != null) {
                 val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
                 val vaccineCode = basicVaccine.vaccineCode
+                val weekNumberInt = weekNumber.toIntOrNull()
+
 
                 if (flowType == "ROUTINE"){
 
@@ -1045,7 +1047,6 @@ class FormatterClass {
                      * -> weekNumber = Current Vaccine schedule
                      */
 
-                    val weekNumberInt = weekNumber.toIntOrNull()
 
                     if (!vaccineCode.contains("IMHPV-")){
                         if (numberOfWeek > 256){
@@ -1061,7 +1062,7 @@ class FormatterClass {
                             }else{
 
                                 if (weekNumberInt != null){
-                                    if (numberOfWeek > weekNumberInt){
+                                    if (numberOfWeek >= weekNumberInt){
                                         canBeVaccinated = true
                                     }else{
                                         canBeVaccinated = false
@@ -1080,6 +1081,43 @@ class FormatterClass {
                     }
 
                 }
+
+                if (flowType == "NON-ROUTINE"){
+                    canBeVaccinated = false
+
+                    /**
+                     * Non Routine Vaccines have their own validations
+                     */
+                    if (vaccineCode.contains("IMCOV-")){
+                        //All these are covid vaccines
+
+                        if(vaccineCode.contains("PFIZER-")){
+                            //For PFIZER, should be above 12 years
+                            if (numberOfWeek > 625){
+                                canBeVaccinated = true
+                            }
+                        }else{
+                            //All other covid vaccines are given after 18
+                            if (vaccineCode.contains("SINO-")){
+                                if (numberOfWeek in 938..3128){
+                                    canBeVaccinated = true
+                                }
+                            }else{
+                                if (numberOfWeek > 938){
+                                    canBeVaccinated = true
+                                }
+                            }
+
+                        }
+
+                    }else{
+                        if (numberOfWeek > 938){
+                            canBeVaccinated = true
+                        }
+                    }
+
+                }
+
             }
         }
 

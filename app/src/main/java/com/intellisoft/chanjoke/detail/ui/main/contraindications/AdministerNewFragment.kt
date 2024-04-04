@@ -55,7 +55,7 @@ class AdministerNewFragment : Fragment() {
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
     private val immunizationHandler = ImmunizationHandler()
     private var selectedItem = ""
-    val weightList = listOf<String>("Select Weight", "Kg", "g")
+    val weightList = listOf<String>("Select Unit", "Kg", "g")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,10 +106,12 @@ class AdministerNewFragment : Fragment() {
 
             val currentWeight = binding.etCurrentWeight.text
             if (resultList.isNotEmpty()){
+                //Check if weight has been added
 
                 if (!TextUtils.isEmpty(currentWeight)){
                     if (selectedItem == weightList.first()){
-                        Toast.makeText(requireContext(), "Please select g/kg to proceed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Please select the unit to proceed", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
                     }
                 }
 
