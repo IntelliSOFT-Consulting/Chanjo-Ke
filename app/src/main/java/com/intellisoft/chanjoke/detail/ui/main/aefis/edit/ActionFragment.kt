@@ -65,7 +65,15 @@ class ActionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
-
+        binding.phone.apply {
+            setOnFocusChangeListener { _, hasFocus ->
+                hint = if (hasFocus) {
+                    "07xxxxxxxx"
+                } else {
+                    null
+                }
+            }
+        }
         val actions = arrayOf(
             "Life Threatening", "Mild", "Moderate", "Severe", "Fatal"
         )
@@ -137,6 +145,11 @@ class ActionFragment : Fragment() {
         }
         if (phone.isEmpty()) {
             Toast.makeText(requireContext(), "Please enter reporter phone", Toast.LENGTH_SHORT)
+                .show()
+            return false
+        }
+        if (phone.length!=10) {
+            Toast.makeText(requireContext(), "Please enter valid phone", Toast.LENGTH_SHORT)
                 .show()
             return false
         }
