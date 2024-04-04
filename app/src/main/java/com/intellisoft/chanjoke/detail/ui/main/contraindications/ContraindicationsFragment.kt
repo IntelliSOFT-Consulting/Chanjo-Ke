@@ -65,6 +65,7 @@ class ContraindicationsFragment : Fragment() {
     private var administrationFlowTitle: String? = null
     private var status: String = ""
     private var spinnerReasons = ""
+
     val resultList = listOf<String>(
         "Product out of stock",
         "Contraindication",
@@ -203,6 +204,7 @@ class ContraindicationsFragment : Fragment() {
                                 } else {
 
                                     administerVaccineViewModel.createManualContraindication(
+                                        administrationFlowTitle,
                                         selectedItemList.toList(),
                                         patientId,
                                         dobDate,

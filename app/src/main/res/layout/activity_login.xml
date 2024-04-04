@@ -71,7 +71,7 @@
                             android:background="@drawable/edittext_border"
                             android:drawableStart="@drawable/ic_action_email"
                             android:drawablePadding="15dp"
-                            android:hint="Username"
+                            android:hint="Username *"
                             android:singleLine="true"
                             android:textColor="@color/black" />
 
@@ -97,7 +97,7 @@
                                 android:background="@drawable/edittext_border"
                                 android:drawableStart="@drawable/ic_action_password"
                                 android:drawablePadding="15dp"
-                                android:hint="Password"
+                                android:hint="Password *"
                                 android:inputType="textPassword"
                                 android:textColor="@color/black" />
 
@@ -119,9 +119,11 @@
                                 <TextView
                                     android:layout_marginStart="5dp"
                                     android:layout_weight="1"
-                                    android:text="Location:"
+                                    android:text="Location *:"
                                     android:layout_width="0dp"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                    android:drawablePadding="10dp"
+                                    app:drawableStartCompat="@drawable/ic_action_locations" />
 
                                 <Spinner
                                     android:id="@+id/spinnerLocation"

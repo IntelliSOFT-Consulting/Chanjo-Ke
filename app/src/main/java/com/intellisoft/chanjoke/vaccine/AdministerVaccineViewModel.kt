@@ -35,6 +35,7 @@ import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -233,6 +234,7 @@ class AdministerVaccineViewModel(
                             )
                         }
                     }.join()
+
                     val immunization = createImmunizationResource(
                         encounterId,
                         patientId,
@@ -259,7 +261,7 @@ class AdministerVaccineViewModel(
 
     //Create an immunization resource
     private fun createImmunizationResource(
-        encounterId: String,
+        encounterId: String?,
         patientId: String,
         immunisationStatus: ImmunizationStatus,
         date: Date
@@ -267,10 +269,12 @@ class AdministerVaccineViewModel(
 
         val immunization = Immunization()
         val immunizationId = generateUuid()
-        val encounterReference = Reference("Encounter/$encounterId")
+        if (encounterId != null){
+            val encounterReference = Reference("Encounter/$encounterId")
+            immunization.encounter = encounterReference
+        }
         val patientReference = Reference("Patient/$patientId")
 
-        immunization.encounter = encounterReference
         immunization.patient = patientReference
         immunization.id = immunizationId
 
@@ -532,6 +536,7 @@ class AdministerVaccineViewModel(
     }
 
     fun createManualContraindication(
+        administrationFlowTitle:String?,
         immunizationList: List<String>,
         patientId: String,
         nextImmunizationDate: Date?,
@@ -567,7 +572,37 @@ class AdministerVaccineViewModel(
 
                     /**
                      * Update the status with the typed one
+                     * -> For not administered, create an immunization resource
+                     *
                      */
+
+                    if (administrationFlowTitle != null && administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name){
+
+                        val immunization = createImmunizationResource(
+                            null,
+                            patientId,
+                            ImmunizationStatus.NOTDONE,
+                            Date()
+                        )
+                        val codeableConcept = CodeableConcept()
+                        codeableConcept.text = "Reasons for not administering"
+
+                        val codingList = ArrayList<Coding>()
+                        val coding = Coding()
+                        coding.code = "371900001"
+                        coding.display = foreCastReason
+                        coding.system = "http://snomed.info/sct"
+                        codingList.add(coding)
+
+                        codeableConcept.coding = codingList
+
+                        immunization.statusReason = codeableConcept
+
+                        saveResourceToDatabase(immunization, "Imm")
+
+
+                    }
+
                     val recommendation = createImmunizationRecommendationResource(
                         patientId,
                         nextImmunizationDate,

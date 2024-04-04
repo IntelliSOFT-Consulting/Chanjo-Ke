@@ -118,6 +118,7 @@ class AdministerNewFragment : Fragment() {
                     formatterClass.generateUuid(),
                     patientId,
                     requireContext())
+
                 val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                 blurBackgroundDialog.show()
 
@@ -126,6 +127,7 @@ class AdministerNewFragment : Fragment() {
             }
 
         }
+
         createSpinner()
 
         getBatchNumbers()
