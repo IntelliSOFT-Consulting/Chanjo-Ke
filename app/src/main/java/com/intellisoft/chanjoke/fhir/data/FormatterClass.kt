@@ -343,6 +343,8 @@ class FormatterClass {
                 val months = period.months
                 val days = period.days
 
+                println("patientYears $years.toString(")
+
                 saveSharedPref("patientYears", years.toString(), context)
                 saveSharedPref("patientMonth", months.toString(), context)
                 saveSharedPref("patientDays", days.toString(), context)

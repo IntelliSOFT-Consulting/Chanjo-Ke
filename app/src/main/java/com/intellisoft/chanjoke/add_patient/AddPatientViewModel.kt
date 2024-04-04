@@ -149,16 +149,23 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
              * Utilized patient's id for navigation
              * */
 
+            Log.e("----->","<------")
             try {
                 val birthDateElement = FormatterClass().formatCurrentDateTime(patient.birthDate)
+
+                println("birthDateElement $birthDateElement")
 
                 FormatterClass().getFormattedAge(
                     birthDateElement,
                     context.resources,
                     context)
+
+
             }catch (e:Exception){
                 println(e)
             }
+
+            Log.e("----->","<------")
 
 
 
