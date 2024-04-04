@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.util.Log
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -208,6 +210,7 @@ class FormatterClass {
             "appointmentDateScheduled",
             "appointmentVaccineTitle",
             "appointmentFlow",
+            "patientGender",
         )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
@@ -969,6 +972,7 @@ class FormatterClass {
 
     fun getVaccineChildStatus(
         context: Context,
+        flowType: String,
         weekNumber: String,
         vaccineName: String,
         administeredList: List<DbVaccineData>,
@@ -1021,12 +1025,60 @@ class FormatterClass {
         val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
         var canBeVaccinated: Boolean? = null
         val patientDob = getSharedPref("patientDob", context)
+        val patientGender = getSharedPref("patientGender", context)?.let {
+            AppUtils().capitalizeFirstLetter(
+                it
+            )
+        }
+
         if (patientDob != null) {
             val numberOfWeek = calculateWeeksFromDate(patientDob)
             if (numberOfWeek != null && basicVaccine != null) {
                 val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
-                if (administrativeWeeksSinceDOB > 0) {
-                    canBeVaccinated = administrativeWeeksSinceDOB < numberOfWeek
+                val vaccineCode = basicVaccine.vaccineCode
+
+                if (flowType == "ROUTINE"){
+
+                    /**
+                     * All routines are under 5 YEARS apart from HPV
+                     * -> numberOfWeek = Weeks after birth
+                     * -> weekNumber = Current Vaccine schedule
+                     */
+
+                    val weekNumberInt = weekNumber.toIntOrNull()
+
+                    if (!vaccineCode.contains("IMHPV-")){
+                        if (numberOfWeek > 256){
+                            canBeVaccinated = false
+                        }else{
+                            //bOPV is allowed for less than 2 weeks
+                            if (vaccineCode == "IMPO-bOPV"){
+                                if (numberOfWeek < 2){
+                                    canBeVaccinated = true
+                                }else{
+                                    canBeVaccinated = false
+                                }
+                            }else{
+
+                                if (weekNumberInt != null){
+                                    if (numberOfWeek > weekNumberInt){
+                                        canBeVaccinated = true
+                                    }else{
+                                        canBeVaccinated = false
+                                    }
+                                }
+
+                            }
+                        }
+                    }else{
+                        //Should only be for Females above 9 years and below 15 years
+                        if (numberOfWeek in 471..782 && patientGender == "Female"){
+                            canBeVaccinated = true
+                        }else{
+                            canBeVaccinated = false
+                        }
+                    }
+
                 }
             }
         }

@@ -203,6 +203,9 @@ class PatientDetailActivity : AppCompatActivity() {
             }
 
             val patientDetail = patientDetailsViewModel.getPatientInfo()
+            val gender = patientDetail.gender
+            formatterClass.saveSharedPref("patientGender", gender, this@PatientDetailActivity)
+
             CoroutineScope(Dispatchers.Main).launch {
                 binding.apply {
                     tvName.text = patientDetail.name

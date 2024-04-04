@@ -154,8 +154,11 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                 val vaccineList = weekNoList?.toList()
                 vaccineList?.forEach { vaccineName ->
 
+                    /**
+                     * TODO: CHECK ON NON-ROUTINE
+                     */
                     val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
-                        requireContext(), keyValue, vaccineName, administeredList, recommendationList)
+                        requireContext(),"NON-ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
                     dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
                 }
 

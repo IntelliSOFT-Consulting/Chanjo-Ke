@@ -153,7 +153,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 vaccineList?.forEach { vaccineName ->
 
                     val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
-                        requireContext(), keyValue, vaccineName, administeredList, recommendationList)
+                        requireContext(), "ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
                     dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
                 }
 
