@@ -169,7 +169,7 @@ class PatientAdapter(
 
         val name = dbPatientList[position].name
         val age = dbPatientList[position].dob
-        val idNumber = dbPatientList[position].identification
+        val idNumber = dbPatientList[position].number
         var phoneNumber = dbPatientList[position].phone
         val careGiverPhone = dbPatientList[position].contact_phone
         val gender = dbPatientList[position].contact_gender

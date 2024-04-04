@@ -58,7 +58,10 @@ class CareGiverAdapter(
     }
 
     fun addItem(careGiver: CareGiver) {
-        entryList.add(careGiver)
-        notifyItemInserted(entryList.size - 1)
+        //
+        if (!entryList.contains(careGiver)) {
+            entryList.add(careGiver)
+            notifyItemInserted(entryList.size - 1)
+        }
     }
 }

@@ -108,7 +108,6 @@ class PatientListFragment : Fragment() {
 //        )
         patientListViewModel.liveSearchedPatients.observe(viewLifecycleOwner) {
 
-            Timber.d("Submitting ${it.count()} patient records")
             val patientList = ArrayList(it)
 
             if (patientList.isEmpty() && isSearched) {
