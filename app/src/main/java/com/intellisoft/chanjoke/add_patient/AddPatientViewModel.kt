@@ -149,25 +149,6 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
              * Utilized patient's id for navigation
              * */
 
-            Log.e("----->","<------")
-            try {
-                val birthDateElement = FormatterClass().formatCurrentDateTime(patient.birthDate)
-
-                println("birthDateElement $birthDateElement")
-
-                FormatterClass().getFormattedAge(
-                    birthDateElement,
-                    context.resources,
-                    context)
-
-
-            }catch (e:Exception){
-                println(e)
-            }
-
-            Log.e("----->","<------")
-
-
 
             FormatterClass().saveSharedPref("patientId", patientId, context)
             FormatterClass().saveSharedPref("isRegistration", "true", context)
@@ -540,8 +521,24 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 FormatterClass().deleteSharedPref("isUpdate", context)
             } else {
 
+
+
                 patient.id = patientId
                 fhirEngine.create(patient)
+
+                try {
+                    val birthDateElement = FormatterClass().formatCurrentDateTime(patient.birthDate)
+
+                    FormatterClass().getFormattedAge(
+                        birthDateElement,
+                        context.resources,
+                        context)
+
+
+                }catch (e:Exception){
+                    println(e)
+                }
+
             }
 
             FormatterClass().saveSharedPref("patientId", patientId, context)
