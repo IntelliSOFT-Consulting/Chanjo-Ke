@@ -295,6 +295,7 @@ class PersonalFragment : Fragment() {
             if (personal != null) {
                 val data = Gson().fromJson(personal, CustomPatient::class.java)
                 binding.apply {
+                    //remove commas
                     val parts = data.firstname.split(" ")
                     when (parts.size) {
                         2 -> {
@@ -304,6 +305,12 @@ class PersonalFragment : Fragment() {
                         }
 
                         3 -> {
+                            val (firstName, middleName, lastName) = parts
+                            firstname.setText(firstName)
+                            lastname.setText(lastName)
+                            middlename.setText(middleName)
+                        }
+                        4 -> {
                             val (firstName, middleName, lastName) = parts
                             firstname.setText(firstName)
                             lastname.setText(lastName)
