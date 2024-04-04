@@ -336,6 +336,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
     override fun onCheckBoxSelected(position: Int, isChecked: Boolean, vaccineName: String) {
 
+
         if (isChecked){
             selectedVaccineList.add(vaccineName)
         }else{

@@ -85,6 +85,7 @@ class VaccineDetailsAdapter(
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             onCheckBoxSelectedListener.onCheckBoxSelected(position, isChecked, vaccineName)
         }
+
     }
 
     override fun getItemCount(): Int {
