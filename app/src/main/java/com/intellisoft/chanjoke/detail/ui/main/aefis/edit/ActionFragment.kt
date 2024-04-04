@@ -177,6 +177,7 @@ class ActionFragment : Fragment() {
                     outcome.setText(refinedData.outcome.trim(), false)
                     reporter.setText(refinedData.reporter.trim())
                     phone.setText(refinedData.phone.trim())
+                    specimen.setText(refinedData.specimen.trim())
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
