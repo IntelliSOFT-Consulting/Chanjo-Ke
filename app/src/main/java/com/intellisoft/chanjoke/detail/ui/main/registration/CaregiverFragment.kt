@@ -77,7 +77,11 @@ class CaregiverFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         careGivers.clear()
-        adapter = CareGiverAdapter(ArrayList(), requireContext()) // Initialize with an empty list
+        adapter = CareGiverAdapter(
+            ArrayList(),
+            requireContext(),
+            this::handleClick
+        ) // Initialize with an empty list
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
         Timber.e("TAG******* Caregiver Message $isUpdate")
         if (isUpdate != null) {
@@ -115,6 +119,7 @@ class CaregiverFragment : Fragment() {
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, suggestions)
 
         binding.apply {
+
             identificationType.apply {
                 setAdapter(adapterType)
             }
@@ -199,6 +204,17 @@ class CaregiverFragment : Fragment() {
 
             }
 
+        }
+    }
+
+    private fun handleClick(careGiver: CareGiver) {
+        /**
+         * Handle click
+         */
+        val existingCareGiverIndex = careGivers.indexOfFirst { it.type == careGiver.type }
+        if (existingCareGiverIndex != -1) {
+            careGivers.remove(careGiver)
+            adapter.removeItem(careGiver)
         }
     }
 

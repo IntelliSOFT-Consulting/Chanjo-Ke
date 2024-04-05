@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentAefisBinding
@@ -125,10 +126,9 @@ class AefisFragment : Fragment() {
                     FormatterClass().saveSharedPref("vaccinationFlow", "addAefi", context)
                     FormatterClass().deleteSharedPref("updated_aefi_data", context)
 
-//                    val intent = Intent(context, MainActivity::class.java)
-//                    intent.putExtra("functionToCall", NavigationDetails.ADD_AEFI.name)
-//                    intent.putExtra("patientId", patientId)
-//                    context.startActivity(intent)
+                    FormatterClass().deleteSharedPref(
+                        "aefi_data", requireContext()
+                    )
                     startActivity(Intent(requireContext(), AddAefiActivity::class.java))
                 } else {
                     Toast.makeText(

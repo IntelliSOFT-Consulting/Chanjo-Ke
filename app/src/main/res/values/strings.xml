@@ -76,8 +76,10 @@
     <string name="edit_client_detail">Edit Client Detail</string>
     <string name="contraindications">Contraindications</string>
     <string name="next_vaccination_date">Next Vaccination Date</string>
-    <string name="specimen_collected">Speciment Collected</string>
+    <string name="specimen_collected">Specimen Collected</string>
     <string name="preview">Preview</string>
+    <string name="remove_caregiver">Remove Caregiver</string>
+    <string name="remove_caregiver_confirmation">Are you sure you want to remove Caregiver?</string>
 
 
 </resources>
