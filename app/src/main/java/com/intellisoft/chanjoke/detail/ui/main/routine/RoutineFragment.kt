@@ -313,11 +313,14 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 }else{
                     recyclerView.visibility = View.VISIBLE
                 }
-
             }else{
                 recyclerView.visibility = View.GONE
             }
         }
+
+        selectedVaccineList.clear()
+        updateList()
+
 
     }
 
@@ -341,8 +344,12 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             }
     }
 
-    override fun onCheckBoxSelected(position: Int, isChecked: Boolean, vaccineName: String) {
+    private fun updateList(){
+        val administerText = "Administer (${selectedVaccineList.size})"
+        binding.tvAdministerVaccine.text = administerText
+    }
 
+    override fun onCheckBoxSelected(position: Int, isChecked: Boolean, vaccineName: String) {
 
         if (isChecked){
             selectedVaccineList.add(vaccineName)
@@ -350,8 +357,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             selectedVaccineList.remove(vaccineName)
         }
 
-        val administerText = "Administer (${selectedVaccineList.size})"
-        binding.tvAdministerVaccine.text = administerText
+        updateList()
 
     }
 }
