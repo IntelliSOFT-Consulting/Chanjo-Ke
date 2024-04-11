@@ -57,6 +57,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private val formatterClass = FormatterClass()
     private var patientYears:String? = null
     private var patientDob:String? = null
+    private var patientGender:String? = null
     private var selectedVaccineList = ArrayList<String>()
     private var dbRecyclerList = HashSet<DbRecycler>()
 
@@ -89,6 +90,8 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
+
+        patientGender = formatterClass.getSharedPref("patientGender", requireContext())
 
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
         patientDob = formatterClass.getSharedPref("patientDob", requireContext())
@@ -277,7 +280,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
                             if (isWithinPlusOrMinus14(numberOfBirthWeek, numberOfWeek)){
                                 generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
-                                generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
                             }
                         }
                     }
@@ -307,6 +309,17 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 }
             }
         }
+
+        val patientGender = formatterClass.getSharedPref("patientGender", requireContext())
+        Log.e("---->","<----")
+        println(patientGender)
+        Log.e("---->","<----")
+
+        //Remove HPV if it's a male
+        if (patientGender != null && patientGender == "male"){
+            vaccineList.removeIf { it.vaccineName.contains("HPV") }
+        }
+
 
         val adapter = VaccineDetailsAdapter(
             patientDetailsViewModel,
