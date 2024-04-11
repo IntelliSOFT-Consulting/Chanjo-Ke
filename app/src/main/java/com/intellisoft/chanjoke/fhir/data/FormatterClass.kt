@@ -342,6 +342,8 @@ class FormatterClass {
                 val finalDate = convertDateToLocalDate(dobDate)
                 val period = Period.between(finalDate, LocalDate.now())
 
+
+
                 val years = period.years
                 val months = period.months
                 val days = period.days
@@ -969,6 +971,29 @@ class FormatterClass {
 
         return statusColor
     }
+
+    fun convertVaccineScheduleToWeeks(vaccineSchedule: String): Int {
+        return when {
+            vaccineSchedule == "At Birth" -> 0
+            vaccineSchedule.endsWith("weeks") -> {
+                // Extract the number of weeks from the string and return it as an integer
+                val number = vaccineSchedule.removeSuffix(" weeks").toInt()
+                number
+            }
+            vaccineSchedule.endsWith("months") -> {
+                // Extract the number of months from the string and convert it to weeks
+                val number = vaccineSchedule.removeSuffix(" months").toInt()
+                number * 4 // Assume each month has 4 weeks
+            }
+            vaccineSchedule.endsWith("years") -> {
+                // Extract the number of years from the string and convert it to weeks
+                val number = vaccineSchedule.removeSuffix(" years").toInt()
+                number * 52 // Assume each year has 52 weeks
+            }
+            else -> -1 // Return -1 or any other default value if the input doesn't match any condition
+        }
+    }
+
 
     fun getVaccineChildStatus(
         context: Context,
