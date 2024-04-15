@@ -85,6 +85,7 @@ class PersonalFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         AppUtils().disableEditing(binding.dateOfBirth)
         AppUtils().disableEditing(binding.calculatedAge)
+        AppUtils().disableEditing(binding.tvEstimatedDob)
 
         updateMandatoryFields()
 
@@ -310,6 +311,7 @@ class PersonalFragment : Fragment() {
                             lastname.setText(lastName)
                             middlename.setText(middleName)
                         }
+
                         4 -> {
                             val (firstName, middleName, lastName) = parts
                             firstname.setText(firstName)
@@ -353,11 +355,13 @@ class PersonalFragment : Fragment() {
 
             if (enteredYear >= 18) {
                 formatter.saveSharedPref("isAbove", "true", requireContext())
-
-
             } else {
                 formatter.saveSharedPref("isAbove", "false", requireContext())
-
+            }
+            binding.apply {
+                tvEstimatedDob.apply {
+                  setText(calculateDateOfBirth(enteredYear, enteredMonths, enteredWeeks))
+                }
             }
             updateIdentifications(enteredYear)
         } catch (e: Exception) {

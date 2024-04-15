@@ -80,6 +80,7 @@
     <string name="preview">Preview</string>
     <string name="remove_caregiver">Remove Caregiver</string>
     <string name="remove_caregiver_confirmation">Are you sure you want to remove Caregiver?</string>
+    <string name="estimated_dob">Estimated DoB</string>
 
 
 </resources>
