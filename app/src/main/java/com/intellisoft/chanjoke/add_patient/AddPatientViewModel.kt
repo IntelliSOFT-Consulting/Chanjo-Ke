@@ -42,6 +42,8 @@ import com.intellisoft.chanjoke.patient_list.toPatientItem
 import java.util.UUID
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.hl7.fhir.r4.model.AdverseEvent
+import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.ContactPoint
@@ -400,6 +402,9 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
 
             /* Identification Document*/
+
+            val adv=AdverseEvent()
+
 
             val identifierSystem1 = Identifier()
             val typeCodeableConcept1 = CodeableConcept()

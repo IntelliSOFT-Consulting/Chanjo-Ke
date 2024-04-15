@@ -322,7 +322,6 @@ class PersonalFragment : Fragment() {
                         }
                     }
 
-                    Timber.e("Populated Gender ***** ${data.gender}")
                     val gender = data.gender
                     if (gender.lowercase() == "male") {
                         radioButtonYes.isChecked = true
@@ -380,7 +379,7 @@ class PersonalFragment : Fragment() {
                 arrayOf(
                     "Birth Certificate",
                     "Passport",
-                    "Nemis"
+                    "NEMIS"
                 )
             }
 
