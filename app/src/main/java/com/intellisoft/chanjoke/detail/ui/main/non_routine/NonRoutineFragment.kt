@@ -261,7 +261,13 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                                     newVaccineList = ArrayList(vaccineList.filter { it.vaccineName == "Yellow Fever" }.toMutableList())
                                 }else {
                                     //Return all non routines
+
                                     newVaccineList = vaccineList
+
+                                    if (patientYearsInt > 60){
+                                        vaccineList.removeIf { it.vaccineName.contains("Sinopharm") }
+                                    }
+
                                 }
                             }
                         }

@@ -311,9 +311,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
         }
 
         val patientGender = formatterClass.getSharedPref("patientGender", requireContext())
-        Log.e("---->","<----")
-        println(patientGender)
-        Log.e("---->","<----")
 
         //Remove HPV if it's a male
         if (patientGender != null && patientGender == "male"){
