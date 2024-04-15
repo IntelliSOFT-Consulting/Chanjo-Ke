@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Zanzibar"
         tools:targetApi="31">
         <activity
+            android:name=".shared.SetPassword"
+            android:exported="false" />
+        <activity
             android:name=".detail.ui.main.aefis.AddAefiActivity"
             android:exported="false"
             android:label=""

@@ -85,6 +85,9 @@
     <string name="email_address">Email Address *</string>
     <string name="enter_email_address_and_id_number">Enter Email Address and Id Number</string>
     <string name="forgot_password">Forgot Password</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="update_password">Update Password</string>
+    <string name="reset_code">Reset code</string>
 
 
 </resources>

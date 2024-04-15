@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.network_request
 
 import com.intellisoft.chanjoke.fhir.data.DbResetPassword
+import com.intellisoft.chanjoke.fhir.data.DbSetPasswordReq
 import com.intellisoft.chanjoke.fhir.data.DbSignIn
 import com.intellisoft.chanjoke.fhir.data.DbSignInResponse
 import com.intellisoft.chanjoke.fhir.data.DbUserInfoResponse
@@ -27,6 +28,11 @@ interface Interface {
         @Path("idNumber") idNumber:String,
         @Path("email") email:String,
     ): Response<DbResetPassword>
+
+    @POST("provider/reset-password")
+    suspend fun setNewPassword(
+        @Body dbSetPasswordReq: DbSetPasswordReq
+    ): Response<Any>
 
 
 

@@ -146,6 +146,11 @@ data class DbSignIn(
     val idNumber: String,
     val password: String
 )
+data class DbSetPasswordReq(
+    val resetCode: String,
+    val idNumber: String,
+    val password: String
+)
 
 data class DbSignInResponse(
     val access_token: String,

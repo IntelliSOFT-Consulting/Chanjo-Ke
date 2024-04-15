@@ -23,6 +23,9 @@ class ForgotPassword : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
 
+        etEmailAddress = findViewById(R.id.etEmailAddress)
+        etIdNumber = findViewById(R.id.etIdNumber)
+
         findViewById<Button>(R.id.btnResetPassword).setOnClickListener {
             val emailAddress = etEmailAddress.text.toString()
             val idNumber = etIdNumber.text.toString()
@@ -38,6 +41,9 @@ class ForgotPassword : AppCompatActivity() {
 
             val dbResetPasswordData = DbResetPasswordData(idNumber, emailAddress)
             retrofitCallsAuthentication.getResetPassword(this, dbResetPasswordData)
+
+            val intent = Intent(this, SetPassword::class.java)
+            startActivity(intent)
 
 
         }
