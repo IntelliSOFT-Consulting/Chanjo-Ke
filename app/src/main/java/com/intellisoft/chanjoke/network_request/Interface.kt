@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.network_request
 
+import com.intellisoft.chanjoke.fhir.data.DbResetPassword
 import com.intellisoft.chanjoke.fhir.data.DbSignIn
 import com.intellisoft.chanjoke.fhir.data.DbSignInResponse
 import com.intellisoft.chanjoke.fhir.data.DbUserInfoResponse
@@ -21,6 +22,11 @@ interface Interface {
         @Header("Authorization") token: String, // Add this line to pass the Bearer Token
     ): Response<DbUserInfoResponse>
 
+    @GET("provider/reset-password")
+    suspend fun resetPassword(
+        @Path("idNumber") idNumber:String,
+        @Path("email") email:String,
+    ): Response<DbResetPassword>
 
 
 

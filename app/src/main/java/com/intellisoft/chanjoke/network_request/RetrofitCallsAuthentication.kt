@@ -7,6 +7,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import com.intellisoft.chanjoke.MainActivity
+import com.intellisoft.chanjoke.fhir.data.DbResetPasswordData
 import com.intellisoft.chanjoke.fhir.data.DbSignIn
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.UrlData
@@ -193,6 +194,68 @@ class RetrofitCallsAuthentication {
 
     }
 
+    fun getResetPassword(context: Context, dbResetPasswordData: DbResetPasswordData){
+        CoroutineScope(Dispatchers.Main).launch {
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+                resetPassword(context, dbResetPasswordData)
+            }.join()
+        }
+
+    }
+
+    private suspend fun resetPassword(context: Context, dbResetPasswordData: DbResetPasswordData) {
+
+        val job1 = Job()
+        CoroutineScope(Dispatchers.Main + job1).launch {
+
+            val progressDialog = ProgressDialog(context)
+            progressDialog.setTitle("Please wait..")
+            progressDialog.setMessage("Authentication in progress..")
+            progressDialog.setCanceledOnTouchOutside(false)
+            progressDialog.show()
+
+            var messageToast = ""
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+
+                val formatter = FormatterClass()
+                val baseUrl = context.getString(UrlData.BASE_URL.message)
+                val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+                try {
+
+                    val apiInterface = apiService.resetPassword(dbResetPasswordData.idNumber, dbResetPasswordData.email)
+                    if (apiInterface.isSuccessful) {
+
+                        val statusCode = apiInterface.code()
+                        val body = apiInterface.body()
+
+                        messageToast = if (statusCode == 200 || statusCode == 201) {
+                            body?.response ?: "Cannot reset user password!"
+                        }else{
+                            "Cannot reset user password!!"
+                        }
+                    }else{
+                        messageToast = "Cannot reset user password!!!"
+                    }
+                }catch (e: Exception){
+
+                    Log.e("******","")
+                    Log.e("******",e.toString())
+                    Log.e("******","")
+
+                    messageToast = "Cannot reset user password.."
+                }
+            }.join()
+            CoroutineScope(Dispatchers.Main).launch{
+
+                progressDialog.dismiss()
+                Toast.makeText(context, messageToast, Toast.LENGTH_LONG).show()
+
+            }
+        }
+
+    }
 
 
 }
