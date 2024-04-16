@@ -403,7 +403,6 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
             /* Identification Document*/
 
-            val adv=AdverseEvent()
 
 
             val identifierSystem1 = Identifier()

@@ -105,11 +105,10 @@ class AddAefiActivity : AppCompatActivity(), OnButtonClickListener {
 
             } else {
                 val data = formatter.getSharedPref("updated_aefi_data", this@AddAefiActivity)
-                Timber.e("End results *** $data")
+
                 val patientId = FormatterClass().getSharedPref("patientId", this@AddAefiActivity)
-                Timber.e("End results *** Patient $patientId")
+
                 if (data != null) {
-//                    progressDialog.show()
                     val refinedData = Gson().fromJson(data, AEFIData::class.java)
                     // create observations
                     val encounterId = generateUuid()

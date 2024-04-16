@@ -18,11 +18,15 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import java.util.UUID
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.hl7.fhir.r4.model.AdverseEvent
 import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.CodeableConcept
+import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Condition
 import org.hl7.fhir.r4.model.DateTimeType
 import org.hl7.fhir.r4.model.Encounter
+import org.hl7.fhir.r4.model.Narrative
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
@@ -38,9 +42,8 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
     val isResourcesSaved = MutableLiveData<Boolean>()
 
     private val questionnaireResource: Questionnaire
-        get() =
-            FhirContext.forCached(FhirVersionEnum.R4).newJsonParser().parseResource(questionnaire)
-                    as Questionnaire
+        get() = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
+            .parseResource(questionnaire) as Questionnaire
 
     private var questionnaireJson: String? = null
     private var fhirEngine: FhirEngine = FhirApplication.fhirEngine(application.applicationContext)
@@ -154,16 +157,23 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
     ) {
         viewModelScope.launch {
             val age = FormatterClass().getSharedPref(
-                "current_age",
-                getApplication<Application>().applicationContext
+                "current_age", getApplication<Application>().applicationContext
             )
 
-            createAdverseEffects(encounterId, patientId, age.toString())
+            createAdverseEvent(context, encounterId, patientId, age.toString())
 
             val subjectReference = Reference("Patient/$patientId")
             val resource = Encounter()
             resource.subject = subjectReference
             resource.id = encounterId
+
+
+            val facility = FormatterClass().getSharedPref("practitionerFacility", context)
+            if (facility != null) {
+
+                val locationReference = Reference(facility)
+                resource.locationFirstRep.location = locationReference
+            }
             saveResourceToDatabase(resource)
             observations.forEach {
                 saveResourceToDatabase(it)
@@ -172,6 +182,43 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
         }
 
     }
+
+    private suspend fun createAdverseEvent(
+        context: Context, encounterId: String, patientId: String, age: String
+    ) {
+
+        val encounterReference = Reference("Encounter/$encounterId")
+        val patientReference = Reference("Patient/$patientId")
+
+        val adv = AdverseEvent()
+        adv.id = generateUuid()
+        adv.encounter = encounterReference
+        adv.subject = patientReference
+        val fhirPractitionerId = FormatterClass().getSharedPref("fhirPractitionerId", context)
+        if (fhirPractitionerId != null) {
+            val recorderReference = Reference("Practitioner/$fhirPractitionerId")
+            adv.recorder = recorderReference
+        }
+        val facility = FormatterClass().getSharedPref("practitionerFacility", context)
+        if (facility != null) {
+            val locationReference = Reference(facility)
+            adv.location = locationReference
+        }
+        val coding = Coding()
+        coding.code = age
+        coding.system = age
+        coding.display = age
+        val codeableConcept = CodeableConcept()
+        codeableConcept.addCoding(coding)
+        codeableConcept.text = age
+        adv.event
+        /**
+         * TODO: Add more details for the allergy intolerance
+         */
+        saveResourceToDatabase(adv)
+
+    }
+
     private suspend fun createAdverseEffects(encounterId: String, patientId: String, age: String) {
 
         val encounterReference = Reference("Encounter/$encounterId")
@@ -206,16 +253,15 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
 
         const val SPO2 = "59408-5"
 
-        private val comorbidities: Set<String> =
-            setOf(
-                ASTHMA,
-                LUNG_DISEASE,
-                DEPRESSION,
-                DIABETES,
-                HYPER_TENSION,
-                HEART_DISEASE,
-                HIGH_BLOOD_LIPIDS,
-            )
+        private val comorbidities: Set<String> = setOf(
+            ASTHMA,
+            LUNG_DISEASE,
+            DEPRESSION,
+            DIABETES,
+            HYPER_TENSION,
+            HEART_DISEASE,
+            HIGH_BLOOD_LIPIDS,
+        )
         private val symptoms: Set<String> = setOf(FEVER, SHORTNESS_BREATH, COUGH, LOSS_OF_SMELL)
     }
 }
