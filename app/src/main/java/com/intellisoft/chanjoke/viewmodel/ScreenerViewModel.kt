@@ -211,7 +211,7 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
         val codeableConcept = CodeableConcept()
         codeableConcept.addCoding(coding)
         codeableConcept.text = age
-        adv.event
+        adv.event = codeableConcept
         /**
          * TODO: Add more details for the allergy intolerance
          */
