@@ -22,6 +22,7 @@ import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
+import com.intellisoft.chanjoke.fhir.data.AdverseEventItem
 import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.Contraindication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
@@ -45,6 +46,7 @@ import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.hl7.fhir.r4.model.AdverseEvent
 import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Appointment
@@ -55,8 +57,10 @@ import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Location
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
+import org.hl7.fhir.r4.model.Practitioner
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
+import org.hl7.fhir.r4.model.ResourceType
 import org.hl7.fhir.r4.model.RiskAssessment
 import timber.log.Timber
 
@@ -481,6 +485,7 @@ class PatientDetailsViewModel(
 
         return ArrayList(vaccineList)
     }
+
     private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {
 
         val vaccineList = ArrayList<DbVaccineData>()
@@ -495,6 +500,89 @@ class PatientDetailsViewModel(
 
 
         return ArrayList(vaccineList)
+    }
+
+    fun getAdverseEvent(patientId: String, encounterId: String) = runBlocking {
+        getAdverseEventDetails(patientId, encounterId)
+    }
+
+    private suspend fun getAdverseEventDetails(
+        patientId: String,
+        encounterId: String
+    ): AdverseEventItem? {
+        return withContext(Dispatchers.IO) {
+            // Search for adverse events related to the specified patient
+            val adverseEvents = fhirEngine
+                .search<AdverseEvent> {
+                    filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
+                    sort(AdverseEvent.DATE, Order.DESCENDING)
+                }
+                .map { createAdverseEventItemDetails(it) }
+
+            // Find the adverse event that matches the encounterId
+            adverseEvents.find { it.encounterId == encounterId }
+        }
+    }
+
+    private fun createAdverseEventItemDetails(data: AdverseEvent): AdverseEventItem {
+        val logicalId = if (data.hasEncounter()) data.encounter.reference else ""
+        val encounterId = logicalId.toString().replace("Encounter/", "")
+        val practId = if (data.hasRecorder()) data.recorder.reference else ""
+        var practitionerId = practId.toString().replace("Practitioner/", "")
+        val locId = if (data.hasLocation()) data.location.reference else ""
+        var locationId = locId.toString().replace("Location/", "")
+
+        if (locationId.isNotEmpty()) {
+            locationId = getLocationName(locationId)
+        }
+        if (practitionerId.isNotEmpty()) {
+
+            practitionerId = getPractitionerName(practitionerId)
+        }
+
+
+        // Create and return an AdverseEventItem instance
+        return AdverseEventItem(encounterId, practitionerId, locationId)
+    }
+
+    private fun getLocationName(locationId: String) = runBlocking {
+        getLocationNameInner(locationId)
+    }
+
+    private fun getPractitionerName(locationId: String) = runBlocking {
+        getPractitionerNameInner(locationId)
+    }
+
+    private suspend fun getPractitionerNameInner(locationId: String): String {
+        var location = ""
+        Timber.e("Adverse Event ***** $locationId")
+
+        try {
+            val searchResult = fhirEngine.search<Practitioner> {
+                filter(Practitioner.RES_ID, { value = of(locationId) })
+            }
+            Timber.e("Adverse Event ***** $searchResult")
+            location = searchResult.first().name[0].nameAsSingleString
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return location
+    }
+
+    private suspend fun getLocationNameInner(locationId: String): String {
+        var location = ""
+        Timber.e("Adverse Event ***** $locationId")
+
+        try {
+            val searchResult = fhirEngine.search<Location> {
+                filter(Location.RES_ID, { value = of(locationId) })
+            }
+            Timber.e("Adverse Event ***** $searchResult")
+            location = searchResult.first().name
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return location
     }
 
     fun getImmunizationDataDetails(codeValue: String) =
@@ -1005,6 +1093,7 @@ class PatientDetailsViewModel(
 
         return "$counter"
     }
+
     private suspend fun counterAllergies(weekNo: String, patientId: String): String {
         var counter = 0
         fhirEngine
@@ -1021,6 +1110,8 @@ class PatientDetailsViewModel(
 
         return "$counter"
     }
+
+
 }
 
 class PatientDetailsViewModelFactory(

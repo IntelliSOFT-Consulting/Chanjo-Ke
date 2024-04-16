@@ -31,7 +31,11 @@ enum class StatusColors {
     RED, //All missed
     NORMAL, //Future
 }
-
+data class AdverseEventItem(
+    val encounterId: String,
+    val practitionerId: String,
+    val locationId: String
+)
 data class DbVaccineDetailsData(
     val logicalId: String,
     val vaccineName: String,
