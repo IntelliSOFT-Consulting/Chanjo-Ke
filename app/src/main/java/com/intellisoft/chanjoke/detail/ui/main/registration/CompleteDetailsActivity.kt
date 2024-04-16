@@ -99,11 +99,11 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 tvCname.text = patientDetail.contact_name
                 tvCtype.text = patientDetail.contact_gender
                 tvCphone.text = patientDetail.contact_phone
-                tvCounty.text = patientDetail.county
-                tvSubCounty.text = patientDetail.subCounty
-                tvWard.text = patientDetail.ward
-                tvTrading.text = patientDetail.trading
-                tvVillage.text = patientDetail.estate
+                tvCounty.text = AppUtils().capitalizeFirstLetter(patientDetail.county.toString())
+                tvSubCounty.text = AppUtils().capitalizeFirstLetter(patientDetail.subCounty.toString())
+                tvWard.text = AppUtils().capitalizeFirstLetter(patientDetail.ward.toString())
+                tvTrading.text = AppUtils().capitalizeFirstLetter(patientDetail.trading.toString())
+                tvVillage.text = AppUtils().capitalizeFirstLetter(patientDetail.estate.toString())
 
                 try {
                     if (patientDetail.kins != null) {
