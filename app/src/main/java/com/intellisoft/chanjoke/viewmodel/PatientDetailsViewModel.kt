@@ -45,6 +45,7 @@ import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.hl7.fhir.r4.model.AdverseEvent
 import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Coding
@@ -465,7 +466,7 @@ class PatientDetailsViewModel(
         getVaccineListDetailsOld()
     }
 
-    private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {
+    private suspend fun getVaccineListDetailsOldOne(): ArrayList<DbVaccineData> {
 
         val vaccineList = ArrayList<DbVaccineData>()
 
@@ -475,6 +476,21 @@ class PatientDetailsViewModel(
                 sort(AllergyIntolerance.DATE, Order.DESCENDING)
             }
             .map { createAllergyIntoleranceItem(it) }
+            .let { vaccineList.addAll(it) }
+
+
+        return ArrayList(vaccineList)
+    }
+    private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {
+
+        val vaccineList = ArrayList<DbVaccineData>()
+
+        fhirEngine
+            .search<AdverseEvent> {
+                filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
+                sort(AdverseEvent.DATE, Order.DESCENDING)
+            }
+            .map { createAdverseEventItem(it) }
             .let { vaccineList.addAll(it) }
 
 
@@ -655,6 +671,30 @@ class PatientDetailsViewModel(
 
         if (data.hasNote()) {
             status = if (data.noteFirstRep.hasText()) data.noteFirstRep.text else ""
+        }
+
+        return DbVaccineData(
+            ref,
+            null,
+            vaccineName,
+            doseNumberValue,
+            dateScheduled,
+            status
+        )
+    }
+
+    private fun createAdverseEventItem(data: AdverseEvent): DbVaccineData {
+
+        var vaccineName = ""
+        var doseNumberValue = ""
+        val logicalId = if (data.hasEncounter()) data.encounter.reference else ""
+        var dateScheduled = ""
+        var status = ""
+
+        val ref = logicalId.toString().replace("Encounter/", "")
+
+        if (data.hasEvent()) {
+            status = if (data.event.hasText()) data.event.text else ""
         }
 
         return DbVaccineData(
@@ -949,7 +989,7 @@ class PatientDetailsViewModel(
     }
 
 
-    private suspend fun counterAllergies(weekNo: String, patientId: String): String {
+    private suspend fun counterAllergiesOld(weekNo: String, patientId: String): String {
         var counter = 0
         fhirEngine
             .search<AllergyIntolerance> {
@@ -965,8 +1005,22 @@ class PatientDetailsViewModel(
 
         return "$counter"
     }
+    private suspend fun counterAllergies(weekNo: String, patientId: String): String {
+        var counter = 0
+        fhirEngine
+            .search<AdverseEvent> {
+                filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
+                sort(AdverseEvent.DATE, Order.DESCENDING)
+            }
+            .map { createAdverseEventItem(it) }
+            .forEach { q ->
+                if (q.status.contains(weekNo)) {
+                    counter++
+                }
+            }
 
-
+        return "$counter"
+    }
 }
 
 class PatientDetailsViewModelFactory(
