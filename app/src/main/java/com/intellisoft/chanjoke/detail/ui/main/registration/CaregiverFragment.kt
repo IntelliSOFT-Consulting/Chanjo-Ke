@@ -20,6 +20,7 @@ import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentCaregiverBinding
 import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.utils.AppUtils
 import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
@@ -225,7 +226,7 @@ class CaregiverFragment : Fragment() {
             val kinPhone = binding.phone.text.toString()
             val careGiver = CareGiver(
                 phone = kinPhone,
-                name = kinName,
+                name = AppUtils().capitalizeFirstLetter(kinName),
                 type = kinType
             )
             //only add if there is no caregiver type, else update that index

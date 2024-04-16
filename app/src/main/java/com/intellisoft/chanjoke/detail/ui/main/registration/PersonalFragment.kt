@@ -360,7 +360,7 @@ class PersonalFragment : Fragment() {
             }
             binding.apply {
                 tvEstimatedDob.apply {
-                  setText(calculateDateOfBirth(enteredYear, enteredMonths, enteredWeeks))
+                    setText(calculateDateOfBirth(enteredYear, enteredMonths, enteredWeeks))
                 }
             }
             updateIdentifications(enteredYear)
@@ -560,9 +560,9 @@ class PersonalFragment : Fragment() {
         }
 
         val payload = CustomPatient(
-            firstname = firstName,
-            middlename = middleName,
-            lastname = lastName,
+            firstname = AppUtils().capitalizeFirstLetter(firstName),
+            middlename = AppUtils().capitalizeFirstLetter(middleName),
+            lastname = AppUtils().capitalizeFirstLetter(lastName),
             gender = gender,
             age = age,
             dateOfBirth = dateOfBirthString,
