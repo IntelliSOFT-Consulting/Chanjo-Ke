@@ -177,7 +177,15 @@ class AdverseEventActivity : AppCompatActivity() {
             val adverseEvent = patientDetailsViewModel.getAdverseEvent(patientId, encounterId)
             if (adverseEvent != null) {
                 // Process the adverse event (e.g., display details, perform actions)
-                println("Found Adverse Event: ${adverseEvent}")
+                println("Found Adverse Event: ${adverseEvent.practitionerId}")
+                binding.apply {
+                    healthcareWorkerTextView.apply {
+                        text = adverseEvent.practitionerId.name
+                    }
+                    designationTextView.apply {
+                        text = adverseEvent.practitionerId.role
+                    }
+                }
             } else {
                 println("No Adverse Event found for encounterId: $encounterId")
             }

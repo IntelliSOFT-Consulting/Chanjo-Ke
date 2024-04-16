@@ -31,6 +31,7 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
+import com.intellisoft.chanjoke.fhir.data.PractitionerDetails
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.utils.Constants.AEFI_DATE
 import com.intellisoft.chanjoke.utils.Constants.AEFI_TYPE
@@ -531,18 +532,29 @@ class PatientDetailsViewModel(
         var practitionerId = practId.toString().replace("Practitioner/", "")
         val locId = if (data.hasLocation()) data.location.reference else ""
         var locationId = locId.toString().replace("Location/", "")
-
+        var name = ""
+        var role = ""
         if (locationId.isNotEmpty()) {
             locationId = getLocationName(locationId)
         }
         if (practitionerId.isNotEmpty()) {
 
-            practitionerId = getPractitionerName(practitionerId)
+            try {
+                val myPair = getPractitionerName(practitionerId)
+                name = myPair.first
+                role = myPair.second
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
 
         // Create and return an AdverseEventItem instance
-        return AdverseEventItem(encounterId, practitionerId, locationId)
+        return AdverseEventItem(
+            encounterId,
+            PractitionerDetails(name = name, role = role),
+            locationId
+        )
     }
 
     private fun getLocationName(locationId: String) = runBlocking {
@@ -553,31 +565,36 @@ class PatientDetailsViewModel(
         getPractitionerNameInner(locationId)
     }
 
-    private suspend fun getPractitionerNameInner(locationId: String): String {
-        var location = ""
-        Timber.e("Adverse Event ***** $locationId")
+    private suspend fun getPractitionerNameInner(resId: String): Pair<String, String> {
+        var name = ""
+        var role = ""
 
         try {
             val searchResult = fhirEngine.search<Practitioner> {
-                filter(Practitioner.RES_ID, { value = of(locationId) })
+                filter(Practitioner.RES_ID, { value = of(resId) })
             }
-            Timber.e("Adverse Event ***** $searchResult")
-            location = searchResult.first().name[0].nameAsSingleString
+            name = searchResult.first().name[0].nameAsSingleString
+            if (searchResult.first().hasExtension()) {
+                searchResult.first().extension.forEach {
+                    if (it.hasValue()) {
+                        role = it.value.asStringValue()
+                    }
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return location
+        return Pair(name, role)
+
     }
 
     private suspend fun getLocationNameInner(locationId: String): String {
         var location = ""
-        Timber.e("Adverse Event ***** $locationId")
 
         try {
             val searchResult = fhirEngine.search<Location> {
                 filter(Location.RES_ID, { value = of(locationId) })
             }
-            Timber.e("Adverse Event ***** $searchResult")
             location = searchResult.first().name
         } catch (e: Exception) {
             e.printStackTrace()
