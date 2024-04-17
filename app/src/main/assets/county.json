@@ -3,16 +3,16 @@
     "name": "Baringo",
     "sub_counties": [
       {
-        "name": "Baringo central"
+        "name": "Baringo Central"
       },
       {
-        "name": "Baringo north"
+        "name": "Baringo North"
       },
       {
-        "name": "Baringo south"
+        "name": "Baringo South"
       },
       {
-        "name": "Eldama ravine"
+        "name": "Eldama Ravine"
       },
       {
         "name": "Mogotio"
@@ -26,10 +26,10 @@
     "name": "Bomet",
     "sub_counties": [
       {
-        "name": "Bomet central"
+        "name": "Bomet Central"
       },
       {
-        "name": "Bomet east"
+        "name": "Bomet East"
       },
       {
         "name": "Chepalungu"
@@ -67,10 +67,10 @@
         "name": "Tongaren"
       },
       {
-        "name": "Webuye east"
+        "name": "Webuye East"
       },
       {
-        "name": "Webuye west"
+        "name": "Webuye West"
       }
     ]
   },
@@ -101,16 +101,16 @@
     "name": "Elgeyo-Marakwet",
     "sub_counties": [
       {
-        "name": "Keiyo north"
+        "name": "Keiyo North"
       },
       {
-        "name": "Keiyo south"
+        "name": "Keiyo South"
       },
       {
-        "name": "Marakwet east"
+        "name": "Marakwet East"
       },
       {
-        "name": "Marakwet west"
+        "name": "Marakwet West"
       }
     ]
   },
@@ -121,10 +121,10 @@
         "name": "Manyatta"
       },
       {
-        "name": "Mbeere north"
+        "name": "Mbeere North"
       },
       {
-        "name": "Mbeere south"
+        "name": "Mbeere South"
       },
       {
         "name": "Runyenjes"
@@ -150,7 +150,7 @@
         "name": "Ijara"
       },
       {
-        "name": "Lagdera balambala"
+        "name": "Lagdera Balambala"
       }
     ]
   },
@@ -158,7 +158,7 @@
     "name": "Homa Bay",
     "sub_counties": [
       {
-        "name": "Homabay town"
+        "name": "Homabay Town"
       },
       {
         "name": "Kabondo"
@@ -190,7 +190,7 @@
         "name": "Central"
       },
       {
-        "name": "Garba tula"
+        "name": "Garba Tula"
       },
       {
         "name": "Kina"
@@ -233,16 +233,16 @@
         "name": "Butere"
       },
       {
-        "name": "Kakamega central"
+        "name": "Kakamega Central"
       },
       {
-        "name": "Kakamega east"
+        "name": "Kakamega East"
       },
       {
-        "name": "Kakamega north"
+        "name": "Kakamega North"
       },
       {
-        "name": "Kakamega south"
+        "name": "Kakamega South"
       },
       {
         "name": "Khwisero"
@@ -283,13 +283,13 @@
         "name": "Bureti"
       },
       {
-        "name": "Kipkelion east"
+        "name": "Kipkelion East"
       },
       {
-        "name": "Kipkelion west"
+        "name": "Kipkelion West"
       },
       {
-        "name": "Soin sigowet"
+        "name": "Soin Sigowet"
       }
     ]
   },
@@ -297,10 +297,10 @@
     "name": "Kiambu",
     "sub_counties": [
       {
-        "name": "Gatundu north"
+        "name": "Gatundu North"
       },
       {
-        "name": "Gatundu south"
+        "name": "Gatundu South"
       },
       {
         "name": "Githunguri"
@@ -327,10 +327,10 @@
         "name": "Ruiru"
       },
       {
-        "name": "Thika town"
+        "name": "Thika Town"
       },
       {
-        "name": "lari"
+        "name": "Lari"
       }
     ]
   },
@@ -344,10 +344,10 @@
         "name": "Kaloleni"
       },
       {
-        "name": "Kilifi north"
+        "name": "Kilifi North"
       },
       {
-        "name": "Kilifi south"
+        "name": "Kilifi South"
       },
       {
         "name": "Magarini"
@@ -364,19 +364,19 @@
     "name": "Kirinyaga",
     "sub_counties": [
       {
-        "name": "Kirinyaga central"
+        "name": "Kirinyaga Central"
       },
       {
-        "name": "Kirinyaga east"
+        "name": "Kirinyaga East"
       },
       {
-        "name": "Kirinyaga west"
+        "name": "Kirinyaga West"
       },
       {
-        "name": "Mwea east"
+        "name": "Mwea East"
       },
       {
-        "name": "Mwea west"
+        "name": "Mwea West"
       }
     ]
   },
@@ -416,13 +416,13 @@
     "name": "Kisumu",
     "sub_counties": [
       {
-        "name": "Kisumu central"
+        "name": "Kisumu Central"
       },
       {
-        "name": "Kisumu east "
+        "name": "Kisumu East"
       },
       {
-        "name": "Kisumu west"
+        "name": "Kisumu West"
       },
       {
         "name": "Mohoroni"
@@ -451,13 +451,13 @@
         "name": "Kisasi"
       },
       {
-        "name": "Kitui central"
+        "name": "Kitui Central"
       },
       {
-        "name": "Kitui west "
+        "name": "Kitui West"
       },
       {
-        "name": "Lower yatta"
+        "name": "Lower Yatta"
       },
       {
         "name": "Matiyani"
@@ -475,10 +475,10 @@
         "name": "Muumonikyusu"
       },
       {
-        "name": "Mwingi central"
+        "name": "Mwingi Central"
       },
       {
-        "name": "Mwingi east"
+        "name": "Mwingi East"
       },
       {
         "name": "Nzambani"
@@ -509,16 +509,16 @@
     "name": "Laikipia",
     "sub_counties": [
       {
-        "name": "Laikipia central"
+        "name": "Laikipia Central"
       },
       {
-        "name": "Laikipia east"
+        "name": "Laikipia East"
       },
       {
-        "name": "Laikipia north"
+        "name": "Laikipia North"
       },
       {
-        "name": "Laikipia west "
+        "name": "Laikipia West"
       },
       {
         "name": "Nyahururu"
@@ -543,7 +543,7 @@
         "name": "Kathiani"
       },
       {
-        "name": "Machakos town"
+        "name": "Machakos Town"
       },
       {
         "name": "Masinga"
@@ -569,10 +569,10 @@
         "name": "Kaiti"
       },
       {
-        "name": "Kibwei west"
+        "name": "Kibwei West"
       },
       {
-        "name": "Kibwezi east"
+        "name": "Kibwezi East"
       },
       {
         "name": "Kilome"
@@ -618,7 +618,7 @@
         "name": "Moyale"
       },
       {
-        "name": "North hor"
+        "name": "North Hor"
       },
       {
         "name": "Saku"
@@ -632,28 +632,28 @@
         "name": "Buuri"
       },
       {
-        "name": "Igembe central"
+        "name": "Igembe Central"
       },
       {
-        "name": "Igembe north"
+        "name": "Igembe North"
       },
       {
-        "name": "Igembe south"
+        "name": "Igembe South"
       },
       {
-        "name": "Imenti central"
+        "name": "Meru Central"
       },
       {
-        "name": "Imenti north"
+        "name": "Meru North"
       },
       {
-        "name": "Imenti south"
+        "name": "Meru South"
       },
       {
-        "name": "Tigania east"
+        "name": "Tigania East"
       },
       {
-        "name": "Tigania west"
+        "name": "Tigania West"
       }
     ]
   },
@@ -664,25 +664,22 @@
         "name": "Awendo"
       },
       {
-        "name": "Kuria east"
+        "name": "Kuria East"
       },
       {
-        "name": "Kuria west"
+        "name": "Kuria West"
       },
       {
-        "name": "Mabera"
-      },
-      {
-        "name": "Ntimaru"
+        "name": "Nyatike"
       },
       {
         "name": "Rongo"
       },
       {
-        "name": "Suna east"
+        "name": "Suna East"
       },
       {
-        "name": "Suna west"
+        "name": "Suna West"
       },
       {
         "name": "Uriri"
@@ -731,13 +728,13 @@
         "name": "Kigumo"
       },
       {
-        "name": "Kiharu"
+        "name": "Maragua"
       },
       {
         "name": "Mathioya"
       },
       {
-        "name": "Murang’a south"
+        "name": "Muranga South"
       }
     ]
   },
@@ -745,55 +742,58 @@
     "name": "Nairobi",
     "sub_counties": [
       {
-        "name": "Dagoretti North Sub County"
+        "name": "Dagoretti North"
       },
       {
-        "name": "Dagoretti South Sub County "
+        "name": "Dagoretti South"
       },
       {
-        "name": "Embakasi Central Sub Count"
+        "name": "Embakasi Central"
       },
       {
-        "name": "Embakasi East Sub County"
+        "name": "Embakasi East"
       },
       {
-        "name": "Embakasi North Sub County "
+        "name": "Embakasi North"
       },
       {
-        "name": "Embakasi South Sub County"
+        "name": "Embakasi South"
       },
       {
-        "name": "Embakasi West Sub County"
+        "name": "Embakasi West"
       },
       {
-        "name": "Kamukunji Sub County"
+        "name": "Kamukunji"
       },
       {
-        "name": "Kasarani Sub County "
+        "name": "Kasarani"
       },
       {
-        "name": "Kibra Sub County "
+        "name": "Kibra"
       },
       {
-        "name": "Lang'ata Sub County "
+        "name": "Lang'ata"
       },
       {
-        "name": "Makadara Sub County"
+        "name": "Makadara"
       },
       {
-        "name": "Mathare Sub County "
+        "name": "Mathare"
       },
       {
-        "name": "Roysambu Sub County "
+        "name": "Nairobi Central"
       },
       {
-        "name": "Ruaraka Sub County "
+        "name": "Roysambu"
       },
       {
-        "name": "Starehe Sub County "
+        "name": "Ruaraka"
       },
       {
-        "name": "Westlands Sub County "
+        "name": "Starehe"
+      },
+      {
+        "name": "Westlands"
       }
     ]
   },
@@ -807,10 +807,10 @@
         "name": "Gilgil"
       },
       {
-        "name": "Kuresoi north"
+        "name": "Kuresoi North"
       },
       {
-        "name": "Kuresoi south"
+        "name": "Kuresoi South"
       },
       {
         "name": "Molo"
@@ -819,10 +819,10 @@
         "name": "Naivasha"
       },
       {
-        "name": "Nakuru town east"
+        "name": "Nakuru East"
       },
       {
-        "name": "Nakuru town west"
+        "name": "Nakuru North"
       },
       {
         "name": "Njoro"
@@ -851,10 +851,10 @@
         "name": "Mosop"
       },
       {
-        "name": "Namdi hills"
+        "name": "Nandi Hills"
       },
       {
-        "name": "Tindiret"
+        "name": "Tinderet"
       }
     ]
   },
@@ -862,22 +862,19 @@
     "name": "Narok",
     "sub_counties": [
       {
-        "name": "Narok east"
+        "name": "Narok East"
       },
       {
-        "name": "Narok north"
+        "name": "Narok North"
       },
       {
-        "name": "Narok south"
+        "name": "Narok South"
       },
       {
-        "name": "Narok west"
+        "name": "Trans Mara East"
       },
       {
-        "name": "Transmara east"
-      },
-      {
-        "name": "Transmara west"
+        "name": "Trans Mara West"
       }
     ]
   },
@@ -891,13 +888,13 @@
         "name": "Manga"
       },
       {
-        "name": "Masaba north"
+        "name": "Masaba North"
       },
       {
-        "name": "Nyamira north"
+        "name": "Nyamira North"
       },
       {
-        "name": "Nyamira south"
+        "name": "Nyamira South"
       }
     ]
   },
@@ -915,9 +912,6 @@
       },
       {
         "name": "Ol Kalou"
-      },
-      {
-        "name": "Ol joro orok"
       }
     ]
   },
@@ -925,22 +919,22 @@
     "name": "Nyeri",
     "sub_counties": [
       {
-        "name": "Kieni east"
+        "name": "Kieni East"
       },
       {
-        "name": "Kieni west"
+        "name": "Kieni West"
       },
       {
-        "name": "Mathira east"
+        "name": "Mathira East"
       },
       {
-        "name": "Mathira west"
+        "name": "Mathira West"
       },
       {
-        "name": "Mkurweni"
+        "name": "Mukurwe-ini"
       },
       {
-        "name": "Nyeri town"
+        "name": "Nyeri Central"
       },
       {
         "name": "Othaya"
@@ -954,13 +948,13 @@
     "name": "Samburu",
     "sub_counties": [
       {
-        "name": "Samburu east"
+        "name": "Samburu Central"
       },
       {
-        "name": "Samburu north"
+        "name": "Samburu East"
       },
       {
-        "name": "Samburu west"
+        "name": "Samburu North"
       }
     ]
   },
@@ -968,7 +962,7 @@
     "name": "Siaya",
     "sub_counties": [
       {
-        "name": "Alego usonga"
+        "name": "Alego Usonga"
       },
       {
         "name": "Bondo"
@@ -980,10 +974,7 @@
         "name": "Rarieda"
       },
       {
-        "name": "Ugenya"
-      },
-      {
-        "name": "Unguja"
+        "name": "Ugunja"
       }
     ]
   },
@@ -1011,10 +1002,10 @@
         "name": "Bura"
       },
       {
-        "name": "Galole"
+        "name": "Garsen"
       },
       {
-        "name": "Garsen"
+        "name": "Hirimani"
       }
     ]
   },
@@ -1025,7 +1016,7 @@
         "name": "Chuka"
       },
       {
-        "name": "Igambangobe"
+        "name": "Igambang'ombe"
       },
       {
         "name": "Maara"
@@ -1034,10 +1025,7 @@
         "name": "Muthambi"
       },
       {
-        "name": "Tharak north"
-      },
-      {
-        "name": "Tharaka south"
+        "name": "Tharaka"
       }
     ]
   },
@@ -1054,9 +1042,6 @@
         "name": "Kiminini"
       },
       {
-        "name": "Kwanza"
-      },
-      {
         "name": "Saboti"
       }
     ]
@@ -1065,19 +1050,28 @@
     "name": "Turkana",
     "sub_counties": [
       {
+        "name": "Central"
+      },
+      {
         "name": "Loima"
       },
       {
-        "name": "Turkana central"
+        "name": "North Hor"
       },
       {
-        "name": "Turkana east"
+        "name": "South Hor"
       },
       {
-        "name": "Turkana north"
+        "name": "Turkana East"
       },
       {
-        "name": "Turkana south"
+        "name": "Turkana North"
+      },
+      {
+        "name": "Turkana South"
+      },
+      {
+        "name": "Turkana West"
       }
     ]
   },
@@ -1118,9 +1112,6 @@
       },
       {
         "name": "Sabatia"
-      },
-      {
-        "name": "vihiga"
       }
     ]
   },
@@ -1129,6 +1120,12 @@
     "sub_counties": [
       {
         "name": "Eldas"
+      },
+      {
+        "name": "Habaswein"
+      },
+      {
+        "name": "Lagbogol South"
       },
       {
         "name": "Tarbaj"
@@ -1151,16 +1148,16 @@
     "name": "West Pokot",
     "sub_counties": [
       {
-        "name": "Central Pokot"
+        "name": "Central"
       },
       {
-        "name": "North Pokot"
+        "name": "North Hor"
       },
       {
         "name": "Pokot South"
       },
       {
-        "name": "West Pokot"
+        "name": "Pokot West"
       }
     ]
   }

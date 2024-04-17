@@ -132,8 +132,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10dp"
+            android:orientation="horizontal"
+            >
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutOne"
@@ -192,6 +199,24 @@
                     android:hint="@string/weeks"
                     android:inputType="number"
                     android:maxLength="2"
+                    android:maxLines="1"
+                    android:textSize="12sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutEstimate"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxBackgroundMode="outline">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tv_estimated_dob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/estimated_dob"
+                    android:inputType="none"
                     android:maxLines="1"
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>

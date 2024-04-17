@@ -90,6 +90,9 @@ class AdverseEventActivity : AppCompatActivity() {
             FormatterClass().getSharedPref("encounter_logical", this@AdverseEventActivity)
         binding.apply {
             val type = extractAefiData(patientId.toString(), encounterId.toString(), "882-22")
+            if (encounterId != null) {
+                displayPractitionerDetails(patientId.toString(), encounterId)
+            }
 
             try {
                 val trimmedText = type.trim()
@@ -167,6 +170,29 @@ class AdverseEventActivity : AppCompatActivity() {
                 "882-22"
             )
         }
+    }
+
+    private fun displayPractitionerDetails(patientId: String, encounterId: String) {
+        try {
+            val adverseEvent = patientDetailsViewModel.getAdverseEvent(patientId, encounterId)
+            if (adverseEvent != null) {
+                // Process the adverse event (e.g., display details, perform actions)
+                println("Found Adverse Event: ${adverseEvent.practitionerId}")
+                binding.apply {
+                    healthcareWorkerTextView.apply {
+                        text = adverseEvent.practitionerId.name
+                    }
+                    designationTextView.apply {
+                        text = adverseEvent.practitionerId.role
+                    }
+                }
+            } else {
+                println("No Adverse Event found for encounterId: $encounterId")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     private fun extractAefiOccuranceData(

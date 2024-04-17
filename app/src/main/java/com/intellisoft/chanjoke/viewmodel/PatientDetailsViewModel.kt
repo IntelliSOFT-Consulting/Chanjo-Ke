@@ -22,6 +22,7 @@ import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
+import com.intellisoft.chanjoke.fhir.data.AdverseEventItem
 import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.Contraindication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
@@ -30,6 +31,7 @@ import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
+import com.intellisoft.chanjoke.fhir.data.PractitionerDetails
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.utils.Constants.AEFI_DATE
 import com.intellisoft.chanjoke.utils.Constants.AEFI_TYPE
@@ -45,6 +47,8 @@ import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import org.hl7.fhir.r4.model.AdverseEvent
 import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Appointment
 import org.hl7.fhir.r4.model.Coding
@@ -54,8 +58,10 @@ import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Location
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
+import org.hl7.fhir.r4.model.Practitioner
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
+import org.hl7.fhir.r4.model.ResourceType
 import org.hl7.fhir.r4.model.RiskAssessment
 import timber.log.Timber
 
@@ -465,7 +471,7 @@ class PatientDetailsViewModel(
         getVaccineListDetailsOld()
     }
 
-    private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {
+    private suspend fun getVaccineListDetailsOldOne(): ArrayList<DbVaccineData> {
 
         val vaccineList = ArrayList<DbVaccineData>()
 
@@ -479,6 +485,121 @@ class PatientDetailsViewModel(
 
 
         return ArrayList(vaccineList)
+    }
+
+    private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {
+
+        val vaccineList = ArrayList<DbVaccineData>()
+
+        fhirEngine
+            .search<AdverseEvent> {
+                filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
+                sort(AdverseEvent.DATE, Order.DESCENDING)
+            }
+            .map { createAdverseEventItem(it) }
+            .let { vaccineList.addAll(it) }
+
+
+        return ArrayList(vaccineList)
+    }
+
+    fun getAdverseEvent(patientId: String, encounterId: String) = runBlocking {
+        getAdverseEventDetails(patientId, encounterId)
+    }
+
+    private suspend fun getAdverseEventDetails(
+        patientId: String,
+        encounterId: String
+    ): AdverseEventItem? {
+        return withContext(Dispatchers.IO) {
+            // Search for adverse events related to the specified patient
+            val adverseEvents = fhirEngine
+                .search<AdverseEvent> {
+                    filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
+                    sort(AdverseEvent.DATE, Order.DESCENDING)
+                }
+                .map { createAdverseEventItemDetails(it) }
+
+            // Find the adverse event that matches the encounterId
+            adverseEvents.find { it.encounterId == encounterId }
+        }
+    }
+
+    private fun createAdverseEventItemDetails(data: AdverseEvent): AdverseEventItem {
+        val logicalId = if (data.hasEncounter()) data.encounter.reference else ""
+        val encounterId = logicalId.toString().replace("Encounter/", "")
+        val practId = if (data.hasRecorder()) data.recorder.reference else ""
+        var practitionerId = practId.toString().replace("Practitioner/", "")
+        val locId = if (data.hasLocation()) data.location.reference else ""
+        var locationId = locId.toString().replace("Location/", "")
+        var name = ""
+        var role = ""
+        if (locationId.isNotEmpty()) {
+            locationId = getLocationName(locationId)
+        }
+        if (practitionerId.isNotEmpty()) {
+
+            try {
+                val myPair = getPractitionerName(practitionerId)
+                name = myPair.first
+                role = myPair.second
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+
+        // Create and return an AdverseEventItem instance
+        return AdverseEventItem(
+            encounterId,
+            PractitionerDetails(name = name, role = role),
+            locationId
+        )
+    }
+
+    private fun getLocationName(locationId: String) = runBlocking {
+        getLocationNameInner(locationId)
+    }
+
+    private fun getPractitionerName(locationId: String) = runBlocking {
+        getPractitionerNameInner(locationId)
+    }
+
+    private suspend fun getPractitionerNameInner(resId: String): Pair<String, String> {
+        var name = ""
+        var role = ""
+
+        try {
+            val searchResult = fhirEngine.search<Practitioner> {
+                filter(Practitioner.RES_ID, { value = of(resId) })
+            }
+            name = searchResult.first().name[0].nameAsSingleString
+            if (searchResult.first().hasExtension()) {
+                searchResult.first().extension.forEach {
+                    if (it.hasValue()) {
+                        role = it.value.asStringValue()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return Pair(name, role)
+
+    }
+
+    private suspend fun getLocationNameInner(locationId: String): String {
+        var location = ""
+
+        try {
+            val searchResult = fhirEngine.search<Location> {
+                filter(Location.RES_ID, { value = of(locationId) })
+            }
+            location = searchResult.first().name
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return location
     }
 
     fun getImmunizationDataDetails(codeValue: String) =
@@ -655,6 +776,30 @@ class PatientDetailsViewModel(
 
         if (data.hasNote()) {
             status = if (data.noteFirstRep.hasText()) data.noteFirstRep.text else ""
+        }
+
+        return DbVaccineData(
+            ref,
+            null,
+            vaccineName,
+            doseNumberValue,
+            dateScheduled,
+            status
+        )
+    }
+
+    private fun createAdverseEventItem(data: AdverseEvent): DbVaccineData {
+
+        var vaccineName = ""
+        var doseNumberValue = ""
+        val logicalId = if (data.hasEncounter()) data.encounter.reference else ""
+        var dateScheduled = ""
+        var status = ""
+
+        val ref = logicalId.toString().replace("Encounter/", "")
+
+        if (data.hasEvent()) {
+            status = if (data.event.hasText()) data.event.text else ""
         }
 
         return DbVaccineData(
@@ -949,7 +1094,7 @@ class PatientDetailsViewModel(
     }
 
 
-    private suspend fun counterAllergies(weekNo: String, patientId: String): String {
+    private suspend fun counterAllergiesOld(weekNo: String, patientId: String): String {
         var counter = 0
         fhirEngine
             .search<AllergyIntolerance> {
@@ -957,6 +1102,23 @@ class PatientDetailsViewModel(
                 sort(AllergyIntolerance.DATE, Order.DESCENDING)
             }
             .map { createAllergyIntoleranceItem(it) }
+            .forEach { q ->
+                if (q.status.contains(weekNo)) {
+                    counter++
+                }
+            }
+
+        return "$counter"
+    }
+
+    private suspend fun counterAllergies(weekNo: String, patientId: String): String {
+        var counter = 0
+        fhirEngine
+            .search<AdverseEvent> {
+                filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
+                sort(AdverseEvent.DATE, Order.DESCENDING)
+            }
+            .map { createAdverseEventItem(it) }
             .forEach { q ->
                 if (q.status.contains(weekNo)) {
                     counter++
