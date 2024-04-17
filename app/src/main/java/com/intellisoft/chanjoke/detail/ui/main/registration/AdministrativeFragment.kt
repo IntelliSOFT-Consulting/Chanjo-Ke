@@ -195,12 +195,13 @@ class AdministrativeFragment : Fragment() {
                             if (value.isNotEmpty()) {
                                 binding.telSubCounty.error = null
                                 updatePrefs()
-                                val subCounty = wards.find { it.subCounty == value.lowercase() }
+                                val subCounty =
+                                    wards.find { it.subCounty.lowercase() == value.lowercase() }
                                 if (subCounty != null) {
                                     wardList.clear()
                                     binding.ward.setText("", false)
                                     subCounty.wards.forEach {
-                                        wardList.add(AppUtils().capitalizeFirstLetter(it.name))
+                                        wardList.add(it.name)
 
                                     }
                                     val subCountyAdapter =
@@ -360,11 +361,11 @@ class AdministrativeFragment : Fragment() {
             val estateString = binding.estate.text.toString()
 
             val payload = Administrative(
-                county = countyString,
-                subCounty = subCountyString,
-                ward = wardString,
-                trading = tradingString,
-                estate = estateString
+                county = AppUtils().capitalizeFirstLetter(countyString),
+                subCounty = AppUtils().capitalizeFirstLetter(subCountyString),
+                ward = AppUtils().capitalizeFirstLetter(wardString),
+                trading = AppUtils().capitalizeFirstLetter(tradingString),
+                estate = AppUtils().capitalizeFirstLetter(estateString)
             )
             formatter.saveSharedPref("administrative", Gson().toJson(payload), requireContext())
             liveData.updatePatientDetails(Gson().toJson(payload))

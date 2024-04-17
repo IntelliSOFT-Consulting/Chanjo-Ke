@@ -88,6 +88,7 @@
     <string name="enter_new_password">Enter New Password</string>
     <string name="update_password">Update Password</string>
     <string name="reset_code">Reset code</string>
+    <string name="estimated_dob">Estimated DoB</string>
 
 
 </resources>

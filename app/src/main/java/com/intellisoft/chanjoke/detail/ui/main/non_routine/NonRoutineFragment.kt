@@ -224,7 +224,10 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
                     tvAefi.setOnClickListener {
                         FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
-
+                        FormatterClass().saveSharedPref(
+                            "title",
+                            "AEFI", requireContext()
+                        )
                         val intent = Intent(context, MainActivity::class.java)
                         intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
                         intent.putExtra("patientId", patientId)

@@ -85,6 +85,7 @@ class PersonalFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         AppUtils().disableEditing(binding.dateOfBirth)
         AppUtils().disableEditing(binding.calculatedAge)
+        AppUtils().disableEditing(binding.tvEstimatedDob)
 
         updateMandatoryFields()
 
@@ -310,6 +311,7 @@ class PersonalFragment : Fragment() {
                             lastname.setText(lastName)
                             middlename.setText(middleName)
                         }
+
                         4 -> {
                             val (firstName, middleName, lastName) = parts
                             firstname.setText(firstName)
@@ -322,7 +324,6 @@ class PersonalFragment : Fragment() {
                         }
                     }
 
-                    Timber.e("Populated Gender ***** ${data.gender}")
                     val gender = data.gender
                     if (gender.lowercase() == "male") {
                         radioButtonYes.isChecked = true
@@ -354,11 +355,13 @@ class PersonalFragment : Fragment() {
 
             if (enteredYear >= 18) {
                 formatter.saveSharedPref("isAbove", "true", requireContext())
-
-
             } else {
                 formatter.saveSharedPref("isAbove", "false", requireContext())
-
+            }
+            binding.apply {
+                tvEstimatedDob.apply {
+                    setText(calculateDateOfBirth(enteredYear, enteredMonths, enteredWeeks))
+                }
             }
             updateIdentifications(enteredYear)
         } catch (e: Exception) {
@@ -380,7 +383,7 @@ class PersonalFragment : Fragment() {
                 arrayOf(
                     "Birth Certificate",
                     "Passport",
-                    "Nemis"
+                    "NEMIS"
                 )
             }
 
@@ -557,9 +560,9 @@ class PersonalFragment : Fragment() {
         }
 
         val payload = CustomPatient(
-            firstname = firstName,
-            middlename = middleName,
-            lastname = lastName,
+            firstname = AppUtils().capitalizeFirstLetter(firstName),
+            middlename = AppUtils().capitalizeFirstLetter(middleName),
+            lastname = AppUtils().capitalizeFirstLetter(lastName),
             gender = gender,
             age = age,
             dateOfBirth = dateOfBirthString,

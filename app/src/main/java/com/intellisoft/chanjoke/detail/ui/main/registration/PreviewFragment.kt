@@ -22,6 +22,7 @@ import com.intellisoft.chanjoke.fhir.data.Administrative
 import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.utils.AppUtils
 import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
@@ -145,7 +146,7 @@ class PreviewFragment : Fragment() {
                         val tvCphone = itemView.findViewById<TextView>(R.id.tv_cphone)
 
                         // Set the text for each TextView with caregiver information
-                        tvCname.text = caregiver.name
+                        tvCname.text = AppUtils().capitalizeFirstLetter(caregiver.name)
                         tvCtype.text = caregiver.type
                         tvCphone.text = caregiver.phone
 
@@ -163,11 +164,11 @@ class PreviewFragment : Fragment() {
                 val refinedAdministrative =
                     Gson().fromJson(administrative, Administrative::class.java)
 
-                tvCounty.text = refinedAdministrative.county
-                tvSubCounty.text = refinedAdministrative.subCounty
-                tvWard.text = refinedAdministrative.ward
-                tvTrading.text = refinedAdministrative.trading
-                tvVillage.text = refinedAdministrative.estate
+                tvCounty.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.county)
+                tvSubCounty.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.subCounty)
+                tvWard.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.ward)
+                tvTrading.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.trading)
+                tvVillage.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.estate)
             }
         }
     }

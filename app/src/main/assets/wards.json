@@ -1,5801 +1,5801 @@
 [
   {
-    "subCounty": "changamwe",
+    "subCounty": "Changamwe",
     "wards": [
       {
-        "name": "port reitz"
+        "name": "Port Reitz"
       },
       {
-        "name": "kipevu"
+        "name": "Kipevu"
       },
       {
-        "name": "airport"
+        "name": "Airport"
       },
       {
-        "name": "changamwe"
+        "name": "Changamwe"
       },
       {
-        "name": "chaani"
+        "name": "Chaani"
       }
     ]
   },
   {
-    "subCounty": "jomvu",
+    "subCounty": "Jomvu",
     "wards": [
       {
-        "name": "jomvu kuu"
+        "name": "Jomvu Kuu"
       },
       {
-        "name": "miritini"
+        "name": "Miritini"
       },
       {
-        "name": "mikindani"
+        "name": "Mikindani"
       }
     ]
   },
   {
-    "subCounty": "kisauni",
+    "subCounty": "Kisauni",
     "wards": [
       {
-        "name": "mjambere"
+        "name": "Mjambere"
       },
       {
-        "name": "junda"
+        "name": "Junda"
       },
       {
-        "name": "bamburi"
+        "name": "Bamburi"
       },
       {
-        "name": "mwakirunge"
+        "name": "Mwakirunge"
       },
       {
-        "name": "mtopanga"
+        "name": "Mtopanga"
       },
       {
-        "name": "magogoni"
+        "name": "Magogoni"
       },
       {
-        "name": "shanzu"
+        "name": "Shanzu"
       }
     ]
   },
   {
-    "subCounty": "nyali",
+    "subCounty": "Nyali",
     "wards": [
       {
-        "name": "frere town"
+        "name": "Frere Town"
       },
       {
-        "name": "ziwa la ng'ombe"
+        "name": "Ziwa La Ng'ombe"
       },
       {
-        "name": "mkomani"
+        "name": "Mkomani"
       },
       {
-        "name": "kongowea"
+        "name": "Kongowea"
       },
       {
-        "name": "kadzandani"
+        "name": "Kadzandani"
       }
     ]
   },
   {
-    "subCounty": "likoni",
+    "subCounty": "Likoni",
     "wards": [
       {
-        "name": "mtongwe"
+        "name": "Mtongwe"
       },
       {
-        "name": "shika adabu"
+        "name": "Shika Adabu"
       },
       {
-        "name": "bofu"
+        "name": "Bofu"
       },
       {
-        "name": "likoni"
+        "name": "Likoni"
       },
       {
-        "name": "timbwani"
+        "name": "Timbwani"
       }
     ]
   },
   {
-    "subCounty": "mvita",
+    "subCounty": "Mvita",
     "wards": [
       {
-        "name": "mji wa kale makadara"
+        "name": "Mji Wa Kale Makadara"
       },
       {
-        "name": "tudor"
+        "name": "Tudor"
       },
       {
-        "name": "tononoka"
+        "name": "Tononoka"
       },
       {
-        "name": "shimanzi ganjoni"
+        "name": "Shimanzi Ganjoni"
       },
       {
-        "name": "majengo"
+        "name": "Majengo"
       }
     ]
   },
   {
-    "subCounty": "msambweni",
+    "subCounty": "Msambweni",
     "wards": [
       {
-        "name": "gombatobongwe"
+        "name": "Gombatobongwe"
       },
       {
-        "name": "ukunda"
+        "name": "Ukunda"
       },
       {
-        "name": "kinondo"
+        "name": "Kinondo"
       },
       {
-        "name": "ramisi"
+        "name": "Ramisi"
       }
     ]
   },
   {
-    "subCounty": "lungalunga",
+    "subCounty": "Lungalunga",
     "wards": [
       {
-        "name": "pongwekikoneni"
+        "name": "Pongwekikoneni"
       },
       {
-        "name": "dzombo"
+        "name": "Dzombo"
       },
       {
-        "name": "mwereni"
+        "name": "Mwereni"
       },
       {
-        "name": "vanga"
+        "name": "Vanga"
       }
     ]
   },
   {
-    "subCounty": "matuga",
+    "subCounty": "Matuga",
     "wards": [
       {
-        "name": "tsimba golini"
+        "name": "Tsimba Golini"
       },
       {
-        "name": "waa"
+        "name": "Waa"
       },
       {
-        "name": "tiwi"
+        "name": "Tiwi"
       },
       {
-        "name": "kubo south"
+        "name": "Kubo South"
       },
       {
-        "name": "mkongani"
+        "name": "Mkongani"
       }
     ]
   },
   {
-    "subCounty": "kinango",
+    "subCounty": "Kinango",
     "wards": [
       {
-        "name": "nadavaya"
+        "name": "Nadavaya"
       },
       {
-        "name": "puma"
+        "name": "Puma"
       },
       {
-        "name": "kinango"
+        "name": "Kinango"
       },
       {
-        "name": "mackinnon-road"
+        "name": "Mackinnon-Road"
       },
       {
-        "name": "chengoni samburu"
+        "name": "Chengoni Samburu"
       },
       {
-        "name": "mwavumbo"
+        "name": "Mwavumbo"
       },
       {
-        "name": "kasemeni"
+        "name": "Kasemeni"
       }
     ]
   },
   {
-    "subCounty": "kilifi north",
+    "subCounty": "Kilifi North",
     "wards": [
       {
-        "name": "tezo"
+        "name": "Tezo"
       },
       {
-        "name": "sokoni"
+        "name": "Sokoni"
       },
       {
-        "name": "kibarani"
+        "name": "Kibarani"
       },
       {
-        "name": "dabaso"
+        "name": "Dabaso"
       },
       {
-        "name": "matsangoni"
+        "name": "Matsangoni"
       },
       {
-        "name": "watamu"
+        "name": "Watamu"
       },
       {
-        "name": "mnarani"
+        "name": "Mnarani"
       }
     ]
   },
   {
-    "subCounty": "kilifi south",
+    "subCounty": "Kilifi South",
     "wards": [
       {
-        "name": "junju"
+        "name": "Junju"
       },
       {
-        "name": "mwarakaya"
+        "name": "Mwarakaya"
       },
       {
-        "name": "shimo la tewa"
+        "name": "Shimo La Tewa"
       },
       {
-        "name": "chasimba"
+        "name": "Chasimba"
       },
       {
-        "name": "mtepeni"
+        "name": "Mtepeni"
       }
     ]
   },
   {
-    "subCounty": "kaloleni",
+    "subCounty": "Kaloleni",
     "wards": [
       {
-        "name": "mariakani"
+        "name": "Mariakani"
       },
       {
-        "name": "kayafungo"
+        "name": "Kayafungo"
       },
       {
-        "name": "kaloleni"
+        "name": "Kaloleni"
       },
       {
-        "name": "mwanamwinga"
+        "name": "Mwanamwinga"
       }
     ]
   },
   {
-    "subCounty": "rabai",
+    "subCounty": "Rabai",
     "wards": [
       {
-        "name": "mwawesa"
+        "name": "Mwawesa"
       },
       {
-        "name": "ruruma"
+        "name": "Ruruma"
       },
       {
-        "name": "kambe ribe"
+        "name": "Kambe Ribe"
       },
       {
-        "name": "rabai kisurutini"
+        "name": "Rabai Kisurutini"
       }
     ]
   },
   {
-    "subCounty": "ganze",
+    "subCounty": "Ganze",
     "wards": [
       {
-        "name": "ganze"
+        "name": "Ganze"
       },
       {
-        "name": "bamba"
+        "name": "Bamba"
       },
       {
-        "name": "jaribuni"
+        "name": "Jaribuni"
       },
       {
-        "name": "sokoke"
+        "name": "Sokoke"
       }
     ]
   },
   {
-    "subCounty": "malindi",
+    "subCounty": "Malindi",
     "wards": [
       {
-        "name": "jilore"
+        "name": "Jilore"
       },
       {
-        "name": "kakuyuni"
+        "name": "Kakuyuni"
       },
       {
-        "name": "ganda"
+        "name": "Ganda"
       },
       {
-        "name": "malindi town"
+        "name": "Malindi Town"
       },
       {
-        "name": "shella"
+        "name": "Shella"
       }
     ]
   },
   {
-    "subCounty": "magarini",
+    "subCounty": "Magarini",
     "wards": [
       {
-        "name": "marafa"
+        "name": "Marafa"
       },
       {
-        "name": "magarini"
+        "name": "Magarini"
       },
       {
-        "name": "gongoni"
+        "name": "Gongoni"
       },
       {
-        "name": "adu"
+        "name": "Adu"
       },
       {
-        "name": "garashi"
+        "name": "Garashi"
       },
       {
-        "name": "sabaki"
+        "name": "Sabaki"
       }
     ]
   },
   {
-    "subCounty": "garsen",
+    "subCounty": "Garsen",
     "wards": [
       {
-        "name": "kipini east"
+        "name": "Kipini East"
       },
       {
-        "name": "garsen south"
+        "name": "Garsen South"
       },
       {
-        "name": "kipini west"
+        "name": "Kipini West"
       },
       {
-        "name": "garsen central"
+        "name": "Garsen Central"
       },
       {
-        "name": "garsen west"
+        "name": "Garsen West"
       },
       {
-        "name": "garsen north"
+        "name": "Garsen North"
       }
     ]
   },
   {
-    "subCounty": "galole",
+    "subCounty": "Galole",
     "wards": [
       {
-        "name": "kinakomba"
+        "name": "Kinakomba"
       },
       {
-        "name": "mikinduni"
+        "name": "Mikinduni"
       },
       {
-        "name": "chewani"
+        "name": "Chewani"
       },
       {
-        "name": "wayu"
+        "name": "Wayu"
       }
     ]
   },
   {
-    "subCounty": "bura",
+    "subCounty": "Bura",
     "wards": [
       {
-        "name": "chewele"
+        "name": "Chewele"
       },
       {
-        "name": "bura"
+        "name": "Bura"
       },
       {
-        "name": "bangale"
+        "name": "Bangale"
       },
       {
-        "name": "sala"
+        "name": "Sala"
       },
       {
-        "name": "madogo"
+        "name": "Madogo"
       }
     ]
   },
   {
-    "subCounty": "lamu east",
+    "subCounty": "Lamu East",
     "wards": [
       {
-        "name": "faza"
+        "name": "Faza"
       },
       {
-        "name": "kiunga"
+        "name": "Kiunga"
       },
       {
-        "name": "basuba"
+        "name": "Basuba"
       }
     ]
   },
   {
-    "subCounty": "lamu west",
+    "subCounty": "Lamu West",
     "wards": [
       {
-        "name": "shella"
+        "name": "Shella"
       },
       {
-        "name": "mkomani"
+        "name": "Mkomani"
       },
       {
-        "name": "hindi"
+        "name": "Hindi"
       },
       {
-        "name": "mkunumbi"
+        "name": "Mkunumbi"
       },
       {
-        "name": "hongwe"
+        "name": "Hongwe"
       },
       {
-        "name": "witu"
+        "name": "Witu"
       },
       {
-        "name": "bahari"
+        "name": "Bahari"
       }
     ]
   },
   {
-    "subCounty": "taveta",
+    "subCounty": "Taveta",
     "wards": [
       {
-        "name": "chala"
+        "name": "Chala"
       },
       {
-        "name": "mahoo"
+        "name": "Mahoo"
       },
       {
-        "name": "bomeni"
+        "name": "Bomeni"
       },
       {
-        "name": "mboghoni"
+        "name": "Mboghoni"
       },
       {
-        "name": "mata"
+        "name": "Mata"
       }
     ]
   },
   {
-    "subCounty": "wundanyi",
+    "subCounty": "Wundanyi",
     "wards": [
       {
-        "name": "wundanyi mbale"
+        "name": "Wundanyi Mbale"
       },
       {
-        "name": "werugha"
+        "name": "Werugha"
       },
       {
-        "name": "wumingu kishushe"
+        "name": "Wumingu Kishushe"
       },
       {
-        "name": "mwanda mgange"
+        "name": "Mwanda Mgange"
       }
     ]
   },
   {
-    "subCounty": "mwatate",
+    "subCounty": "Mwatate",
     "wards": [
       {
-        "name": "rong'e"
+        "name": "Rong'e"
       },
       {
-        "name": "mwatate"
+        "name": "Mwatate"
       },
       {
-        "name": "bura"
+        "name": "Bura"
       },
       {
-        "name": "chawia"
+        "name": "Chawia"
       },
       {
-        "name": "wusi kishamba"
+        "name": "Wusi Kishamba"
       }
     ]
   },
   {
-    "subCounty": "voi",
+    "subCounty": "Voi",
     "wards": [
       {
-        "name": "mbololo"
+        "name": "Mbololo"
       },
       {
-        "name": "sagalla"
+        "name": "Sagalla"
       },
       {
-        "name": "kaloleni"
+        "name": "Kaloleni"
       },
       {
-        "name": "marungu"
+        "name": "Marungu"
       },
       {
-        "name": "kasigau"
+        "name": "Kasigau"
       },
       {
-        "name": "ngolia"
+        "name": "Ngolia"
       }
     ]
   },
   {
-    "subCounty": "garissa township",
+    "subCounty": "Garissa Township",
     "wards": [
       {
-        "name": "waberi"
+        "name": "Waberi"
       },
       {
-        "name": "galbet"
+        "name": "Galbet"
       },
       {
-        "name": "township"
+        "name": "Township"
       },
       {
-        "name": "iftin"
+        "name": "Iftin"
       }
     ]
   },
   {
-    "subCounty": "balambala",
+    "subCounty": "Balambala",
     "wards": [
       {
-        "name": "balambala"
+        "name": "Balambala"
       },
       {
-        "name": "danyere"
+        "name": "Danyere"
       },
       {
-        "name": "jara jara"
+        "name": "Jara Jara"
       },
       {
-        "name": "saka"
+        "name": "Saka"
       },
       {
-        "name": "sankuri"
+        "name": "Sankuri"
       }
     ]
   },
   {
-    "subCounty": "lagdera",
+    "subCounty": "Lagdera",
     "wards": [
       {
-        "name": "modogashe"
+        "name": "Modogashe"
       },
       {
-        "name": "benane"
+        "name": "Benane"
       },
       {
-        "name": "goreale"
+        "name": "Goreale"
       },
       {
-        "name": "maalimin"
+        "name": "Maalimin"
       },
       {
-        "name": "sabena"
+        "name": "Sabena"
       },
       {
-        "name": "baraki"
+        "name": "Baraki"
       }
     ]
   },
   {
-    "subCounty": "dadaab",
+    "subCounty": "Dadaab",
     "wards": [
       {
-        "name": "dertu"
+        "name": "Dertu"
       },
       {
-        "name": "dadaab"
+        "name": "Dadaab"
       },
       {
-        "name": "labasigale"
+        "name": "Labasigale"
       },
       {
-        "name": "damajale"
+        "name": "Damajale"
       },
       {
-        "name": "liboi"
+        "name": "Liboi"
       },
       {
-        "name": "abakaile"
+        "name": "Abakaile"
       }
     ]
   },
   {
-    "subCounty": "fafi",
+    "subCounty": "Fafi",
     "wards": [
       {
-        "name": "bura"
+        "name": "Bura"
       },
       {
-        "name": "dekaharia"
+        "name": "Dekaharia"
       },
       {
-        "name": "jarajila"
+        "name": "Jarajila"
       },
       {
-        "name": "fafi"
+        "name": "Fafi"
       },
       {
-        "name": "nanighi"
+        "name": "Nanighi"
       }
     ]
   },
   {
-    "subCounty": "ijara",
+    "subCounty": "Ijara",
     "wards": [
       {
-        "name": "hulugho"
+        "name": "Hulugho"
       },
       {
-        "name": "sangailu"
+        "name": "Sangailu"
       },
       {
-        "name": "ijara"
+        "name": "Ijara"
       },
       {
-        "name": "masalani"
+        "name": "Masalani"
       }
     ]
   },
   {
-    "subCounty": "wajir north",
+    "subCounty": "Wajir North",
     "wards": [
       {
-        "name": "gurar"
+        "name": "Gurar"
       },
       {
-        "name": "bute"
+        "name": "Bute"
       },
       {
-        "name": "korondile"
+        "name": "Korondile"
       },
       {
-        "name": "malkagufu"
+        "name": "Malkagufu"
       },
       {
-        "name": "batalu"
+        "name": "Batalu"
       },
       {
-        "name": "danaba"
+        "name": "Danaba"
       },
       {
-        "name": "godoma"
+        "name": "Godoma"
       }
     ]
   },
   {
-    "subCounty": "wajir east",
+    "subCounty": "Wajir East",
     "wards": [
       {
-        "name": "wagberi"
+        "name": "Wagberi"
       },
       {
-        "name": "township"
+        "name": "Township"
       },
       {
-        "name": "barwago"
+        "name": "Barwago"
       },
       {
-        "name": "khorof harar"
+        "name": "Khorof Harar"
       }
     ]
   },
   {
-    "subCounty": "tarbaj",
+    "subCounty": "Tarbaj",
     "wards": [
       {
-        "name": "elben"
+        "name": "Elben"
       },
       {
-        "name": "sarman"
+        "name": "Sarman"
       },
       {
-        "name": "tarbaj"
+        "name": "Tarbaj"
       },
       {
-        "name": "wargadud"
+        "name": "Wargadud"
       }
     ]
   },
   {
-    "subCounty": "wajir west",
+    "subCounty": "Wajir West",
     "wards": [
       {
-        "name": "arbajahan"
+        "name": "Arbajahan"
       },
       {
-        "name": "hadado athibohol"
+        "name": "Hadado Athibohol"
       },
       {
-        "name": "ademasajide"
+        "name": "Ademasajide"
       },
       {
-        "name": "wagalla ganyure"
+        "name": "Wagalla Ganyure"
       }
     ]
   },
   {
-    "subCounty": "eldas",
+    "subCounty": "Eldas",
     "wards": [
       {
-        "name": "eldas"
+        "name": "Eldas"
       },
       {
-        "name": "della"
+        "name": "Della"
       },
       {
-        "name": "lakoley south basir"
+        "name": "Lakoley South Basir"
       },
       {
-        "name": "elnur tula tula"
+        "name": "Elnur Tula Tula"
       }
     ]
   },
   {
-    "subCounty": "wajir south",
+    "subCounty": "Wajir South",
     "wards": [
       {
-        "name": "benane"
+        "name": "Benane"
       },
       {
-        "name": "burder"
+        "name": "Burder"
       },
       {
-        "name": "dadaja bulla"
+        "name": "Dadaja Bulla"
       },
       {
-        "name": "habasswein"
+        "name": "Habasswein"
       },
       {
-        "name": "lagboghol south"
+        "name": "Lagboghol South"
       },
       {
-        "name": "ibrahim ure"
+        "name": "Ibrahim Ure"
       },
       {
-        "name": "diif"
+        "name": "Diif"
       }
     ]
   },
   {
-    "subCounty": "mandera west",
+    "subCounty": "Mandera West",
     "wards": [
       {
-        "name": "takaba south"
+        "name": "Takaba South"
       },
       {
-        "name": "takaba"
+        "name": "Takaba"
       },
       {
-        "name": "lag sure"
+        "name": "Lag Sure"
       },
       {
-        "name": "dandu"
+        "name": "Dandu"
       },
       {
-        "name": "gither"
+        "name": "Gither"
       }
     ]
   },
   {
-    "subCounty": "banissa",
+    "subCounty": "Banissa",
     "wards": [
       {
-        "name": "banissa"
+        "name": "Banissa"
       },
       {
-        "name": "derkhale"
+        "name": "Derkhale"
       },
       {
-        "name": "guba"
+        "name": "Guba"
       },
       {
-        "name": "malkamari"
+        "name": "Malkamari"
       },
       {
-        "name": "kiliwehiri"
+        "name": "Kiliwehiri"
       }
     ]
   },
   {
-    "subCounty": "mandera north",
+    "subCounty": "Mandera North",
     "wards": [
       {
-        "name": "ashabito"
+        "name": "Ashabito"
       },
       {
-        "name": "guticha"
+        "name": "Guticha"
       },
       {
-        "name": "morothile"
+        "name": "Morothile"
       },
       {
-        "name": "rhamu"
+        "name": "Rhamu"
       },
       {
-        "name": "rhamu-dimtu"
+        "name": "Rhamu-dimtu"
       }
     ]
   },
   {
-    "subCounty": "mandera south",
+    "subCounty": "Mandera South",
     "wards": [
       {
-        "name": "wargudud"
+        "name": "Wargudud"
       },
       {
-        "name": "kutulo"
+        "name": "Kutulo"
       },
       {
-        "name": "elwak south"
+        "name": "Elwak South"
       },
       {
-        "name": "elwak north"
+        "name": "Elwak North"
       },
       {
-        "name": "shimbir fatuma"
+        "name": "Shimbir Fatuma"
       }
     ]
   },
   {
-    "subCounty": "mandera east",
+    "subCounty": "Mandera East",
     "wards": [
       {
-        "name": "arabia"
+        "name": "Arabia"
       },
       {
-        "name": "bulla mpya"
+        "name": "Bulla Mpya"
       },
       {
-        "name": "khalalio"
+        "name": "Khalalio"
       },
       {
-        "name": "neboi"
+        "name": "Neboi"
       },
       {
-        "name": "township"
+        "name": "Township"
       }
     ]
   },
   {
-    "subCounty": "lafey",
+    "subCounty": "Lafey",
     "wards": [
       {
-        "name": "libehia"
+        "name": "Libehia"
       },
       {
-        "name": "fino"
+        "name": "Fino"
       },
       {
-        "name": "lafey"
+        "name": "Lafey"
       },
       {
-        "name": "warankara"
+        "name": "Warankara"
       },
       {
-        "name": "alungo gof"
+        "name": "Alungo Gof"
       }
     ]
   },
   {
-    "subCounty": "moyale",
+    "subCounty": "Moyale",
     "wards": [
       {
-        "name": "butiye"
+        "name": "Butiye"
       },
       {
-        "name": "sololo"
+        "name": "Sololo"
       },
       {
-        "name": "heilu-manyatta"
+        "name": "Heilu-manyatta"
       },
       {
-        "name": "golbo"
+        "name": "Golbo"
       },
       {
-        "name": "moyale township"
+        "name": "Moyale Township"
       },
       {
-        "name": "uran"
+        "name": "Uran"
       },
       {
-        "name": "obbu"
+        "name": "Obbu"
       }
     ]
   },
   {
-    "subCounty": "north horr",
+    "subCounty": "North Horr",
     "wards": [
       {
-        "name": "illeret"
+        "name": "Illeret"
       },
       {
-        "name": "north horr"
+        "name": "North Horr"
       },
       {
-        "name": "dukana"
+        "name": "Dukana"
       },
       {
-        "name": "maikona"
+        "name": "Maikona"
       },
       {
-        "name": "turbi"
+        "name": "Turbi"
       }
     ]
   },
   {
-    "subCounty": "saku",
+    "subCounty": "Saku",
     "wards": [
       {
-        "name": "sagante jaldesa"
+        "name": "Sagante Jaldesa"
       },
       {
-        "name": "karare"
+        "name": "Karare"
       },
       {
-        "name": "marsabit central"
+        "name": "Marsabit Central"
       }
     ]
   },
   {
-    "subCounty": "laisamis",
+    "subCounty": "Laisamis",
     "wards": [
       {
-        "name": "loiyangalani"
+        "name": "Loiyangalani"
       },
       {
-        "name": "kargi south horr"
+        "name": "Kargi South Horr"
       },
       {
-        "name": "korr ngurunit"
+        "name": "Korr Ngurunit"
       },
       {
-        "name": "log logo"
+        "name": "Log Logo"
       },
       {
-        "name": "laisamis"
+        "name": "Laisamis"
       }
     ]
   },
   {
-    "subCounty": "isiolo north",
+    "subCounty": "Isiolo North",
     "wards": [
       {
-        "name": "wabera"
+        "name": "Wabera"
       },
       {
-        "name": "bulla pesa"
+        "name": "Bulla Pesa"
       },
       {
-        "name": "chari"
+        "name": "Chari"
       },
       {
-        "name": "cherab"
+        "name": "Cherab"
       },
       {
-        "name": "ngare mara"
+        "name": "Ngare Mara"
       },
       {
-        "name": "burat"
+        "name": "Burat"
       },
       {
-        "name": "oldonyiro"
+        "name": "Oldonyiro"
       }
     ]
   },
   {
-    "subCounty": "isiolo south",
+    "subCounty": "Isiolo South",
     "wards": [
       {
-        "name": "garbatulla"
+        "name": "Garbatulla"
       },
       {
-        "name": "kinna"
+        "name": "Kinna"
       },
       {
-        "name": "sericho"
+        "name": "Sericho"
       }
     ]
   },
   {
-    "subCounty": "igembe south",
+    "subCounty": "Igembe South",
     "wards": [
       {
-        "name": "maua"
+        "name": "Maua"
       },
       {
-        "name": "kiegoi antubochiu"
+        "name": "Kiegoi Antubochiu"
       },
       {
-        "name": "athiru gaiti"
+        "name": "Athiru Gaiti"
       },
       {
-        "name": "akachiu"
+        "name": "Akachiu"
       },
       {
-        "name": "kanuni"
+        "name": "Kanuni"
       }
     ]
   },
   {
-    "subCounty": "igembe central",
+    "subCounty": "Igembe Central",
     "wards": [
       {
-        "name": "akirang'ondu"
+        "name": "Akirang'ondu"
       },
       {
-        "name": "athiru ruujine"
+        "name": "Athiru Ruujine"
       },
       {
-        "name": "igembe east"
+        "name": "Igembe East"
       },
       {
-        "name": "njia"
+        "name": "Njia"
       },
       {
-        "name": "kangeta"
+        "name": "Kangeta"
       }
     ]
   },
   {
-    "subCounty": "igembe north",
+    "subCounty": "Igembe North",
     "wards": [
       {
-        "name": "antuambui"
+        "name": "Antuambui"
       },
       {
-        "name": "ntunene"
+        "name": "Ntunene"
       },
       {
-        "name": "antubetwe kiongo"
+        "name": "Antubetwe Kiongo"
       },
       {
-        "name": "naathu"
+        "name": "Naathu"
       },
       {
-        "name": "amwathi"
+        "name": "Amwathi"
       }
     ]
   },
   {
-    "subCounty": "tigania west",
+    "subCounty": "Tigania West",
     "wards": [
       {
-        "name": "athwana"
+        "name": "Athwana"
       },
       {
-        "name": "akithii"
+        "name": "Akithii"
       },
       {
-        "name": "kianjai"
+        "name": "Kianjai"
       },
       {
-        "name": "nkomo"
+        "name": "Nkomo"
       },
       {
-        "name": "mbeu"
+        "name": "Mbeu"
       }
     ]
   },
   {
-    "subCounty": "tigania east",
+    "subCounty": "Tigania East",
     "wards": [
       {
-        "name": "thangatha"
+        "name": "Thangatha"
       },
       {
-        "name": "mikinduri"
+        "name": "Mikinduri"
       },
       {
-        "name": "kiguchwa"
+        "name": "Kiguchwa"
       },
       {
-        "name": "muthara"
+        "name": "Muthara"
       },
       {
-        "name": "karama"
+        "name": "Karama"
       }
     ]
   },
   {
-    "subCounty": "north imenti",
+    "subCounty": "North Imenti",
     "wards": [
       {
-        "name": "municipality"
+        "name": "Municipality"
       },
       {
-        "name": "ntima east"
+        "name": "Ntima East"
       },
       {
-        "name": "ntima west"
+        "name": "Ntima West"
       },
       {
-        "name": "nyaki west"
+        "name": "Nyaki West"
       },
       {
-        "name": "nyaki east"
+        "name": "Nyaki East"
       }
     ]
   },
   {
-    "subCounty": "buuri",
+    "subCounty": "Buuri",
     "wards": [
       {
-        "name": "timau"
+        "name": "Timau"
       },
       {
-        "name": "kisima"
+        "name": "Kisima"
       },
       {
-        "name": "kiirua naari"
+        "name": "Kiirua Naari"
       },
       {
-        "name": "ruiri rwarera"
+        "name": "Ruiri Rwarera"
       },
       {
-        "name": "kibirichia"
+        "name": "Kibirichia"
       }
     ]
   },
   {
-    "subCounty": "central imenti",
+    "subCounty": "Central Imenti",
     "wards": [
       {
-        "name": "mwanganthia"
+        "name": "Mwanganthia"
       },
       {
-        "name": "abothuguchi central"
+        "name": "Abothuguchi Central"
       },
       {
-        "name": "abothuguchi west"
+        "name": "Abothuguchi West"
       },
       {
-        "name": "kiagu"
+        "name": "Kiagu"
       }
     ]
   },
   {
-    "subCounty": "south imenti",
+    "subCounty": "South Imenti",
     "wards": [
       {
-        "name": "mitunguu"
+        "name": "Mitunguu"
       },
       {
-        "name": "igoji east"
+        "name": "Igoji East"
       },
       {
-        "name": "igoji west"
+        "name": "Igoji West"
       },
       {
-        "name": "abogeta east"
+        "name": "Abogeta East"
       },
       {
-        "name": "abogeta west"
+        "name": "Abogeta West"
       },
       {
-        "name": "nkuene"
+        "name": "Nkuene"
       }
     ]
   },
   {
-    "subCounty": "maara",
+    "subCounty": "Maara",
     "wards": [
       {
-        "name": "mitheru"
+        "name": "Mitheru"
       },
       {
-        "name": "muthambi"
+        "name": "Muthambi"
       },
       {
-        "name": "mwimbi"
+        "name": "Mwimbi"
       },
       {
-        "name": "ganga"
+        "name": "Ganga"
       },
       {
-        "name": "chogoria"
+        "name": "Chogoria"
       }
     ]
   },
   {
-    "subCounty": "chuka igambang'om",
+    "subCounty": "Chuka Igambang'om",
     "wards": [
       {
-        "name": "mariani"
+        "name": "Mariani"
       },
       {
-        "name": "karingani"
+        "name": "Karingani"
       },
       {
-        "name": "magumoni"
+        "name": "Magumoni"
       },
       {
-        "name": "mugwe"
+        "name": "Mugwe"
       },
       {
-        "name": "igambang'ombe"
+        "name": "Igambang'ombe"
       }
     ]
   },
   {
-    "subCounty": "tharaka",
+    "subCounty": "Tharaka",
     "wards": [
       {
-        "name": "gatunga"
+        "name": "Gatunga"
       },
       {
-        "name": "mukothima"
+        "name": "Mukothima"
       },
       {
-        "name": "nkondi"
+        "name": "Nkondi"
       },
       {
-        "name": "chiakariga"
+        "name": "Chiakariga"
       },
       {
-        "name": "marimanti"
+        "name": "Marimanti"
       }
     ]
   },
   {
-    "subCounty": "manyatta",
+    "subCounty": "Manyatta",
     "wards": [
       {
-        "name": "ruguru ngandori"
+        "name": "Ruguru Ngandori"
       },
       {
-        "name": "kithimu"
+        "name": "Kithimu"
       },
       {
-        "name": "nginda"
+        "name": "Nginda"
       },
       {
-        "name": "mbeti north"
+        "name": "Mbeti North"
       },
       {
-        "name": "kirimari"
+        "name": "Kirimari"
       },
       {
-        "name": "gaturi south"
+        "name": "Gaturi South"
       }
     ]
   },
   {
-    "subCounty": "runyenjes",
+    "subCounty": "Runyenjes",
     "wards": [
       {
-        "name": "gaturi north"
+        "name": "Gaturi North"
       },
       {
-        "name": "kagaari south"
+        "name": "Kagaari South"
       },
       {
-        "name": "central ward"
+        "name": "Central Ward"
       },
       {
-        "name": "kagaari north"
+        "name": "Kagaari North"
       },
       {
-        "name": "kyeni north"
+        "name": "Kyeni North"
       },
       {
-        "name": "kyeni south"
+        "name": "Kyeni South"
       }
     ]
   },
   {
-    "subCounty": "mbeere south",
+    "subCounty": "Mbeere South",
     "wards": [
       {
-        "name": "mwea"
+        "name": "Mwea"
       },
       {
-        "name": "makima"
+        "name": "Makima"
       },
       {
-        "name": "mbeti south"
+        "name": "Mbeti South"
       },
       {
-        "name": "mavuria"
+        "name": "Mavuria"
       },
       {
-        "name": "kiambere"
+        "name": "Kiambere"
       }
     ]
   },
   {
-    "subCounty": "mbeere north",
+    "subCounty": "Mbeere North",
     "wards": [
       {
-        "name": "nthawa"
+        "name": "Nthawa"
       },
       {
-        "name": "muminji"
+        "name": "Muminji"
       },
       {
-        "name": "evurore"
+        "name": "Evurore"
       }
     ]
   },
   {
-    "subCounty": "mwingi north",
+    "subCounty": "Mwingi North",
     "wards": [
       {
-        "name": "ngomeni"
+        "name": "Ngomeni"
       },
       {
-        "name": "kyuso"
+        "name": "Kyuso"
       },
       {
-        "name": "mumoni"
+        "name": "Mumoni"
       },
       {
-        "name": "tseikuru"
+        "name": "Tseikuru"
       },
       {
-        "name": "tharaka"
+        "name": "Tharaka"
       }
     ]
   },
   {
-    "subCounty": "mwingi west",
+    "subCounty": "Mwingi West",
     "wards": [
       {
-        "name": "kyome thaana"
+        "name": "Kyome Thaana"
       },
       {
-        "name": "nguutani"
+        "name": "Nguutani"
       },
       {
-        "name": "migwani"
+        "name": "Migwani"
       },
       {
-        "name": "kiomo kyethani"
+        "name": "Kiomo Kyethani"
       }
     ]
   },
   {
-    "subCounty": "mwingi central",
+    "subCounty": "Mwingi Central",
     "wards": [
       {
-        "name": "central"
+        "name": "Central"
       },
       {
-        "name": "kivou"
+        "name": "Kivou"
       },
       {
-        "name": "nguni"
+        "name": "Nguni"
       },
       {
-        "name": "nuu"
+        "name": "Nuu"
       },
       {
-        "name": "mui"
+        "name": "Mui"
       },
       {
-        "name": "waita"
+        "name": "Waita"
       }
     ]
   },
   {
-    "subCounty": "kitui west",
+    "subCounty": "Kitui West",
     "wards": [
       {
-        "name": "mutonguni"
+        "name": "Mutonguni"
       },
       {
-        "name": "kauwi"
+        "name": "Kauwi"
       },
       {
-        "name": "matinyani"
+        "name": "Matinyani"
       },
       {
-        "name": "kwa mutonga kithumula"
+        "name": "Kwa Mutonga Kithumula"
       }
     ]
   },
   {
-    "subCounty": "kitui rural",
+    "subCounty": "Kitui Rural",
     "wards": [
       {
-        "name": "kisasi"
+        "name": "Kisasi"
       },
       {
-        "name": "mbitini"
+        "name": "Mbitini"
       },
       {
-        "name": "kwavonza yatta"
+        "name": "Kwavonza Yatta"
       },
       {
-        "name": "kanyangi"
+        "name": "Kanyangi"
       }
     ]
   },
   {
-    "subCounty": "kitui central",
+    "subCounty": "Kitui Central",
     "wards": [
       {
-        "name": "miambani"
+        "name": "Miambani"
       },
       {
-        "name": "township"
+        "name": "Township"
       },
       {
-        "name": "kyangwithya west"
+        "name": "Kyangwithya West"
       },
       {
-        "name": "mulango"
+        "name": "Mulango"
       },
       {
-        "name": "kyangwithya east"
+        "name": "Kyangwithya East"
       }
     ]
   },
   {
-    "subCounty": "kitui east",
+    "subCounty": "Kitui East",
     "wards": [
       {
-        "name": "zombe mwitika"
+        "name": "Zombe Mwitika"
       },
       {
-        "name": "chuluni"
+        "name": "Chuluni"
       },
       {
-        "name": "nzambani"
+        "name": "Nzambani"
       },
       {
-        "name": "voo kyamatu"
+        "name": "Voo Kyamatu"
       },
       {
-        "name": "endau malalani"
+        "name": "Endau Malalani"
       },
       {
-        "name": "mutito kaliku"
+        "name": "Mutito Kaliku"
       }
     ]
   },
   {
-    "subCounty": "kitui south",
+    "subCounty": "Kitui South",
     "wards": [
       {
-        "name": "ikanga kyatune"
+        "name": "Ikanga Kyatune"
       },
       {
-        "name": "mutomo"
+        "name": "Mutomo"
       },
       {
-        "name": "mutha"
+        "name": "Mutha"
       },
       {
-        "name": "ikutha"
+        "name": "Ikutha"
       },
       {
-        "name": "kanziko"
+        "name": "Kanziko"
       },
       {
-        "name": "athi"
+        "name": "Athi"
       }
     ]
   },
   {
-    "subCounty": "masinga",
+    "subCounty": "Masinga",
     "wards": [
       {
-        "name": "kivaa"
+        "name": "Kivaa"
       },
       {
-        "name": "masinga central"
+        "name": "Masinga Central"
       },
       {
-        "name": "ekalakala"
+        "name": "Ekalakala"
       },
       {
-        "name": "muthesya"
+        "name": "Muthesya"
       },
       {
-        "name": "ndithini"
+        "name": "Ndithini"
       }
     ]
   },
   {
-    "subCounty": "yatta",
+    "subCounty": "Yatta",
     "wards": [
       {
-        "name": "ndalani"
+        "name": "Ndalani"
       },
       {
-        "name": "matuu"
+        "name": "Matuu"
       },
       {
-        "name": "kithimani"
+        "name": "Kithimani"
       },
       {
-        "name": "ikombe"
+        "name": "Ikombe"
       },
       {
-        "name": "katangi"
+        "name": "Katangi"
       }
     ]
   },
   {
-    "subCounty": "kangundo",
+    "subCounty": "Kangundo",
     "wards": [
       {
-        "name": "kangundo north"
+        "name": "Kangundo North"
       },
       {
-        "name": "kangundo central"
+        "name": "Kangundo Central"
       },
       {
-        "name": "kangundo east"
+        "name": "Kangundo East"
       },
       {
-        "name": "kangundo west"
+        "name": "Kangundo West"
       }
     ]
   },
   {
-    "subCounty": "matungulu",
+    "subCounty": "Matungulu",
     "wards": [
       {
-        "name": "tala"
+        "name": "Tala"
       },
       {
-        "name": "matungulu north"
+        "name": "Matungulu North"
       },
       {
-        "name": "matungulu east"
+        "name": "Matungulu East"
       },
       {
-        "name": "matungulu west"
+        "name": "Matungulu West"
       },
       {
-        "name": "kyeleni"
+        "name": "Kyeleni"
       }
     ]
   },
   {
-    "subCounty": "kathiani",
+    "subCounty": "Kathiani",
     "wards": [
       {
-        "name": "mitaboni"
+        "name": "Mitaboni"
       },
       {
-        "name": "kathiani central"
+        "name": "Kathiani Central"
       },
       {
-        "name": "upper kaewa iveti"
+        "name": "Upper Kaewa Iveti"
       },
       {
-        "name": "lower kaewa kaani"
+        "name": "Lower Kaewa Kaani"
       }
     ]
   },
   {
-    "subCounty": "mavoko",
+    "subCounty": "Mavoko",
     "wards": [
       {
-        "name": "athi river"
+        "name": "Athi River"
       },
       {
-        "name": "kinanie"
+        "name": "Kinanie"
       },
       {
-        "name": "muthwani"
+        "name": "Muthwani"
       },
       {
-        "name": "syokimau mulolongo"
+        "name": "Syokimau Mulolongo"
       }
     ]
   },
   {
-    "subCounty": "machakos town",
+    "subCounty": "Machakos Town",
     "wards": [
       {
-        "name": "kalama"
+        "name": "Kalama"
       },
       {
-        "name": "mua"
+        "name": "Mua"
       },
       {
-        "name": "mutituni"
+        "name": "Mutituni"
       },
       {
-        "name": "machakos central"
+        "name": "Machakos Central"
       },
       {
-        "name": "mumbuni north"
+        "name": "Mumbuni North"
       },
       {
-        "name": "muvuti kiima-kimwe"
+        "name": "Muvuti Kiima-kimwe"
       },
       {
-        "name": "kola"
+        "name": "Kola"
       }
     ]
   },
   {
-    "subCounty": "mwala",
+    "subCounty": "Mwala",
     "wards": [
       {
-        "name": "mbiuni"
+        "name": "Mbiuni"
       },
       {
-        "name": "makutano mwala"
+        "name": "Makutano Mwala"
       },
       {
-        "name": "masii"
+        "name": "Masii"
       },
       {
-        "name": "muthetheni"
+        "name": "Muthetheni"
       },
       {
-        "name": "wamunyu"
+        "name": "Wamunyu"
       },
       {
-        "name": "kibauni"
+        "name": "Kibauni"
       }
     ]
   },
   {
-    "subCounty": "mbooni",
+    "subCounty": "Mbooni",
     "wards": [
       {
-        "name": "tulimani"
+        "name": "Tulimani"
       },
       {
-        "name": "mbooni"
+        "name": "Mbooni"
       },
       {
-        "name": "kithungo kitundu"
+        "name": "Kithungo Kitundu"
       },
       {
-        "name": "kisau kiteta"
+        "name": "Kisau Kiteta"
       },
       {
-        "name": "waia kako"
+        "name": "Waia Kako"
       },
       {
-        "name": "kalawa"
+        "name": "Kalawa"
       }
     ]
   },
   {
-    "subCounty": "kilome",
+    "subCounty": "Kilome",
     "wards": [
       {
-        "name": "kasikeu"
+        "name": "Kasikeu"
       },
       {
-        "name": "mukaa"
+        "name": "Mukaa"
       },
       {
-        "name": "kiima kiu kalanzoni"
+        "name": "Kiima Kiu Kalanzoni"
       }
     ]
   },
   {
-    "subCounty": "kaiti",
+    "subCounty": "Kaiti",
     "wards": [
       {
-        "name": "ukia"
+        "name": "Ukia"
       },
       {
-        "name": "kee"
+        "name": "Kee"
       },
       {
-        "name": "kilungu"
+        "name": "Kilungu"
       },
       {
-        "name": "ilima"
+        "name": "Ilima"
       }
     ]
   },
   {
-    "subCounty": "makueni",
+    "subCounty": "Makueni",
     "wards": [
       {
-        "name": "wote"
+        "name": "Wote"
       },
       {
-        "name": "muvau kikuumini"
+        "name": "Muvau Kikuumini"
       },
       {
-        "name": "mavindini"
+        "name": "Mavindini"
       },
       {
-        "name": "kitise kithuki"
+        "name": "Kitise Kithuki"
       },
       {
-        "name": "kathonzweni"
+        "name": "Kathonzweni"
       },
       {
-        "name": "nzaui kilili kalamba"
+        "name": "Nzaui Kilili Kalamba"
       },
       {
-        "name": "mbitini"
+        "name": "Mbitini"
       }
     ]
   },
   {
-    "subCounty": "kibwezi west",
+    "subCounty": "Kibwezi West",
     "wards": [
       {
-        "name": "makindu"
+        "name": "Makindu"
       },
       {
-        "name": "nguumo"
+        "name": "Nguumo"
       },
       {
-        "name": "kikumbulyu north"
+        "name": "Kikumbulyu North"
       },
       {
-        "name": "kikumbulyu south"
+        "name": "Kikumbulyu South"
       },
       {
-        "name": "nguu masumba"
+        "name": "Nguu Masumba"
       },
       {
-        "name": "emali mulala"
+        "name": "Emali Mulala"
       }
     ]
   },
   {
-    "subCounty": "kibwezi east",
+    "subCounty": "Kibwezi East",
     "wards": [
       {
-        "name": "masongaleni"
+        "name": "Masongaleni"
       },
       {
-        "name": "mtito andei"
+        "name": "Mtito Andei"
       },
       {
-        "name": "thange"
+        "name": "Thange"
       },
       {
-        "name": "ivingoni nzambani"
+        "name": "Ivingoni Nzambani"
       }
     ]
   },
   {
-    "subCounty": "kinangop",
+    "subCounty": "Kinangop",
     "wards": [
       {
-        "name": "engineer"
+        "name": "Engineer"
       },
       {
-        "name": "gathara"
+        "name": "Gathara"
       },
       {
-        "name": "north kinangop"
+        "name": "North Kinangop"
       },
       {
-        "name": "murungaru"
+        "name": "Murungaru"
       },
       {
-        "name": "njabini kiburu"
+        "name": "Njabini Kiburu"
       },
       {
-        "name": "nyakio"
+        "name": "Nyakio"
       },
       {
-        "name": "githabai"
+        "name": "Githabai"
       },
       {
-        "name": "magumu"
+        "name": "Magumu"
       }
     ]
   },
   {
-    "subCounty": "kipipiri",
+    "subCounty": "Kipipiri",
     "wards": [
       {
-        "name": "wanjohi"
+        "name": "Wanjohi"
       },
       {
-        "name": "kipipiri"
+        "name": "Kipipiri"
       },
       {
-        "name": "geta"
+        "name": "Geta"
       },
       {
-        "name": "githioro"
+        "name": "Githioro"
       }
     ]
   },
   {
-    "subCounty": "ol kalou",
+    "subCounty": "Ol Kalou",
     "wards": [
       {
-        "name": "karau"
+        "name": "Karau"
       },
       {
-        "name": "kanjuiri ridge"
+        "name": "Kanjuiri Ridge"
       },
       {
-        "name": "mirangine"
+        "name": "Mirangine"
       },
       {
-        "name": "kaimbaga"
+        "name": "Kaimbaga"
       },
       {
-        "name": "rurii"
+        "name": "Rurii"
       }
     ]
   },
   {
-    "subCounty": "ol jorok",
+    "subCounty": "Ol Jorok",
     "wards": [
       {
-        "name": "gathanji"
+        "name": "Gathanji"
       },
       {
-        "name": "gatimu"
+        "name": "Gatimu"
       },
       {
-        "name": "weru"
+        "name": "Weru"
       },
       {
-        "name": "charagita"
+        "name": "Charagita"
       }
     ]
   },
   {
-    "subCounty": "ndaragwa",
+    "subCounty": "Ndaragwa",
     "wards": [
       {
-        "name": "leshau pondo"
+        "name": "Leshau Pondo"
       },
       {
-        "name": "kiriita"
+        "name": "Kiriita"
       },
       {
-        "name": "central"
+        "name": "Central"
       },
       {
-        "name": "shamata"
+        "name": "Shamata"
       }
     ]
   },
   {
-    "subCounty": "tetu",
+    "subCounty": "Tetu",
     "wards": [
       {
-        "name": "dedan kimanthi"
+        "name": "Dedan Kimanthi"
       },
       {
-        "name": "wamagana"
+        "name": "Wamagana"
       },
       {
-        "name": "aguthi gaaki"
+        "name": "Aguthi Gaaki"
       }
     ]
   },
   {
-    "subCounty": "kieni",
+    "subCounty": "Kieni",
     "wards": [
       {
-        "name": "mweiga"
+        "name": "Mweiga"
       },
       {
-        "name": "naromoru kiamathaga"
+        "name": "Naromoru Kiamathaga"
       },
       {
-        "name": "mwiyogo endarasha"
+        "name": "Mwiyogo Endarasha"
       },
       {
-        "name": "mugunda"
+        "name": "Mugunda"
       },
       {
-        "name": "gatarakwa"
+        "name": "Gatarakwa"
       },
       {
-        "name": "thegu river"
+        "name": "Thegu River"
       },
       {
-        "name": "kabaru"
+        "name": "Kabaru"
       },
       {
-        "name": "gakawa"
+        "name": "Gakawa"
       }
     ]
   },
   {
-    "subCounty": "mathira",
+    "subCounty": "Mathira",
     "wards": [
       {
-        "name": "ruguru"
+        "name": "Ruguru"
       },
       {
-        "name": "magutu"
+        "name": "Magutu"
       },
       {
-        "name": "iriaini"
+        "name": "Iriaini"
       },
       {
-        "name": "konyu"
+        "name": "Konyu"
       },
       {
-        "name": "kirimukuyu"
+        "name": "Kirimukuyu"
       },
       {
-        "name": "karatina town"
+        "name": "Karatina Town"
       }
     ]
   },
   {
-    "subCounty": "othaya",
+    "subCounty": "Othaya",
     "wards": [
       {
-        "name": "mahiga"
+        "name": "Mahiga"
       },
       {
-        "name": "iria-ini"
+        "name": "Iria-ini"
       },
       {
-        "name": "chinga"
+        "name": "Chinga"
       },
       {
-        "name": "karima"
+        "name": "Karima"
       }
     ]
   },
   {
-    "subCounty": "mukurweini",
+    "subCounty": "Mukurweini",
     "wards": [
       {
-        "name": "gikondi"
+        "name": "Gikondi"
       },
       {
-        "name": "rugi"
+        "name": "Rugi"
       },
       {
-        "name": "mukurwe-ini west"
+        "name": "Mukurwe-ini West"
       },
       {
-        "name": "mukurwe-ini central"
+        "name": "Mukurwe-ini Central"
       }
     ]
   },
   {
-    "subCounty": "nyeri town",
+    "subCounty": "Nyeri Town",
     "wards": [
       {
-        "name": "kiganjo mathari"
+        "name": "Kiganjo Mathari"
       },
       {
-        "name": "rware"
+        "name": "Rware"
       },
       {
-        "name": "gatitu muruguru"
+        "name": "Gatitu Muruguru"
       },
       {
-        "name": "ruring'u"
+        "name": "Ruring'u"
       },
       {
-        "name": "kamakwa mukaro"
+        "name": "Kamakwa Mukaro"
       }
     ]
   },
   {
-    "subCounty": "mwea",
+    "subCounty": "Mwea",
     "wards": [
       {
-        "name": "mutithi"
+        "name": "Mutithi"
       },
       {
-        "name": "kangai"
+        "name": "Kangai"
       },
       {
-        "name": "thiba"
+        "name": "Thiba"
       },
       {
-        "name": "wamumu"
+        "name": "Wamumu"
       },
       {
-        "name": "nyangati"
+        "name": "Nyangati"
       },
       {
-        "name": "murinduko"
+        "name": "Murinduko"
       },
       {
-        "name": "gathigiriri"
+        "name": "Gathigiriri"
       },
       {
-        "name": "tebere"
+        "name": "Tebere"
       }
     ]
   },
   {
-    "subCounty": "gichugu",
+    "subCounty": "Gichugu",
     "wards": [
       {
-        "name": "kabare"
+        "name": "Kabare"
       },
       {
-        "name": "baragwi"
+        "name": "Baragwi"
       },
       {
-        "name": "njukiini"
+        "name": "Njukiini"
       },
       {
-        "name": "ngariama"
+        "name": "Ngariama"
       },
       {
-        "name": "karumandi"
+        "name": "Karumandi"
       }
     ]
   },
   {
-    "subCounty": "ndia",
+    "subCounty": "Ndia",
     "wards": [
       {
-        "name": "mukure"
+        "name": "Mukure"
       },
       {
-        "name": "kiine"
+        "name": "Kiine"
       },
       {
-        "name": "kariti"
+        "name": "Kariti"
       }
     ]
   },
   {
-    "subCounty": "kirinyaga central",
+    "subCounty": "Kirinyaga Central",
     "wards": [
       {
-        "name": "mutira"
+        "name": "Mutira"
       },
       {
-        "name": "kanyeki-ini"
+        "name": "Kanyeki-ini"
       },
       {
-        "name": "kerugoya"
+        "name": "Kerugoya"
       },
       {
-        "name": "inoi"
+        "name": "Inoi"
       }
     ]
   },
   {
-    "subCounty": "kangema",
+    "subCounty": "Kangema",
     "wards": [
       {
-        "name": "kanyenyaini"
+        "name": "Kanyenyaini"
       },
       {
-        "name": "muguru"
+        "name": "Muguru"
       },
       {
-        "name": "rwathia"
+        "name": "Rwathia"
       }
     ]
   },
   {
-    "subCounty": "mathioya",
+    "subCounty": "Mathioya",
     "wards": [
       {
-        "name": "gitugi"
+        "name": "Gitugi"
       },
       {
-        "name": "kiru"
+        "name": "Kiru"
       },
       {
-        "name": "kamacharia"
+        "name": "Kamacharia"
       }
     ]
   },
   {
-    "subCounty": "kiharu",
+    "subCounty": "Kiharu",
     "wards": [
       {
-        "name": "wangu"
+        "name": "Wangu"
       },
       {
-        "name": "mugoiri"
+        "name": "Mugoiri"
       },
       {
-        "name": "mbiri"
+        "name": "Mbiri"
       },
       {
-        "name": "township"
+        "name": "Township"
       },
       {
-        "name": "murarandia"
+        "name": "Murarandia"
       },
       {
-        "name": "gaturi"
+        "name": "Gaturi"
       }
     ]
   },
   {
-    "subCounty": "kigumo",
+    "subCounty": "Kigumo",
     "wards": [
       {
-        "name": "kahumbu"
+        "name": "Kahumbu"
       },
       {
-        "name": "muthithi"
+        "name": "Muthithi"
       },
       {
-        "name": "kigumo"
+        "name": "Kigumo"
       },
       {
-        "name": "kangari"
+        "name": "Kangari"
       },
       {
-        "name": "kinyona"
+        "name": "Kinyona"
       }
     ]
   },
   {
-    "subCounty": "maragwa",
+    "subCounty": "Maragwa",
     "wards": [
       {
-        "name": "kimorori wempa"
+        "name": "Kimorori Wempa"
       },
       {
-        "name": "makuyu"
+        "name": "Makuyu"
       },
       {
-        "name": "kambiti"
+        "name": "Kambiti"
       },
       {
-        "name": "kamahuha"
+        "name": "Kamahuha"
       },
       {
-        "name": "ichagaki"
+        "name": "Ichagaki"
       },
       {
-        "name": "nginda"
+        "name": "Nginda"
       }
     ]
   },
   {
-    "subCounty": "kandara",
+    "subCounty": "Kandara",
     "wards": [
       {
-        "name": "ng'araria"
+        "name": "Ng'araria"
       },
       {
-        "name": "muruka"
+        "name": "Muruka"
       },
       {
-        "name": "kagundu-ini"
+        "name": "Kagundu-ini"
       },
       {
-        "name": "gaichanjiru"
+        "name": "Gaichanjiru"
       },
       {
-        "name": "ithiru"
+        "name": "Ithiru"
       },
       {
-        "name": "ruchu"
+        "name": "Ruchu"
       }
     ]
   },
   {
-    "subCounty": "gatanga",
+    "subCounty": "Gatanga",
     "wards": [
       {
-        "name": "ithanga"
+        "name": "Ithanga"
       },
       {
-        "name": "kakuzi mitubiri"
+        "name": "Kakuzi Mitubiri"
       },
       {
-        "name": "mugumo-ini"
+        "name": "Mugumo-ini"
       },
       {
-        "name": "kihumbu-ini"
+        "name": "Kihumbu-ini"
       },
       {
-        "name": "gatanga"
+        "name": "Gatanga"
       },
       {
-        "name": "kariara"
+        "name": "Kariara"
       }
     ]
   },
   {
-    "subCounty": "gatundu south",
+    "subCounty": "Gatundu South",
     "wards": [
       {
-        "name": "kiamwangi"
+        "name": "Kiamwangi"
       },
       {
-        "name": "kiganjo"
+        "name": "Kiganjo"
       },
       {
-        "name": "ndarugu"
+        "name": "Ndarugu"
       },
       {
-        "name": "ngenda"
+        "name": "Ngenda"
       }
     ]
   },
   {
-    "subCounty": "gatundu north",
+    "subCounty": "Gatundu North",
     "wards": [
       {
-        "name": "gituamba"
+        "name": "Gituamba"
       },
       {
-        "name": "githobokoni"
+        "name": "Githobokoni"
       },
       {
-        "name": "chania"
+        "name": "Chania"
       },
       {
-        "name": "mang'u"
+        "name": "Mang'u"
       }
     ]
   },
   {
-    "subCounty": "juja",
+    "subCounty": "Juja",
     "wards": [
       {
-        "name": "murera"
+        "name": "Murera"
       },
       {
-        "name": "theta"
+        "name": "Theta"
       },
       {
-        "name": "juja"
+        "name": "Juja"
       },
       {
-        "name": "witeithie"
+        "name": "Witeithie"
       },
       {
-        "name": "kalimoni"
+        "name": "Kalimoni"
       }
     ]
   },
   {
-    "subCounty": "thika town",
+    "subCounty": "Thika Town",
     "wards": [
       {
-        "name": "township"
+        "name": "Township"
       },
       {
-        "name": "kamenu"
+        "name": "Kamenu"
       },
       {
-        "name": "hospital"
+        "name": "Hospital"
       },
       {
-        "name": "gatuanyaga"
+        "name": "Gatuanyaga"
       },
       {
-        "name": "ngoliba"
+        "name": "Ngoliba"
       }
     ]
   },
   {
-    "subCounty": "ruiru",
+    "subCounty": "Ruiru",
     "wards": [
       {
-        "name": "gitothua"
+        "name": "Gitothua"
       },
       {
-        "name": "biashara"
+        "name": "Biashara"
       },
       {
-        "name": "gatongora"
+        "name": "Gatongora"
       },
       {
-        "name": "kahawa sukari"
+        "name": "Kahawa Sukari"
       },
       {
-        "name": "kahawa wendani"
+        "name": "Kahawa Wendani"
       },
       {
-        "name": "kiuu"
+        "name": "Kiuu"
       },
       {
-        "name": "mwiki"
+        "name": "Mwiki"
       },
       {
-        "name": "mwihoko"
+        "name": "Mwihoko"
       }
     ]
   },
   {
-    "subCounty": "githunguri",
+    "subCounty": "Githunguri",
     "wards": [
       {
-        "name": "githunguri"
+        "name": "Githunguri"
       },
       {
-        "name": "githiga"
+        "name": "Githiga"
       },
       {
-        "name": "ikinu"
+        "name": "Ikinu"
       },
       {
-        "name": "ngewa"
+        "name": "Ngewa"
       },
       {
-        "name": "komothai"
+        "name": "Komothai"
       }
     ]
   },
   {
-    "subCounty": "kiambu",
+    "subCounty": "Kiambu",
     "wards": [
       {
-        "name": "ting'ang'a"
+        "name": "Ting'ang'a"
       },
       {
-        "name": "ndumberi"
+        "name": "Ndumberi"
       },
       {
-        "name": "riabai"
+        "name": "Riabai"
       },
       {
-        "name": "township"
+        "name": "Township"
       }
     ]
   },
   {
-    "subCounty": "kiambaa",
+    "subCounty": "Kiambaa",
     "wards": [
       {
-        "name": "cianda"
+        "name": "Cianda"
       },
       {
-        "name": "karuri"
+        "name": "Karuri"
       },
       {
-        "name": "ndenderu"
+        "name": "Ndenderu"
       },
       {
-        "name": "muchatha"
+        "name": "Muchatha"
       },
       {
-        "name": "kihara"
+        "name": "Kihara"
       }
     ]
   },
   {
-    "subCounty": "kabete",
+    "subCounty": "Kabete",
     "wards": [
       {
-        "name": "gitaru"
+        "name": "Gitaru"
       },
       {
-        "name": "muguga"
+        "name": "Muguga"
       },
       {
-        "name": "nyadhuna"
+        "name": "Nyadhuna"
       },
       {
-        "name": "kabete"
+        "name": "Kabete"
       },
       {
-        "name": "uthiru"
+        "name": "Uthiru"
       }
     ]
   },
   {
-    "subCounty": "kikuyu",
+    "subCounty": "Kikuyu",
     "wards": [
       {
-        "name": "karai"
+        "name": "Karai"
       },
       {
-        "name": "nachu"
+        "name": "Nachu"
       },
       {
-        "name": "sigona"
+        "name": "Sigona"
       },
       {
-        "name": "kikuyu"
+        "name": "Kikuyu"
       },
       {
-        "name": "kinoo"
+        "name": "Kinoo"
       }
     ]
   },
   {
-    "subCounty": "limuru",
+    "subCounty": "Limuru",
     "wards": [
       {
-        "name": "bibirioni"
+        "name": "Bibirioni"
       },
       {
-        "name": "limuru central"
+        "name": "Limuru Central"
       },
       {
-        "name": "ndeiya"
+        "name": "Ndeiya"
       },
       {
-        "name": "limuru east"
+        "name": "Limuru East"
       },
       {
-        "name": "ngecha tigoni"
+        "name": "Ngecha Tigoni"
       }
     ]
   },
   {
-    "subCounty": "lari",
+    "subCounty": "Lari",
     "wards": [
       {
-        "name": "kinale"
+        "name": "Kinale"
       },
       {
-        "name": "kijabe"
+        "name": "Kijabe"
       },
       {
-        "name": "nyanduma"
+        "name": "Nyanduma"
       },
       {
-        "name": "kamburu"
+        "name": "Kamburu"
       },
       {
-        "name": "lari kirenga"
+        "name": "Lari Kirenga"
       }
     ]
   },
   {
-    "subCounty": "turkana north",
+    "subCounty": "Turkana North",
     "wards": [
       {
-        "name": "kaeris"
+        "name": "Kaeris"
       },
       {
-        "name": "lake zone"
+        "name": "Lake Zone"
       },
       {
-        "name": "lapur"
+        "name": "Lapur"
       },
       {
-        "name": "kaaleng kaikor"
+        "name": "Kaaleng Kaikor"
       },
       {
-        "name": "kibish"
+        "name": "Kibish"
       },
       {
-        "name": "nakalale"
+        "name": "Nakalale"
       }
     ]
   },
   {
-    "subCounty": "turkana west",
+    "subCounty": "Turkana West",
     "wards": [
       {
-        "name": "kakuma"
+        "name": "Kakuma"
       },
       {
-        "name": "lopur"
+        "name": "Lopur"
       },
       {
-        "name": "letea"
+        "name": "Letea"
       },
       {
-        "name": "songot"
+        "name": "Songot"
       },
       {
-        "name": "kalobeyei"
+        "name": "Kalobeyei"
       },
       {
-        "name": "lokichoggio"
+        "name": "Lokichoggio"
       },
       {
-        "name": "nanaam"
+        "name": "Nanaam"
       }
     ]
   },
   {
-    "subCounty": "turkana central",
+    "subCounty": "Turkana Central",
     "wards": [
       {
-        "name": "kerio delta"
+        "name": "Kerio Delta"
       },
       {
-        "name": "kang'atotha"
+        "name": "Kang'atotha"
       },
       {
-        "name": "kalokol"
+        "name": "Kalokol"
       },
       {
-        "name": "lodwar township"
+        "name": "Lodwar Township"
       },
       {
-        "name": "kanamkemer"
+        "name": "Kanamkemer"
       }
     ]
   },
   {
-    "subCounty": "loima",
+    "subCounty": "Loima",
     "wards": [
       {
-        "name": "kotaruk lobei"
+        "name": "Kotaruk Lobei"
       },
       {
-        "name": "turkwel"
+        "name": "Turkwel"
       },
       {
-        "name": "loima"
+        "name": "Loima"
       },
       {
-        "name": "lokiriama lorengippi"
+        "name": "Lokiriama Lorengippi"
       }
     ]
   },
   {
-    "subCounty": "turkana south",
+    "subCounty": "Turkana South",
     "wards": [
       {
-        "name": "kaputir"
+        "name": "Kaputir"
       },
       {
-        "name": "katilu"
+        "name": "Katilu"
       },
       {
-        "name": "lobokat"
+        "name": "Lobokat"
       },
       {
-        "name": "kalapata"
+        "name": "Kalapata"
       },
       {
-        "name": "lokichar"
+        "name": "Lokichar"
       }
     ]
   },
   {
-    "subCounty": "turkana east",
+    "subCounty": "Turkana East",
     "wards": [
       {
-        "name": "kapedo napeitom"
+        "name": "Kapedo Napeitom"
       },
       {
-        "name": "katilia"
+        "name": "Katilia"
       },
       {
-        "name": "lokori kochodin"
+        "name": "Lokori Kochodin"
       }
     ]
   },
   {
-    "subCounty": "kapenguria",
+    "subCounty": "Kapenguria",
     "wards": [
       {
-        "name": "riwo"
+        "name": "Riwo"
       },
       {
-        "name": "kapenguria"
+        "name": "Kapenguria"
       },
       {
-        "name": "mnagei"
+        "name": "Mnagei"
       },
       {
-        "name": "siyoi"
+        "name": "Siyoi"
       },
       {
-        "name": "endugh"
+        "name": "Endugh"
       },
       {
-        "name": "sook"
+        "name": "Sook"
       }
     ]
   },
   {
-    "subCounty": "sigor",
+    "subCounty": "Sigor",
     "wards": [
       {
-        "name": "sekerr"
+        "name": "Sekerr"
       },
       {
-        "name": "masool"
+        "name": "Masool"
       },
       {
-        "name": "lomut"
+        "name": "Lomut"
       },
       {
-        "name": "weiwei"
+        "name": "Weiwei"
       }
     ]
   },
   {
-    "subCounty": "kacheliba",
+    "subCounty": "Kacheliba",
     "wards": [
       {
-        "name": "suam"
+        "name": "Suam"
       },
       {
-        "name": "kodich"
+        "name": "Kodich"
       },
       {
-        "name": "kapckok"
+        "name": "Kapckok"
       },
       {
-        "name": "kasei"
+        "name": "Kasei"
       },
       {
-        "name": "kiwawa"
+        "name": "Kiwawa"
       },
       {
-        "name": "alale"
+        "name": "Alale"
       }
     ]
   },
   {
-    "subCounty": "pokot south",
+    "subCounty": "Pokot South",
     "wards": [
       {
-        "name": "chepareria"
+        "name": "Chepareria"
       },
       {
-        "name": "batei"
+        "name": "Batei"
       },
       {
-        "name": "lelan"
+        "name": "Lelan"
       },
       {
-        "name": "tapach"
+        "name": "Tapach"
       }
     ]
   },
   {
-    "subCounty": "samburu west",
+    "subCounty": "Samburu West",
     "wards": [
       {
-        "name": "lodokejek"
+        "name": "Lodokejek"
       },
       {
-        "name": "suguta marmar"
+        "name": "Suguta Marmar"
       },
       {
-        "name": "maralal"
+        "name": "Maralal"
       },
       {
-        "name": "loosuk"
+        "name": "Loosuk"
       },
       {
-        "name": "poro"
+        "name": "Poro"
       }
     ]
   },
   {
-    "subCounty": "samburu north",
+    "subCounty": "Samburu North",
     "wards": [
       {
-        "name": "el-barta"
+        "name": "El-barta"
       },
       {
-        "name": "nachola"
+        "name": "Nachola"
       },
       {
-        "name": "ndoto"
+        "name": "Ndoto"
       },
       {
-        "name": "nyiro"
+        "name": "Nyiro"
       },
       {
-        "name": "angata nanyokie"
+        "name": "Angata Nanyokie"
       },
       {
-        "name": "baawa"
+        "name": "Baawa"
       }
     ]
   },
   {
-    "subCounty": "samburu east",
+    "subCounty": "Samburu East",
     "wards": [
       {
-        "name": "waso"
+        "name": "Waso"
       },
       {
-        "name": "wamba west"
+        "name": "Wamba West"
       },
       {
-        "name": "wamba east"
+        "name": "Wamba East"
       },
       {
-        "name": "wamba north"
+        "name": "Wamba North"
       }
     ]
   },
   {
-    "subCounty": "kwanza",
+    "subCounty": "Kwanza",
     "wards": [
       {
-        "name": "kapomboi"
+        "name": "Kapomboi"
       },
       {
-        "name": "kwanza"
+        "name": "Kwanza"
       },
       {
-        "name": "keiyo"
+        "name": "Keiyo"
       },
       {
-        "name": "bidii"
+        "name": "Bidii"
       }
     ]
   },
   {
-    "subCounty": "endebess",
+    "subCounty": "Endebess",
     "wards": [
       {
-        "name": "chepchoina"
+        "name": "Chepchoina"
       },
       {
-        "name": "endebess"
+        "name": "Endebess"
       },
       {
-        "name": "matumbei"
+        "name": "Matumbei"
       }
     ]
   },
   {
-    "subCounty": "saboti",
+    "subCounty": "Saboti",
     "wards": [
       {
-        "name": "kinyoro"
+        "name": "Kinyoro"
       },
       {
-        "name": "matisi"
+        "name": "Matisi"
       },
       {
-        "name": "tuwani"
+        "name": "Tuwani"
       },
       {
-        "name": "saboti"
+        "name": "Saboti"
       },
       {
-        "name": "machewa"
+        "name": "Machewa"
       }
     ]
   },
   {
-    "subCounty": "kiminini",
+    "subCounty": "Kiminini",
     "wards": [
       {
-        "name": "kiminini"
+        "name": "Kiminini"
       },
       {
-        "name": "waitaluk"
+        "name": "Waitaluk"
       },
       {
-        "name": "sirende"
+        "name": "Sirende"
       },
       {
-        "name": "hospital"
+        "name": "Hospital"
       },
       {
-        "name": "sikhendu"
+        "name": "Sikhendu"
       },
       {
-        "name": "nabiswa"
+        "name": "Nabiswa"
       }
     ]
   },
   {
-    "subCounty": "cherangany",
+    "subCounty": "Cherangany",
     "wards": [
       {
-        "name": "sinyerere"
+        "name": "Sinyerere"
       },
       {
-        "name": "makutano"
+        "name": "Makutano"
       },
       {
-        "name": "kaplamai"
+        "name": "Kaplamai"
       },
       {
-        "name": "motosiet"
+        "name": "Motosiet"
       },
       {
-        "name": "cherangany suwerwa"
+        "name": "Cherangany Suwerwa"
       },
       {
-        "name": "chepsiro kiptoror"
+        "name": "Chepsiro Kiptoror"
       },
       {
-        "name": "sitatunga"
+        "name": "Sitatunga"
       }
     ]
   },
   {
-    "subCounty": "soy",
+    "subCounty": "Soy",
     "wards": [
       {
-        "name": "moi's bridge"
+        "name": "Moi's Bridge"
       },
       {
-        "name": "kapkures"
+        "name": "Kapkures"
       },
       {
-        "name": "ziwa"
+        "name": "Ziwa"
       },
       {
-        "name": "segero barsombe"
+        "name": "Segero Barsombe"
       },
       {
-        "name": "kipsomba"
+        "name": "Kipsomba"
       },
       {
-        "name": "soy"
+        "name": "Soy"
       },
       {
-        "name": "kuinet kapsuswa"
+        "name": "Kuinet Kapsuswa"
       }
     ]
   },
   {
-    "subCounty": "turbo",
+    "subCounty": "Turbo",
     "wards": [
       {
-        "name": "ngenyilel"
+        "name": "Ngenyilel"
       },
       {
-        "name": "tapsagoi"
+        "name": "Tapsagoi"
       },
       {
-        "name": "kamagut"
+        "name": "Kamagut"
       },
       {
-        "name": "kiplombe"
+        "name": "Kiplombe"
       },
       {
-        "name": "kapsaos"
+        "name": "Kapsaos"
       },
       {
-        "name": "huruma"
+        "name": "Huruma"
       }
     ]
   },
   {
-    "subCounty": "moiben",
+    "subCounty": "Moiben",
     "wards": [
       {
-        "name": "tembelio"
+        "name": "Tembelio"
       },
       {
-        "name": "sergoit"
+        "name": "Sergoit"
       },
       {
-        "name": "karuna meibeki"
+        "name": "Karuna Meibeki"
       },
       {
-        "name": "moiben"
+        "name": "Moiben"
       },
       {
-        "name": "kimumu"
+        "name": "Kimumu"
       }
     ]
   },
   {
-    "subCounty": "ainabkoi",
+    "subCounty": "Ainabkoi",
     "wards": [
       {
-        "name": "kapsoya"
+        "name": "Kapsoya"
       },
       {
-        "name": "kaptagat"
+        "name": "Kaptagat"
       },
       {
-        "name": "ainabkoi olare"
+        "name": "Ainabkoi Olare"
       }
     ]
   },
   {
-    "subCounty": "kapseret",
+    "subCounty": "Kapseret",
     "wards": [
       {
-        "name": "simat kapseret"
+        "name": "Simat Kapseret"
       },
       {
-        "name": "kipkenyo"
+        "name": "Kipkenyo"
       },
       {
-        "name": "ngeria"
+        "name": "Ngeria"
       },
       {
-        "name": "megun"
+        "name": "Megun"
       },
       {
-        "name": "langas"
+        "name": "Langas"
       }
     ]
   },
   {
-    "subCounty": "kesses",
+    "subCounty": "Kesses",
     "wards": [
       {
-        "name": "racecourse"
+        "name": "Racecourse"
       },
       {
-        "name": "cheptiret kipchamo"
+        "name": "Cheptiret Kipchamo"
       },
       {
-        "name": "tulwet chuiyat"
+        "name": "Tulwet Chuiyat"
       },
       {
-        "name": "tarakwa"
+        "name": "Tarakwa"
       }
     ]
   },
   {
-    "subCounty": "marakwet east",
+    "subCounty": "Marakwet East",
     "wards": [
       {
-        "name": "kapyego"
+        "name": "Kapyego"
       },
       {
-        "name": "sambirir"
+        "name": "Sambirir"
       },
       {
-        "name": "endo"
+        "name": "Endo"
       },
       {
-        "name": "embobut embulot"
+        "name": "Embobut Embulot"
       }
     ]
   },
   {
-    "subCounty": "marakwet west",
+    "subCounty": "Marakwet West",
     "wards": [
       {
-        "name": "lelan"
+        "name": "Lelan"
       },
       {
-        "name": "sengwer"
+        "name": "Sengwer"
       },
       {
-        "name": "cherang'any chebororwa"
+        "name": "Cherang'any Chebororwa"
       },
       {
-        "name": "moiben kuserwo"
+        "name": "Moiben Kuserwo"
       },
       {
-        "name": "kapsowar"
+        "name": "Kapsowar"
       },
       {
-        "name": "arror"
+        "name": "Arror"
       }
     ]
   },
   {
-    "subCounty": "keiyo north",
+    "subCounty": "Keiyo North",
     "wards": [
       {
-        "name": "emsoo"
+        "name": "Emsoo"
       },
       {
-        "name": "kamariny"
+        "name": "Kamariny"
       },
       {
-        "name": "kapchemutwa"
+        "name": "Kapchemutwa"
       },
       {
-        "name": "tambach"
+        "name": "Tambach"
       }
     ]
   },
   {
-    "subCounty": "keiyo south",
+    "subCounty": "Keiyo South",
     "wards": [
       {
-        "name": "kaptarakwa"
+        "name": "Kaptarakwa"
       },
       {
-        "name": "chepkorio"
+        "name": "Chepkorio"
       },
       {
-        "name": "soy north"
+        "name": "Soy North"
       },
       {
-        "name": "soy south"
+        "name": "Soy South"
       },
       {
-        "name": "kabiemit"
+        "name": "Kabiemit"
       },
       {
-        "name": "metkei"
+        "name": "Metkei"
       }
     ]
   },
   {
-    "subCounty": "tinderet",
+    "subCounty": "Tinderet",
     "wards": [
       {
-        "name": "songhor soba"
+        "name": "Songhor Soba"
       },
       {
-        "name": "tindiret"
+        "name": "Tindiret"
       },
       {
-        "name": "chemelil chemase"
+        "name": "Chemelil Chemase"
       },
       {
-        "name": "kapsimotwo"
+        "name": "Kapsimotwo"
       }
     ]
   },
   {
-    "subCounty": "aldai",
+    "subCounty": "Aldai",
     "wards": [
       {
-        "name": "kabwareng"
+        "name": "Kabwareng"
       },
       {
-        "name": "terik"
+        "name": "Terik"
       },
       {
-        "name": "kemeloi-maraba"
+        "name": "Kemeloi-maraba"
       },
       {
-        "name": "kobujoi"
+        "name": "Kobujoi"
       },
       {
-        "name": "kaptumo-kaboi"
+        "name": "Kaptumo-kaboi"
       },
       {
-        "name": "koyo-ndurio"
+        "name": "Koyo-ndurio"
       }
     ]
   },
   {
-    "subCounty": "nandi hills",
+    "subCounty": "Nandi Hills",
     "wards": [
       {
-        "name": "nandi hills"
+        "name": "Nandi Hills"
       },
       {
-        "name": "chepkunyuk"
+        "name": "Chepkunyuk"
       },
       {
-        "name": "ol'lessos"
+        "name": "Ol'lessos"
       },
       {
-        "name": "kapchorua"
+        "name": "Kapchorua"
       }
     ]
   },
   {
-    "subCounty": "chesumei",
+    "subCounty": "Chesumei",
     "wards": [
       {
-        "name": "chemundu kapng'etuny"
+        "name": "Chemundu Kapng'etuny"
       },
       {
-        "name": "kosirai"
+        "name": "Kosirai"
       },
       {
-        "name": "lelmokwo ngechek"
+        "name": "Lelmokwo Ngechek"
       },
       {
-        "name": "kaptel kamoiywo"
+        "name": "Kaptel Kamoiywo"
       },
       {
-        "name": "kiptuya"
+        "name": "Kiptuya"
       }
     ]
   },
   {
-    "subCounty": "emgwen",
+    "subCounty": "Emgwen",
     "wards": [
       {
-        "name": "chepkumia"
+        "name": "Chepkumia"
       },
       {
-        "name": "kapkangani"
+        "name": "Kapkangani"
       },
       {
-        "name": "kapsabet"
+        "name": "Kapsabet"
       },
       {
-        "name": "kilibwoni"
+        "name": "Kilibwoni"
       }
     ]
   },
   {
-    "subCounty": "mosop",
+    "subCounty": "Mosop",
     "wards": [
       {
-        "name": "chepterwai"
+        "name": "Chepterwai"
       },
       {
-        "name": "kipkaren"
+        "name": "Kipkaren"
       },
       {
-        "name": "kurgung surungai"
+        "name": "Kurgung Surungai"
       },
       {
-        "name": "kabiyet"
+        "name": "Kabiyet"
       },
       {
-        "name": "ndalat"
+        "name": "Ndalat"
       },
       {
-        "name": "kabisaga"
+        "name": "Kabisaga"
       },
       {
-        "name": "sangalo kebulonik"
+        "name": "Sangalo Kebulonik"
       }
     ]
   },
   {
-    "subCounty": "tiaty",
+    "subCounty": "Tiaty",
     "wards": [
       {
-        "name": "tirioko"
+        "name": "Tirioko"
       },
       {
-        "name": "kolowa"
+        "name": "Kolowa"
       },
       {
-        "name": "ribkwo"
+        "name": "Ribkwo"
       },
       {
-        "name": "silale"
+        "name": "Silale"
       },
       {
-        "name": "loiyamorock"
+        "name": "Loiyamorock"
       },
       {
-        "name": "tangulbei korossi"
+        "name": "Tangulbei Korossi"
       },
       {
-        "name": "churo amaya"
+        "name": "Churo Amaya"
       }
     ]
   },
   {
-    "subCounty": "baringo north",
+    "subCounty": "Baringo North",
     "wards": [
       {
-        "name": "barwessa"
+        "name": "Barwessa"
       },
       {
-        "name": "kabartonjo"
+        "name": "Kabartonjo"
       },
       {
-        "name": "saimo kipsaraman"
+        "name": "Saimo Kipsaraman"
       },
       {
-        "name": "saimo soi"
+        "name": "Saimo Soi"
       },
       {
-        "name": "bartabwa"
+        "name": "Bartabwa"
       }
     ]
   },
   {
-    "subCounty": "baringo central",
+    "subCounty": "Baringo Central",
     "wards": [
       {
-        "name": "kabarnet"
+        "name": "Kabarnet"
       },
       {
-        "name": "sacho"
+        "name": "Sacho"
       },
       {
-        "name": "tenges"
+        "name": "Tenges"
       },
       {
-        "name": "ewalel chapchap"
+        "name": "Ewalel Chapchap"
       },
       {
-        "name": "kapropita"
+        "name": "Kapropita"
       }
     ]
   },
   {
-    "subCounty": "baringo south",
+    "subCounty": "Baringo South",
     "wards": [
       {
-        "name": "marigat"
+        "name": "Marigat"
       },
       {
-        "name": "ilchamus"
+        "name": "Ilchamus"
       },
       {
-        "name": "mochongoi"
+        "name": "Mochongoi"
       },
       {
-        "name": "mukutani"
+        "name": "Mukutani"
       }
     ]
   },
   {
-    "subCounty": "mogotio",
+    "subCounty": "Mogotio",
     "wards": [
       {
-        "name": "mogotio"
+        "name": "Mogotio"
       },
       {
-        "name": "emining"
+        "name": "Emining"
       },
       {
-        "name": "kisanana"
+        "name": "Kisanana"
       }
     ]
   },
   {
-    "subCounty": "eldama ravine",
+    "subCounty": "Eldama Ravine",
     "wards": [
       {
-        "name": "lembus"
+        "name": "Lembus"
       },
       {
-        "name": "lembus kwen"
+        "name": "Lembus Kwen"
       },
       {
-        "name": "ravine"
+        "name": "Ravine"
       },
       {
-        "name": "mumberes maji mazuri"
+        "name": "Mumberes Maji Mazuri"
       },
       {
-        "name": "lembus perkerra"
+        "name": "Lembus Perkerra"
       },
       {
-        "name": "koibatek"
+        "name": "Koibatek"
       }
     ]
   },
   {
-    "subCounty": "laikipia west",
+    "subCounty": "Laikipia West",
     "wards": [
       {
-        "name": "olmoran"
+        "name": "Olmoran"
       },
       {
-        "name": "rumuruti township"
+        "name": "Rumuruti Township"
       },
       {
-        "name": "kinamba"
+        "name": "Kinamba"
       },
       {
-        "name": "marmanet"
+        "name": "Marmanet"
       },
       {
-        "name": "igwamiti"
+        "name": "Igwamiti"
       },
       {
-        "name": "salama"
+        "name": "Salama"
       }
     ]
   },
   {
-    "subCounty": "laikipia east",
+    "subCounty": "Laikipia East",
     "wards": [
       {
-        "name": "ngobit"
+        "name": "Ngobit"
       },
       {
-        "name": "tigithi"
+        "name": "Tigithi"
       },
       {
-        "name": "thingithu"
+        "name": "Thingithu"
       },
       {
-        "name": "nanyuki"
+        "name": "Nanyuki"
       },
       {
-        "name": "umande"
+        "name": "Umande"
       }
     ]
   },
   {
-    "subCounty": "laikipia north",
+    "subCounty": "Laikipia North",
     "wards": [
       {
-        "name": "sosian"
+        "name": "Sosian"
       },
       {
-        "name": "segera"
+        "name": "Segera"
       },
       {
-        "name": "mukogondo west"
+        "name": "Mukogondo West"
       },
       {
-        "name": "mukogondo east"
+        "name": "Mukogondo East"
       }
     ]
   },
   {
-    "subCounty": "molo",
+    "subCounty": "Molo",
     "wards": [
       {
-        "name": "mariashoni"
+        "name": "Mariashoni"
       },
       {
-        "name": "elburgon"
+        "name": "Elburgon"
       },
       {
-        "name": "turi"
+        "name": "Turi"
       },
       {
-        "name": "molo"
+        "name": "Molo"
       }
     ]
   },
   {
-    "subCounty": "njoro",
+    "subCounty": "Njoro",
     "wards": [
       {
-        "name": "maunarok"
+        "name": "Maunarok"
       },
       {
-        "name": "mauche"
+        "name": "Mauche"
       },
       {
-        "name": "kihingo"
+        "name": "Kihingo"
       },
       {
-        "name": "nessuit"
+        "name": "Nessuit"
       },
       {
-        "name": "lare"
+        "name": "Lare"
       },
       {
-        "name": "njoro"
+        "name": "Njoro"
       }
     ]
   },
   {
-    "subCounty": "naivasha",
+    "subCounty": "Naivasha",
     "wards": [
       {
-        "name": "biashara"
+        "name": "Biashara"
       },
       {
-        "name": "hells gate"
+        "name": "Hells Gate"
       },
       {
-        "name": "lakeview"
+        "name": "Lakeview"
       },
       {
-        "name": "maai-mahiu"
+        "name": "Maai-mahiu"
       },
       {
-        "name": "maiella"
+        "name": "Maiella"
       },
       {
-        "name": "olkaria"
+        "name": "Olkaria"
       },
       {
-        "name": "naivasha east"
+        "name": "Naivasha East"
       },
       {
-        "name": "viwandani"
+        "name": "Viwandani"
       }
     ]
   },
   {
-    "subCounty": "gilgil",
+    "subCounty": "Gilgil",
     "wards": [
       {
-        "name": "gilgil"
+        "name": "Gilgil"
       },
       {
-        "name": "elementaita"
+        "name": "Elementaita"
       },
       {
-        "name": "mbaruk eburu"
+        "name": "Mbaruk Eburu"
       },
       {
-        "name": "malewa west"
+        "name": "Malewa West"
       },
       {
-        "name": "murindati"
+        "name": "Murindati"
       }
     ]
   },
   {
-    "subCounty": "kuresoi south",
+    "subCounty": "Kuresoi South",
     "wards": [
       {
-        "name": "amalo"
+        "name": "Amalo"
       },
       {
-        "name": "keringet"
+        "name": "Keringet"
       },
       {
-        "name": "kiptagich"
+        "name": "Kiptagich"
       },
       {
-        "name": "tinet"
+        "name": "Tinet"
       }
     ]
   },
   {
-    "subCounty": "kuresoi north",
+    "subCounty": "Kuresoi North",
     "wards": [
       {
-        "name": "kiptororo"
+        "name": "Kiptororo"
       },
       {
-        "name": "nyota"
+        "name": "Nyota"
       },
       {
-        "name": "sirikwa"
+        "name": "Sirikwa"
       },
       {
-        "name": "kamara"
+        "name": "Kamara"
       }
     ]
   },
   {
-    "subCounty": "subukia",
+    "subCounty": "Subukia",
     "wards": [
       {
-        "name": "subukia"
+        "name": "Subukia"
       },
       {
-        "name": "waseges"
+        "name": "Waseges"
       },
       {
-        "name": "kabazi"
+        "name": "Kabazi"
       }
     ]
   },
   {
-    "subCounty": "rongai",
+    "subCounty": "Rongai",
     "wards": [
       {
-        "name": "menengai west"
+        "name": "Menengai West"
       },
       {
-        "name": "soin"
+        "name": "Soin"
       },
       {
-        "name": "visoi"
+        "name": "Visoi"
       },
       {
-        "name": "mosop"
+        "name": "Mosop"
       },
       {
-        "name": "solai"
+        "name": "Solai"
       }
     ]
   },
   {
-    "subCounty": "bahati",
+    "subCounty": "Bahati",
     "wards": [
       {
-        "name": "dundori"
+        "name": "Dundori"
       },
       {
-        "name": "kabatini"
+        "name": "Kabatini"
       },
       {
-        "name": "kiamaina"
+        "name": "Kiamaina"
       },
       {
-        "name": "lanet umoja"
+        "name": "Lanet Umoja"
       },
       {
-        "name": "bahati"
+        "name": "Bahati"
       }
     ]
   },
   {
-    "subCounty": "nakuru town west",
+    "subCounty": "Nakuru Town West",
     "wards": [
       {
-        "name": "barut"
+        "name": "Barut"
       },
       {
-        "name": "london"
+        "name": "London"
       },
       {
-        "name": "kaptembwo"
+        "name": "Kaptembwo"
       },
       {
-        "name": "kapkures"
+        "name": "Kapkures"
       },
       {
-        "name": "rhoda"
+        "name": "Rhoda"
       },
       {
-        "name": "shaabab"
+        "name": "Shaabab"
       }
     ]
   },
   {
-    "subCounty": "nakuru town east",
+    "subCounty": "Nakuru Town East",
     "wards": [
       {
-        "name": "biashara"
+        "name": "Biashara"
       },
       {
-        "name": "kivumbini"
+        "name": "Kivumbini"
       },
       {
-        "name": "flamingo"
+        "name": "Flamingo"
       },
       {
-        "name": "menengai"
+        "name": "Menengai"
       },
       {
-        "name": "nakuru east"
+        "name": "Nakuru East"
       }
     ]
   },
   {
-    "subCounty": "kilgoris",
+    "subCounty": "Kilgoris",
     "wards": [
       {
-        "name": "kilgoris central"
+        "name": "Kilgoris Central"
       },
       {
-        "name": "keyian"
+        "name": "Keyian"
       },
       {
-        "name": "angata barikoi"
+        "name": "Angata Barikoi"
       },
       {
-        "name": "shankoe"
+        "name": "Shankoe"
       },
       {
-        "name": "kimintet"
+        "name": "Kimintet"
       },
       {
-        "name": "lolgorian"
+        "name": "Lolgorian"
       }
     ]
   },
   {
-    "subCounty": "emurua dikirr",
+    "subCounty": "Emurua Dikirr",
     "wards": [
       {
-        "name": "ilkerin"
+        "name": "Ilkerin"
       },
       {
-        "name": "ololmasani"
+        "name": "Ololmasani"
       },
       {
-        "name": "mogondo"
+        "name": "Mogondo"
       },
       {
-        "name": "kapsasian"
+        "name": "Kapsasian"
       }
     ]
   },
   {
-    "subCounty": "narok north",
+    "subCounty": "Narok North",
     "wards": [
       {
-        "name": "olpusimoru"
+        "name": "Olpusimoru"
       },
       {
-        "name": "olokurto"
+        "name": "Olokurto"
       },
       {
-        "name": "narok town"
+        "name": "Narok Town"
       },
       {
-        "name": "nkareta"
+        "name": "Nkareta"
       },
       {
-        "name": "olorropil"
+        "name": "Olorropil"
       },
       {
-        "name": "melili"
+        "name": "Melili"
       }
     ]
   },
   {
-    "subCounty": "narok east",
+    "subCounty": "Narok East",
     "wards": [
       {
-        "name": "mosiro"
+        "name": "Mosiro"
       },
       {
-        "name": "ildamat"
+        "name": "Ildamat"
       },
       {
-        "name": "keekonyokie"
+        "name": "Keekonyokie"
       },
       {
-        "name": "suswa"
+        "name": "Suswa"
       }
     ]
   },
   {
-    "subCounty": "narok south",
+    "subCounty": "Narok South",
     "wards": [
       {
-        "name": "majimoto naroosura"
+        "name": "Majimoto Naroosura"
       },
       {
-        "name": "ololulung'a"
+        "name": "Ololulung'a"
       },
       {
-        "name": "melelo"
+        "name": "Melelo"
       },
       {
-        "name": "loita"
+        "name": "Loita"
       },
       {
-        "name": "sogoo"
+        "name": "Sogoo"
       },
       {
-        "name": "sagamian"
+        "name": "Sagamian"
       }
     ]
   },
   {
-    "subCounty": "narok west",
+    "subCounty": "Narok West",
     "wards": [
       {
-        "name": "ilmotiok"
+        "name": "Ilmotiok"
       },
       {
-        "name": "mara"
+        "name": "Mara"
       },
       {
-        "name": "siana"
+        "name": "Siana"
       },
       {
-        "name": "naikarra"
+        "name": "Naikarra"
       }
     ]
   },
   {
-    "subCounty": "kajiado north",
+    "subCounty": "Kajiado North",
     "wards": [
       {
-        "name": "olkeri"
+        "name": "Olkeri"
       },
       {
-        "name": "ongata rongai"
+        "name": "Ongata Rongai"
       },
       {
-        "name": "nkaimurunya"
+        "name": "Nkaimurunya"
       },
       {
-        "name": "oloolua"
+        "name": "Oloolua"
       },
       {
-        "name": "ngong"
+        "name": "Ngong"
       }
     ]
   },
   {
-    "subCounty": "kajiado central",
+    "subCounty": "Kajiado Central",
     "wards": [
       {
-        "name": "purko"
+        "name": "Purko"
       },
       {
-        "name": "ildamat"
+        "name": "Ildamat"
       },
       {
-        "name": "dalalekutuk"
+        "name": "Dalalekutuk"
       },
       {
-        "name": "matapato north"
+        "name": "Matapato North"
       },
       {
-        "name": "matapato south"
+        "name": "Matapato South"
       }
     ]
   },
   {
-    "subCounty": "kajiado east",
+    "subCounty": "Kajiado East",
     "wards": [
       {
-        "name": "kaputiei north"
+        "name": "Kaputiei North"
       },
       {
-        "name": "kitengela"
+        "name": "Kitengela"
       },
       {
-        "name": "oloosirkon sholinke"
+        "name": "Oloosirkon Sholinke"
       },
       {
-        "name": "kenyawa-poka"
+        "name": "Kenyawa-poka"
       },
       {
-        "name": "imaroro"
+        "name": "Imaroro"
       }
     ]
   },
   {
-    "subCounty": "kajiado west",
+    "subCounty": "Kajiado West",
     "wards": [
       {
-        "name": "keekonyokie"
+        "name": "Keekonyokie"
       },
       {
-        "name": "iloodokilani"
+        "name": "Iloodokilani"
       },
       {
-        "name": "magadi"
+        "name": "Magadi"
       },
       {
-        "name": "ewuaso oonkidong'i"
+        "name": "Ewuaso Oonkidong'i"
       },
       {
-        "name": "mosiro"
+        "name": "Mosiro"
       }
     ]
   },
   {
-    "subCounty": "kajiado south",
+    "subCounty": "Kajiado South",
     "wards": [
       {
-        "name": "entonet lenkisim"
+        "name": "Entonet Lenkisim"
       },
       {
-        "name": "mbirikani eselenkei"
+        "name": "Mbirikani Eselenkei"
       },
       {
-        "name": "kuku"
+        "name": "Kuku"
       },
       {
-        "name": "rombo"
+        "name": "Rombo"
       },
       {
-        "name": "kimana"
+        "name": "Kimana"
       }
     ]
   },
   {
-    "subCounty": "kipkelion east",
+    "subCounty": "Kipkelion East",
     "wards": [
       {
-        "name": "londiani"
+        "name": "Londiani"
       },
       {
-        "name": "kedowa kimugul"
+        "name": "Kedowa Kimugul"
       },
       {
-        "name": "chepseon"
+        "name": "Chepseon"
       },
       {
-        "name": "tendeno sorget"
+        "name": "Tendeno Sorget"
       }
     ]
   },
   {
-    "subCounty": "kipkelion west",
+    "subCounty": "Kipkelion West",
     "wards": [
       {
-        "name": "kunyak"
+        "name": "Kunyak"
       },
       {
-        "name": "kamasian"
+        "name": "Kamasian"
       },
       {
-        "name": "kipkelion"
+        "name": "Kipkelion"
       },
       {
-        "name": "chilchila"
+        "name": "Chilchila"
       }
     ]
   },
   {
-    "subCounty": "ainamoi",
+    "subCounty": "Ainamoi",
     "wards": [
       {
-        "name": "kapsoit"
+        "name": "Kapsoit"
       },
       {
-        "name": "ainamoi"
+        "name": "Ainamoi"
       },
       {
-        "name": "kapkugerwet"
+        "name": "Kapkugerwet"
       },
       {
-        "name": "kipchebor"
+        "name": "Kipchebor"
       },
       {
-        "name": "kipchimchim"
+        "name": "Kipchimchim"
       },
       {
-        "name": "kapsaos"
+        "name": "Kapsaos"
       }
     ]
   },
   {
-    "subCounty": "bureti",
+    "subCounty": "Bureti",
     "wards": [
       {
-        "name": "kisiara"
+        "name": "Kisiara"
       },
       {
-        "name": "tebesonik"
+        "name": "Tebesonik"
       },
       {
-        "name": "cheboin"
+        "name": "Cheboin"
       },
       {
-        "name": "chemosot"
+        "name": "Chemosot"
       },
       {
-        "name": "litein"
+        "name": "Litein"
       },
       {
-        "name": "cheplanget"
+        "name": "Cheplanget"
       },
       {
-        "name": "kapkatet"
+        "name": "Kapkatet"
       }
     ]
   },
   {
-    "subCounty": "belgut",
+    "subCounty": "Belgut",
     "wards": [
       {
-        "name": "waldai"
+        "name": "Waldai"
       },
       {
-        "name": "kabianga"
+        "name": "Kabianga"
       },
       {
-        "name": "cheptororiet seretut"
+        "name": "Cheptororiet Seretut"
       },
       {
-        "name": "chaik"
+        "name": "Chaik"
       },
       {
-        "name": "kapsuser"
+        "name": "Kapsuser"
       }
     ]
   },
   {
-    "subCounty": "sigowet soin",
+    "subCounty": "Sigowet Soin",
     "wards": [
       {
-        "name": "sigowet"
+        "name": "Sigowet"
       },
       {
-        "name": "kaplelartet"
+        "name": "Kaplelartet"
       },
       {
-        "name": "soliat"
+        "name": "Soliat"
       },
       {
-        "name": "soin"
+        "name": "Soin"
       }
     ]
   },
   {
-    "subCounty": "sotik",
+    "subCounty": "Sotik",
     "wards": [
       {
-        "name": "ndanai abosi"
+        "name": "Ndanai Abosi"
       },
       {
-        "name": "chemagel"
+        "name": "Chemagel"
       },
       {
-        "name": "kipsonoi"
+        "name": "Kipsonoi"
       },
       {
-        "name": "kapletundo"
+        "name": "Kapletundo"
       },
       {
-        "name": "rongena manaret"
+        "name": "Rongena Manaret"
       }
     ]
   },
   {
-    "subCounty": "chepalungu",
+    "subCounty": "Chepalungu",
     "wards": [
       {
-        "name": "kong'asis"
+        "name": "Kong'asis"
       },
       {
-        "name": "nyangores"
+        "name": "Nyangores"
       },
       {
-        "name": "sigor"
+        "name": "Sigor"
       },
       {
-        "name": "chebunyo"
+        "name": "Chebunyo"
       },
       {
-        "name": "siongiroi"
+        "name": "Siongiroi"
       }
     ]
   },
   {
-    "subCounty": "bomet east",
+    "subCounty": "Bomet East",
     "wards": [
       {
-        "name": "merigi"
+        "name": "Merigi"
       },
       {
-        "name": "kembu"
+        "name": "Kembu"
       },
       {
-        "name": "longisa"
+        "name": "Longisa"
       },
       {
-        "name": "kipreres"
+        "name": "Kipreres"
       },
       {
-        "name": "chemaner"
+        "name": "Chemaner"
       }
     ]
   },
   {
-    "subCounty": "bomet central",
+    "subCounty": "Bomet Central",
     "wards": [
       {
-        "name": "silibwet township"
+        "name": "Silibwet Township"
       },
       {
-        "name": "ndaraweta"
+        "name": "Ndaraweta"
       },
       {
-        "name": "singorwet"
+        "name": "Singorwet"
       },
       {
-        "name": "chesoen"
+        "name": "Chesoen"
       },
       {
-        "name": "mutarakwa"
+        "name": "Mutarakwa"
       }
     ]
   },
   {
-    "subCounty": "konoin",
+    "subCounty": "Konoin",
     "wards": [
       {
-        "name": "chepchabas"
+        "name": "Chepchabas"
       },
       {
-        "name": "kimulot"
+        "name": "Kimulot"
       },
       {
-        "name": "mogogosiek"
+        "name": "Mogogosiek"
       },
       {
-        "name": "boito"
+        "name": "Boito"
       },
       {
-        "name": "embomos"
+        "name": "Embomos"
       }
     ]
   },
   {
-    "subCounty": "lugari",
+    "subCounty": "Lugari",
     "wards": [
       {
-        "name": "mautuma"
+        "name": "Mautuma"
       },
       {
-        "name": "lugari"
+        "name": "Lugari"
       },
       {
-        "name": "lumakanda"
+        "name": "Lumakanda"
       },
       {
-        "name": "chekalini"
+        "name": "Chekalini"
       },
       {
-        "name": "chevaywa"
+        "name": "Chevaywa"
       },
       {
-        "name": "lwandeti"
+        "name": "Lwandeti"
       }
     ]
   },
   {
-    "subCounty": "likuyani",
+    "subCounty": "Likuyani",
     "wards": [
       {
-        "name": "likuyani"
+        "name": "Likuyani"
       },
       {
-        "name": "sango"
+        "name": "Sango"
       },
       {
-        "name": "kongoni"
+        "name": "Kongoni"
       },
       {
-        "name": "nzoia"
+        "name": "Nzoia"
       },
       {
-        "name": "sinoko"
+        "name": "Sinoko"
       }
     ]
   },
   {
-    "subCounty": "malava",
+    "subCounty": "Malava",
     "wards": [
       {
-        "name": "west kabras"
+        "name": "West Kabras"
       },
       {
-        "name": "chemuche"
+        "name": "Chemuche"
       },
       {
-        "name": "east kabras"
+        "name": "East Kabras"
       },
       {
-        "name": "butali chegulo"
+        "name": "Butali Chegulo"
       },
       {
-        "name": "manda-shivanga"
+        "name": "Manda-shivanga"
       },
       {
-        "name": "shirugu-mugai"
+        "name": "Shirugu-mugai"
       },
       {
-        "name": "south kabras"
+        "name": "South Kabras"
       }
     ]
   },
   {
-    "subCounty": "lurambi",
+    "subCounty": "Lurambi",
     "wards": [
       {
-        "name": "butsotso east"
+        "name": "Butsotso East"
       },
       {
-        "name": "butsotso south"
+        "name": "Butsotso South"
       },
       {
-        "name": "butsotso central"
+        "name": "Butsotso Central"
       },
       {
-        "name": "sheywe"
+        "name": "Sheywe"
       },
       {
-        "name": "mahiakalo"
+        "name": "Mahiakalo"
       },
       {
-        "name": "shirere"
+        "name": "Shirere"
       }
     ]
   },
   {
-    "subCounty": "navakholo",
+    "subCounty": "Navakholo",
     "wards": [
       {
-        "name": "ingostse-mathia"
+        "name": "Ingostse-mathia"
       },
       {
-        "name": "shinoyi-shikomari-"
+        "name": "Shinoyi-shikomari-"
       },
       {
-        "name": "bunyala west"
+        "name": "Bunyala West"
       },
       {
-        "name": "bunyala east"
+        "name": "Bunyala East"
       },
       {
-        "name": "bunyala central"
+        "name": "Bunyala Central"
       }
     ]
   },
   {
-    "subCounty": "mumias west",
+    "subCounty": "Mumias West",
     "wards": [
       {
-        "name": "mumias central"
+        "name": "Mumias Central"
       },
       {
-        "name": "mumias north"
+        "name": "Mumias North"
       },
       {
-        "name": "etenje"
+        "name": "Etenje"
       },
       {
-        "name": "musanda"
+        "name": "Musanda"
       }
     ]
   },
   {
-    "subCounty": "mumias east",
+    "subCounty": "Mumias East",
     "wards": [
       {
-        "name": "lubinu lusheya"
+        "name": "Lubinu Lusheya"
       },
       {
-        "name": "isongo makunga malaha"
+        "name": "Isongo Makunga Malaha"
       },
       {
-        "name": "east wanga"
+        "name": "East Wanga"
       }
     ]
   },
   {
-    "subCounty": "matungu",
+    "subCounty": "Matungu",
     "wards": [
       {
-        "name": "koyonzo"
+        "name": "Koyonzo"
       },
       {
-        "name": "kholera"
+        "name": "Kholera"
       },
       {
-        "name": "khalaba"
+        "name": "Khalaba"
       },
       {
-        "name": "mayoni"
+        "name": "Mayoni"
       },
       {
-        "name": "namamali"
+        "name": "Namamali"
       }
     ]
   },
   {
-    "subCounty": "butere",
+    "subCounty": "Butere",
     "wards": [
       {
-        "name": "marama west"
+        "name": "Marama West"
       },
       {
-        "name": "marama central"
+        "name": "Marama Central"
       },
       {
-        "name": "marenyo - shianda"
+        "name": "Marenyo - Shianda"
       },
       {
-        "name": "marama north"
+        "name": "Marama North"
       },
       {
-        "name": "marama south"
+        "name": "Marama South"
       }
     ]
   },
   {
-    "subCounty": "khwisero",
+    "subCounty": "Khwisero",
     "wards": [
       {
-        "name": "kisa north"
+        "name": "Kisa North"
       },
       {
-        "name": "kisa east"
+        "name": "Kisa East"
       },
       {
-        "name": "kisa west"
+        "name": "Kisa West"
       },
       {
-        "name": "kisa central"
+        "name": "Kisa Central"
       }
     ]
   },
   {
-    "subCounty": "shinyalu",
+    "subCounty": "Shinyalu",
     "wards": [
       {
-        "name": "isukha north"
+        "name": "Isukha North"
       },
       {
-        "name": "murhanda"
+        "name": "Murhanda"
       },
       {
-        "name": "isukha central"
+        "name": "Isukha Central"
       },
       {
-        "name": "isukha south"
+        "name": "Isukha South"
       },
       {
-        "name": "isukha east"
+        "name": "Isukha East"
       },
       {
-        "name": "isukha west"
+        "name": "Isukha West"
       }
     ]
   },
   {
-    "subCounty": "ikolomani",
+    "subCounty": "Ikolomani",
     "wards": [
       {
-        "name": "idakho south"
+        "name": "Idakho South"
       },
       {
-        "name": "idakho east"
+        "name": "Idakho East"
       },
       {
-        "name": "idakho north"
+        "name": "Idakho North"
       },
       {
-        "name": "idakho central"
+        "name": "Idakho Central"
       }
     ]
   },
   {
-    "subCounty": "vihiga",
+    "subCounty": "Vihiga",
     "wards": [
       {
-        "name": "lugaga-wamuluma"
+        "name": "Lugaga-wamuluma"
       },
       {
-        "name": "south maragoli"
+        "name": "South Maragoli"
       },
       {
-        "name": "central maragoli"
+        "name": "Central Maragoli"
       },
       {
-        "name": "mungoma"
+        "name": "Mungoma"
       }
     ]
   },
   {
-    "subCounty": "sabatia",
+    "subCounty": "Sabatia",
     "wards": [
       {
-        "name": "lyaduywa izava"
+        "name": "Lyaduywa Izava"
       },
       {
-        "name": "west sabatia"
+        "name": "West Sabatia"
       },
       {
-        "name": "chavakali"
+        "name": "Chavakali"
       },
       {
-        "name": "north maragoli"
+        "name": "North Maragoli"
       },
       {
-        "name": "wodanga"
+        "name": "Wodanga"
       },
       {
-        "name": "busali"
+        "name": "Busali"
       }
     ]
   },
   {
-    "subCounty": "hamisi",
+    "subCounty": "Hamisi",
     "wards": [
       {
-        "name": "shiru"
+        "name": "Shiru"
       },
       {
-        "name": "muhudu"
+        "name": "Muhudu"
       },
       {
-        "name": "shamakhokho"
+        "name": "Shamakhokho"
       },
       {
-        "name": "gisambai"
+        "name": "Gisambai"
       },
       {
-        "name": "banja"
+        "name": "Banja"
       },
       {
-        "name": "tambua"
+        "name": "Tambua"
       },
       {
-        "name": "jepkoyai"
+        "name": "Jepkoyai"
       }
     ]
   },
   {
-    "subCounty": "luanda",
+    "subCounty": "Luanda",
     "wards": [
       {
-        "name": "luanda township"
+        "name": "Luanda Township"
       },
       {
-        "name": "wemilabi"
+        "name": "Wemilabi"
       },
       {
-        "name": "mwibona"
+        "name": "Mwibona"
       },
       {
-        "name": "luanda south"
+        "name": "Luanda South"
       },
       {
-        "name": "emabungo"
+        "name": "Emabungo"
       }
     ]
   },
   {
-    "subCounty": "emuhaya",
+    "subCounty": "Emuhaya",
     "wards": [
       {
-        "name": "north east bunyore"
+        "name": "North East Bunyore"
       },
       {
-        "name": "central bunyore"
+        "name": "Central Bunyore"
       },
       {
-        "name": "west bunyore"
+        "name": "West Bunyore"
       }
     ]
   },
   {
-    "subCounty": "mt.elgon",
+    "subCounty": "Mt.elgon",
     "wards": [
       {
-        "name": "cheptais"
+        "name": "Cheptais"
       },
       {
-        "name": "chesikaki"
+        "name": "Chesikaki"
       },
       {
-        "name": "chepyuk"
+        "name": "Chepyuk"
       },
       {
-        "name": "kapkateny"
+        "name": "Kapkateny"
       },
       {
-        "name": "kaptama"
+        "name": "Kaptama"
       },
       {
-        "name": "elgon"
+        "name": "Elgon"
       }
     ]
   },
   {
-    "subCounty": "sirisia",
+    "subCounty": "Sirisia",
     "wards": [
       {
-        "name": "namwela"
+        "name": "Namwela"
       },
       {
-        "name": "malakisi south kulisiru"
+        "name": "Malakisi South Kulisiru"
       },
       {
-        "name": "lwandanyi"
+        "name": "Lwandanyi"
       }
     ]
   },
   {
-    "subCounty": "kabuchai",
+    "subCounty": "Kabuchai",
     "wards": [
       {
-        "name": "kabuchai chwele"
+        "name": "Kabuchai Chwele"
       },
       {
-        "name": "west nalondo"
+        "name": "West Nalondo"
       },
       {
-        "name": "bwake luuya"
+        "name": "Bwake Luuya"
       },
       {
-        "name": "mukuyuni"
+        "name": "Mukuyuni"
       }
     ]
   },
   {
-    "subCounty": "bumula",
+    "subCounty": "Bumula",
     "wards": [
       {
-        "name": "south bukusu"
+        "name": "South Bukusu"
       },
       {
-        "name": "bumula"
+        "name": "Bumula"
       },
       {
-        "name": "khasoko"
+        "name": "Khasoko"
       },
       {
-        "name": "kabula"
+        "name": "Kabula"
       },
       {
-        "name": "kimaeti"
+        "name": "Kimaeti"
       },
       {
-        "name": "west bukusu"
+        "name": "West Bukusu"
       },
       {
-        "name": "siboti"
+        "name": "Siboti"
       }
     ]
   },
   {
-    "subCounty": "kanduyi",
+    "subCounty": "Kanduyi",
     "wards": [
       {
-        "name": "bukembe west"
+        "name": "Bukembe West"
       },
       {
-        "name": "bukembe east"
+        "name": "Bukembe East"
       },
       {
-        "name": "township"
+        "name": "Township"
       },
       {
-        "name": "khalaba"
+        "name": "Khalaba"
       },
       {
-        "name": "musikoma"
+        "name": "Musikoma"
       },
       {
-        "name": "east sang'alo"
+        "name": "East Sang'alo"
       },
       {
-        "name": "marakaru tuuti"
+        "name": "Marakaru Tuuti"
       },
       {
-        "name": "sang'alo west"
+        "name": "Sang'alo West"
       }
     ]
   },
   {
-    "subCounty": "webuye east",
+    "subCounty": "Webuye East",
     "wards": [
       {
-        "name": "mihuu"
+        "name": "Mihuu"
       },
       {
-        "name": "ndivisi"
+        "name": "Ndivisi"
       },
       {
-        "name": "maraka"
+        "name": "Maraka"
       }
     ]
   },
   {
-    "subCounty": "webuye west",
+    "subCounty": "Webuye West",
     "wards": [
       {
-        "name": "misikhu"
+        "name": "Misikhu"
       },
       {
-        "name": "sitikho"
+        "name": "Sitikho"
       },
       {
-        "name": "matulo"
+        "name": "Matulo"
       },
       {
-        "name": "bokoli"
+        "name": "Bokoli"
       }
     ]
   },
   {
-    "subCounty": "kimilili",
+    "subCounty": "Kimilili",
     "wards": [
       {
-        "name": "kimilili"
+        "name": "Kimilili"
       },
       {
-        "name": "kibingei"
+        "name": "Kibingei"
       },
       {
-        "name": "maeni"
+        "name": "Maeni"
       },
       {
-        "name": "kamukuywa"
+        "name": "Kamukuywa"
       }
     ]
   },
   {
-    "subCounty": "tongaren",
+    "subCounty": "Tongaren",
     "wards": [
       {
-        "name": "mbakalo"
+        "name": "Mbakalo"
       },
       {
-        "name": "naitiri kabuyefwe"
+        "name": "Naitiri Kabuyefwe"
       },
       {
-        "name": "milima"
+        "name": "Milima"
       },
       {
-        "name": "ndalu tabani"
+        "name": "Ndalu Tabani"
       },
       {
-        "name": "tongaren"
+        "name": "Tongaren"
       },
       {
-        "name": "soysambu mitua"
+        "name": "Soysambu Mitua"
       }
     ]
   },
   {
-    "subCounty": "teso north",
+    "subCounty": "Teso North",
     "wards": [
       {
-        "name": "malaba central"
+        "name": "Malaba Central"
       },
       {
-        "name": "malaba north"
+        "name": "Malaba North"
       },
       {
-        "name": "ang'urai south"
+        "name": "Ang'urai South"
       },
       {
-        "name": "ang'urai north"
+        "name": "Ang'urai North"
       },
       {
-        "name": "ang'urai east"
+        "name": "Ang'urai East"
       },
       {
-        "name": "malaba south"
+        "name": "Malaba South"
       }
     ]
   },
   {
-    "subCounty": "teso south",
+    "subCounty": "Teso South",
     "wards": [
       {
-        "name": "ang'orom"
+        "name": "Ang'orom"
       },
       {
-        "name": "chakol south"
+        "name": "Chakol South"
       },
       {
-        "name": "chakol north"
+        "name": "Chakol North"
       },
       {
-        "name": "amukura west"
+        "name": "Amukura West"
       },
       {
-        "name": "amukura east"
+        "name": "Amukura East"
       },
       {
-        "name": "amukura central"
+        "name": "Amukura Central"
       }
     ]
   },
   {
-    "subCounty": "nambale",
+    "subCounty": "Nambale",
     "wards": [
       {
-        "name": "nambale township"
+        "name": "Nambale Township"
       },
       {
-        "name": "bukhayo north waltsi"
+        "name": "Bukhayo North Waltsi"
       },
       {
-        "name": "bukhayo east"
+        "name": "Bukhayo East"
       },
       {
-        "name": "bukhayo central"
+        "name": "Bukhayo Central"
       }
     ]
   },
   {
-    "subCounty": "matayos",
+    "subCounty": "Matayos",
     "wards": [
       {
-        "name": "bukhayo west"
+        "name": "Bukhayo West"
       },
       {
-        "name": "mayenje"
+        "name": "Mayenje"
       },
       {
-        "name": "matayos south"
+        "name": "Matayos South"
       },
       {
-        "name": "busibwabo"
+        "name": "Busibwabo"
       },
       {
-        "name": "burumba"
+        "name": "Burumba"
       }
     ]
   },
   {
-    "subCounty": "butula",
+    "subCounty": "Butula",
     "wards": [
       {
-        "name": "marachi west"
+        "name": "Marachi West"
       },
       {
-        "name": "kingandole"
+        "name": "Kingandole"
       },
       {
-        "name": "marachi central"
+        "name": "Marachi Central"
       },
       {
-        "name": "marachi east"
+        "name": "Marachi East"
       },
       {
-        "name": "marachi north"
+        "name": "Marachi North"
       },
       {
-        "name": "elugulu"
+        "name": "Elugulu"
       }
     ]
   },
   {
-    "subCounty": "funyula",
+    "subCounty": "Funyula",
     "wards": [
       {
-        "name": "namboboto nambuku"
+        "name": "Namboboto Nambuku"
       },
       {
-        "name": "nangina"
+        "name": "Nangina"
       },
       {
-        "name": "ageng'a nanguba"
+        "name": "Ageng'a Nanguba"
       },
       {
-        "name": "bwiri"
+        "name": "Bwiri"
       }
     ]
   },
   {
-    "subCounty": "budalangi",
+    "subCounty": "Budalangi",
     "wards": [
       {
-        "name": "bunyala central"
+        "name": "Bunyala Central"
       },
       {
-        "name": "bunyala north"
+        "name": "Bunyala North"
       },
       {
-        "name": "bunyala west"
+        "name": "Bunyala West"
       },
       {
-        "name": "bunyala south"
+        "name": "Bunyala South"
       }
     ]
   },
   {
-    "subCounty": "ugenya",
+    "subCounty": "Ugenya",
     "wards": [
       {
-        "name": "west ugenya"
+        "name": "West Ugenya"
       },
       {
-        "name": "ukwala"
+        "name": "Ukwala"
       },
       {
-        "name": "north ugenya"
+        "name": "North Ugenya"
       },
       {
-        "name": "east ugenya"
+        "name": "East Ugenya"
       }
     ]
   },
   {
-    "subCounty": "ugunja",
+    "subCounty": "Ugunja",
     "wards": [
       {
-        "name": "sidindi"
+        "name": "Sidindi"
       },
       {
-        "name": "sigomere"
+        "name": "Sigomere"
       },
       {
-        "name": "ugunja"
+        "name": "Ugunja"
       }
     ]
   },
   {
-    "subCounty": "alego usonga",
+    "subCounty": "Alego Usonga",
     "wards": [
       {
-        "name": "usonga"
+        "name": "Usonga"
       },
       {
-        "name": "west alego"
+        "name": "West Alego"
       },
       {
-        "name": "central alego"
+        "name": "Central Alego"
       },
       {
-        "name": "siaya township"
+        "name": "Siaya Township"
       },
       {
-        "name": "north alego"
+        "name": "North Alego"
       },
       {
-        "name": "south east alego"
+        "name": "South East Alego"
       }
     ]
   },
   {
-    "subCounty": "gem",
+    "subCounty": "Gem",
     "wards": [
       {
-        "name": "north gem"
+        "name": "North Gem"
       },
       {
-        "name": "west gem"
+        "name": "West Gem"
       },
       {
-        "name": "central gem"
+        "name": "Central Gem"
       },
       {
-        "name": "yala township"
+        "name": "Yala Township"
       },
       {
-        "name": "east gem"
+        "name": "East Gem"
       },
       {
-        "name": "south gem"
+        "name": "South Gem"
       }
     ]
   },
   {
-    "subCounty": "bondo",
+    "subCounty": "Bondo",
     "wards": [
       {
-        "name": "west yimbo"
+        "name": "West Yimbo"
       },
       {
-        "name": "central sakwa"
+        "name": "Central Sakwa"
       },
       {
-        "name": "south sakwa"
+        "name": "South Sakwa"
       },
       {
-        "name": "yimbo east"
+        "name": "Yimbo East"
       },
       {
-        "name": "west sakwa"
+        "name": "West Sakwa"
       },
       {
-        "name": "north sakwa"
+        "name": "North Sakwa"
       }
     ]
   },
   {
-    "subCounty": "rarieda",
+    "subCounty": "Rarieda",
     "wards": [
       {
-        "name": "east asembo"
+        "name": "East Asembo"
       },
       {
-        "name": "west asembo"
+        "name": "West Asembo"
       },
       {
-        "name": "north uyoma"
+        "name": "North Uyoma"
       },
       {
-        "name": "south uyoma"
+        "name": "South Uyoma"
       },
       {
-        "name": "west uyoma"
+        "name": "West Uyoma"
       }
     ]
   },
   {
-    "subCounty": "kisumu east",
+    "subCounty": "Kisumu East",
     "wards": [
       {
-        "name": "kajulu"
+        "name": "Kajulu"
       },
       {
-        "name": "kolwa east"
+        "name": "Kolwa East"
       },
       {
-        "name": "manyatta 'b'"
+        "name": "Manyatta 'b'"
       },
       {
-        "name": "nyalenda 'a'"
+        "name": "Nyalenda 'a'"
       },
       {
-        "name": "kolwa central"
+        "name": "Kolwa Central"
       }
     ]
   },
   {
-    "subCounty": "kisumu west",
+    "subCounty": "Kisumu West",
     "wards": [
       {
-        "name": "south west kisumu"
+        "name": "South West Kisumu"
       },
       {
-        "name": "central kisumu"
+        "name": "Central Kisumu"
       },
       {
-        "name": "kisumu north"
+        "name": "Kisumu North"
       },
       {
-        "name": "west kisumu"
+        "name": "West Kisumu"
       },
       {
-        "name": "north west kisumu"
+        "name": "North West Kisumu"
       }
     ]
   },
   {
-    "subCounty": "kisumu central",
+    "subCounty": "Kisumu Central",
     "wards": [
       {
-        "name": "railways"
+        "name": "Railways"
       },
       {
-        "name": "migosi"
+        "name": "Migosi"
       },
       {
-        "name": "shaurimoyo kaloleni"
+        "name": "Shaurimoyo Kaloleni"
       },
       {
-        "name": "market milimani"
+        "name": "Market Milimani"
       },
       {
-        "name": "kondele"
+        "name": "Kondele"
       },
       {
-        "name": "nyalenda b"
+        "name": "Nyalenda B"
       }
     ]
   },
   {
-    "subCounty": "seme",
+    "subCounty": "Seme",
     "wards": [
       {
-        "name": "west seme"
+        "name": "West Seme"
       },
       {
-        "name": "central seme"
+        "name": "Central Seme"
       },
       {
-        "name": "east seme"
+        "name": "East Seme"
       },
       {
-        "name": "north seme"
+        "name": "North Seme"
       }
     ]
   },
   {
-    "subCounty": "nyando",
+    "subCounty": "Nyando",
     "wards": [
       {
-        "name": "east kano wawidhi"
+        "name": "East Kano Wawidhi"
       },
       {
-        "name": "awasi onjiko"
+        "name": "Awasi Onjiko"
       },
       {
-        "name": "ahero"
+        "name": "Ahero"
       },
       {
-        "name": "kabonyo kanyagwal"
+        "name": "Kabonyo Kanyagwal"
       },
       {
-        "name": "kobura"
+        "name": "Kobura"
       }
     ]
   },
   {
-    "subCounty": "muhoroni",
+    "subCounty": "Muhoroni",
     "wards": [
       {
-        "name": "miwani"
+        "name": "Miwani"
       },
       {
-        "name": "ombeyi"
+        "name": "Ombeyi"
       },
       {
-        "name": "masogo nyang'oma"
+        "name": "Masogo Nyang'oma"
       },
       {
-        "name": "chemelil"
+        "name": "Chemelil"
       },
       {
-        "name": "muhoroni koru"
+        "name": "Muhoroni Koru"
       }
     ]
   },
   {
-    "subCounty": "nyakach",
+    "subCounty": "Nyakach",
     "wards": [
       {
-        "name": "south west nyakach"
+        "name": "South West Nyakach"
       },
       {
-        "name": "north nyakach"
+        "name": "North Nyakach"
       },
       {
-        "name": "central nyakach"
+        "name": "Central Nyakach"
       },
       {
-        "name": "west nyakach"
+        "name": "West Nyakach"
       },
       {
-        "name": "south east nyakach"
+        "name": "South East Nyakach"
       }
     ]
   },
   {
-    "subCounty": "kasipul",
+    "subCounty": "Kasipul",
     "wards": [
       {
-        "name": "west kasipul"
+        "name": "West Kasipul"
       },
       {
-        "name": "south kasipul"
+        "name": "South Kasipul"
       },
       {
-        "name": "central kasipul"
+        "name": "Central Kasipul"
       },
       {
-        "name": "east kamagak"
+        "name": "East Kamagak"
       },
       {
-        "name": "west kamagak"
+        "name": "West Kamagak"
       }
     ]
   },
   {
-    "subCounty": "kabondo kasipul",
+    "subCounty": "Kabondo Kasipul",
     "wards": [
       {
-        "name": "kabondo east"
+        "name": "Kabondo East"
       },
       {
-        "name": "kabondo west"
+        "name": "Kabondo West"
       },
       {
-        "name": "kokwanyo kakelo"
+        "name": "Kokwanyo Kakelo"
       },
       {
-        "name": "kojwach"
+        "name": "Kojwach"
       }
     ]
   },
   {
-    "subCounty": "karachuonyo",
+    "subCounty": "Karachuonyo",
     "wards": [
       {
-        "name": "west karachuonyo"
+        "name": "West Karachuonyo"
       },
       {
-        "name": "north karachuonyo"
+        "name": "North Karachuonyo"
       },
       {
-        "name": "central"
+        "name": "Central"
       },
       {
-        "name": "kanyaluo"
+        "name": "Kanyaluo"
       },
       {
-        "name": "kibiri"
+        "name": "Kibiri"
       },
       {
-        "name": "wangchieng"
+        "name": "Wangchieng"
       },
       {
-        "name": "kendu bay town"
+        "name": "Kendu Bay Town"
       }
     ]
   },
   {
-    "subCounty": "rangwe",
+    "subCounty": "Rangwe",
     "wards": [
       {
-        "name": "west gem"
+        "name": "West Gem"
       },
       {
-        "name": "east gem"
+        "name": "East Gem"
       },
       {
-        "name": "kagan"
+        "name": "Kagan"
       },
       {
-        "name": "kochia"
+        "name": "Kochia"
       }
     ]
   },
   {
-    "subCounty": "homa bay town",
+    "subCounty": "Homa Bay Town",
     "wards": [
       {
-        "name": "homa bay central"
+        "name": "Homa Bay Central"
       },
       {
-        "name": "homa bay arujo"
+        "name": "Homa Bay Arujo"
       },
       {
-        "name": "homa bay west"
+        "name": "Homa Bay West"
       },
       {
-        "name": "homa bay east"
+        "name": "Homa Bay East"
       }
     ]
   },
   {
-    "subCounty": "ndhiwa",
+    "subCounty": "Ndhiwa",
     "wards": [
       {
-        "name": "kwabwai"
+        "name": "Kwabwai"
       },
       {
-        "name": "kanyadoto"
+        "name": "Kanyadoto"
       },
       {
-        "name": "kanyikela"
+        "name": "Kanyikela"
       },
       {
-        "name": "north kabuoch"
+        "name": "North Kabuoch"
       },
       {
-        "name": "kabuoch south pala"
+        "name": "Kabuoch South Pala"
       },
       {
-        "name": "kanyamwa kologi"
+        "name": "Kanyamwa Kologi"
       },
       {
-        "name": "kanyamwa kosewe"
+        "name": "Kanyamwa Kosewe"
       }
     ]
   },
   {
-    "subCounty": "mbita",
+    "subCounty": "Mbita",
     "wards": [
       {
-        "name": "mfangano island"
+        "name": "Mfangano Island"
       },
       {
-        "name": "rusinga island"
+        "name": "Rusinga Island"
       },
       {
-        "name": "kasgunga"
+        "name": "Kasgunga"
       },
       {
-        "name": "gembe"
+        "name": "Gembe"
       },
       {
-        "name": "lambwe"
+        "name": "Lambwe"
       }
     ]
   },
   {
-    "subCounty": "suba",
+    "subCounty": "Suba",
     "wards": [
       {
-        "name": "gwassi south"
+        "name": "Gwassi South"
       },
       {
-        "name": "gwassi north"
+        "name": "Gwassi North"
       },
       {
-        "name": "kaksingri west"
+        "name": "Kaksingri West"
       },
       {
-        "name": "ruma kaksingri east"
+        "name": "Ruma Kaksingri East"
       }
     ]
   },
   {
-    "subCounty": "rongo",
+    "subCounty": "Rongo",
     "wards": [
       {
-        "name": "north kamagambo"
+        "name": "North Kamagambo"
       },
       {
-        "name": "central kamagambo"
+        "name": "Central Kamagambo"
       },
       {
-        "name": "east kamagambo"
+        "name": "East Kamagambo"
       },
       {
-        "name": "south kamagambo"
+        "name": "South Kamagambo"
       }
     ]
   },
   {
-    "subCounty": "awendo",
+    "subCounty": "Awendo",
     "wards": [
       {
-        "name": "north sakwa"
+        "name": "North Sakwa"
       },
       {
-        "name": "south sakwa"
+        "name": "South Sakwa"
       },
       {
-        "name": "west sakwa"
+        "name": "West Sakwa"
       },
       {
-        "name": "central sakwa"
+        "name": "Central Sakwa"
       }
     ]
   },
   {
-    "subCounty": "suna east",
+    "subCounty": "Suna East",
     "wards": [
       {
-        "name": "god jope"
+        "name": "God Jope"
       },
       {
-        "name": "suna central"
+        "name": "Suna Central"
       },
       {
-        "name": "kakrao"
+        "name": "Kakrao"
       },
       {
-        "name": "kwa"
+        "name": "Kwa"
       }
     ]
   },
   {
-    "subCounty": "suna west",
+    "subCounty": "Suna West",
     "wards": [
       {
-        "name": "wiga"
+        "name": "Wiga"
       },
       {
-        "name": "wasweta ii"
+        "name": "Wasweta Ii"
       },
       {
-        "name": "ragana-oruba"
+        "name": "Ragana-oruba"
       },
       {
-        "name": "wasimbete"
+        "name": "Wasimbete"
       }
     ]
   },
   {
-    "subCounty": "uriri",
+    "subCounty": "Uriri",
     "wards": [
       {
-        "name": "west kanyamkago"
+        "name": "West Kanyamkago"
       },
       {
-        "name": "north kanyamkago"
+        "name": "North Kanyamkago"
       },
       {
-        "name": "central kanyamkago"
+        "name": "Central Kanyamkago"
       },
       {
-        "name": "south kanyamkago"
+        "name": "South Kanyamkago"
       },
       {
-        "name": "east kanyamkago"
+        "name": "East Kanyamkago"
       }
     ]
   },
   {
-    "subCounty": "nyatike",
+    "subCounty": "Nyatike",
     "wards": [
       {
-        "name": "kachien'g"
+        "name": "Kachien'g"
       },
       {
-        "name": "kanyasa"
+        "name": "Kanyasa"
       },
       {
-        "name": "north kadem"
+        "name": "North Kadem"
       },
       {
-        "name": "macalder kanyarwanda"
+        "name": "Macalder Kanyarwanda"
       },
       {
-        "name": "kaler"
+        "name": "Kaler"
       },
       {
-        "name": "got kachola"
+        "name": "Got Kachola"
       },
       {
-        "name": "muhuru"
+        "name": "Muhuru"
       }
     ]
   },
   {
-    "subCounty": "kuria west",
+    "subCounty": "Kuria West",
     "wards": [
       {
-        "name": "bukira east"
+        "name": "Bukira East"
       },
       {
-        "name": "bukira centrl ikerege"
+        "name": "Bukira Centrl Ikerege"
       },
       {
-        "name": "isibania"
+        "name": "Isibania"
       },
       {
-        "name": "makerero"
+        "name": "Makerero"
       },
       {
-        "name": "masaba"
+        "name": "Masaba"
       },
       {
-        "name": "tagare"
+        "name": "Tagare"
       },
       {
-        "name": "nyamosense komosoko"
+        "name": "Nyamosense Komosoko"
       }
     ]
   },
   {
-    "subCounty": "kuria east",
+    "subCounty": "Kuria East",
     "wards": [
       {
-        "name": "gokeharaka getambwega"
+        "name": "Gokeharaka Getambwega"
       },
       {
-        "name": "ntimaru west"
+        "name": "Ntimaru West"
       },
       {
-        "name": "ntimaru east"
+        "name": "Ntimaru East"
       },
       {
-        "name": "nyabasi east"
+        "name": "Nyabasi East"
       },
       {
-        "name": "nyabasi west"
+        "name": "Nyabasi West"
       }
     ]
   },
   {
-    "subCounty": "bonchari",
+    "subCounty": "Bonchari",
     "wards": [
       {
-        "name": "bomariba"
+        "name": "Bomariba"
       },
       {
-        "name": "bogiakumu"
+        "name": "Bogiakumu"
       },
       {
-        "name": "bomorenda"
+        "name": "Bomorenda"
       },
       {
-        "name": "riana"
+        "name": "Riana"
       }
     ]
   },
   {
-    "subCounty": "south mugirango",
+    "subCounty": "South Mugirango",
     "wards": [
       {
-        "name": "tabaka"
+        "name": "Tabaka"
       },
       {
-        "name": "boikang'a"
+        "name": "Boikang'a"
       },
       {
-        "name": "bogetenga"
+        "name": "Bogetenga"
       },
       {
-        "name": "borabu chitago"
+        "name": "Borabu Chitago"
       },
       {
-        "name": "moticho"
+        "name": "Moticho"
       },
       {
-        "name": "getenga"
+        "name": "Getenga"
       }
     ]
   },
   {
-    "subCounty": "bomachoge borabu",
+    "subCounty": "Bomachoge Borabu",
     "wards": [
       {
-        "name": "bombaba borabu"
+        "name": "Bombaba Borabu"
       },
       {
-        "name": "boochi borabu"
+        "name": "Boochi Borabu"
       },
       {
-        "name": "bokimonge"
+        "name": "Bokimonge"
       },
       {
-        "name": "magenche"
+        "name": "Magenche"
       }
     ]
   },
   {
-    "subCounty": "bobasi",
+    "subCounty": "Bobasi",
     "wards": [
       {
-        "name": "masige west"
+        "name": "Masige West"
       },
       {
-        "name": "masige east"
+        "name": "Masige East"
       },
       {
-        "name": "bobasi central"
+        "name": "Bobasi Central"
       },
       {
-        "name": "nyacheki"
+        "name": "Nyacheki"
       },
       {
-        "name": "bobasi bogetaorio"
+        "name": "Bobasi Bogetaorio"
       },
       {
-        "name": "bobasi chache"
+        "name": "Bobasi Chache"
       },
       {
-        "name": "sameta mokwerero"
+        "name": "Sameta Mokwerero"
       },
       {
-        "name": "bobasi boitangare"
+        "name": "Bobasi Boitangare"
       }
     ]
   },
   {
-    "subCounty": "bomachoge chache",
+    "subCounty": "Bomachoge Chache",
     "wards": [
       {
-        "name": "majoge"
+        "name": "Majoge"
       },
       {
-        "name": "boochi tendere"
+        "name": "Boochi Tendere"
       },
       {
-        "name": "bosoti sengera"
+        "name": "Bosoti Sengera"
       }
     ]
   },
   {
-    "subCounty": "nyaribari masaba",
+    "subCounty": "Nyaribari Masaba",
     "wards": [
       {
-        "name": "ichuni"
+        "name": "Ichuni"
       },
       {
-        "name": "nyamasibi"
+        "name": "Nyamasibi"
       },
       {
-        "name": "masimba"
+        "name": "Masimba"
       },
       {
-        "name": "gesusu"
+        "name": "Gesusu"
       },
       {
-        "name": "kiamokama"
+        "name": "Kiamokama"
       }
     ]
   },
   {
-    "subCounty": "nyaribari chache",
+    "subCounty": "Nyaribari Chache",
     "wards": [
       {
-        "name": "bobaracho"
+        "name": "Bobaracho"
       },
       {
-        "name": "kisii central"
+        "name": "Kisii Central"
       },
       {
-        "name": "keumbu"
+        "name": "Keumbu"
       },
       {
-        "name": "kiogoro"
+        "name": "Kiogoro"
       },
       {
-        "name": "birongo"
+        "name": "Birongo"
       },
       {
-        "name": "ibeno"
+        "name": "Ibeno"
       }
     ]
   },
   {
-    "subCounty": "kitutu chache north",
+    "subCounty": "Kitutu Chache North",
     "wards": [
       {
-        "name": "monyerero"
+        "name": "Monyerero"
       },
       {
-        "name": "sensi"
+        "name": "Sensi"
       },
       {
-        "name": "marani"
+        "name": "Marani"
       },
       {
-        "name": "kegogi"
+        "name": "Kegogi"
       }
     ]
   },
   {
-    "subCounty": "kitutu chache south",
+    "subCounty": "Kitutu Chache South",
     "wards": [
       {
-        "name": "bogusero"
+        "name": "Bogusero"
       },
       {
-        "name": "bogeka"
+        "name": "Bogeka"
       },
       {
-        "name": "nyakoe"
+        "name": "Nyakoe"
       },
       {
-        "name": "kitutu central"
+        "name": "Kitutu Central"
       },
       {
-        "name": "nyatieko"
+        "name": "Nyatieko"
       }
     ]
   },
   {
-    "subCounty": "kitutu masaba",
+    "subCounty": "Kitutu Masaba",
     "wards": [
       {
-        "name": "rigoma"
+        "name": "Rigoma"
       },
       {
-        "name": "gachuba"
+        "name": "Gachuba"
       },
       {
-        "name": "kemera"
+        "name": "Kemera"
       },
       {
-        "name": "magombo"
+        "name": "Magombo"
       },
       {
-        "name": "manga"
+        "name": "Manga"
       },
       {
-        "name": "gesima"
+        "name": "Gesima"
       }
     ]
   },
   {
-    "subCounty": "west mugirango",
+    "subCounty": "West Mugirango",
     "wards": [
       {
-        "name": "nyamaiya"
+        "name": "Nyamaiya"
       },
       {
-        "name": "bogichora"
+        "name": "Bogichora"
       },
       {
-        "name": "bosamaro"
+        "name": "Bosamaro"
       },
       {
-        "name": "bonyamatuta"
+        "name": "Bonyamatuta"
       },
       {
-        "name": "township"
+        "name": "Township"
       }
     ]
   },
   {
-    "subCounty": "north mugirango",
+    "subCounty": "North Mugirango",
     "wards": [
       {
-        "name": "itibo"
+        "name": "Itibo"
       },
       {
-        "name": "bomwagamo"
+        "name": "Bomwagamo"
       },
       {
-        "name": "bokeira"
+        "name": "Bokeira"
       },
       {
-        "name": "magwagwa"
+        "name": "Magwagwa"
       },
       {
-        "name": "ekerenyo"
+        "name": "Ekerenyo"
       }
     ]
   },
   {
-    "subCounty": "borabu",
+    "subCounty": "Borabu",
     "wards": [
       {
-        "name": "mekenene"
+        "name": "Mekenene"
       },
       {
-        "name": "kiabonyoru"
+        "name": "Kiabonyoru"
       },
       {
-        "name": "nyansiongo"
+        "name": "Nyansiongo"
       },
       {
-        "name": "esise"
+        "name": "Esise"
       }
     ]
   },
   {
-    "subCounty": "westlands",
+    "subCounty": "Westlands",
     "wards": [
       {
-        "name": "kitisuru"
+        "name": "Kitisuru"
       },
       {
-        "name": "parklands highridge"
+        "name": "Parklands Highridge"
       },
       {
-        "name": "karura"
+        "name": "Karura"
       },
       {
-        "name": "kangemi"
+        "name": "Kangemi"
       },
       {
-        "name": "mountain view"
+        "name": "Mountain View"
       }
     ]
   },
   {
-    "subCounty": "dagoretti north",
+    "subCounty": "Dagoretti North",
     "wards": [
       {
-        "name": "kilimani"
+        "name": "Kilimani"
       },
       {
-        "name": "kawangware"
+        "name": "Kawangware"
       },
       {
-        "name": "gatina"
+        "name": "Gatina"
       },
       {
-        "name": "kileleshwa"
+        "name": "Kileleshwa"
       },
       {
-        "name": "kabiro"
+        "name": "Kabiro"
       }
     ]
   },
   {
-    "subCounty": "dagoretti south",
+    "subCounty": "Dagoretti South",
     "wards": [
       {
-        "name": "mutuini"
+        "name": "Mutuini"
       },
       {
-        "name": "ngando"
+        "name": "Ngando"
       },
       {
-        "name": "riruta"
+        "name": "Riruta"
       },
       {
-        "name": "uthiru ruthimitu"
+        "name": "Uthiru Ruthimitu"
       },
       {
-        "name": "waithaka"
+        "name": "Waithaka"
       }
     ]
   },
   {
-    "subCounty": "langata",
+    "subCounty": "Langata",
     "wards": [
       {
-        "name": "karen"
+        "name": "Karen"
       },
       {
-        "name": "nairobi west"
+        "name": "Nairobi West"
       },
       {
-        "name": "mugumo-ini"
+        "name": "Mugumo-ini"
       },
       {
-        "name": "south-c"
+        "name": "South-c"
       },
       {
-        "name": "nyayo highrise"
+        "name": "Nyayo Highrise"
       }
     ]
   },
   {
-    "subCounty": "kibra",
+    "subCounty": "Kibra",
     "wards": [
       {
-        "name": "laini saba"
+        "name": "Laini Saba"
       },
       {
-        "name": "lindi"
+        "name": "Lindi"
       },
       {
-        "name": "makina"
+        "name": "Makina"
       },
       {
-        "name": "woodley kenyatta golf"
+        "name": "Woodley Kenyatta Golf"
       },
       {
-        "name": "sarangombe"
+        "name": "Sarangombe"
       }
     ]
   },
   {
-    "subCounty": "roysambu",
+    "subCounty": "Roysambu",
     "wards": [
       {
-        "name": "githurai"
+        "name": "Githurai"
       },
       {
-        "name": "kahawa west"
+        "name": "Kahawa West"
       },
       {
-        "name": "zimmerman"
+        "name": "Zimmerman"
       },
       {
-        "name": "roysambu"
+        "name": "Roysambu"
       },
       {
-        "name": "kahawa"
+        "name": "Kahawa"
       }
     ]
   },
   {
-    "subCounty": "kasarani",
+    "subCounty": "Kasarani",
     "wards": [
       {
-        "name": "claycity"
+        "name": "Claycity"
       },
       {
-        "name": "mwiki"
+        "name": "Mwiki"
       },
       {
-        "name": "kasarani"
+        "name": "Kasarani"
       },
       {
-        "name": "njiru"
+        "name": "Njiru"
       },
       {
-        "name": "ruai"
+        "name": "Ruai"
       }
     ]
   },
   {
-    "subCounty": "ruaraka",
+    "subCounty": "Ruaraka",
     "wards": [
       {
-        "name": "baba dogo"
+        "name": "Baba Dogo"
       },
       {
-        "name": "utalii"
+        "name": "Utalii"
       },
       {
-        "name": "mathare north"
+        "name": "Mathare North"
       },
       {
-        "name": "lucky summer"
+        "name": "Lucky Summer"
       },
       {
-        "name": "korogocho"
+        "name": "Korogocho"
       }
     ]
   },
   {
-    "subCounty": "embakasi south",
+    "subCounty": "Embakasi South",
     "wards": [
       {
-        "name": "imara daima"
+        "name": "Imara Daima"
       },
       {
-        "name": "kwa njenga"
+        "name": "Kwa Njenga"
       },
       {
-        "name": "kwa reuben"
+        "name": "Kwa Reuben"
       },
       {
-        "name": "pipeline"
+        "name": "Pipeline"
       },
       {
-        "name": "kware"
+        "name": "Kware"
       }
     ]
   },
   {
-    "subCounty": "embakasi north",
+    "subCounty": "Embakasi North",
     "wards": [
       {
-        "name": "kariobangi north"
+        "name": "Kariobangi North"
       },
       {
-        "name": "dandora area i"
+        "name": "Dandora Area I"
       },
       {
-        "name": "dandora area ii"
+        "name": "Dandora Area Ii"
       },
       {
-        "name": "dandora area iii"
+        "name": "Dandora Area Iii"
       },
       {
-        "name": "dandora area iv"
+        "name": "Dandora Area Iv"
       }
     ]
   },
   {
-    "subCounty": "embakasi central",
+    "subCounty": "Embakasi Central",
     "wards": [
       {
-        "name": "kayole north"
+        "name": "Kayole North"
       },
       {
-        "name": "kayole central"
+        "name": "Kayole Central"
       },
       {
-        "name": "kayole south"
+        "name": "Kayole South"
       },
       {
-        "name": "komarock"
+        "name": "Komarock"
       },
       {
-        "name": "matopeni"
+        "name": "Matopeni"
       }
     ]
   },
   {
-    "subCounty": "embakasi east",
+    "subCounty": "Embakasi East",
     "wards": [
       {
-        "name": "upper savannah"
+        "name": "Upper Savannah"
       },
       {
-        "name": "lower savannah"
+        "name": "Lower Savannah"
       },
       {
-        "name": "embakasi"
+        "name": "Embakasi"
       },
       {
-        "name": "utawala"
+        "name": "Utawala"
       },
       {
-        "name": "mihango"
+        "name": "Mihango"
       }
     ]
   },
   {
-    "subCounty": "embakasi west",
+    "subCounty": "Embakasi West",
     "wards": [
       {
-        "name": "umoja i"
+        "name": "Umoja I"
       },
       {
-        "name": "umoja ii"
+        "name": "Umoja Ii"
       },
       {
-        "name": "mowlem"
+        "name": "Mowlem"
       },
       {
-        "name": "kariobangi south"
+        "name": "Kariobangi South"
       }
     ]
   },
   {
-    "subCounty": "makadara",
+    "subCounty": "Makadara",
     "wards": [
       {
-        "name": "makongeni"
+        "name": "Makongeni"
       },
       {
-        "name": "maringo hamza"
+        "name": "Maringo Hamza"
       },
       {
-        "name": "harambee"
+        "name": "Harambee"
       },
       {
-        "name": "viwandani"
+        "name": "Viwandani"
       }
     ]
   },
   {
-    "subCounty": "kamukunji",
+    "subCounty": "Kamukunji",
     "wards": [
       {
-        "name": "pumwani"
+        "name": "Pumwani"
       },
       {
-        "name": "eastleigh north"
+        "name": "Eastleigh North"
       },
       {
-        "name": "eastleigh south"
+        "name": "Eastleigh South"
       },
       {
-        "name": "airbase"
+        "name": "Airbase"
       },
       {
-        "name": "california"
+        "name": "California"
       }
     ]
   },
   {
-    "subCounty": "starehe",
+    "subCounty": "Starehe",
     "wards": [
       {
-        "name": "nairobi central"
+        "name": "Nairobi Central"
       },
       {
-        "name": "ngara"
+        "name": "Ngara"
       },
       {
-        "name": "ziwani kariokor"
+        "name": "Ziwani Kariokor"
       },
       {
-        "name": "pangani"
+        "name": "Pangani"
       },
       {
-        "name": "landimawe"
+        "name": "Landimawe"
       },
       {
-        "name": "nairobi south"
+        "name": "Nairobi South"
       }
     ]
   },
   {
-    "subCounty": "mathare",
+    "subCounty": "Mathare",
     "wards": [
       {
-        "name": "hospital"
+        "name": "Hospital"
       },
       {
-        "name": "mabatini"
+        "name": "Mabatini"
       },
       {
-        "name": "huruma"
+        "name": "Huruma"
       },
       {
-        "name": "ngei"
+        "name": "Ngei"
       },
       {
-        "name": "mlango kubwa"
+        "name": "Mlango Kubwa"
       },
       {
-        "name": "kiamaiko"
+        "name": "Kiamaiko"
       }
     ]
   },
