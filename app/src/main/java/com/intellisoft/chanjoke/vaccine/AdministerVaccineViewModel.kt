@@ -206,7 +206,8 @@ class AdministerVaccineViewModel(
         immunizationList: List<String>,
         encounterId: String,
         patientId: String,
-        context: Context
+        context: Context,
+        dateValue: String? = null
     ) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -235,11 +236,17 @@ class AdministerVaccineViewModel(
                         }
                     }.join()
 
+                    val date = if(dateValue != null) {
+                        formatterClass.convertStringToDate(dateValue, "MMM d yyyy") ?: Date()
+                    }else{
+                        Date()
+                    }
+
                     val immunization = createImmunizationResource(
                         encounterId,
                         patientId,
                         ImmunizationStatus.COMPLETED,
-                        Date()
+                        date
                     )
 
                     //Create Immunization Recommendation

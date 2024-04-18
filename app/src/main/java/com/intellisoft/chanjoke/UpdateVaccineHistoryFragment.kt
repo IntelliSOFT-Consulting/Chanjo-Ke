@@ -13,12 +13,16 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.databinding.FragmentUpdateVaccineHistoryBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
@@ -37,6 +41,11 @@ class UpdateVaccineHistoryFragment : Fragment() {
     private var patientWeeks:String? = null
     private lateinit var sharedPreferences: SharedPreferences
     private val immunizationHandler = ImmunizationHandler()
+
+    private var vaccineType: String = ""
+    private var lastDose: String = ""
+    private var vaccinePlace: String = ""
+    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +73,47 @@ class UpdateVaccineHistoryFragment : Fragment() {
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
 
+        binding.nextSubmit.setOnClickListener {
+
+            if (vaccineType == "") {
+                binding.vaccineSpinner.requestFocus()
+                Toast.makeText(requireContext(), "Select the type of vaccine", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (lastDose == "") {
+                binding.lastDose.requestFocus()
+                Toast.makeText(requireContext(), "Select the type of last vaccine dose", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (vaccinePlace == "") {
+                binding.vaccinationPlace.requestFocus()
+                Toast.makeText(requireContext(), "Select the place of vaccination", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val lastDoseDate = binding.tvDatePicker.text.toString()
+            if (lastDoseDate == "Date of last Dose *") {
+                binding.tvDatePicker.requestFocus()
+                Toast.makeText(requireContext(), "Select the Date of last Dose", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            /**
+             * Create an immunization resource,
+             */
+            val resultList = ArrayList<String>()
+            resultList.add(lastDose)
+
+            administerVaccineViewModel.createManualImmunizationResource(
+                resultList,
+                formatterClass.generateUuid(),
+                patientId,
+                requireContext(),
+                lastDoseDate)
+
+            val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
+            blurBackgroundDialog.show()
+
+        }
+
         patientWeeks = formatterClass.getSharedPref("patientWeeks", requireContext())
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
 
@@ -78,6 +128,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
 
         createVaccinationPlace()
         createVaccineType()
+
+
 
         // Inflate the layout for this fragment
         return binding.root
@@ -122,7 +174,6 @@ class UpdateVaccineHistoryFragment : Fragment() {
 
             routineTargetDiseases.forEach { routineVaccine ->
 
-                val targetDisease =  routineVaccine.targetDisease
                 val vaccineList =  routineVaccine.vaccineList
 
                 val newBasicVaccineList = vaccineList.filter { basicVaccine -> newVaccineNameList.contains(basicVaccine.vaccineName) }
@@ -152,6 +203,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                     // Handle the selection
                     val selectedItem = parent.getItemAtPosition(position) as String
+                    vaccineType = selectedItem
                     createLastDose(selectedItem)
                     // Perform your actions based on the selected item
                 }
@@ -195,6 +247,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 // Handle the selection
                 val selectedItem = parent.getItemAtPosition(position) as String
+                lastDose = selectedItem
                 // Perform your actions based on the selected item
             }
 
@@ -220,6 +273,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 // Handle the selection
                 val selectedItem = parent.getItemAtPosition(position) as String
+                vaccinePlace = selectedItem
                 // Perform your actions based on the selected item
             }
 

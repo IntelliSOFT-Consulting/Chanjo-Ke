@@ -116,7 +116,7 @@ class PatientAdapter(
 //            )
             FormatterClass().saveSharedPref(
                 "vaccinationFlow",
-                "updateVaccineDetails",
+                NavigationDetails.UPDATE_VACCINE_DETAILS.name,
                 context
             )
             FormatterClass().saveSharedPref(
