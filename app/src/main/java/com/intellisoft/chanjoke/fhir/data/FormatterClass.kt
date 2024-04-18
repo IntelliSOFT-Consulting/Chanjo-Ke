@@ -342,15 +342,24 @@ class FormatterClass {
                 val finalDate = convertDateToLocalDate(dobDate)
                 val period = Period.between(finalDate, LocalDate.now())
 
-
-
                 val years = period.years
                 val months = period.months
                 val days = period.days
 
+                /**
+                 * Convert to weeks
+                 */
+                // Calculate the total number of days in the period
+                val totalDays = period.toTotalMonths() * 30 + period.days
+
+                // Calculate the number of weeks
+                val totalWeeks = totalDays / 7
+
+
                 saveSharedPref("patientYears", years.toString(), context)
                 saveSharedPref("patientMonth", months.toString(), context)
                 saveSharedPref("patientDays", days.toString(), context)
+                saveSharedPref("patientWeeks", totalWeeks.toString(), context)
 
                 val ageStringBuilder = StringBuilder()
 

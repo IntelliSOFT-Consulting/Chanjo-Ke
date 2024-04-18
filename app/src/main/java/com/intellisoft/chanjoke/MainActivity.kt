@@ -131,6 +131,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            NavigationDetails.UPDATE_VACCINE_DETAILS.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    contraindicationFunction(patientId,  R.id.updateVaccineHistoryFragment)
+                }
+            }
+
             NavigationDetails.CONTRAINDICATIONS.name -> {
                 contraindicationFunction("",  R.id.contraindicationsFragment)
             }

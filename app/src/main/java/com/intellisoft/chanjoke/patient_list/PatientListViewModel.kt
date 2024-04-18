@@ -327,7 +327,8 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
             if (hasContact()) AppUtils().capitalizeFirstLetter(contactFirstRep.genderElement.valueAsString) else ""
         if (contactFirstRep.hasRelationship()) {
             if (contactFirstRep.relationshipFirstRep.hasCoding()) {
-                contact_type = contactFirstRep.relationshipFirstRep.text
+                if (contactFirstRep.relationshipFirstRep.hasText())
+                    contact_type = contactFirstRep.relationshipFirstRep.text
             }
         }
     }

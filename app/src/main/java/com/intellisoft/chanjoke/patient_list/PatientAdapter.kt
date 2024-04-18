@@ -109,11 +109,11 @@ class PatientAdapter(
 
         val patientId = FormatterClass().getSharedPref("patientId", context)
         vaccineDetails.setOnClickListener {
-            FormatterClass().saveSharedPref(
-                "questionnaireJson",
-                "update_history_specifics.json",
-                context
-            )
+//            FormatterClass().saveSharedPref(
+//                "questionnaireJson",
+//                "update_history_specifics.json",
+//                context
+//            )
             FormatterClass().saveSharedPref(
                 "vaccinationFlow",
                 "updateVaccineDetails",
@@ -126,7 +126,7 @@ class PatientAdapter(
 
             FormatterClass().deleteSharedPref("ready_to_update", context)
             val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("functionToCall", NavigationDetails.UPDATE_VACCINE_DETAILS.name)
             intent.putExtra("patientId", patientId)
             context.startActivity(intent)
             customDialog.dismiss() // Close the dialog
