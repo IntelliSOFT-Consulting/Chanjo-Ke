@@ -19,6 +19,9 @@ import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.databinding.FragmentUpdateVaccineHistoryBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import java.util.Calendar
@@ -33,6 +36,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
     private var patientYears:String? = null
     private var patientWeeks:String? = null
     private lateinit var sharedPreferences: SharedPreferences
+    private val immunizationHandler = ImmunizationHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,31 +91,50 @@ class UpdateVaccineHistoryFragment : Fragment() {
         val patientWeeksInt = patientWeeks?.toIntOrNull()
         if (patientWeeksInt != null && patientWeeksInt < 260){
 
+            /**
+             * 1.) Get the target disease
+             * 2.) Get the vaccines under the target disease
+             */
             //get the vaccine not vaccinated
             val routineKeyList = sharedPreferences.getString("routineList", null)
             val expandableListTitle = routineKeyList!!.split(",").toList()
-
-            val filteredList =expandableListTitle.filter { it.toInt() < patientWeeksInt }
-
-            Log.e("---->","<-----")
-            println("patientWeeksInt $patientWeeksInt")
-            println("patientWeeks $patientWeeks")
-            println("expandableListTitle $filteredList")
-            Log.e("---->","<-----")
 //            Get the administered list
             val administeredList = patientDetailsViewModel.getVaccineList()
+            val newVaccineNameList = ArrayList<String>()
 
-            val newVaccineList = ArrayList<String>()
-
-            filteredList.forEach { keyValue ->
+            val filteredWeeksList = expandableListTitle.filter { it.toInt() < patientWeeksInt }
+            filteredWeeksList.forEach { keyValue ->
                 val weekNo = formatterClass.getVaccineScheduleValue(keyValue)
                 val weekNoList = sharedPreferences.getStringSet(weekNo, null)
                 weekNoList?.toList()?.forEach { vaccineToCheck ->
                     val exists = administeredList.any { it.vaccineName == vaccineToCheck }
                     if (!exists){
-                        newVaccineList.add(vaccineToCheck)
+                        newVaccineNameList.add(vaccineToCheck)
                     }
                 }
+            }
+
+
+
+            val newVaccineList = ArrayList<String>()
+            val routineVaccineList = ArrayList<RoutineVaccine>()
+            val routineTargetDiseases = immunizationHandler.getRoutineTargetDiseases()
+
+            routineTargetDiseases.forEach { routineVaccine ->
+
+                val targetDisease =  routineVaccine.targetDisease
+                val vaccineList =  routineVaccine.vaccineList
+
+                val newBasicVaccineList = vaccineList.filter { basicVaccine -> newVaccineNameList.contains(basicVaccine.vaccineName) }
+
+                routineVaccine.vaccineList = newBasicVaccineList
+
+                if (newBasicVaccineList.isNotEmpty())
+                    routineVaccineList.add(routineVaccine)
+                if (newBasicVaccineList.isNotEmpty()){
+                    newVaccineList.add(routineVaccine.targetDisease)
+                }
+
             }
 
             // Create an ArrayAdapter using the dataList and a default spinner layout
@@ -129,6 +152,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                     // Handle the selection
                     val selectedItem = parent.getItemAtPosition(position) as String
+                    createLastDose(selectedItem)
                     // Perform your actions based on the selected item
                 }
 
@@ -137,20 +161,31 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 }
             }
 
-        }else{
-            Log.e("-=-=-=-","-=-=-=-")
         }
 
     }
-    private fun createLastDose(){
+    private fun createLastDose(targetDisease: String){
+
+        /**
+         * Get the dose number from the vaccine name
+         */
+        val vaccineList = ArrayList<String>()
+        val routineBasicVaccine = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
+        if (routineBasicVaccine is RoutineVaccine){
+            val routineVaccineList = routineBasicVaccine.vaccineList
+            routineVaccineList.forEach {
+                val vaccineName = it.vaccineName
+                vaccineList.add(vaccineName)
+            }
+        }
 
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter.createFromResource(
+        // Create an ArrayAdapter using the dataList and a default spinner layout
+        val adapter = ArrayAdapter(
             requireContext(),
-            R.array.vaccine_place,
-            android.R.layout.simple_spinner_item
-        )
+            android.R.layout.simple_spinner_item,
+            vaccineList)
+
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // Apply the adapter to the spinner

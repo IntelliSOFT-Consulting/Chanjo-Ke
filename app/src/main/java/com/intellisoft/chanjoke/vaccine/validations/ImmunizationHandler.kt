@@ -429,6 +429,11 @@ class ImmunizationHandler() {
         val vaccineName: String
     )
 
+    fun getRoutineTargetDiseases():List<RoutineVaccine>{
+        val (routineList, _,  _) = vaccines
+        return routineList
+    }
+
     // Liskov substitution principle
     fun getAllVaccineList(administeredList: ArrayList<BasicVaccine>, ageInWeeks:Int, context: Context?):
             Triple<List<RoutineVaccine>, List<NonRoutineVaccine>, List<PregnancyVaccine>> {
@@ -731,8 +736,6 @@ class ImmunizationHandler() {
 
 //        return pregnancySeriesContainingDose
     }
-
-
 
     fun getNextBasicVaccineInSeries(series: RoutineVaccine, doseNumber: String): BasicVaccine? {
         return series.vaccineList.firstOrNull { it.doseNumber == doseNumber.toInt().plus(1).toString() }
