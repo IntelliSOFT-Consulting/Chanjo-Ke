@@ -67,6 +67,7 @@ class ContraindicationsFragment : Fragment() {
     private var spinnerReasons = ""
 
     val resultList = listOf<String>(
+        "Please Select",
         "Product out of stock",
         "Contraindication",
         "Cold chain break",
@@ -191,8 +192,17 @@ class ContraindicationsFragment : Fragment() {
                                                 binding.etOtherReasons.error =
                                                     "Field cannot be empty.."
                                             }
-                                        } else
-                                            forecastReason = spinnerReasons
+                                        } else{
+                                            if(spinnerReasons != resultList.first()){
+                                                forecastReason = spinnerReasons
+                                            }else{
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Please select a reason",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
                                     }
                                 }
                                 if (forecastReason == "") {
@@ -387,7 +397,6 @@ class ContraindicationsFragment : Fragment() {
                 ) {
                     // Get the selected item
                     val selectedItem = parentView.getItemAtPosition(position).toString()
-
                     createContraindications(selectedItem)
 
                 }
@@ -402,6 +411,7 @@ class ContraindicationsFragment : Fragment() {
     }
 
     private fun createContraindications(selectedItem: String) {
+
         if (selectedItemList.contains(selectedItem)) selectedItemList.remove(selectedItem)
         selectedItemList.add(selectedItem)
 
