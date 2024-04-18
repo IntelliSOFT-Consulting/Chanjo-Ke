@@ -5,8 +5,6 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +13,9 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
@@ -23,11 +24,13 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class UpdateVaccineHistoryFragment : Fragment() {
@@ -47,10 +50,6 @@ class UpdateVaccineHistoryFragment : Fragment() {
     private var vaccinePlace: String = ""
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +57,31 @@ class UpdateVaccineHistoryFragment : Fragment() {
     ): View? {
 
         // Inflate the layout for this fragment
-        binding = FragmentUpdateVaccineHistoryBinding.inflate(inflater, container, false)
+        binding = FragmentUpdateVaccineHistoryBinding.inflate(layoutInflater)
+
+        // Inflate the layout for this fragment
+        return binding.root
+
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Set up onBackPressedCallback to navigate back to Fragment 2 when in Fragment 3
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().supportFragmentManager.popBackStack()
+                }
+            })
+
+        binding.btnBack.setOnClickListener {
+            //Implement onBackPressedCallback
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
+
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
@@ -117,23 +140,18 @@ class UpdateVaccineHistoryFragment : Fragment() {
         patientWeeks = formatterClass.getSharedPref("patientWeeks", requireContext())
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
 
-        // Set up onBackPressedCallback to navigate back to Fragment 2 when in Fragment 3
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().supportFragmentManager.popBackStack()
-            }
-        })
+
 
         binding.tvDatePicker.setOnClickListener { showDatePickerDialog() }
 
-        createVaccinationPlace()
-        createVaccineType()
+        CoroutineScope(Dispatchers.IO).launch {
 
+            CoroutineScope(Dispatchers.Main).launch {
+                createVaccinationPlace()
+                createVaccineType()
+            }
 
-
-        // Inflate the layout for this fragment
-        return binding.root
-
+        }
 
     }
 

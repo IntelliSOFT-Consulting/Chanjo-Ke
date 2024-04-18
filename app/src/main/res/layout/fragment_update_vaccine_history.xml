@@ -6,124 +6,165 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".UpdateVaccineHistoryFragment">
 
-    <ScrollView
-        android:layout_marginBottom="80dp"
-        android:layout_below="@+id/layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
+            android:id="@+id/layout"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:background="@drawable/spinner_border"
+            <ImageButton
+                android:clickable="true"
+                android:id="@+id/btnBack"
+                android:layout_margin="@dimen/_10dp"
+                android:layout_gravity="center"
+                android:padding="15dp"
+                android:background="@drawable/ic_action_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:background="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                app:helperText="Type of Vaccine *"
-                app:boxBackgroundMode="outline">
+                android:theme="@style/Theme.Zanzibar.AppBarOverlay">
 
-                <Spinner
-                    android:id="@+id/vaccineSpinner"
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:title="Update Client History"
+                    app:titleTextColor="@android:color/white" />
+            </com.google.android.material.appbar.AppBarLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:background="@drawable/spinner_border"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                app:helperText="Type of last Dose *"
-                app:boxBackgroundMode="outline">
-
-                <Spinner
-                    android:id="@+id/lastDose"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tvOthers"
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="Other Service Provided*"
-                app:boxBackgroundMode="outline">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etOthers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapSentences"
-                    android:textSize="12sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:background="@drawable/spinner_border"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                app:helperText="Place of Vaccination *"
-                app:boxBackgroundMode="outline">
-
-                <Spinner
-                    android:id="@+id/vaccinationPlace"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <TextView
-                android:id="@+id/tvDatePicker"
-                android:background="@drawable/spinner_border"
-                android:text="Date of last dose *"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:drawableEndCompat="@drawable/ic_action_date" />
-
-            <RelativeLayout
-                android:layout_marginBottom="80dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="Cancel"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/nextSubmit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="16dp"
-                    android:text="Next"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white" />
-
-            </RelativeLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+        <ScrollView
+            android:layout_marginBottom="80dp"
+            android:layout_below="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:background="@drawable/spinner_border"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    app:helperText="Type of Vaccine *"
+                    app:boxBackgroundMode="outline">
+
+                    <Spinner
+                        android:id="@+id/vaccineSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:background="@drawable/spinner_border"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    app:helperText="Type of last Dose *"
+                    app:boxBackgroundMode="outline">
+
+                    <Spinner
+                        android:id="@+id/lastDose"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tvOthers"
+                    android:visibility="gone"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Other Service Provided*"
+                    app:boxBackgroundMode="outline">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etOthers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences"
+                        android:textSize="12sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:background="@drawable/spinner_border"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    app:helperText="Place of Vaccination *"
+                    app:boxBackgroundMode="outline">
+
+                    <Spinner
+                        android:id="@+id/vaccinationPlace"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                    android:id="@+id/tvDatePicker"
+                    android:background="@drawable/spinner_border"
+                    android:text="Date of last dose *"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:drawableEndCompat="@drawable/ic_action_date" />
+
+                <RelativeLayout
+                    android:layout_marginBottom="80dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Cancel"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/nextSubmit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="16dp"
+                        android:text="Next"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
