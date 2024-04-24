@@ -124,9 +124,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             }else
                 Toast.makeText(requireContext(), "Select at least one vaccine", Toast.LENGTH_SHORT).show()
 
-
-
-
         }
 
 

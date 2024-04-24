@@ -3,10 +3,16 @@ package com.intellisoft.chanjoke.fhir.data
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import java.util.Date
 
 enum class UrlData(var message: Int) {
     BASE_URL(R.string.base_url),
 }
+
+data class DbVaccineAdmin(
+    val dateAdministered: Date,
+    val type: String
+)
 
 data class DbStatusColor(
     val keyTitle: String,

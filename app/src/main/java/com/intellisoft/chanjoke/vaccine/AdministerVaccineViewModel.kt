@@ -34,9 +34,12 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
+import com.intellisoft.chanjoke.fhir.data.DbVaccineAdmin
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -54,6 +57,7 @@ import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
+import org.hl7.fhir.r4.model.PositiveIntType
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
@@ -61,6 +65,7 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.SimpleQuantity
 import org.hl7.fhir.r4.model.StringType
 import java.math.BigDecimal
+import java.util.Arrays
 import java.util.Date
 
 /** ViewModel for patient registration screen {@link AddPatientFragment}. */
@@ -92,8 +97,6 @@ class AdministerVaccineViewModel(
 //        isResourcesSaved.value = false
 //        return@launch
 //      }
-
-            Log.e("-----", "hhhhhhhh")
 
             val context = FhirContext.forR4()
             val questionnaire =
@@ -1205,7 +1208,6 @@ class AdministerVaccineViewModel(
 
 
     }
-
 
     private suspend fun saveResourceToDatabase(resource: Resource, type: String) {
 

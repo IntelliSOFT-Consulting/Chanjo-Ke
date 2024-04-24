@@ -78,6 +78,7 @@ class FormatterClass {
             val dateFormat = SimpleDateFormat(format, Locale.getDefault())
             dateFormat.parse(dateString) ?: Date()
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
 
@@ -140,23 +141,6 @@ class FormatterClass {
 
     fun convertDateFormatWithDesiredFormat(inputDate: String, finalFormat: String): String? {
         // Define the input date formats to check
-        val inputDateFormats = arrayOf(
-            "yyyy-MM-dd",
-            "MM/dd/yyyy",
-            "yyyyMMdd",
-            "dd-MM-yyyy",
-            "yyyy/MM/dd",
-            "MM-dd-yyyy",
-            "dd/MM/yyyy",
-            "MMM d yyyy",
-            "yyyyMMddHHmmss",
-            "yyyy-MM-dd HH:mm:ss",
-            "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
-            "yyyy-MM-dd'T'HH:mm:ssXXX",     // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
-            "EEE MMM dd HH:mm:ss zzz yyyy", // Example: "Sun Jan 01 00:00:00 GMT+03:00 2023"
-
-            // Add more formats as needed
-        )
 
         // Try parsing the input date with each format
         for (format in inputDateFormats) {
@@ -356,6 +340,7 @@ class FormatterClass {
                 val totalWeeks = totalDays / 7
 
 
+                saveSharedPref("patientDob", dobDate.toString(), context)
                 saveSharedPref("patientYears", years.toString(), context)
                 saveSharedPref("patientMonth", months.toString(), context)
                 saveSharedPref("patientDays", days.toString(), context)

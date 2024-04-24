@@ -69,7 +69,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Set up onBackPressedCallback to navigate back to Fragment 2 when in Fragment 3
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     requireActivity().supportFragmentManager.popBackStack()
