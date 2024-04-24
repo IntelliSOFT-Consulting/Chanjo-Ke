@@ -340,7 +340,6 @@ class FormatterClass {
                 val totalWeeks = totalDays / 7
 
 
-                saveSharedPref("patientDob", dobDate.toString(), context)
                 saveSharedPref("patientYears", years.toString(), context)
                 saveSharedPref("patientMonth", months.toString(), context)
                 saveSharedPref("patientDays", days.toString(), context)
@@ -1044,6 +1043,7 @@ class FormatterClass {
         val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
         var canBeVaccinated: Boolean? = null
         val patientDob = getSharedPref("patientDob", context)
+
         val patientGender = getSharedPref("patientGender", context)?.let {
             AppUtils().capitalizeFirstLetter(
                 it
