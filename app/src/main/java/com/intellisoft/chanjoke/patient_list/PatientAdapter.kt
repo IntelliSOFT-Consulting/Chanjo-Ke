@@ -47,6 +47,7 @@ class PatientAdapter(
 
             val pos = adapterPosition
             val id = dbPatientList[pos].resourceId
+            val dob = dbPatientList[pos].dob
 
             FormatterClass().saveSharedPref("patientId", id, context)
             val selectedVaccinationVenue =
@@ -55,6 +56,13 @@ class PatientAdapter(
                 FormatterClass().getSharedPref("isSelectedVaccinationVenue", context)
             val readyToUpdate =
                 FormatterClass().getSharedPref("ready_to_update", context)
+
+            val birthDateElement = FormatterClass().convertLocalDateToDate(dob)
+
+            FormatterClass().getFormattedAge(
+                birthDateElement,
+                context.resources,
+                context)
 
             if (readyToUpdate != null) {
                 createDialog()
@@ -101,14 +109,14 @@ class PatientAdapter(
 
         val patientId = FormatterClass().getSharedPref("patientId", context)
         vaccineDetails.setOnClickListener {
-            FormatterClass().saveSharedPref(
-                "questionnaireJson",
-                "update_history_specifics.json",
-                context
-            )
+//            FormatterClass().saveSharedPref(
+//                "questionnaireJson",
+//                "update_history_specifics.json",
+//                context
+//            )
             FormatterClass().saveSharedPref(
                 "vaccinationFlow",
-                "updateVaccineDetails",
+                NavigationDetails.UPDATE_VACCINE_DETAILS.name,
                 context
             )
             FormatterClass().saveSharedPref(
@@ -118,7 +126,7 @@ class PatientAdapter(
 
             FormatterClass().deleteSharedPref("ready_to_update", context)
             val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
+            intent.putExtra("functionToCall", NavigationDetails.UPDATE_VACCINE_DETAILS.name)
             intent.putExtra("patientId", patientId)
             context.startActivity(intent)
             customDialog.dismiss() // Close the dialog

@@ -7,9 +7,12 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import com.intellisoft.chanjoke.MainActivity
+import com.intellisoft.chanjoke.fhir.data.DbResetPasswordData
+import com.intellisoft.chanjoke.fhir.data.DbSetPasswordReq
 import com.intellisoft.chanjoke.fhir.data.DbSignIn
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.UrlData
+import com.intellisoft.chanjoke.shared.Login
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -193,6 +196,155 @@ class RetrofitCallsAuthentication {
 
     }
 
+    fun getResetPassword(context: Context, dbResetPasswordData: DbResetPasswordData){
+        CoroutineScope(Dispatchers.Main).launch {
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+                resetPassword(context, dbResetPasswordData)
+            }.join()
+        }
+
+    }
+    private suspend fun resetPassword(context: Context, dbResetPasswordData: DbResetPasswordData) {
+
+        val job1 = Job()
+        CoroutineScope(Dispatchers.Main + job1).launch {
+
+            val progressDialog = ProgressDialog(context)
+            progressDialog.setTitle("Please wait..")
+            progressDialog.setMessage("Authentication in progress..")
+            progressDialog.setCanceledOnTouchOutside(false)
+            progressDialog.show()
+
+            var messageToast = ""
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+
+                val formatter = FormatterClass()
+                val baseUrl = context.getString(UrlData.BASE_URL.message)
+                val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+                try {
+
+                    val apiInterface = apiService.resetPassword(dbResetPasswordData.idNumber, dbResetPasswordData.email)
+                    if (apiInterface.isSuccessful) {
+
+                        val statusCode = apiInterface.code()
+                        val body = apiInterface.body()
+
+                        messageToast = if (statusCode == 200 || statusCode == 201) {
+                            body?.response ?: "Cannot reset user password!"
+                        }else{
+                            "Cannot reset user password!!"
+                        }
+                    }else{
+                        messageToast = "Cannot reset user password!!!"
+                    }
+                }catch (e: Exception){
+
+                    Log.e("******","")
+                    Log.e("******",e.toString())
+                    Log.e("******","")
+
+                    messageToast = "Cannot reset user password.."
+                }
+            }.join()
+            CoroutineScope(Dispatchers.Main).launch{
+
+                progressDialog.dismiss()
+                Toast.makeText(context, messageToast, Toast.LENGTH_LONG).show()
+
+            }
+        }
+
+    }
+
+    fun setPassword(context: Context, dbSetPasswordReq: DbSetPasswordReq){
+
+        CoroutineScope(Dispatchers.Main).launch {
+
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+                setPasswordBac(context, dbSetPasswordReq)
+            }.join()
+        }
+
+    }
+    private suspend fun setPasswordBac(context: Context, dbSetPasswordReq: DbSetPasswordReq) {
+
+
+        val job1 = Job()
+        CoroutineScope(Dispatchers.Main + job1).launch {
+
+            val progressDialog = ProgressDialog(context)
+            progressDialog.setTitle("Please wait..")
+            progressDialog.setMessage("Authentication in progress..")
+            progressDialog.setCanceledOnTouchOutside(false)
+            progressDialog.show()
+
+            var messageToast = ""
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+
+                val formatter = FormatterClass()
+                val baseUrl = context.getString(UrlData.BASE_URL.message)
+                val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+                try {
+
+
+                    val apiInterface = apiService.setNewPassword(dbSetPasswordReq)
+                    if (apiInterface.isSuccessful){
+
+                        val statusCode = apiInterface.code()
+                        val body = apiInterface.body()
+
+                        if (statusCode == 200 || statusCode == 201){
+
+                            if (body != null){
+                                messageToast = "Login successful.."
+
+                            }else{
+                                messageToast = "Error: Body is null"
+                            }
+                        }else{
+                            messageToast = "Error: The request was not successful"
+                        }
+                    }else{
+                        apiInterface.errorBody()?.let {
+                            val errorBody = JSONObject(it.string())
+                            messageToast = errorBody.getString("error")
+                        }
+                    }
+
+
+                }catch (e: Exception){
+
+                    Log.e("******","")
+                    Log.e("******",e.toString())
+                    Log.e("******","")
+
+
+                    messageToast = "Cannot set new password.."
+                }
+
+
+            }.join()
+            CoroutineScope(Dispatchers.Main).launch{
+
+                progressDialog.dismiss()
+                Toast.makeText(context, messageToast, Toast.LENGTH_LONG).show()
+
+                val intent = Intent(context, Login::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                context.startActivity(intent)
+                if (context is Activity) {
+                    context.finish()
+                }
+
+            }
+
+        }
+
+    }
 
 
 }

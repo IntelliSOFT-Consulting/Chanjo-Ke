@@ -3,10 +3,16 @@ package com.intellisoft.chanjoke.fhir.data
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import java.util.Date
 
 enum class UrlData(var message: Int) {
     BASE_URL(R.string.base_url),
 }
+
+data class DbVaccineAdmin(
+    val dateAdministered: Date,
+    val type: String
+)
 
 data class DbStatusColor(
     val keyTitle: String,
@@ -114,7 +120,9 @@ enum class NavigationDetails {
     EDIT_CLIENT,
     LIST_AEFI,
     ADD_AEFI,
-    VACCINE_DETAILS
+    VACCINE_DETAILS,
+
+    UPDATE_VACCINE_DETAILS
 }
 
 data class DbAppointmentDataDetails(
@@ -157,12 +165,25 @@ data class DbSignIn(
     val idNumber: String,
     val password: String
 )
+data class DbSetPasswordReq(
+    val resetCode: String,
+    val idNumber: String,
+    val password: String
+)
 
 data class DbSignInResponse(
     val access_token: String,
     val expires_in: String,
     val refresh_expires_in: String,
     val refresh_token: String,
+)
+data class DbResetPassword(
+    val status: String,
+    val response: String,
+)
+data class DbResetPasswordData(
+    val idNumber: String,
+    val email: String
 )
 
 data class DbUserInfoResponse(

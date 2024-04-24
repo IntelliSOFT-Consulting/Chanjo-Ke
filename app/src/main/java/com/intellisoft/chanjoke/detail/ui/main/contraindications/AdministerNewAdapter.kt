@@ -46,7 +46,7 @@ class AdministerNewAdapter(
     }
 
     override fun onBindViewHolder(holder: Pager2ViewHolder, position: Int) {
-        val selectedVaccine = "${entryList[position].vaccineName} batch number"
+        val selectedVaccine = "${entryList[position].vaccineName}"
         val diseaseTargeted = entryList[position].diseaseTargeted
 
         holder.spinner.text = selectedVaccine

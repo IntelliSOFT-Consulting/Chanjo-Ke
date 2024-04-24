@@ -87,8 +87,9 @@ class VaccineDetailsFragment : Fragment() {
                         if (contras.isNotEmpty()){
                             startActivity(Intent(requireContext(), ContrasActivity::class.java))
                         }else {
-                            Toast.makeText(requireContext(), "No contraindications found.", Toast.LENGTH_SHORT)
-                                .show()
+                            Toast.makeText(requireContext(),
+                                "There were no contraindications recorded for this vaccine",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -142,11 +143,6 @@ class VaccineDetailsFragment : Fragment() {
                         tvAgeThen.text = age
 
                     }
-
-                }else{
-                    val intent = Intent(context, PatientDetailActivity::class.java)
-                    intent.putExtra("patientId", patientId)
-                    startActivity(intent)
                 }
 
             }

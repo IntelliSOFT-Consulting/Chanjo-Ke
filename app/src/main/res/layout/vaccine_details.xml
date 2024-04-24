@@ -18,7 +18,7 @@
             android:layout_weight="1"
             android:id="@+id/tvDetailName"
             android:padding="20dp"
-            android:text="Vaccine batch number"
+            android:text="Vaccine "
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
 
@@ -32,7 +32,7 @@
                 android:background="@color/bac_trans"
                 android:id="@+id/tvDetail"
                 android:padding="20dp"
-                android:text="Vaccine batch number"
+                android:text="Vaccine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

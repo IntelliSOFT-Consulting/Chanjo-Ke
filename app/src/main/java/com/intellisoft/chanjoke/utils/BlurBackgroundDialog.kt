@@ -62,6 +62,14 @@ class BlurBackgroundDialog(
                 "Client HIV status has been updated successfully"
             }
 
+            NavigationDetails.ADMINISTER_VACCINE.name -> {
+                "Vaccine has been administered successfully!"
+            }
+
+            NavigationDetails.UPDATE_VACCINE_DETAILS.name -> {
+                "Vaccine has been updated successfully!"
+            }
+
             else -> {
                 "Record has been captured successfully!"
             }

@@ -80,6 +80,14 @@
     <string name="preview">Preview</string>
     <string name="remove_caregiver">Remove Caregiver</string>
     <string name="remove_caregiver_confirmation">Are you sure you want to remove Caregiver?</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="id_number">Id Number *</string>
+    <string name="email_address">Email Address *</string>
+    <string name="enter_email_address_and_id_number">Enter Email Address and Id Number</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="update_password">Update Password</string>
+    <string name="reset_code">Reset code</string>
     <string name="estimated_dob">Estimated DoB</string>
 
 

@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -29,9 +30,24 @@ class FormatterClass {
 
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
     private val dateInverseFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    private val dateInverseFormatSeconds: SimpleDateFormat =
-        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    private val dateInverseFormatSeconds: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    private val inputDateFormats = arrayOf(
+        "yyyy-MM-dd",
+        "MM/dd/yyyy",
+        "yyyyMMdd",
+        "dd-MM-yyyy",
+        "yyyy/MM/dd",
+        "MM-dd-yyyy",
+        "dd/MM/yyyy",
+        "MMM d yyyy",
+        "yyyyMMddHHmmss",
+        "yyyy-MM-dd HH:mm:ss",
+        "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
+        "yyyy-MM-dd'T'HH:mm:ssXXX",     // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
+        "EEE MMM dd HH:mm:ss zzz yyyy", // Example: "Sun Jan 01 00:00:00 GMT+03:00 2023"
 
+        // Add more formats as needed
+    )
 
     fun saveSharedPref(key: String, value: String, context: Context) {
         val sharedPreferences: SharedPreferences =
@@ -62,6 +78,7 @@ class FormatterClass {
             val dateFormat = SimpleDateFormat(format, Locale.getDefault())
             dateFormat.parse(dateString) ?: Date()
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
 
@@ -70,6 +87,12 @@ class FormatterClass {
     fun convertDateToLocalDate(date: Date): LocalDate {
         val instant = date.toInstant()
         return instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+    }
+    fun convertLocalDateToDate(date: LocalDate?): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Define your desired date format
+        return if (date != null){
+            date.format(formatter)
+        } else ""
     }
 
     fun removeNonNumeric(input: String): String {
@@ -84,65 +107,18 @@ class FormatterClass {
     }
 
     fun convertDateFormat(inputDate: String): String? {
-        // Define the input date formats to check
-        val inputDateFormats = arrayOf(
-            "yyyy-MM-dd",
-            "MM/dd/yyyy",
-            "yyyyMMdd",
-            "dd-MM-yyyy",
-            "yyyy/MM/dd",
-            "MM-dd-yyyy",
-            "dd/MM/yyyy",
-            "MMM d yyyy",
-            "yyyyMMddHHmmss",
-            "yyyy-MM-dd HH:mm:ss",
-            "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
-            "yyyy-MM-dd'T'HH:mm:ssXXX",     // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
-            "EEE MMM dd HH:mm:ss zzz yyyy", // Example: "Sun Jan 01 00:00:00 GMT+03:00 2023"
-
-            // Add more formats as needed
-        )
-
-        // Try parsing the input date with each format
-        for (format in inputDateFormats) {
-            try {
-                val dateFormat = SimpleDateFormat(format, Locale.getDefault())
-                dateFormat.isLenient = false // Set lenient to false
-                val parsedDate = dateFormat.parse(inputDate)
-
-                // If parsing succeeds, format and return the date in the desired format
-                parsedDate?.let {
-                    return SimpleDateFormat("MMM d yyyy", Locale.getDefault()).format(it)
-                }
-            } catch (e: ParseException) {
-                // Continue to the next format if parsing fails
-            }
-        }
-
         // If none of the formats match, return an error message or handle it as needed
-        return null
+        return mainConvertDate("MMM d yyyy", inputDate)
     }
 
     fun convertChildDateFormat(inputDate: String): String? {
         // Define the input date formats to check
-        val inputDateFormats = arrayOf(
-            "yyyy-MM-dd",
-            "MM/dd/yyyy",
-            "yyyyMMdd",
-            "dd-MM-yyyy",
-            "yyyy/MM/dd",
-            "MM-dd-yyyy",
-            "dd/MM/yyyy",
-            "MMM d yyyy",
-            "yyyyMMddHHmmss",
-            "yyyy-MM-dd HH:mm:ss",
-            "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
-            "yyyy-MM-dd'T'HH:mm:ssXXX",     // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
-            "EEE MMM dd HH:mm:ss zzz yyyy", // Example: "Sun Jan 01 00:00:00 GMT+03:00 2023"
-
-            // Add more formats as needed
-        )
-
+        return mainConvertDate("yyyy-MM-dd", inputDate)
+    }
+    fun convertViewDateFormats(inputDate: String): String?{
+        return mainConvertDate("dd-MM-yyyy", inputDate)
+    }
+    private fun mainConvertDate(pattern: String, inputDate: String): String?{
         // Try parsing the input date with each format
         for (format in inputDateFormats) {
             try {
@@ -152,7 +128,7 @@ class FormatterClass {
 
                 // If parsing succeeds, format and return the date in the desired format
                 parsedDate?.let {
-                    return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+                    return SimpleDateFormat(pattern, Locale.getDefault()).format(it)
                 }
             } catch (e: ParseException) {
                 // Continue to the next format if parsing fails
@@ -165,23 +141,6 @@ class FormatterClass {
 
     fun convertDateFormatWithDesiredFormat(inputDate: String, finalFormat: String): String? {
         // Define the input date formats to check
-        val inputDateFormats = arrayOf(
-            "yyyy-MM-dd",
-            "MM/dd/yyyy",
-            "yyyyMMdd",
-            "dd-MM-yyyy",
-            "yyyy/MM/dd",
-            "MM-dd-yyyy",
-            "dd/MM/yyyy",
-            "MMM d yyyy",
-            "yyyyMMddHHmmss",
-            "yyyy-MM-dd HH:mm:ss",
-            "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
-            "yyyy-MM-dd'T'HH:mm:ssXXX",     // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
-            "EEE MMM dd HH:mm:ss zzz yyyy", // Example: "Sun Jan 01 00:00:00 GMT+03:00 2023"
-
-            // Add more formats as needed
-        )
 
         // Try parsing the input date with each format
         for (format in inputDateFormats) {
@@ -235,6 +194,7 @@ class FormatterClass {
             "appointmentDateScheduled",
             "appointmentVaccineTitle",
             "appointmentFlow",
+            "patientGender",
         )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
@@ -370,9 +330,21 @@ class FormatterClass {
                 val months = period.months
                 val days = period.days
 
+                /**
+                 * Convert to weeks
+                 */
+                // Calculate the total number of days in the period
+                val totalDays = period.toTotalMonths() * 30 + period.days
+
+                // Calculate the number of weeks
+                val totalWeeks = totalDays / 7
+
+
+                saveSharedPref("patientDob", dobDate.toString(), context)
                 saveSharedPref("patientYears", years.toString(), context)
                 saveSharedPref("patientMonth", months.toString(), context)
                 saveSharedPref("patientDays", days.toString(), context)
+                saveSharedPref("patientWeeks", totalWeeks.toString(), context)
 
                 val ageStringBuilder = StringBuilder()
 
@@ -994,8 +966,32 @@ class FormatterClass {
         return statusColor
     }
 
+    fun convertVaccineScheduleToWeeks(vaccineSchedule: String): Int {
+        return when {
+            vaccineSchedule == "At Birth" -> 0
+            vaccineSchedule.endsWith("weeks") -> {
+                // Extract the number of weeks from the string and return it as an integer
+                val number = vaccineSchedule.removeSuffix(" weeks").toInt()
+                number
+            }
+            vaccineSchedule.endsWith("months") -> {
+                // Extract the number of months from the string and convert it to weeks
+                val number = vaccineSchedule.removeSuffix(" months").toInt()
+                number * 4 // Assume each month has 4 weeks
+            }
+            vaccineSchedule.endsWith("years") -> {
+                // Extract the number of years from the string and convert it to weeks
+                val number = vaccineSchedule.removeSuffix(" years").toInt()
+                number * 52 // Assume each year has 52 weeks
+            }
+            else -> -1 // Return -1 or any other default value if the input doesn't match any condition
+        }
+    }
+
+
     fun getVaccineChildStatus(
         context: Context,
+        flowType: String,
         weekNumber: String,
         vaccineName: String,
         administeredList: List<DbVaccineData>,
@@ -1048,13 +1044,99 @@ class FormatterClass {
         val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
         var canBeVaccinated: Boolean? = null
         val patientDob = getSharedPref("patientDob", context)
+        val patientGender = getSharedPref("patientGender", context)?.let {
+            AppUtils().capitalizeFirstLetter(
+                it
+            )
+        }
+
         if (patientDob != null) {
             val numberOfWeek = calculateWeeksFromDate(patientDob)
             if (numberOfWeek != null && basicVaccine != null) {
                 val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
-                if (administrativeWeeksSinceDOB > 0) {
-                    canBeVaccinated = administrativeWeeksSinceDOB < numberOfWeek
+                val vaccineCode = basicVaccine.vaccineCode
+                val weekNumberInt = weekNumber.toIntOrNull()
+
+
+                if (flowType == "ROUTINE"){
+
+                    /**
+                     * All routines are under 5 YEARS apart from HPV
+                     * -> numberOfWeek = Weeks after birth
+                     * -> weekNumber = Current Vaccine schedule
+                     */
+
+
+                    if (!vaccineCode.contains("IMHPV-")){
+                        if (numberOfWeek > 256){
+                            canBeVaccinated = false
+                        }else{
+                            //bOPV is allowed for less than 2 weeks
+                            if (vaccineCode == "IMPO-bOPV"){
+                                if (numberOfWeek < 2){
+                                    canBeVaccinated = true
+                                }else{
+                                    canBeVaccinated = false
+                                }
+                            }else{
+
+                                if (weekNumberInt != null){
+                                    if (numberOfWeek >= weekNumberInt){
+                                        canBeVaccinated = true
+                                    }else{
+                                        canBeVaccinated = false
+                                    }
+                                }
+
+                            }
+                        }
+                    }else{
+                        //Should only be for Females above 9 years and below 15 years
+                        if (numberOfWeek in 471..782 && patientGender == "Female"){
+                            canBeVaccinated = true
+                        }else{
+                            canBeVaccinated = false
+                        }
+                    }
+
                 }
+
+                if (flowType == "NON-ROUTINE"){
+                    canBeVaccinated = false
+
+                    /**
+                     * Non Routine Vaccines have their own validations
+                     */
+                    if (vaccineCode.contains("IMCOV-")){
+                        //All these are covid vaccines
+
+                        if(vaccineCode.contains("PFIZER-")){
+                            //For PFIZER, should be above 12 years
+                            if (numberOfWeek > 625){
+                                canBeVaccinated = true
+                            }
+                        }else{
+                            //All other covid vaccines are given after 18
+                            if (vaccineCode.contains("SINO-")){
+                                if (numberOfWeek in 938..3128){
+                                    canBeVaccinated = true
+                                }
+                            }else{
+                                if (numberOfWeek > 938){
+                                    canBeVaccinated = true
+                                }
+                            }
+
+                        }
+
+                    }else{
+                        if (numberOfWeek > 938){
+                            canBeVaccinated = true
+                        }
+                    }
+
+                }
+
             }
         }
 

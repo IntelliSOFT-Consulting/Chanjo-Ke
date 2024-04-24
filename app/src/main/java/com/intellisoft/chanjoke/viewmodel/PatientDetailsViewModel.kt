@@ -37,6 +37,8 @@ import com.intellisoft.chanjoke.utils.Constants.AEFI_DATE
 import com.intellisoft.chanjoke.utils.Constants.AEFI_TYPE
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
+import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.text.SimpleDateFormat
@@ -326,6 +328,7 @@ class PatientDetailsViewModel(
 
     private fun createRecommendation(it: ImmunizationRecommendation): DbAppointmentDetails {
 
+        var immunizationHandler = ImmunizationHandler()
         var appointmentId = ""
 
         if (it.hasId()) appointmentId = it.id.replace("ImmunizationRecommendation/", "")
@@ -347,6 +350,7 @@ class PatientDetailsViewModel(
         var targetDisease = ""
         var doseNumber: String? = ""
         var appointmentStatus = ""
+        var vaccineCode = ""
         var vaccineName = ""
 
 
@@ -372,7 +376,35 @@ class PatientDetailsViewModel(
 
                 //Contraindicated vaccine code
                 if (recommendation[0].hasContraindicatedVaccineCode()) {
-                    vaccineName = recommendation[0].contraindicatedVaccineCode[0].text
+                    vaccineCode = recommendation[0].contraindicatedVaccineCode[0].text
+
+                    val vaccineDetails =
+                        immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
+
+                    if (vaccineDetails != null){
+
+                        val seriesDoses = when (vaccineDetails) {
+                            is RoutineVaccine -> {
+                                vaccineDetails.vaccineList.filter { it.vaccineCode == vaccineCode }.firstOrNull()
+                            }
+
+                            is NonRoutineVaccine -> {
+                                val nonRoutineVaccine =
+                                    vaccineDetails.vaccineList.firstOrNull()
+                                    { it.targetDisease == targetDisease }
+                                nonRoutineVaccine?.vaccineList?.filter { it.vaccineCode == vaccineCode }?.firstOrNull()
+                            }
+                            else -> {
+                                null
+                            }
+
+                        }
+
+                        if (seriesDoses != null){
+                            vaccineName = seriesDoses.vaccineName
+                        }
+
+                    }
                 }
 
             }

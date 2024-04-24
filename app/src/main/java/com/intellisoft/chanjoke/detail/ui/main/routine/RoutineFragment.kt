@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,8 +56,12 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
     private var patientYears:String? = null
+    private var patientDob:String? = null
+    private var patientGender:String? = null
     private var selectedVaccineList = ArrayList<String>()
     private var dbRecyclerList = HashSet<DbRecycler>()
+
+    private lateinit var sharedPreferences:SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,13 +80,22 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
+        sharedPreferences = requireContext()
+            .getSharedPreferences(getString(R.string.vaccineList),
+                Context.MODE_PRIVATE
+            )
+
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
 
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
         )[PatientDetailsViewModel::class.java]
 
+        patientGender = formatterClass.getSharedPref("patientGender", requireContext())
+
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
+        patientDob = formatterClass.getSharedPref("patientDob", requireContext())
+
         if (patientYears != null){
             val patientYearsInt = patientYears!!.toIntOrNull()
             if (patientYearsInt != null){
@@ -108,10 +122,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     bottomSheet.show(it1,
                         "ModalBottomSheet") }
             }else
-                Toast.makeText(requireContext(), "Please select a vaccine", Toast.LENGTH_SHORT).show()
-
-
-
+                Toast.makeText(requireContext(), "Select at least one vaccine", Toast.LENGTH_SHORT).show()
 
         }
 
@@ -126,10 +137,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val sharedPreferences: SharedPreferences = requireContext()
-                .getSharedPreferences(getString(R.string.vaccineList),
-                    Context.MODE_PRIVATE
-                )
+            checkCurrentVaccination()
 
             val routineKeyList = sharedPreferences.getString("routineList", null)
             val expandableListTitle = routineKeyList!!.split(",").toList()
@@ -149,7 +157,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 vaccineList?.forEach { vaccineName ->
 
                     val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
-                        requireContext(), keyValue, vaccineName, administeredList, recommendationList)
+                        requireContext(), "ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
                     dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
                 }
 
@@ -191,6 +199,10 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 }
             }
 
+            fun isWithinPlusOrMinus14(numberOfBirthWeek: Int, numberOfWeek: Int): Boolean {
+                val difference = numberOfBirthWeek - numberOfWeek
+                return difference in -2..2
+            }
 
             CoroutineScope(Dispatchers.Main).launch {
 
@@ -238,11 +250,11 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
                         val counterInt = counter.toIntOrNull()
 //                        if (counterInt != null && counterInt > 0){
-                            FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
-                            val intent = Intent(context, MainActivity::class.java)
-                            intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
-                            intent.putExtra("patientId", patientId)
-                            startActivity(intent)
+                        FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
+                        intent.putExtra("patientId", patientId)
+                        startActivity(intent)
 //                        }else{
 //                            Toast.makeText(requireContext(), "The schedule does not have any AEFI(s)", Toast.LENGTH_SHORT).show()
 //                        }
@@ -252,47 +264,95 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     groupLayout.setOnClickListener {
 
                         performVisibility(vaccineSchedule)
-
-                        val vaccineList = ArrayList<DbVaccineScheduleChild>()
-
-                        val weekNoList = sharedPreferences.getStringSet(vaccineSchedule, null)
-                        if (weekNoList != null){
-                            val savedVaccineList = weekNoList.toList()
-                            for (dbVaccineScheduleChild in dbVaccineScheduleChildList) {
-                                if (savedVaccineList.contains(dbVaccineScheduleChild.vaccineName)){
-                                    vaccineList.add(dbVaccineScheduleChild)
-                                }
-                            }
-                        }
-
-                        val adapter = VaccineDetailsAdapter(
-                            patientDetailsViewModel,
-                            vaccineList,
-                            this@RoutineFragment,
-                            requireContext())
-
-                        recyclerView.adapter = adapter
+                        generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
 
                     }
                     // Add the cardview_item to linearLayoutId2
                     binding.groupLayout.addView(groupLayout)
 
+                    if (patientDob != null){
+                        val numberOfBirthWeek = formatterClass.calculateWeeksFromDate(patientDob!!)
+                        if (numberOfBirthWeek != null){
+                            val numberOfWeek = formatterClass.convertVaccineScheduleToWeeks(vaccineSchedule)
+
+                            if (isWithinPlusOrMinus14(numberOfBirthWeek, numberOfWeek)){
+                                generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
+                            }
+                        }
+                    }
+
+
+
+                }
+
+            }
+        }
+    }
+
+    private fun generateVaccineList(
+        vaccineSchedule: String,
+        recyclerView: RecyclerView,
+        dbVaccineScheduleChildList: ArrayList<DbVaccineScheduleChild>
+    ) {
+
+        val vaccineList = ArrayList<DbVaccineScheduleChild>()
+
+        val weekNoList = sharedPreferences.getStringSet(vaccineSchedule, null)
+        if (weekNoList != null){
+            val savedVaccineList = weekNoList.toList()
+            for (dbVaccineScheduleChild in dbVaccineScheduleChildList) {
+                if (savedVaccineList.contains(dbVaccineScheduleChild.vaccineName)){
+                    vaccineList.add(dbVaccineScheduleChild)
                 }
             }
+        }
+
+        val patientGender = formatterClass.getSharedPref("patientGender", requireContext())
+
+        //Remove HPV if it's a male
+        if (patientGender != null && patientGender == "male"){
+            vaccineList.removeIf { it.vaccineName.contains("HPV") }
+        }
+
+
+        val adapter = VaccineDetailsAdapter(
+            patientDetailsViewModel,
+            vaccineList,
+            this@RoutineFragment,
+            requireContext())
+
+        recyclerView.adapter = adapter
+
+    }
+
+    private fun checkCurrentVaccination(){
+        CoroutineScope(Dispatchers.IO).launch {
+
         }
     }
 
     private fun performVisibility(vaccineSchedule:String) {
 
         dbRecyclerList.forEach {
+
             val recyclerView = it.recyclerView
             val dbVaccineSchedule = it.vaccineSchedule
+
             if (vaccineSchedule == dbVaccineSchedule){
-                recyclerView.visibility = View.VISIBLE
+                if (recyclerView.visibility == View.VISIBLE){
+                    recyclerView.visibility = View.GONE
+                }else{
+                    recyclerView.visibility = View.VISIBLE
+                }
             }else{
+
                 recyclerView.visibility = View.GONE
             }
         }
+
+        selectedVaccineList.clear()
+        updateList()
+
 
     }
 
@@ -316,6 +376,11 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             }
     }
 
+    private fun updateList(){
+        val administerText = "Administer (${selectedVaccineList.size})"
+        binding.tvAdministerVaccine.text = administerText
+    }
+
     override fun onCheckBoxSelected(position: Int, isChecked: Boolean, vaccineName: String) {
 
         if (isChecked){
@@ -324,8 +389,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             selectedVaccineList.remove(vaccineName)
         }
 
-        val administerText = "Administer (${selectedVaccineList.size})"
-        binding.tvAdministerVaccine.text = administerText
+        updateList()
 
     }
 }

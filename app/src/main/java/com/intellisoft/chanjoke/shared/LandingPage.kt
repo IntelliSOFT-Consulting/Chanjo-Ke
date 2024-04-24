@@ -45,6 +45,12 @@ class LandingPage : Fragment() {
             setHomeAsUpIndicator(null)
         }
 
+        val practitionerFullNames = formatterClass.getSharedPref("practitionerFullNames", requireContext())
+        if (practitionerFullNames != null){
+            binding.topBarLayout.tvFullName.text = practitionerFullNames
+        }
+
+
         createSpinner()
         formatterClass.deleteSharedPref("patientListAction", requireContext())
         formatterClass.deleteSharedPref("ready_to_update", requireContext())

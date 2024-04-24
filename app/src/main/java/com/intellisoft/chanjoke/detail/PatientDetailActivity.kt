@@ -203,6 +203,9 @@ class PatientDetailActivity : AppCompatActivity() {
             }
 
             val patientDetail = patientDetailsViewModel.getPatientInfo()
+            val gender = patientDetail.gender
+            formatterClass.saveSharedPref("patientGender", gender, this@PatientDetailActivity)
+
             CoroutineScope(Dispatchers.Main).launch {
                 binding.apply {
                     tvName.text = patientDetail.name
@@ -210,10 +213,14 @@ class PatientDetailActivity : AppCompatActivity() {
                     tvSystemId.text = patientDetail.systemId
 
                     val dob = formatterClass.convertDateFormat(patientDetail.dob)
-                    val age = formatterClass.getFormattedAge(patientDetail.dob, tvAge.context.resources, this@PatientDetailActivity)
+                    val age = formatterClass.getFormattedAge(
+                        patientDetail.dob,
+                        tvAge.context.resources,
+                        this@PatientDetailActivity)
 //                    val dobAge = "$dob ($age old)"
 
-                    tvDob.text = dob
+                    val dobFormatted = dob?.let { formatterClass.convertViewDateFormats(it) }
+                    tvDob.text = dobFormatted
                     tvAge.text = "$age old"
 
                 }

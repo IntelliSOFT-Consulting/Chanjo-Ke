@@ -136,6 +136,11 @@
         android:name="com.intellisoft.chanjoke.ReportsFragment"
         android:label="fragment_reports"
         tools:layout="@layout/fragment_reports" />
+    <fragment
+        android:id="@+id/updateVaccineHistoryFragment"
+        android:name="com.intellisoft.chanjoke.UpdateVaccineHistoryFragment"
+        android:label="fragment_update_vaccine_history"
+        tools:layout="@layout/fragment_update_vaccine_history" />
 
 
 </navigation>
