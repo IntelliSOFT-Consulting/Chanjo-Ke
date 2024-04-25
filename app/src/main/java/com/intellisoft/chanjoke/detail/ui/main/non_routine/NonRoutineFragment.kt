@@ -115,7 +115,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
             val patientYearsInt = patientYears!!.toIntOrNull()
             if (patientYearsInt != null){
                 if (patientYearsInt > 12){
-                    getNonRoutine()
+//                    getNonRoutine()
                 }
             }
         }
@@ -123,177 +123,177 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
     override fun onResume() {
         super.onResume()
-        getNonRoutine()
+//        getNonRoutine()
     }
 
-    private fun getNonRoutine() {
-
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val sharedPreferences: SharedPreferences = requireContext()
-                .getSharedPreferences(getString(R.string.vaccineList),
-                    Context.MODE_PRIVATE
-                )
-
-            val routineKeyList = sharedPreferences.getString("nonRoutineList", null)
-            val expandableListTitle = routineKeyList!!.split(",").toList()
-
-//            Get the administered list
-            val recommendationList = patientDetailsViewModel.recommendationList("Contraindicated")
-
-            val administeredList = patientDetailsViewModel.getVaccineList()
-            val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
-
-            val dbVaccineScheduleGroupList = ArrayList<DbVaccineScheduleGroup>()
-            expandableListTitle.forEach { keyValue->
-
-                val weekNoList = sharedPreferences.getStringSet(keyValue, null)
-                val vaccineList = weekNoList?.toList()
-                vaccineList?.forEach { vaccineName ->
-
-                    /**
-                     * TODO: CHECK ON NON-ROUTINE
-                     */
-                    val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
-                        requireContext(),"NON-ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
-                    dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
-                }
-
-                //Get the group color Code
-                val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList)
-
-                val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
-                    keyValue,
-                    statusColor,
-                    "",
-                    dbVaccineScheduleChildList
-                )
-                dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
-
-            }
-
-            val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
-
-            for (group in dbVaccineScheduleGroupList) {
-                newExpandableListDetail[group] = group.dbVaccineScheduleChildList
-            }
-
-            val newExpandableListTitle = ArrayList(newExpandableListDetail.keys)
-
-            CoroutineScope(Dispatchers.Main).launch {
-
-                val inflater = LayoutInflater.from(requireContext())
-
-                for (group in newExpandableListTitle){
-
-                    val groupLayout = inflater.inflate(R.layout.vaccination_schedule, null) as RelativeLayout
-                    val tvScheduleTime = groupLayout.findViewById<TextView>(R.id.tvScheduleTime)
-                    val tvAefi = groupLayout.findViewById<TextView>(R.id.tvAefi)
-                    val imageViewSchedule = groupLayout.findViewById<ImageView>(R.id.imageViewSchedule)
-                    val recyclerView = groupLayout.findViewById<RecyclerView>(R.id.recyclerView)
-                    recyclerView.setHasFixedSize(true)
-
-                    val vaccineSchedule = group.vaccineSchedule
-                    val colorCode = group.colorCode
-
-                    val dbRecycler = DbRecycler(recyclerView, vaccineSchedule)
-                    dbRecyclerList.add(dbRecycler)
-
-                    // Populate views with data from DbVaccineScheduleGroup
-                    tvScheduleTime.text = vaccineSchedule
-                    when (colorCode) {
-                        StatusColors.GREEN.name -> {
-                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
-                        }
-                        StatusColors.AMBER.name -> {
-                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
-                        }
-                        StatusColors.RED.name -> {
-                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
-                        }
-                        else -> {
-                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
-                        }
-                    }
-                    tvAefi.text = "Aefi(0)"
-                    val counter = patientDetailsViewModel.generateCurrentCount(
-                        vaccineSchedule,
-                        patientId
-                    )
-                    tvAefi.text = "AEFIs ($counter)"
-
-                    tvAefi.setOnClickListener {
-                        FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
-                        FormatterClass().saveSharedPref(
-                            "title",
-                            "AEFI", requireContext()
-                        )
-                        val intent = Intent(context, MainActivity::class.java)
-                        intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
-                        intent.putExtra("patientId", patientId)
-                        startActivity(intent)
-                    }
-
-                    groupLayout.setOnClickListener {
-
-                        performVisibility(vaccineSchedule)
-
-                        val vaccineList = ArrayList<DbVaccineScheduleChild>()
-
-                        val weekNoList = sharedPreferences.getStringSet(vaccineSchedule, null)
-                        if (weekNoList != null){
-                            val savedVaccineList = weekNoList.toList()
-                            for (dbVaccineScheduleChild in dbVaccineScheduleChildList) {
-                                if (savedVaccineList.contains(dbVaccineScheduleChild.vaccineName)){
-                                    vaccineList.add(dbVaccineScheduleChild)
-                                }
-                            }
-                        }
-
-                        /**
-                         * Check if client is below 9 months; Maintain Yellow fever alone
-                         * Otherwise have all non routines
-                         */
-                        var newVaccineList = ArrayList<DbVaccineScheduleChild>()
-
-                        if (patientYears != null){
-                            val patientYearsInt = patientYears!!.toIntOrNull()
-                            if (patientYearsInt != null){
-                                if (patientYearsInt in 1..12){
-                                    //Return only Yellow fever
-                                    newVaccineList = ArrayList(vaccineList.filter { it.vaccineName == "Yellow Fever" }.toMutableList())
-                                }else {
-                                    //Return all non routines
-
-                                    newVaccineList = vaccineList
-
-                                    if (patientYearsInt > 60){
-                                        vaccineList.removeIf { it.vaccineName.contains("Sinopharm") }
-                                    }
-
-                                }
-                            }
-                        }
-
-
-                        val adapter = VaccineDetailsAdapter(
-                            patientDetailsViewModel,
-                            newVaccineList,
-                            this@NonRoutineFragment,
-                            requireContext())
-
-                        recyclerView.adapter = adapter
-
-                    }
-                    // Add the cardview_item to linearLayoutId2
-                    binding.groupLayout.addView(groupLayout)
-
-                }
-            }
-        }
-
-
-    }
+//    private fun getNonRoutine() {
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//
+//            val sharedPreferences: SharedPreferences = requireContext()
+//                .getSharedPreferences(getString(R.string.vaccineList),
+//                    Context.MODE_PRIVATE
+//                )
+//
+//            val routineKeyList = sharedPreferences.getString("nonRoutineList", null)
+//            val expandableListTitle = routineKeyList!!.split(",").toList()
+//
+////            Get the administered list
+//            val recommendationList = patientDetailsViewModel.recommendationList("Contraindicated")
+//
+//            val administeredList = patientDetailsViewModel.getVaccineList()
+//            val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
+//
+//            val dbVaccineScheduleGroupList = ArrayList<DbVaccineScheduleGroup>()
+//            expandableListTitle.forEach { keyValue->
+//
+//                val weekNoList = sharedPreferences.getStringSet(keyValue, null)
+//                val vaccineList = weekNoList?.toList()
+//                vaccineList?.forEach { vaccineName ->
+//
+//                    /**
+//                     * TODO: CHECK ON NON-ROUTINE
+//                     */
+//                    val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
+//                        requireContext(),"NON-ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
+//                    dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
+//                }
+//
+//                //Get the group color Code
+//                val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList)
+//
+//                val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
+//                    keyValue,
+//                    statusColor,
+//                    "",
+//                    dbVaccineScheduleChildList
+//                )
+//                dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
+//
+//            }
+//
+//            val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
+//
+//            for (group in dbVaccineScheduleGroupList) {
+//                newExpandableListDetail[group] = group.dbVaccineScheduleChildList
+//            }
+//
+//            val newExpandableListTitle = ArrayList(newExpandableListDetail.keys)
+//
+//            CoroutineScope(Dispatchers.Main).launch {
+//
+//                val inflater = LayoutInflater.from(requireContext())
+//
+//                for (group in newExpandableListTitle){
+//
+//                    val groupLayout = inflater.inflate(R.layout.vaccination_schedule, null) as RelativeLayout
+//                    val tvScheduleTime = groupLayout.findViewById<TextView>(R.id.tvScheduleTime)
+//                    val tvAefi = groupLayout.findViewById<TextView>(R.id.tvAefi)
+//                    val imageViewSchedule = groupLayout.findViewById<ImageView>(R.id.imageViewSchedule)
+//                    val recyclerView = groupLayout.findViewById<RecyclerView>(R.id.recyclerView)
+//                    recyclerView.setHasFixedSize(true)
+//
+//                    val vaccineSchedule = group.vaccineSchedule
+//                    val colorCode = group.colorCode
+//
+//                    val dbRecycler = DbRecycler(recyclerView, vaccineSchedule)
+//                    dbRecyclerList.add(dbRecycler)
+//
+//                    // Populate views with data from DbVaccineScheduleGroup
+//                    tvScheduleTime.text = vaccineSchedule
+//                    when (colorCode) {
+//                        StatusColors.GREEN.name -> {
+//                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_green)
+//                        }
+//                        StatusColors.AMBER.name -> {
+//                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_amber)
+//                        }
+//                        StatusColors.RED.name -> {
+//                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_red)
+//                        }
+//                        else -> {
+//                            imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
+//                        }
+//                    }
+//                    tvAefi.text = "Aefi(0)"
+//                    val counter = patientDetailsViewModel.generateCurrentCount(
+//                        vaccineSchedule,
+//                        patientId
+//                    )
+//                    tvAefi.text = "AEFIs ($counter)"
+//
+//                    tvAefi.setOnClickListener {
+//                        FormatterClass().saveSharedPref("current_age", vaccineSchedule, requireContext())
+//                        FormatterClass().saveSharedPref(
+//                            "title",
+//                            "AEFI", requireContext()
+//                        )
+//                        val intent = Intent(context, MainActivity::class.java)
+//                        intent.putExtra("functionToCall", NavigationDetails.LIST_AEFI.name)
+//                        intent.putExtra("patientId", patientId)
+//                        startActivity(intent)
+//                    }
+//
+//                    groupLayout.setOnClickListener {
+//
+//                        performVisibility(vaccineSchedule)
+//
+//                        val vaccineList = ArrayList<DbVaccineScheduleChild>()
+//
+//                        val weekNoList = sharedPreferences.getStringSet(vaccineSchedule, null)
+//                        if (weekNoList != null){
+//                            val savedVaccineList = weekNoList.toList()
+//                            for (dbVaccineScheduleChild in dbVaccineScheduleChildList) {
+//                                if (savedVaccineList.contains(dbVaccineScheduleChild.vaccineName)){
+//                                    vaccineList.add(dbVaccineScheduleChild)
+//                                }
+//                            }
+//                        }
+//
+//                        /**
+//                         * Check if client is below 9 months; Maintain Yellow fever alone
+//                         * Otherwise have all non routines
+//                         */
+//                        var newVaccineList = ArrayList<DbVaccineScheduleChild>()
+//
+//                        if (patientYears != null){
+//                            val patientYearsInt = patientYears!!.toIntOrNull()
+//                            if (patientYearsInt != null){
+//                                if (patientYearsInt in 1..12){
+//                                    //Return only Yellow fever
+//                                    newVaccineList = ArrayList(vaccineList.filter { it.vaccineName == "Yellow Fever" }.toMutableList())
+//                                }else {
+//                                    //Return all non routines
+//
+//                                    newVaccineList = vaccineList
+//
+//                                    if (patientYearsInt > 60){
+//                                        vaccineList.removeIf { it.vaccineName.contains("Sinopharm") }
+//                                    }
+//
+//                                }
+//                            }
+//                        }
+//
+//
+//                        val adapter = VaccineDetailsAdapter(
+//                            patientDetailsViewModel,
+//                            newVaccineList,
+//                            this@NonRoutineFragment,
+//                            requireContext())
+//
+//                        recyclerView.adapter = adapter
+//
+//                    }
+//                    // Add the cardview_item to linearLayoutId2
+//                    binding.groupLayout.addView(groupLayout)
+//
+//                }
+//            }
+//        }
+//
+//
+//    }
     private fun performVisibility(vaccineSchedule:String) {
 
         dbRecyclerList.forEach {

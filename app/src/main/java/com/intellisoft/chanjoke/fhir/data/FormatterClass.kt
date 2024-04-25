@@ -994,7 +994,7 @@ class FormatterClass {
         weekNumber: String,
         vaccineName: String,
         administeredList: List<DbVaccineData>,
-        recommendationList: ArrayList<DbAppointmentDetails>
+        recommendationList: ArrayList<DbRecommendationDetails>
     ): DbVaccineScheduleChild {
 
         var dateSchedule: String? = null
@@ -1006,21 +1006,21 @@ class FormatterClass {
         if (contraindicatedList.contains(vaccineName)) {
 
             val dbAppointmentDetailsContra = recommendationList.filter {
-                it.vaccineName == vaccineName && it.appointmentStatus == "Contraindicated"
+                it.vaccineName == vaccineName && it.status.contains("Contraindicated")
             }
                 .map { it }.firstOrNull()
 
             val dbAppointmentDetailsDue = recommendationList.filter {
-                it.vaccineName == vaccineName && it.appointmentStatus == "Due"
+                it.vaccineName == vaccineName && it.status.contains("Due")
             }
                 .map { it }.firstOrNull()
 
             if (dbAppointmentDetailsContra != null) {
-                dateSchedule = dbAppointmentDetailsContra.dateScheduled
+                dateSchedule = dbAppointmentDetailsContra.earliestDate
                 statusColor = StatusColors.AMBER.name
             }
             if (dbAppointmentDetailsDue != null) {
-                dateSchedule = dbAppointmentDetailsDue.dateScheduled
+                dateSchedule = dbAppointmentDetailsDue.earliestDate
                 statusColor = StatusColors.NORMAL.name
             }
 
@@ -1073,18 +1073,18 @@ class FormatterClass {
                         }else{
                             //bOPV is allowed for less than 2 weeks
                             if (vaccineCode == "IMPO-bOPV"){
-                                if (numberOfWeek < 2){
-                                    canBeVaccinated = true
+                                canBeVaccinated = if (numberOfWeek < 2){
+                                    true
                                 }else{
-                                    canBeVaccinated = false
+                                    false
                                 }
                             }else{
 
                                 if (weekNumberInt != null){
-                                    if (numberOfWeek >= weekNumberInt){
-                                        canBeVaccinated = true
+                                    canBeVaccinated = if (numberOfWeek >= weekNumberInt){
+                                        true
                                     }else{
-                                        canBeVaccinated = false
+                                        false
                                     }
                                 }
 
@@ -1092,10 +1092,10 @@ class FormatterClass {
                         }
                     }else{
                         //Should only be for Females above 9 years and below 15 years
-                        if (numberOfWeek in 471..782 && patientGender == "Female"){
-                            canBeVaccinated = true
+                        canBeVaccinated = if (numberOfWeek in 471..782 && patientGender == "Female"){
+                            true
                         }else{
-                            canBeVaccinated = false
+                            false
                         }
                     }
 

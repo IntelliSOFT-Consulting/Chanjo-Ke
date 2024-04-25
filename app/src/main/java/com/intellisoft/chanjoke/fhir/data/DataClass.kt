@@ -161,6 +161,18 @@ data class DbAppointmentDetails(
     val appointmentStatus: String
 )
 
+data class DbRecommendationDetails(
+    val vaccineCode: String,
+    val vaccineName: String,
+    val targetDisease: String,
+    val earliestDate: String,
+    val latestDate: String,
+    val description: String,
+    val series: String,
+    val doseNumber: String,
+    val status: String,
+)
+
 data class DbSignIn(
     val idNumber: String,
     val password: String

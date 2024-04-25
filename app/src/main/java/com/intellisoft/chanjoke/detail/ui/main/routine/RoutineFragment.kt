@@ -145,6 +145,10 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 //            Get the administered list
             val recommendationList = patientDetailsViewModel.recommendationList(null)
 
+            Log.e("------","----")
+            println("recommendationList $recommendationList")
+            Log.e("------","----")
+
             val administeredList = patientDetailsViewModel.getVaccineList()
             val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
 
