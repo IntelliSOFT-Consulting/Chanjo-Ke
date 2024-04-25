@@ -1011,19 +1011,18 @@ class FormatterClass {
                 .map { it }.firstOrNull()
 
             val dbAppointmentDetailsDue = recommendationList.filter {
-                it.vaccineName == vaccineName && it.status.contains("Due")
+                it.vaccineName == vaccineName && it.status == "due"
             }
                 .map { it }.firstOrNull()
 
             if (dbAppointmentDetailsContra != null) {
-                dateSchedule = dbAppointmentDetailsContra.earliestDate
+                dateSchedule = convertDateFormat(dbAppointmentDetailsContra.earliestDate)
                 statusColor = StatusColors.AMBER.name
             }
             if (dbAppointmentDetailsDue != null) {
-                dateSchedule = dbAppointmentDetailsDue.earliestDate
+                dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
                 statusColor = StatusColors.NORMAL.name
             }
-
 
         }
         if (administeredVaccineNamesList.contains(vaccineName)) {

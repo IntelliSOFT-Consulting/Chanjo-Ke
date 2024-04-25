@@ -136,6 +136,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private fun getRoutine() {
 
         CoroutineScope(Dispatchers.IO).launch {
+            Log.e("*****","*****")
 
             checkCurrentVaccination()
 
@@ -144,10 +145,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
 //            Get the administered list
             val recommendationList = patientDetailsViewModel.recommendationList(null)
-
-            Log.e("------","----")
-            println("recommendationList $recommendationList")
-            Log.e("------","----")
 
             val administeredList = patientDetailsViewModel.getVaccineList()
             val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
@@ -159,10 +156,10 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 val weekNoList = sharedPreferences.getStringSet(weekNo, null)
                 val vaccineList = weekNoList?.toList()
                 vaccineList?.forEach { vaccineName ->
-
                     val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
                         requireContext(), "ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
                     dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
+
                 }
 
                 //Get the group color Code
@@ -177,6 +174,9 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
 
             }
+            println("dbVaccineScheduleGroupList $dbVaccineScheduleGroupList")
+            println("dbVaccineScheduleChildList $dbVaccineScheduleChildList")
+
 
             val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
 
@@ -211,6 +211,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             CoroutineScope(Dispatchers.Main).launch {
 
                 val inflater = LayoutInflater.from(requireContext())
+
 
                 for (group in sortedExpandableListTitle){
 
@@ -271,6 +272,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                         generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
 
                     }
+
                     // Add the cardview_item to linearLayoutId2
                     binding.groupLayout.addView(groupLayout)
 
@@ -284,13 +286,10 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                             }
                         }
                     }
-
-
-
                 }
-
             }
         }
+        Log.e("*****","*****")
     }
 
     private fun generateVaccineList(
@@ -324,6 +323,8 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             vaccineList,
             this@RoutineFragment,
             requireContext())
+
+        println("vaccineList $vaccineList")
 
         recyclerView.adapter = adapter
 
