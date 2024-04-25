@@ -1006,7 +1006,7 @@ class FormatterClass {
         if (contraindicatedList.contains(vaccineName)) {
 
             val dbAppointmentDetailsContra = recommendationList.filter {
-                it.vaccineName == vaccineName && it.status.contains("Contraindicated")
+                it.vaccineName == vaccineName && it.status.contains("contraindicated")
             }
                 .map { it }.firstOrNull()
 
@@ -1022,6 +1022,17 @@ class FormatterClass {
             if (dbAppointmentDetailsDue != null) {
                 dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
                 statusColor = StatusColors.NORMAL.name
+            }
+            //Check if dateSchedule is before today
+            if (dateSchedule!= null) {
+                val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+                val dateScheduleDate = dateScheduleFormat.parse(dateSchedule)
+                val todayDate = Calendar.getInstance().time
+                if (dateScheduleDate != null) {
+                    if (dateScheduleDate.before(todayDate)) {
+                        statusColor = StatusColors.RED.name
+                    }
+                }
             }
 
         }

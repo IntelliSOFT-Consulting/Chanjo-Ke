@@ -651,14 +651,6 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                         val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
                         val latestAdministerLocalDate = formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
 
-                        Log.e("---->","<-----")
-                        println("selectedDate $selectedDate")
-                        println("localDate $localDate")
-                        println("earliestAdministerDate $earliestAdministerDate")
-                        println("latestAdministerDate $latestAdministerDate")
-                        println("earliestAdministerLocalDate $earliestAdministerLocalDate")
-                        println("latestAdministerLocalDate $latestAdministerLocalDate")
-                        Log.e("---->","<-----")
 
                         val dateCriterionList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
 

@@ -383,15 +383,8 @@ class PatientDetailsViewModel(
                     status = status,
                 )
                 dbRecommendationDetailsList.add(dbRecommendationDetails)
-
             }
-
-
-
         }
-
-
-
 
         return dbRecommendationDetailsList
     }
