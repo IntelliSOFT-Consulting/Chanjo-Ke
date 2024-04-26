@@ -105,27 +105,59 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date of Birth *"
+            android:text="Child or Adult *"
             android:visibility="visible" />
 
         <RadioGroup
-            android:id="@+id/radioGroupDob"
+            android:id="@+id/radioGroupChild"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/radioButtonYesDob"
+                android:id="@+id/radioButtonYesChild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Actual" />
+                android:text="Child" />
 
             <RadioButton
-                android:id="@+id/radioButtonNoDob"
+                android:id="@+id/radioButtonNoChild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Estimated" />
+                android:text="Adult" />
         </RadioGroup>
+        <LinearLayout
+            android:id="@+id/ln_age_input"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Age Input *"
+                android:visibility="visible" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupDob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioButtonYesDob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Actual" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonNoDob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estimated" />
+            </RadioGroup>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ln_estimated"
