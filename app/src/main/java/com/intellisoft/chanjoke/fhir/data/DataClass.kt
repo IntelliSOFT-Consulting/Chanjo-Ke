@@ -36,6 +36,7 @@ enum class StatusColors {
     AMBER, //Some administered
     RED, //All missed
     NORMAL, //Future
+    NOT_DONE, //Not Done
 }
 
 data class AdverseEventItem(

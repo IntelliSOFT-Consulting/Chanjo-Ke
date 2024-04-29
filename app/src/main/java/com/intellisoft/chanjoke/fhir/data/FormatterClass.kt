@@ -1043,10 +1043,20 @@ class FormatterClass {
 
         }
         if (administeredVaccineNamesList.contains(vaccineName)) {
-            statusColor = StatusColors.GREEN.name
+
+            val dbAppointmentDetailsNotDone = administeredList.filter {
+                it.vaccineName == vaccineName && it.status == "NOTDONE"
+            }.map { it }.firstOrNull()
+
+            statusColor = if (dbAppointmentDetailsNotDone != null){
+                StatusColors.NOT_DONE.name
+            }else{
+                StatusColors.GREEN.name
+            }
             dateSchedule = administeredList.filter { it.vaccineName == vaccineName }
                 .map { it.dateAdministered }
                 .firstOrNull()
+
         }
 
         if (dateSchedule == null) dateSchedule = ""

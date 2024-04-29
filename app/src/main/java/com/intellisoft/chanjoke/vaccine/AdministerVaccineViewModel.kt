@@ -34,13 +34,12 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsFragment
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineAdmin
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
-import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -58,7 +57,6 @@ import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
-import org.hl7.fhir.r4.model.PositiveIntType
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
@@ -66,8 +64,6 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.SimpleQuantity
 import org.hl7.fhir.r4.model.StringType
 import java.math.BigDecimal
-import java.sql.Ref
-import java.util.Arrays
 import java.util.Date
 
 /** ViewModel for patient registration screen {@link AddPatientFragment}. */
@@ -258,12 +254,15 @@ class AdministerVaccineViewModel(
                     //Create Immunization Recommendation
                     formatterClass.saveSharedPref("immunizationId",immunization.id,context)
                     formatterClass.saveSharedPref("administeredProduct",vaccineNameValue,context)
-                    formatterClass.saveSharedPref("immunizationDate",date.toString(),context)
                     formatterClass.saveSharedPref("patientId",patientId,context)
+                    formatterClass.saveSharedPref("immunizationDate",date.toString(),context)
 
                     saveResourceToDatabase(immunization, "immunization")
 
                     createImmunizationRecommendation(context)
+
+
+
 
                 }
 
@@ -508,6 +507,7 @@ class AdministerVaccineViewModel(
 
             val targetDisease = seriesVaccine?.targetDisease
             val vaccineName = nextBasicVaccine?.vaccineName
+            val vaccineCode = nextBasicVaccine?.vaccineCode
 
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
@@ -527,7 +527,7 @@ class AdministerVaccineViewModel(
                 val administrativeWeeksSincePreviousList =
                     nextBasicVaccine.administrativeWeeksSincePrevious
                 val administrativeWeeksSinceDob = nextBasicVaccine.administrativeWeeksSinceDOB
-                val vaccineCode = nextBasicVaccine.vaccineCode
+//
 
                 //Check if the above list is more than one.
 
@@ -563,7 +563,8 @@ class AdministerVaccineViewModel(
                     val patient = immunizationRecommendation.patient
                     val dateRecommendationCreated = immunizationRecommendation.date
 
-                    val recommendationNewList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
+                    val recommendationNewList = ArrayList<ImmunizationRecommendation
+                        .ImmunizationRecommendationRecommendationComponent>()
 
                     val recommendationList = immunizationRecommendation.recommendation
                     recommendationList.forEach {recommendation ->
@@ -678,13 +679,14 @@ class AdministerVaccineViewModel(
     }
 
     fun createManualContraindication(
-        administrationFlowTitle:String?,
+        administrationFlowTitle: String?,
         immunizationList: List<String>,
         patientId: String,
         nextImmunizationDate: Date?,
         status: String,
         immunizationId: String?,
-        foreCastReason: String
+        foreCastReason: String,
+        context: Context
     ) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -718,7 +720,8 @@ class AdministerVaccineViewModel(
                      *
                      */
 
-                    if (administrationFlowTitle != null && administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name){
+                    if (administrationFlowTitle != null &&
+                        administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name){
 
                         val immunization = createImmunizationResource(
                             null,
@@ -742,17 +745,19 @@ class AdministerVaccineViewModel(
 
                         saveResourceToDatabase(immunization, "Imm")
 
+                        createImmunizationRecommendation(context)
+
 
                     }
 
-                    val recommendation = createImmunizationRecommendationResource(
-                        patientId,
-                        nextImmunizationDate,
-                        status,
-                        foreCastReason,
-                        immunizationId
-                    )
-                    saveResourceToDatabase(recommendation, "ImmRec")
+//                    val recommendation = createImmunizationRecommendationResource(
+//                        patientId,
+//                        nextImmunizationDate,
+//                        status,
+//                        foreCastReason,
+//                        immunizationId
+//                    )
+//                    saveResourceToDatabase(recommendation, "ImmRec")
 
                 }
 

@@ -860,11 +860,11 @@ class PatientDetailsViewModel(
             .map { createVaccineItem(it) }
             .let { vaccineList.addAll(it) }
 
-        val newVaccineList = vaccineList.filterNot {
-            it.status == "NOTDONE"
-        }
+//        val newVaccineList = vaccineList.filterNot {
+//            it.status == "NOTDONE"
+//        }
 
-        return ArrayList(newVaccineList)
+        return ArrayList(vaccineList)
     }
 
     private fun createAllergyIntoleranceItem(data: AllergyIntolerance): DbVaccineData {
