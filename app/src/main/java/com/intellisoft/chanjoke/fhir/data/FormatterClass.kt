@@ -16,6 +16,8 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Period
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
@@ -84,9 +86,14 @@ class FormatterClass {
 
     }
 
+
+
     fun convertDateToLocalDate(date: Date): LocalDate {
         val instant = date.toInstant()
-        return instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+        val localDate = instant.atZone(ZoneOffset.UTC).toLocalDate()
+
+        return localDate
+
     }
     fun convertLocalDateToDate(date: LocalDate?): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Define your desired date format

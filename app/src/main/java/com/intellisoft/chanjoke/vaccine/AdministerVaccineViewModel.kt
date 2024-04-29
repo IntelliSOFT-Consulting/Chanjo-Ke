@@ -261,9 +261,10 @@ class AdministerVaccineViewModel(
                     formatterClass.saveSharedPref("immunizationDate",date.toString(),context)
                     formatterClass.saveSharedPref("patientId",patientId,context)
 
+                    saveResourceToDatabase(immunization, "immunization")
+
                     createImmunizationRecommendation(context)
 
-                    saveResourceToDatabase(immunization, "immunization")
                 }
 
 
