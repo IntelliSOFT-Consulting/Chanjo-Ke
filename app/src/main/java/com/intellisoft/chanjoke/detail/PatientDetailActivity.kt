@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +28,7 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
 import com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment
+import com.intellisoft.chanjoke.detail.ui.main.referrals.ReferralsFragment
 import com.intellisoft.chanjoke.detail.ui.main.registration.CompleteDetailsActivity
 import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
@@ -48,6 +51,7 @@ class PatientDetailActivity : AppCompatActivity() {
     //    private val args: PatientDetailActivityArgs by navArgs()
     private lateinit var binding: ActivityPatientDetailBinding
     private var formatterClass = FormatterClass()
+    private val adapterSection = SectionsPagerAdapter(supportFragmentManager)
 
 
     private val immunizationHandler = ImmunizationHandler()
@@ -58,7 +62,7 @@ class PatientDetailActivity : AppCompatActivity() {
         binding = ActivityPatientDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         patientId = FormatterClass().getSharedPref("patientId", this).toString()
-
+        setupSpinner()
         val bundle =
             bundleOf("patient_id" to patientId)
         val toolbar =
@@ -74,7 +78,6 @@ class PatientDetailActivity : AppCompatActivity() {
                 .get(PatientDetailsViewModel::class.java)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val adapter = SectionsPagerAdapter(supportFragmentManager)
 
         val routineFragment = RoutineFragment()
         routineFragment.arguments = bundle
@@ -85,8 +88,10 @@ class PatientDetailActivity : AppCompatActivity() {
         val appointment = AppointmentsFragment()
         appointment.arguments = bundle
 
-        adapter.addFragment(routineFragment, getString(R.string.tab_text_1))
-        adapter.addFragment(nonRoutineFragment, getString(R.string.tab_text_2))
+
+
+        adapterSection.addFragment(routineFragment, getString(R.string.tab_text_1))
+        adapterSection.addFragment(nonRoutineFragment, getString(R.string.tab_text_2))
 //        adapter.addFragment(appointment, getString(R.string.tab_text_4))
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -106,7 +111,7 @@ class PatientDetailActivity : AppCompatActivity() {
         })
 
         val viewPager: ViewPager = binding.viewPager
-        viewPager.adapter = adapter
+        viewPager.adapter = adapterSection
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
 
@@ -165,6 +170,75 @@ class PatientDetailActivity : AppCompatActivity() {
 
     }
 
+    private fun setupSpinner() {
+
+        val actionList = listOf("", "All Details", "Appointment", "Referrals")
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        val adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_item, actionList)
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Apply the adapter to the spinner
+        binding.spinnerLocation.adapter = adapter
+
+        // Set a listener to handle the item selection
+        binding.spinnerLocation.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedAction = actionList[position]
+                    when (selectedAction) {
+                        "All Details" -> {
+                            startActivity(
+                                Intent(
+                                    this@PatientDetailActivity,
+                                    CompleteDetailsActivity::class.java
+                                )
+                            )
+                        }
+
+                        "Appointment" -> {
+                            val intent =
+                                Intent(this@PatientDetailActivity, MainActivity::class.java)
+                            intent.putExtra("functionToCall", NavigationDetails.APPOINTMENT.name)
+                            intent.putExtra("patientId", patientId)
+                            startActivity(intent)
+                        }
+
+                        "Referrals" -> {
+//                            adapterSection.removeAllFragments()
+//                            adapterSection.notifyDataSetChanged()
+//                            patientId = FormatterClass().getSharedPref(
+//                                "patientId",
+//                                this@PatientDetailActivity
+//                            ).toString()
+//
+//                            val bundle =
+//                                bundleOf("patient_id" to patientId)
+//                            val referrals = ReferralsFragment()
+//                            referrals.arguments = bundle
+//                            adapterSection.addFragment(referrals, "Referrals")
+
+                        }
+
+                        else -> {
+                            // Handle default case or do nothing
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parentView: AdapterView<*>) {
+                    // Do nothing here
+                }
+            }
+    }
+
     override fun onStart() {
         super.onStart()
 
@@ -216,7 +290,8 @@ class PatientDetailActivity : AppCompatActivity() {
                     val age = formatterClass.getFormattedAge(
                         patientDetail.dob,
                         tvAge.context.resources,
-                        this@PatientDetailActivity)
+                        this@PatientDetailActivity
+                    )
 //                    val dobAge = "$dob ($age old)"
 
                     val dobFormatted = dob?.let { formatterClass.convertViewDateFormats(it) }

@@ -121,7 +121,7 @@ enum class NavigationDetails {
     LIST_AEFI,
     ADD_AEFI,
     VACCINE_DETAILS,
-
+    REFERRALS,
     UPDATE_VACCINE_DETAILS
 }
 

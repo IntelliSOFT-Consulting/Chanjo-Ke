@@ -118,13 +118,13 @@
                 android:id="@+id/radioButtonYesChild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Child" />
+                android:text="Routine" />
 
             <RadioButton
                 android:id="@+id/radioButtonNoChild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Adult" />
+                android:text="Non Routine" />
         </RadioGroup>
         <LinearLayout
             android:id="@+id/ln_age_input"
