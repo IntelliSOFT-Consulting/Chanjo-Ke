@@ -381,26 +381,29 @@ class PatientDetailsViewModel(
                     val vaccineDetails =
                         immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
 
-                    if (vaccineDetails != null){
+                    if (vaccineDetails != null) {
 
                         val seriesDoses = when (vaccineDetails) {
                             is RoutineVaccine -> {
-                                vaccineDetails.vaccineList.filter { it.vaccineCode == vaccineCode }.firstOrNull()
+                                vaccineDetails.vaccineList.filter { it.vaccineCode == vaccineCode }
+                                    .firstOrNull()
                             }
 
                             is NonRoutineVaccine -> {
                                 val nonRoutineVaccine =
                                     vaccineDetails.vaccineList.firstOrNull()
                                     { it.targetDisease == targetDisease }
-                                nonRoutineVaccine?.vaccineList?.filter { it.vaccineCode == vaccineCode }?.firstOrNull()
+                                nonRoutineVaccine?.vaccineList?.filter { it.vaccineCode == vaccineCode }
+                                    ?.firstOrNull()
                             }
+
                             else -> {
                                 null
                             }
 
                         }
 
-                        if (seriesDoses != null){
+                        if (seriesDoses != null) {
                             vaccineName = seriesDoses.vaccineName
                         }
 
@@ -563,12 +566,14 @@ class PatientDetailsViewModel(
         val practId = if (data.hasRecorder()) data.recorder.reference else ""
         var practitionerId = practId.toString().replace("Practitioner/", "")
         val locId = if (data.hasLocation()) data.location.reference else ""
+        val locDisplay =
+            if (data.hasLocation()) if (data.location.hasDisplay()) data.location.display else "" else ""
         var locationId = locId.toString().replace("Location/", "")
         var name = ""
         var role = ""
-        if (locationId.isNotEmpty()) {
-            locationId = getLocationName(locationId)
-        }
+
+        Timber.e("Location Display From Resource **** $locDisplay")
+
         if (practitionerId.isNotEmpty()) {
 
             try {
@@ -585,13 +590,11 @@ class PatientDetailsViewModel(
         return AdverseEventItem(
             encounterId,
             PractitionerDetails(name = name, role = role),
-            locationId
+            locationId,
+            locDisplay
         )
     }
 
-    private fun getLocationName(locationId: String) = runBlocking {
-        getLocationNameInner(locationId)
-    }
 
     private fun getPractitionerName(locationId: String) = runBlocking {
         getPractitionerNameInner(locationId)
@@ -620,19 +623,6 @@ class PatientDetailsViewModel(
 
     }
 
-    private suspend fun getLocationNameInner(locationId: String): String {
-        var location = ""
-
-        try {
-            val searchResult = fhirEngine.search<Location> {
-                filter(Location.RES_ID, { value = of(locationId) })
-            }
-            location = searchResult.first().name
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return location
-    }
 
     fun getImmunizationDataDetails(codeValue: String) =
         runBlocking { getImmunizationDetails(codeValue) }

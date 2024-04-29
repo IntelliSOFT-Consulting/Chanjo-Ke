@@ -224,6 +224,22 @@ class PersonalFragment : Fragment() {
 
                 }
             }
+            radioGroupChild.setOnCheckedChangeListener { group, checkedId ->
+                if (checkedId != -1) {
+                    when (checkedId) {
+                        R.id.radioButtonYesChild -> {
+                            lnAgeInput.visibility = View.GONE
+                            radioButtonYesDob.isChecked = true
+                        }
+
+                        R.id.radioButtonNoChild -> {
+                            lnAgeInput.visibility = View.VISIBLE
+                            radioButtonYesDob.isChecked = false
+
+                        }
+                    }
+                }
+            }
             radioGroupDob.setOnCheckedChangeListener { group, checkedId ->
                 if (checkedId != -1) {
                     when (checkedId) {
@@ -472,6 +488,14 @@ class PersonalFragment : Fragment() {
         } else {
             // No RadioButton is selected, handle it as needed
             Toast.makeText(requireContext(), "Please select a gender", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
+
+        val checkedRadioButtonIdInput = binding.radioGroupChild.checkedRadioButtonId
+        if (checkedRadioButtonIdInput == -1) {
+            // No RadioButton is selected, handle it as needed
+            Toast.makeText(requireContext(), "Please select a age input", Toast.LENGTH_SHORT)
                 .show()
             return
         }

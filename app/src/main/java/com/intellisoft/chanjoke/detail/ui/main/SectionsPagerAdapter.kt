@@ -29,4 +29,9 @@ class SectionsPagerAdapter : FragmentPagerAdapter {
         fragmentTitleList1.add(title)
     }
 
+    fun removeAllFragments() {
+        fragmentList1.clear()
+        fragmentTitleList1.clear()
+    }
+
 }
