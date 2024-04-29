@@ -136,7 +136,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private fun getRoutine() {
 
         CoroutineScope(Dispatchers.IO).launch {
-            Log.e("*****","*****")
 
             checkCurrentVaccination()
 
@@ -174,8 +173,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
 
             }
-            println("dbVaccineScheduleGroupList $dbVaccineScheduleGroupList")
-            println("dbVaccineScheduleChildList $dbVaccineScheduleChildList")
 
 
             val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
@@ -289,7 +286,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 }
             }
         }
-        Log.e("*****","*****")
     }
 
     private fun generateVaccineList(

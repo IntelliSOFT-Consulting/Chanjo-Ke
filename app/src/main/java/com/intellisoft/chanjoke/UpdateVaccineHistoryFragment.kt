@@ -31,6 +31,7 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.Immunization
 import java.util.Calendar
 
 class UpdateVaccineHistoryFragment : Fragment() {
@@ -130,7 +131,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 formatterClass.generateUuid(),
                 patientId,
                 requireContext(),
-                lastDoseDate)
+                lastDoseDate,
+                Immunization.ImmunizationStatus.COMPLETED)
 
             val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
             blurBackgroundDialog.show()

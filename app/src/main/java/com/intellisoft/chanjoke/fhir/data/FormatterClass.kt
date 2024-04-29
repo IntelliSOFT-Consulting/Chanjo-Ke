@@ -1007,13 +1007,12 @@ class FormatterClass {
 
             val dbAppointmentDetailsContra = recommendationList.filter {
                 it.vaccineName == vaccineName && it.status.contains("contraindicated")
-            }
-                .map { it }.firstOrNull()
+            }.map { it }.firstOrNull()
 
             val dbAppointmentDetailsDue = recommendationList.filter {
                 it.vaccineName == vaccineName && it.status == "due"
-            }
-                .map { it }.firstOrNull()
+            }.map { it }.firstOrNull()
+
 
             if (dbAppointmentDetailsContra != null) {
                 dateSchedule = convertDateFormat(dbAppointmentDetailsContra.earliestDate)

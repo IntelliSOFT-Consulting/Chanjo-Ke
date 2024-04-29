@@ -367,9 +367,12 @@ class PatientDetailsViewModel(
                     doseNumber = recommendation.doseNumberPositiveIntType.value.toString()
                 }
                 if(recommendation.hasForecastStatus()){
-                    status = recommendation.forecastStatus.codingFirstRep.display
+                    if (recommendation.forecastStatus.hasCoding()){
+                        if (recommendation.forecastStatus.codingFirstRep.hasDisplay()){
+                            status = recommendation.forecastStatus.codingFirstRep.display
+                        }
+                    }
                 }
-
 
                 val dbRecommendationDetails = DbRecommendationDetails(
                     vaccineCode = vaccineCode,
