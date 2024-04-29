@@ -212,6 +212,10 @@ data class DbUser(
     val phone: String?,
     val id: String,
     val facility: String,
+
+    val countyName: String?,
+    val subCountyName: String?,
+    val wardName: String?,
 )
 
 data class DbVaccinationSchedule(

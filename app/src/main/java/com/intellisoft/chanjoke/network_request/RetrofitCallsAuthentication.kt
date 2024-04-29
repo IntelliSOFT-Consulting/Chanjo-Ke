@@ -169,6 +169,10 @@ class RetrofitCallsAuthentication {
                                     val id = user.id
                                     val facility = user.facility
 
+                                    val countyName = user.countyName
+                                    val subCountyName = user.subCountyName
+                                    val wardName = user.wardName
+
                                     formatter.saveSharedPref("practitionerFullNames", fullNames, context)
                                     formatter.saveSharedPref("practitionerIdNumber", idNumber, context)
                                     formatter.saveSharedPref("practitionerRole", practitionerRole, context)
@@ -177,6 +181,10 @@ class RetrofitCallsAuthentication {
                                     formatter.saveSharedPref("practitionerEmail", email, context)
                                     formatter.saveSharedPref("practitionerFacility", facility, context)
                                     formatter.saveSharedPref("practitionerPhone", phone ?: "", context)
+
+                                    formatter.saveSharedPref("countyName", countyName ?: "", context)
+                                    formatter.saveSharedPref("subCountyName", subCountyName ?: "", context)
+                                    formatter.saveSharedPref("wardName", wardName ?: "", context)
 
                                 }
                             }
