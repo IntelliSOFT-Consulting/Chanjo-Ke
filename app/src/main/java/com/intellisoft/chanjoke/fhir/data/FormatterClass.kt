@@ -32,7 +32,8 @@ class FormatterClass {
 
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
     private val dateInverseFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    private val dateInverseFormatSeconds: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    private val dateInverseFormatSeconds: SimpleDateFormat =
+        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
     private val inputDateFormats = arrayOf(
         "yyyy-MM-dd",
         "MM/dd/yyyy",
@@ -95,9 +96,10 @@ class FormatterClass {
         return localDate
 
     }
+
     fun convertLocalDateToDate(date: LocalDate?): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Define your desired date format
-        return if (date != null){
+        return if (date != null) {
             date.format(formatter)
         } else ""
     }
@@ -122,10 +124,12 @@ class FormatterClass {
         // Define the input date formats to check
         return mainConvertDate("yyyy-MM-dd", inputDate)
     }
-    fun convertViewDateFormats(inputDate: String): String?{
+
+    fun convertViewDateFormats(inputDate: String): String? {
         return mainConvertDate("dd-MM-yyyy", inputDate)
     }
-    private fun mainConvertDate(pattern: String, inputDate: String): String?{
+
+    private fun mainConvertDate(pattern: String, inputDate: String): String? {
         // Try parsing the input date with each format
         for (format in inputDateFormats) {
             try {
@@ -980,16 +984,19 @@ class FormatterClass {
                 val number = vaccineSchedule.removeSuffix(" weeks").toInt()
                 number
             }
+
             vaccineSchedule.endsWith("months") -> {
                 // Extract the number of months from the string and convert it to weeks
                 val number = vaccineSchedule.removeSuffix(" months").toInt()
                 number * 4 // Assume each month has 4 weeks
             }
+
             vaccineSchedule.endsWith("years") -> {
                 // Extract the number of years from the string and convert it to weeks
                 val number = vaccineSchedule.removeSuffix(" years").toInt()
                 number * 52 // Assume each year has 52 weeks
             }
+
             else -> -1 // Return -1 or any other default value if the input doesn't match any condition
         }
     }
@@ -1077,22 +1084,35 @@ class FormatterClass {
         }
 
         if (patientDob != null) {
-            val numberOfWeek = calculateWeeksFromDate(patientDob)
-            if (numberOfWeek != null && basicVaccine != null) {
-                val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
-                val vaccineCode = basicVaccine.vaccineCode
-                val weekNumberInt = weekNumber.toIntOrNull()
+            try {
+                val numberOfWeek = calculateWeeksFromDate(patientDob)
+                if (numberOfWeek != null && basicVaccine != null) {
+                    val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
+                    val vaccineCode = basicVaccine.vaccineCode
+                    val weekNumberInt = weekNumber.toIntOrNull()
 
 
-                if (flowType == "ROUTINE"){
+                    if (flowType == "ROUTINE") {
 
-                    /**
-                     * All routines are under 5 YEARS apart from HPV
-                     * -> numberOfWeek = Weeks after birth
-                     * -> weekNumber = Current Vaccine schedule
-                     */
+                        /**
+                         * All routines are under 5 YEARS apart from HPV
+                         * -> numberOfWeek = Weeks after birth
+                         * -> weekNumber = Current Vaccine schedule
+                         */
 
 
+                        if (!vaccineCode.contains("IMHPV-")) {
+                            if (numberOfWeek > 256) {
+                                canBeVaccinated = false
+                            } else {
+                                //bOPV is allowed for less than 2 weeks
+                                if (vaccineCode == "IMPO-bOPV") {
+                                    if (numberOfWeek < 2) {
+                                        canBeVaccinated = true
+                                    } else {
+                                        canBeVaccinated = false
+                                    }
+                                } else {
                     if (!vaccineCode.contains("IMHPV-")){
                         if (numberOfWeek > 256){
                             canBeVaccinated = false
@@ -1113,7 +1133,24 @@ class FormatterClass {
                                         false
                                     }
                                 }
+                                    if (weekNumberInt != null) {
+                                        if (numberOfWeek >= weekNumberInt) {
+                                            canBeVaccinated = true
+                                        } else {
+                                            canBeVaccinated = false
+                                        }
+                                    }
 
+                                }
+                            }
+                        } else {
+                            //Should only be for Females above 9 years and below 15 years
+                            if (numberOfWeek in 471..782 && patientGender == "Female") {
+                                canBeVaccinated = true
+                            } else {
+                                canBeVaccinated = false
+                            }
+                        }
                             }
                         }
                     }else{
@@ -1125,44 +1162,47 @@ class FormatterClass {
                         }
                     }
 
-                }
+                    }
 
-                if (flowType == "NON-ROUTINE"){
-                    canBeVaccinated = false
+                    if (flowType == "NON-ROUTINE") {
+                        canBeVaccinated = false
 
-                    /**
-                     * Non Routine Vaccines have their own validations
-                     */
-                    if (vaccineCode.contains("IMCOV-")){
-                        //All these are covid vaccines
+                        /**
+                         * Non Routine Vaccines have their own validations
+                         */
+                        if (vaccineCode.contains("IMCOV-")) {
+                            //All these are covid vaccines
 
-                        if(vaccineCode.contains("PFIZER-")){
-                            //For PFIZER, should be above 12 years
-                            if (numberOfWeek > 625){
+                            if (vaccineCode.contains("PFIZER-")) {
+                                //For PFIZER, should be above 12 years
+                                if (numberOfWeek > 625) {
+                                    canBeVaccinated = true
+                                }
+                            } else {
+                                //All other covid vaccines are given after 18
+                                if (vaccineCode.contains("SINO-")) {
+                                    if (numberOfWeek in 938..3128) {
+                                        canBeVaccinated = true
+                                    }
+                                } else {
+                                    if (numberOfWeek > 938) {
+                                        canBeVaccinated = true
+                                    }
+                                }
+
+                            }
+
+                        } else {
+                            if (numberOfWeek > 938) {
                                 canBeVaccinated = true
                             }
-                        }else{
-                            //All other covid vaccines are given after 18
-                            if (vaccineCode.contains("SINO-")){
-                                if (numberOfWeek in 938..3128){
-                                    canBeVaccinated = true
-                                }
-                            }else{
-                                if (numberOfWeek > 938){
-                                    canBeVaccinated = true
-                                }
-                            }
-
                         }
 
-                    }else{
-                        if (numberOfWeek > 938){
-                            canBeVaccinated = true
-                        }
                     }
 
                 }
-
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 

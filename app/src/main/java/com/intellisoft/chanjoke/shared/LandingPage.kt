@@ -45,8 +45,9 @@ class LandingPage : Fragment() {
             setHomeAsUpIndicator(null)
         }
 
-        val practitionerFullNames = formatterClass.getSharedPref("practitionerFullNames", requireContext())
-        if (practitionerFullNames != null){
+        val practitionerFullNames =
+            formatterClass.getSharedPref("practitionerFullNames", requireContext())
+        if (practitionerFullNames != null) {
             binding.topBarLayout.tvFullName.text = practitionerFullNames
         }
 
@@ -147,6 +148,14 @@ class LandingPage : Fragment() {
 
             "Reports" -> {
                 findNavController().navigate(R.id.reportsFragment)
+            }
+
+            "Referrals" -> {
+                formatterClass.saveSharedPref(
+                    "patientListAction",
+                    NavigationDetails.REFERRALS.name, requireContext()
+                )
+                findNavController().navigate(R.id.patient_list)
             }
 
             "Appointments" -> {

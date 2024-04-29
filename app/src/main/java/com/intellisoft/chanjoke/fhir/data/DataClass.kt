@@ -42,7 +42,8 @@ enum class StatusColors {
 data class AdverseEventItem(
     val encounterId: String,
     val practitionerId: PractitionerDetails,
-    val locationId: String
+    val locationId: String,
+    val locDisplay: String
 )
 
 data class PractitionerDetails(
@@ -122,7 +123,7 @@ enum class NavigationDetails {
     LIST_AEFI,
     ADD_AEFI,
     VACCINE_DETAILS,
-
+    REFERRALS,
     UPDATE_VACCINE_DETAILS
 }
 
@@ -216,6 +217,7 @@ data class DbUser(
     val countyName: String?,
     val subCountyName: String?,
     val wardName: String?,
+    val facilityName: String,
 )
 
 data class DbVaccinationSchedule(

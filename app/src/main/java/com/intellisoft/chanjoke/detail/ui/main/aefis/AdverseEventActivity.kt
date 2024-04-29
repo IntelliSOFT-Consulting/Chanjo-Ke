@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
@@ -176,6 +177,7 @@ class AdverseEventActivity : AppCompatActivity() {
         try {
             val adverseEvent = patientDetailsViewModel.getAdverseEvent(patientId, encounterId)
             if (adverseEvent != null) {
+
                 // Process the adverse event (e.g., display details, perform actions)
                 println("Found Adverse Event: ${adverseEvent.practitionerId}")
                 binding.apply {
@@ -184,6 +186,9 @@ class AdverseEventActivity : AppCompatActivity() {
                     }
                     designationTextView.apply {
                         text = adverseEvent.practitionerId.role
+                    }
+                    facilityTextView.apply {
+                        text = adverseEvent.locDisplay
                     }
                 }
             } else {
