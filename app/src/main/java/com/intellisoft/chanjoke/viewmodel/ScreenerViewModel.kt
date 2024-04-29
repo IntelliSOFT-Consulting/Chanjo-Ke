@@ -173,6 +173,7 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
 
                 val locationReference = Reference(facility)
                 resource.locationFirstRep.location = locationReference
+
             }
             saveResourceToDatabase(resource)
             observations.forEach {
@@ -202,6 +203,9 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
         val facility = FormatterClass().getSharedPref("practitionerFacility", context)
         if (facility != null) {
             val locationReference = Reference(facility)
+
+            locationReference.display =
+                FormatterClass().getSharedPref("practitionerFacilityName", context)
             adv.location = locationReference
         }
         val coding = Coding()

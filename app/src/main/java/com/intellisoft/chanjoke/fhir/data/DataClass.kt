@@ -41,7 +41,8 @@ enum class StatusColors {
 data class AdverseEventItem(
     val encounterId: String,
     val practitionerId: PractitionerDetails,
-    val locationId: String
+    val locationId: String,
+    val locDisplay: String
 )
 
 data class PractitionerDetails(
@@ -199,6 +200,7 @@ data class DbUser(
     val phone: String?,
     val id: String,
     val facility: String,
+    val facilityName: String,
 )
 
 data class DbVaccinationSchedule(
