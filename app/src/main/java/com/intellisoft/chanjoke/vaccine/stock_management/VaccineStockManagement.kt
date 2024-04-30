@@ -73,7 +73,7 @@ class VaccineStockManagement : AppCompatActivity() {
 
     private fun createImmunizationRecommendation() {
 
-        administerVaccineViewModel.createImmunizationRecommendation(this)
+//        administerVaccineViewModel.createImmunizationRecommendation(this)
 
     }
 

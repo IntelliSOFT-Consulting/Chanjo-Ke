@@ -27,6 +27,7 @@ import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.Contraindication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
+import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
@@ -300,29 +301,99 @@ class PatientDetailsViewModel(
     }
 
 
-    private suspend fun getRecommendationList(status: String?): ArrayList<DbAppointmentDetails> {
-        val recommendationList = ArrayList<DbAppointmentDetails>()
+    private suspend fun getRecommendationList(statusValue: String?): ArrayList<DbRecommendationDetails> {
+
+        val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
         fhirEngine
             .search<ImmunizationRecommendation> {
                 filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
                 sort(Encounter.DATE, Order.DESCENDING)
             }
-            .map { createRecommendation(it) }
-            .let { recommendationList.addAll(it) }
+            .map { getRecommendationData(it) }
+            .let { immunizationRecommendationList.addAll(it)}
 
 
-        var newRecommendationList = ArrayList<DbAppointmentDetails>()
-        if (status != null) {
-            val newVaccineList = recommendationList.filter {
-                it.appointmentStatus == status
+
+        val dbRecommendationDetailsList = ArrayList<DbRecommendationDetails>()
+        immunizationRecommendationList.forEach { immunizationRecommendation ->
+
+            val recommendationList = immunizationRecommendation.recommendation
+            recommendationList.forEach { recommendation ->
+
+                var vaccineCode = ""
+                var vaccineName = ""
+                var targetDisease = ""
+                var earliestDate = ""
+                var latestDate = ""
+                var description = ""
+                var series = ""
+                var doseNumber = ""
+                var status = ""
+
+                if (recommendation.hasVaccineCode()){
+                    if (recommendation.vaccineCode[0].hasCoding()){
+                        vaccineCode = recommendation.vaccineCode[0].codingFirstRep.code
+                    }
+                    if (recommendation.vaccineCode[0].hasText()){
+                        vaccineName = recommendation.vaccineCode[0].text
+                    }
+                }
+                if (recommendation.hasTargetDisease()){
+                    if (recommendation.targetDisease.hasText()){
+                        targetDisease = recommendation.targetDisease.text
+                    }
+                }
+                if (recommendation.hasDateCriterion()){
+                    val dateCriterionList = recommendation.dateCriterion
+                    dateCriterionList.forEach { dateCriterion ->
+
+                        if (dateCriterion.hasCode()){
+                            if (dateCriterion.code.codingFirstRep.display == "Earliest-date-to-administer"){
+                                earliestDate = dateCriterion.value.toString()
+                            }
+                            if (dateCriterion.code.codingFirstRep.display == "Latest-date-to-administer"){
+                                latestDate = dateCriterion.value.toString()
+                            }
+                        }
+                    }
+                }
+                if (recommendation.hasDescription()){
+                    description = recommendation.description
+                }
+                if (recommendation.hasSeries()){
+                    series = recommendation.series
+                }
+                if (recommendation.hasDoseNumberPositiveIntType()){
+                    doseNumber = recommendation.doseNumberPositiveIntType.value.toString()
+                }
+                if(recommendation.hasForecastStatus()){
+                    if (recommendation.forecastStatus.hasCoding()){
+                        if (recommendation.forecastStatus.codingFirstRep.hasDisplay()){
+                            status = recommendation.forecastStatus.codingFirstRep.display
+                        }
+                    }
+                }
+
+                val dbRecommendationDetails = DbRecommendationDetails(
+                    vaccineCode = vaccineCode,
+                    vaccineName = vaccineName,
+                    targetDisease = targetDisease,
+                    earliestDate = earliestDate,
+                    latestDate = latestDate,
+                    description = description,
+                    series = series,
+                    doseNumber = doseNumber,
+                    status = status,
+                )
+                dbRecommendationDetailsList.add(dbRecommendationDetails)
             }
-            newRecommendationList = ArrayList(newVaccineList)
-        } else {
-            newRecommendationList = recommendationList
         }
 
+        return dbRecommendationDetailsList
+    }
 
-        return newRecommendationList
+    private fun getRecommendationData(it: ImmunizationRecommendation): ImmunizationRecommendation {
+        return it
     }
 
 
@@ -478,11 +549,11 @@ class PatientDetailsViewModel(
             val immunizationRecommendation = ref.reference
             val recommendationId =
                 immunizationRecommendation.replace("ImmunizationRecommendation/", "")
-            val selectedRecommendation =
-                recommendationList.find { it.appointmentId == recommendationId }
-            if (selectedRecommendation != null) {
-                recommendationSavedList.add(selectedRecommendation)
-            }
+//            val selectedRecommendation =
+//                recommendationList.find { it.appointmentId == recommendationId }
+//            if (selectedRecommendation != null) {
+////                recommendationSavedList.add(selectedRecommendation)
+//            }
         }
 
         return DbAppointmentData(
@@ -779,11 +850,11 @@ class PatientDetailsViewModel(
             .map { createVaccineItem(it) }
             .let { vaccineList.addAll(it) }
 
-        val newVaccineList = vaccineList.filterNot {
-            it.status == "NOTDONE"
-        }
+//        val newVaccineList = vaccineList.filterNot {
+//            it.status == "NOTDONE"
+//        }
 
-        return ArrayList(newVaccineList)
+        return ArrayList(vaccineList)
     }
 
     private fun createAllergyIntoleranceItem(data: AllergyIntolerance): DbVaccineData {

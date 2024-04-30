@@ -32,14 +32,14 @@ import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
+import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsFragment
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineAdmin
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
-import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -57,7 +57,6 @@ import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
-import org.hl7.fhir.r4.model.PositiveIntType
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
@@ -65,7 +64,6 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.SimpleQuantity
 import org.hl7.fhir.r4.model.StringType
 import java.math.BigDecimal
-import java.util.Arrays
 import java.util.Date
 
 /** ViewModel for patient registration screen {@link AddPatientFragment}. */
@@ -210,7 +208,8 @@ class AdministerVaccineViewModel(
         encounterId: String,
         patientId: String,
         context: Context,
-        dateValue: String? = null
+        dateValue: String? = null,
+        status: ImmunizationStatus
     ) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -248,7 +247,7 @@ class AdministerVaccineViewModel(
                     val immunization = createImmunizationResource(
                         encounterId,
                         patientId,
-                        ImmunizationStatus.COMPLETED,
+                        status,
                         date
                     )
 
@@ -256,10 +255,15 @@ class AdministerVaccineViewModel(
                     formatterClass.saveSharedPref("immunizationId",immunization.id,context)
                     formatterClass.saveSharedPref("administeredProduct",vaccineNameValue,context)
                     formatterClass.saveSharedPref("patientId",patientId,context)
+                    formatterClass.saveSharedPref("immunizationDate",date.toString(),context)
+
+                    saveResourceToDatabase(immunization, "immunization")
 
                     createImmunizationRecommendation(context)
 
-                    saveResourceToDatabase(immunization, "immunization")
+
+
+
                 }
 
 
@@ -465,7 +469,6 @@ class AdministerVaccineViewModel(
     private suspend fun createNextImmunization(immunizationId: String?) {
 
         val formatterClass = FormatterClass()
-        val date = Date()
 
         /**
          * TODO: Check if the Vaccine exists
@@ -478,11 +481,17 @@ class AdministerVaccineViewModel(
         val patientId = formatterClass.getSharedPref(
             "patientId", getApplication<Application>().applicationContext
         )
+        val immunizationDate = formatterClass.getSharedPref(
+            "immunizationDate", getApplication<Application>().applicationContext
+        )
 
         /**
          * Get the current administered product and generate the next vaccine
          */
-        if (administeredProduct != null && patientId != null) {
+        if (administeredProduct != null && patientId != null && immunizationDate != null) {
+
+            val date = formatterClass.convertStringToDate(immunizationDate, "MMM d yyyy")
+
             val immunizationHandler = ImmunizationHandler()
             val vaccineBasicVaccine =
                 ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
@@ -498,6 +507,7 @@ class AdministerVaccineViewModel(
 
             val targetDisease = seriesVaccine?.targetDisease
             val vaccineName = nextBasicVaccine?.vaccineName
+            val vaccineCode = nextBasicVaccine?.vaccineCode
 
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
@@ -512,11 +522,15 @@ class AdministerVaccineViewModel(
             }.join()
 
             //Generate the next immunisation recommendation
-            if (nextBasicVaccine != null) {
+            if (nextBasicVaccine != null && date != null) {
+
                 val administrativeWeeksSincePreviousList =
                     nextBasicVaccine.administrativeWeeksSincePrevious
                 val administrativeWeeksSinceDob = nextBasicVaccine.administrativeWeeksSinceDOB
+//
+
                 //Check if the above list is more than one.
+
                 val nextImmunizationDate = if (administrativeWeeksSincePreviousList.isNotEmpty()) {
                     //This is not the first vaccine, check on administrative weeks after birth
                     val weeksToAdd = administrativeWeeksSincePreviousList[0]
@@ -524,18 +538,130 @@ class AdministerVaccineViewModel(
                 } else {
                     formatterClass.getNextDate(date, administrativeWeeksSinceDob.toDouble())
                 }
+                val localDate = formatterClass.convertDateToLocalDate(nextImmunizationDate)
+                val administrativeWeeksSinceDOBLong = administrativeWeeksSinceDob.toLong()
+
 
                 /**
-                 * Check for the ones that have multiple dates
+                 * Get the immunization recommendation
                  */
-                val recommendation = createImmunizationRecommendationResource(
-                    patientId,
-                    nextImmunizationDate,
-                    "Due",
-                    "Next Immunization date",
-                    immunizationId
-                )
-                saveResourceToDatabase(recommendation, "ImmRec")
+                val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
+                fhirEngine
+                    .search<ImmunizationRecommendation> {
+                        filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
+                        sort(Encounter.DATE, Order.DESCENDING)
+                    }
+                    .map { getRecommendationData(it) }
+                    .let { immunizationRecommendationList.addAll(it)}
+
+                val immunizationNewRecommendationList = ArrayList<ImmunizationRecommendation>()
+                immunizationRecommendationList.forEach {immunizationRecommendation ->
+
+                    val immunizationNewRecommendation = ImmunizationRecommendation()
+
+                    val id = immunizationRecommendation.id
+                    val patient = immunizationRecommendation.patient
+                    val dateRecommendationCreated = immunizationRecommendation.date
+
+                    val recommendationNewList = ArrayList<ImmunizationRecommendation
+                        .ImmunizationRecommendationRecommendationComponent>()
+
+                    val recommendationList = immunizationRecommendation.recommendation
+                    recommendationList.forEach {recommendation ->
+
+                        val vaccineCodeRecommendation = recommendation.vaccineCode
+                        val targetDiseaseRecommendation = recommendation.targetDisease
+                        val foreCastRecommendation = recommendation.forecastStatus
+                        val descriptionRecommendation = recommendation.description
+                        val seriesRecommendation = recommendation.series
+                        val doseNumberRecommendation = recommendation.doseNumber
+                        val dateCriterionListRecommendation = recommendation.dateCriterion
+                        val recommendationId = if (recommendation.hasId()) recommendation.id else generateUuid()
+
+                        /**
+                         * TODO: Add Immunization Supporting information
+                         */
+                        val dateCriterionList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
+
+                        if (recommendation.hasVaccineCode() &&
+                            recommendation.vaccineCodeFirstRep.hasCoding() &&
+                            recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
+                            recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode){
+
+                            if (recommendation.hasDateCriterion()){
+
+                                //From selectedDate, calculate the next date plus administrativeWeeksSinceDOB
+                                val earliestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, administrativeWeeksSinceDOBLong)
+                                val latestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, (administrativeWeeksSinceDOBLong + 2))
+
+                                val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
+                                val latestAdministerLocalDate = formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
+                                if (earliestAdministerLocalDate != null && latestAdministerLocalDate != null){
+
+                                    val earlyAdministerDate = DbVaccineAdmin(earliestAdministerLocalDate, "Earliest-date-to-administer")
+                                    val lateAdministerDate = DbVaccineAdmin(latestAdministerLocalDate, "Latest-date-to-administer")
+
+                                    val administerTimeList = ArrayList<DbVaccineAdmin>()
+                                    administerTimeList.addAll(
+                                        mutableListOf(earlyAdministerDate, lateAdministerDate)
+                                    )
+
+                                    /**
+                                     * Date Criterion
+                                     * TODO: Add earliest date to administered date
+                                     * TODO: Add latest date to administered date
+                                     */
+                                    administerTimeList.forEach { administerTime ->
+                                        val dateCriterion = ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
+
+                                        val code = CodeableConcept()
+                                        val codeCoding = Coding()
+                                        codeCoding.system = "http://snomed.info/sct"
+                                        codeCoding.code = administerTime.type
+                                        codeCoding.display = administerTime.type
+                                        code.coding = listOf(codeCoding)
+                                        dateCriterion.code = code
+                                        dateCriterion.value = administerTime.dateAdministered
+
+                                        dateCriterionList.add(dateCriterion)
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                        val recommendationNew =  ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
+                        if(dateCriterionList.isEmpty()){
+                            recommendationNew.dateCriterion = dateCriterionListRecommendation
+                        }else{
+                            recommendationNew.dateCriterion = dateCriterionList
+                        }
+
+                        recommendationNew.description = descriptionRecommendation
+                        recommendationNew.series = seriesRecommendation
+                        recommendationNew.doseNumber = doseNumberRecommendation
+                        recommendationNew.forecastStatus = foreCastRecommendation
+                        recommendationNew.targetDisease = targetDiseaseRecommendation
+                        recommendationNew.vaccineCode = vaccineCodeRecommendation
+                        recommendationNew.id = recommendationId
+
+                        recommendationNewList.add(recommendationNew)
+
+                    }
+
+                    immunizationNewRecommendation.id = id
+                    immunizationNewRecommendation.patient = patient
+                    immunizationNewRecommendation.date = dateRecommendationCreated
+                    immunizationNewRecommendation.recommendation = recommendationNewList
+
+                    immunizationNewRecommendationList.add(immunizationNewRecommendation)
+
+                }
+
+                val recommendation = immunizationNewRecommendationList[0]
+                updateResourceToDatabase(recommendation, "ImmRec")
 
             }
 
@@ -544,15 +670,23 @@ class AdministerVaccineViewModel(
 
 
     }
+    private suspend fun updateResourceToDatabase(resource: Resource, resourceType: String){
+        Log.e("----Update", "----$resourceType")
+        fhirEngine.update(resource)
+    }
+    private fun getRecommendationData(it: ImmunizationRecommendation): ImmunizationRecommendation {
+        return it
+    }
 
     fun createManualContraindication(
-        administrationFlowTitle:String?,
+        administrationFlowTitle: String?,
         immunizationList: List<String>,
         patientId: String,
         nextImmunizationDate: Date?,
         status: String,
         immunizationId: String?,
-        foreCastReason: String
+        foreCastReason: String,
+        context: Context
     ) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -586,7 +720,8 @@ class AdministerVaccineViewModel(
                      *
                      */
 
-                    if (administrationFlowTitle != null && administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name){
+                    if (administrationFlowTitle != null &&
+                        administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name){
 
                         val immunization = createImmunizationResource(
                             null,
@@ -610,17 +745,19 @@ class AdministerVaccineViewModel(
 
                         saveResourceToDatabase(immunization, "Imm")
 
+                        createImmunizationRecommendation(context)
+
 
                     }
 
-                    val recommendation = createImmunizationRecommendationResource(
-                        patientId,
-                        nextImmunizationDate,
-                        status,
-                        foreCastReason,
-                        immunizationId
-                    )
-                    saveResourceToDatabase(recommendation, "ImmRec")
+//                    val recommendation = createImmunizationRecommendationResource(
+//                        patientId,
+//                        nextImmunizationDate,
+//                        status,
+//                        foreCastReason,
+//                        immunizationId
+//                    )
+//                    saveResourceToDatabase(recommendation, "ImmRec")
 
                 }
 

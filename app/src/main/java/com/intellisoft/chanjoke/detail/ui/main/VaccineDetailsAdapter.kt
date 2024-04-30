@@ -66,7 +66,10 @@ class VaccineDetailsAdapter(
         }else if (status == StatusColors.RED.name){
             vaccineStatus = "Missed"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
-        }else{
+        }else if (status == StatusColors.NOT_DONE.name){
+            vaccineStatus = "Not Administered"
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.colorAccent))
+        } else{
             vaccineStatus = ""
         }
 
@@ -76,6 +79,8 @@ class VaccineDetailsAdapter(
         if (canBeVaccinated != null) {
             holder.checkBox.isEnabled = canBeVaccinated
         }
+
+
 
         holder.tvScheduleStatus.text = vaccineStatus
         holder.tvVaccineName.text = vaccineName

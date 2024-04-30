@@ -87,10 +87,18 @@ class PractionerDetails : Fragment() {
         val practitionerEmail = formatterClass.getSharedPref("practitionerEmail", requireContext())
         val practitionerPhone = formatterClass.getSharedPref("practitionerPhone", requireContext())
 
+        val countyName = formatterClass.getSharedPref("countyName", requireContext())
+        val subCountyName = formatterClass.getSharedPref("subCountyName", requireContext())
+        val wardName = formatterClass.getSharedPref("wardName", requireContext())
+
         binding.tvEmailAddress.text = practitionerEmail
         binding.tvPhoneNumber.text = practitionerPhone
         binding.tvIdNumber.text = practitionerIdNumber
         binding.tvFullName.text = practitionerFullNames
+
+        binding.tvCounty.text = countyName ?: ""
+        binding.tvSubCounty.text = subCountyName ?: ""
+        binding.tvWardName.text = wardName ?: ""
 
     }
 }

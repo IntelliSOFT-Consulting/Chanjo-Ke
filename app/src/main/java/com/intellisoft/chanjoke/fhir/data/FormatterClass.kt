@@ -16,6 +16,8 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Period
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
@@ -85,9 +87,14 @@ class FormatterClass {
 
     }
 
+
+
     fun convertDateToLocalDate(date: Date): LocalDate {
         val instant = date.toInstant()
-        return instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+        val localDate = instant.atZone(ZoneOffset.UTC).toLocalDate()
+
+        return localDate
+
     }
 
     fun convertLocalDateToDate(date: LocalDate?): String {
@@ -344,7 +351,6 @@ class FormatterClass {
                 val totalWeeks = totalDays / 7
 
 
-                saveSharedPref("patientDob", dobDate.toString(), context)
                 saveSharedPref("patientYears", years.toString(), context)
                 saveSharedPref("patientMonth", months.toString(), context)
                 saveSharedPref("patientDays", days.toString(), context)
@@ -1002,7 +1008,7 @@ class FormatterClass {
         weekNumber: String,
         vaccineName: String,
         administeredList: List<DbVaccineData>,
-        recommendationList: ArrayList<DbAppointmentDetails>
+        recommendationList: ArrayList<DbRecommendationDetails>
     ): DbVaccineScheduleChild {
 
         var dateSchedule: String? = null
@@ -1014,31 +1020,50 @@ class FormatterClass {
         if (contraindicatedList.contains(vaccineName)) {
 
             val dbAppointmentDetailsContra = recommendationList.filter {
-                it.vaccineName == vaccineName && it.appointmentStatus == "Contraindicated"
-            }
-                .map { it }.firstOrNull()
+                it.vaccineName == vaccineName && it.status.contains("contraindicated")
+            }.map { it }.firstOrNull()
 
             val dbAppointmentDetailsDue = recommendationList.filter {
-                it.vaccineName == vaccineName && it.appointmentStatus == "Due"
-            }
-                .map { it }.firstOrNull()
+                it.vaccineName == vaccineName && it.status == "due"
+            }.map { it }.firstOrNull()
+
 
             if (dbAppointmentDetailsContra != null) {
-                dateSchedule = dbAppointmentDetailsContra.dateScheduled
+                dateSchedule = convertDateFormat(dbAppointmentDetailsContra.earliestDate)
                 statusColor = StatusColors.AMBER.name
             }
             if (dbAppointmentDetailsDue != null) {
-                dateSchedule = dbAppointmentDetailsDue.dateScheduled
+                dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
                 statusColor = StatusColors.NORMAL.name
             }
-
+            //Check if dateSchedule is before today
+            if (dateSchedule!= null) {
+                val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+                val dateScheduleDate = dateScheduleFormat.parse(dateSchedule)
+                val todayDate = Calendar.getInstance().time
+                if (dateScheduleDate != null) {
+                    if (dateScheduleDate.before(todayDate)) {
+                        statusColor = StatusColors.RED.name
+                    }
+                }
+            }
 
         }
         if (administeredVaccineNamesList.contains(vaccineName)) {
-            statusColor = StatusColors.GREEN.name
+
+            val dbAppointmentDetailsNotDone = administeredList.filter {
+                it.vaccineName == vaccineName && it.status == "NOTDONE"
+            }.map { it }.firstOrNull()
+
+            statusColor = if (dbAppointmentDetailsNotDone != null){
+                StatusColors.NOT_DONE.name
+            }else{
+                StatusColors.GREEN.name
+            }
             dateSchedule = administeredList.filter { it.vaccineName == vaccineName }
                 .map { it.dateAdministered }
                 .firstOrNull()
+
         }
 
         if (dateSchedule == null) dateSchedule = ""
@@ -1051,6 +1076,7 @@ class FormatterClass {
         val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
         var canBeVaccinated: Boolean? = null
         val patientDob = getSharedPref("patientDob", context)
+
         val patientGender = getSharedPref("patientGender", context)?.let {
             AppUtils().capitalizeFirstLetter(
                 it
@@ -1087,7 +1113,26 @@ class FormatterClass {
                                         canBeVaccinated = false
                                     }
                                 } else {
+                    if (!vaccineCode.contains("IMHPV-")){
+                        if (numberOfWeek > 256){
+                            canBeVaccinated = false
+                        }else{
+                            //bOPV is allowed for less than 2 weeks
+                            if (vaccineCode == "IMPO-bOPV"){
+                                canBeVaccinated = if (numberOfWeek < 2){
+                                    true
+                                }else{
+                                    false
+                                }
+                            }else{
 
+                                if (weekNumberInt != null){
+                                    canBeVaccinated = if (numberOfWeek >= weekNumberInt){
+                                        true
+                                    }else{
+                                        false
+                                    }
+                                }
                                     if (weekNumberInt != null) {
                                         if (numberOfWeek >= weekNumberInt) {
                                             canBeVaccinated = true
@@ -1106,6 +1151,16 @@ class FormatterClass {
                                 canBeVaccinated = false
                             }
                         }
+                            }
+                        }
+                    }else{
+                        //Should only be for Females above 9 years and below 15 years
+                        canBeVaccinated = if (numberOfWeek in 471..782 && patientGender == "Female"){
+                            true
+                        }else{
+                            false
+                        }
+                    }
 
                     }
 

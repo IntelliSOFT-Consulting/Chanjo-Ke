@@ -31,6 +31,7 @@ import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import org.hl7.fhir.r4.model.Immunization
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -119,7 +120,9 @@ class AdministerNewFragment : Fragment() {
                     resultList,
                     formatterClass.generateUuid(),
                     patientId,
-                    requireContext())
+                    requireContext(),
+                    null,
+                    Immunization.ImmunizationStatus.COMPLETED)
 
                 val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                 blurBackgroundDialog.show()

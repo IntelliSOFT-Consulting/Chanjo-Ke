@@ -36,6 +36,7 @@ enum class StatusColors {
     AMBER, //Some administered
     RED, //All missed
     NORMAL, //Future
+    NOT_DONE, //Not Done
 }
 
 data class AdverseEventItem(
@@ -162,6 +163,18 @@ data class DbAppointmentDetails(
     val appointmentStatus: String
 )
 
+data class DbRecommendationDetails(
+    val vaccineCode: String,
+    val vaccineName: String,
+    val targetDisease: String,
+    val earliestDate: String,
+    val latestDate: String,
+    val description: String,
+    val series: String,
+    val doseNumber: String,
+    val status: String,
+)
+
 data class DbSignIn(
     val idNumber: String,
     val password: String
@@ -200,6 +213,10 @@ data class DbUser(
     val phone: String?,
     val id: String,
     val facility: String,
+
+    val countyName: String?,
+    val subCountyName: String?,
+    val wardName: String?,
     val facilityName: String,
 )
 

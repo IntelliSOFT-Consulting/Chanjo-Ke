@@ -155,10 +155,10 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 val weekNoList = sharedPreferences.getStringSet(weekNo, null)
                 val vaccineList = weekNoList?.toList()
                 vaccineList?.forEach { vaccineName ->
-
                     val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
                         requireContext(), "ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
                     dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
+
                 }
 
                 //Get the group color Code
@@ -173,6 +173,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
 
             }
+
 
             val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
 
@@ -207,6 +208,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             CoroutineScope(Dispatchers.Main).launch {
 
                 val inflater = LayoutInflater.from(requireContext())
+
 
                 for (group in sortedExpandableListTitle){
 
@@ -267,6 +269,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                         generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
 
                     }
+
                     // Add the cardview_item to linearLayoutId2
                     binding.groupLayout.addView(groupLayout)
 
@@ -282,11 +285,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                             e.printStackTrace()
                         }
                     }
-
-
-
                 }
-
             }
         }
     }
@@ -322,6 +321,8 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             vaccineList,
             this@RoutineFragment,
             requireContext())
+
+        println("vaccineList $vaccineList")
 
         recyclerView.adapter = adapter
 
