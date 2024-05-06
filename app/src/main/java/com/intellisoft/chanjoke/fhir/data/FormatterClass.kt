@@ -11,6 +11,7 @@ import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
 import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
+import timber.log.Timber
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -906,12 +907,15 @@ class FormatterClass {
             // Parse the string into a LocalDate
             val date1 = LocalDate.parse(dateString, formatter)
             val date2 = LocalDate.now() // Use the current date
+
             // Calculate the period between the two dates
             val period = Period.between(date1, date2)
+
             when {
                 period.years > 1 -> "${period.years} years ${period.months} months ${period.days} days"
                 period.years == 1 -> "${period.years} year ${period.months} months ${period.days} days"
                 period.months > 1 -> "${period.months} months ${period.days} days"
+                period.months == 1 -> "${period.months} month ${period.days} days"
                 else -> "${period.days} days"
             }
         } catch (e: Exception) {
