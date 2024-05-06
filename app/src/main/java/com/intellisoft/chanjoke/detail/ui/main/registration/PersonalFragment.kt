@@ -495,7 +495,7 @@ class PersonalFragment : Fragment() {
         val checkedRadioButtonIdInput = binding.radioGroupChild.checkedRadioButtonId
         if (checkedRadioButtonIdInput == -1) {
             // No RadioButton is selected, handle it as needed
-            Toast.makeText(requireContext(), "Please select a age input", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), "Please select vaccination category", Toast.LENGTH_SHORT)
                 .show()
             return
         }
