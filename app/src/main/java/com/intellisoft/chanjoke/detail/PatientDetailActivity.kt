@@ -218,6 +218,12 @@ class PatientDetailActivity : AppCompatActivity() {
                         }
 
                         "Referrals" -> {
+
+                            val intent =
+                                Intent(this@PatientDetailActivity, MainActivity::class.java)
+                            intent.putExtra("functionToCall", NavigationDetails.REFERRALS.name)
+                            intent.putExtra("patientId", patientId)
+                            startActivity(intent)
 //                            adapterSection.removeAllFragments()
 //                            adapterSection.notifyDataSetChanged()
 //                            patientId = FormatterClass().getSharedPref(

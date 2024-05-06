@@ -1,11 +1,25 @@
 package com.intellisoft.chanjoke.detail.ui.main.referrals
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment
+import com.google.android.fhir.datacapture.QuestionnaireFragment
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.databinding.FragmentReferralsBinding
+import com.intellisoft.chanjoke.databinding.FragmentUpdateBinding
+import com.intellisoft.chanjoke.detail.PatientDetailActivity
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.viewmodel.ScreenerViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,13 +44,61 @@ class ReferralsFragment : Fragment() {
         }
     }
 
+    private val viewModel: ScreenerViewModel by viewModels()
+    private lateinit var binding: FragmentReferralsBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_referrals, container, false)
+        binding = FragmentReferralsBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = "Referrals"
+            setDisplayShowHomeEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+        }
+        setHasOptionsMenu(true)
+        onBackPressed()
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                showCancelScreenerQuestionnaireAlertDialog()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
+
+    private fun showCancelScreenerQuestionnaireAlertDialog() {
+        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+        val intent = Intent(context, PatientDetailActivity::class.java)
+        intent.putExtra("patientId", patientId)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        requireContext().startActivity(intent)
+    }
+
+    private fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
+            showCancelScreenerQuestionnaireAlertDialog()
+        }
+    }
+
 
     companion object {
         /**
