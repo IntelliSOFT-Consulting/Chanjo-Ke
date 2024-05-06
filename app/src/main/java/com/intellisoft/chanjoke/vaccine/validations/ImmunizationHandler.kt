@@ -235,17 +235,17 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         )
     )
     //HPV Vaccine
-    val hpvVaccine = "IMHPV-"
-    val hpvSeries = RoutineVaccine(
-        hpvVaccine,
-        "Cervical Cancer",
-        2,
-        0,
-        listOf(
-            BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, arrayListOf(), "0.5ml","1"),
-            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 730, arrayListOf(26.07), "0.5ml","2")
-       )
-    )
+//    val hpvVaccine = "IMHPV-"
+//    val hpvSeries = RoutineVaccine(
+//        hpvVaccine,
+//        "Cervical Cancer",
+//        2,
+//        0,
+//        listOf(
+//            BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, arrayListOf(), "0.5ml","1"),
+//            BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 730, arrayListOf(26.07), "0.5ml","2")
+//       )
+//    )
     //YELLOW FEVER
 //    val yellowFever = "IMYF-"
 //    val yellowFeverSeries = RoutineVaccine(
@@ -384,6 +384,27 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         )
     )
 
+    //HPV VACCINE
+    val hpvVaccine = "IMHPV-"
+    val hpvVaccineSeries = NonRoutineVaccine(
+        hpvVaccine,
+        "Cervical Cancer",
+        listOf(
+            RoutineVaccine(
+                hpvVaccine,
+                "Cervical Cancer",
+                2,
+                0,
+                listOf(
+                    BasicVaccine(hpvVaccine+"1", "HPV Vaccine 1", "Intramuscular left deltoid muscle", 521, arrayListOf(), "0.5ml","1"),
+                    BasicVaccine(hpvVaccine+"2", "HPV Vaccine 2", "Intramuscular left deltoid muscle", 730, arrayListOf(26.07), "0.5ml","2")
+                )
+            )
+        )
+    )
+
+
+
     //YELLOW FEVER
     val yellowFever = "IMYF-"
     val yellowFeverSeries = NonRoutineVaccine(
@@ -423,8 +444,8 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
 
 
 
-    val routineList = listOf(polioSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries,hpvSeries)
-    val nonRoutineList = listOf(covidMainSeries,yellowFeverSeries, rabiesMainSeries, influenzaSeries, tetanusToxoidSeries)
+    val routineList = listOf(polioSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries)
+    val nonRoutineList = listOf(covidMainSeries,yellowFeverSeries, rabiesMainSeries, influenzaSeries, tetanusToxoidSeries, hpvVaccineSeries)
     val pregnancyList = listOf(tetanusSeries)
 
     return Triple(routineList, nonRoutineList, pregnancyList)
