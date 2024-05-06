@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:title="Update Client History"
+                    app:title="@string/update_vaccine_history"
                     app:titleTextColor="@android:color/white" />
             </com.google.android.material.appbar.AppBarLayout>
 

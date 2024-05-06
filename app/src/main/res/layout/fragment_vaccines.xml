@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:clickable="true"
             android:icon="@android:drawable/ic_input_add"
-            android:text="Update Client History"
+            android:text="@string/update_vaccine_history"
             android:textColor="#ffffff"
             app:backgroundTint="@color/colorPrimary"
             app:iconGravity="textStart"

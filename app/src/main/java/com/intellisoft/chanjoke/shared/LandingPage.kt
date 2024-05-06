@@ -129,7 +129,7 @@ class LandingPage : Fragment() {
 //                startActivity(Intent(requireContext(), RegistrationActivity::class.java))
             }
 
-            "Update Client History" -> {
+            "Update Vaccine History" -> {
                 findNavController().navigate(R.id.patient_list)
                 formatterClass.saveSharedPref(
                     "patientListAction",

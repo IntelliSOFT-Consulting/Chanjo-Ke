@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Chanjo-Ke</string>
+    <string name="app_name1">OpenCHANJO</string>
     <string name="vaccineList">vaccineList</string>
     <string name="base_url">https://chanjoke.intellisoftkenya.com/auth/</string>
     <string name="add_patient">Register Client</string>
@@ -89,6 +90,7 @@
     <string name="update_password">Update Password</string>
     <string name="reset_code">Reset code</string>
     <string name="estimated_dob">Estimated DoB</string>
+    <string name="update_vaccine_history">Update Vaccine History</string>
 
 
 </resources>

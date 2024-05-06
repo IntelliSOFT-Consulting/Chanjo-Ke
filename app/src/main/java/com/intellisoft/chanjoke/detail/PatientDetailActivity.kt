@@ -52,6 +52,7 @@ class PatientDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPatientDetailBinding
     private var formatterClass = FormatterClass()
     private val adapterSection = SectionsPagerAdapter(supportFragmentManager)
+    private var patientYears:String? = null
 
 
     private val immunizationHandler = ImmunizationHandler()
@@ -67,6 +68,9 @@ class PatientDetailActivity : AppCompatActivity() {
         if (convertedDob != null) {
             formatterClass.saveSharedPref("patientDob", convertedDob, this)
         }
+
+        patientYears = formatterClass.getSharedPref("patientYears", this)
+
 
         setupSpinner()
         val bundle =
@@ -84,7 +88,6 @@ class PatientDetailActivity : AppCompatActivity() {
                 .get(PatientDetailsViewModel::class.java)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
         val routineFragment = RoutineFragment()
         routineFragment.arguments = bundle
 
@@ -94,9 +97,11 @@ class PatientDetailActivity : AppCompatActivity() {
         val appointment = AppointmentsFragment()
         appointment.arguments = bundle
 
+        //Perform a check if user is more than 5 years old
+        if (isBelowFive()){
+            adapterSection.addFragment(routineFragment, getString(R.string.tab_text_1))
+        }
 
-
-        adapterSection.addFragment(routineFragment, getString(R.string.tab_text_1))
         adapterSection.addFragment(nonRoutineFragment, getString(R.string.tab_text_2))
 //        adapter.addFragment(appointment, getString(R.string.tab_text_4))
 
@@ -174,6 +179,18 @@ class PatientDetailActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun isBelowFive() :Boolean{
+        if (patientYears != null){
+            val patientYearsInt = patientYears!!.toIntOrNull()
+            if (patientYearsInt != null){
+                if (patientYearsInt < 6){
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     private fun setupSpinner() {
