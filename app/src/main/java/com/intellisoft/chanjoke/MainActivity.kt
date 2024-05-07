@@ -201,6 +201,13 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.referralsFragment)
                 }
             }
+
+            NavigationDetails.REFERRAL_DETAILS.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    navController.navigate(R.id.referralDetailFragment)
+                }
+            }
         }
 
 

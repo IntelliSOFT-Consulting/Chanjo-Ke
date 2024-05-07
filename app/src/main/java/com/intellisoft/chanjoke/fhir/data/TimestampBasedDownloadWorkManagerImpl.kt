@@ -19,14 +19,15 @@ import org.hl7.fhir.r4.model.OperationOutcome
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ResourceType
+import org.hl7.fhir.r4.model.ServiceRequest
 
 class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore) :
     DownloadWorkManager {
     private val resourceTypeList = ResourceType.values().map { it.name }
     private val urls = LinkedList(
         listOf(
-            "Patient?_sort=_lastUpdated", "Practitioner", "RelatedPerson", "AdverseEvent",
-            "Immunization", "ImmunizationRecommendation", "Location","ServiceRequest"
+            "Patient?_sort=_lastUpdated", "Practitioner","ServiceRequest", "RelatedPerson", "AdverseEvent",
+            "Immunization", "ImmunizationRecommendation"
         )
     )
 
@@ -80,6 +81,12 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
         // in the Bundle.link component, if so, append the URL referenced to list of URLs to download.
         if (response is Bundle) {
 
+//            for (entry in response.entry) {
+//                val type = entry.resource.resourceType.toString()
+//                if (type == "ServiceRequest") {
+//                    urls.add(entry.fullUrl)
+//                }
+//            }
             val nextUrl =
                 response.link.firstOrNull { component -> component.relation == "next" }?.url
             if (nextUrl != null) {
@@ -144,9 +151,9 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
     if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ImmunizationRecommendation")) {
         downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
     }
-    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ServiceRequest")) {
-        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
-    }
+//    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ServiceRequest")) {
+//        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
+//    }
 
     // Do not modify any URL set by a server that specifies the token of the page to return.
     if (downloadUrl.contains("&page_token")) {

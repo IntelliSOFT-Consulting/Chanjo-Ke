@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".detail.ui.main.referrals.ReferralsFragment">
+    tools:context=".detail.ui.main.referrals.ReferralDetailFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -26,19 +26,22 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
-        android:background="@color/bac_trans_color"
-        android:layout_below="@+id/layout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layout"
+        android:background="@color/bac_trans_color"
+        android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/aefi_parent_list"
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/list_service_request" />
+            android:layout_marginBottom="@dimen/_10dp"
+            android:text="@string/referrals_details"
+            android:textAlignment="center"
+            android:textStyle="bold" />
 
     </LinearLayout>
+
+
 </RelativeLayout>

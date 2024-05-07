@@ -78,6 +78,15 @@ data class DbVaccineData(
     val status: String,
 )
 
+data class DbServiceRequest(
+    val logicalId: String,
+    val status: String,
+    val intent: String,
+    var priority: String,
+    val authoredOn: String,
+    val vaccineName:String
+)
+
 data class AllergicReaction(
     val period: String,
     val vaccines: String,
@@ -124,6 +133,7 @@ enum class NavigationDetails {
     ADD_AEFI,
     VACCINE_DETAILS,
     REFERRALS,
+    REFERRAL_DETAILS,
     UPDATE_VACCINE_DETAILS
 }
 
