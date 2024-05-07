@@ -10,11 +10,13 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentReferralDetailBinding
 import com.intellisoft.chanjoke.databinding.FragmentReferralsBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -76,10 +78,10 @@ class ReferralDetailFragment : Fragment() {
         }
     }
 
-
     private fun showCancelScreenerQuestionnaireAlertDialog() {
         val patientId = FormatterClass().getSharedPref("patientId", requireContext())
-        val intent = Intent(context, PatientDetailActivity::class.java)
+        val intent = Intent(context, MainActivity::class.java)
+        intent.putExtra("functionToCall", NavigationDetails.REFERRALS.name)
         intent.putExtra("patientId", patientId)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         requireContext().startActivity(intent)
