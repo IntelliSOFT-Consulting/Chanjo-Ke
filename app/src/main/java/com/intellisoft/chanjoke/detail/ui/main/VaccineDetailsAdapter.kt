@@ -73,13 +73,9 @@ class VaccineDetailsAdapter(
             vaccineStatus = ""
         }
 
-
-
-
         if (canBeVaccinated != null) {
             holder.checkBox.isEnabled = canBeVaccinated
         }
-
 
 
         holder.tvScheduleStatus.text = vaccineStatus

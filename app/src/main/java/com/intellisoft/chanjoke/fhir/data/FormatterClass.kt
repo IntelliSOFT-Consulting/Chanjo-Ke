@@ -1134,6 +1134,7 @@ class FormatterClass {
             try {
                 val numberOfWeek = calculateWeeksFromDate(patientDob)
                 if (numberOfWeek != null && basicVaccine != null) {
+
                     val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
                     val vaccineCode = basicVaccine.vaccineCode
                     val weekNumberInt = weekNumber.toIntOrNull()
@@ -1160,54 +1161,44 @@ class FormatterClass {
                                         canBeVaccinated = false
                                     }
                                 } else {
-                    if (!vaccineCode.contains("IMHPV-")){
-                        if (numberOfWeek > 256){
-                            canBeVaccinated = false
-                        }else{
-                            //bOPV is allowed for less than 2 weeks
-                            if (vaccineCode == "IMPO-bOPV"){
-                                canBeVaccinated = if (numberOfWeek < 2){
-                                    true
-                                }else{
-                                    false
-                                }
-                            }else{
 
-                                if (weekNumberInt != null){
-                                    canBeVaccinated = if (numberOfWeek >= weekNumberInt){
-                                        true
-                                    }else{
-                                        false
-                                    }
-                                }
-                                    if (weekNumberInt != null) {
-                                        if (numberOfWeek >= weekNumberInt) {
-                                            canBeVaccinated = true
-                                        } else {
+                                    if (!vaccineCode.contains("IMHPV-")){
+
+                                        if (numberOfWeek > 256){
                                             canBeVaccinated = false
-                                        }
-                                    }
+                                        }else{
+                                            //bOPV is allowed for less than 2 weeks
+                                            if (vaccineCode == "IMPO-bOPV"){
+                                                canBeVaccinated = numberOfWeek < 2
+                                            }else{
 
+                                                if (weekNumberInt != null){
+                                                    canBeVaccinated = numberOfWeek >= weekNumberInt
+                                                }
+                                                if (weekNumberInt != null) {
+                                                    canBeVaccinated = if (numberOfWeek >= weekNumberInt) {
+                                                        true
+                                                    } else {
+                                                        false
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    } else {
+                                        //Should only be for Females above 9 years and below 15 years
+                                        canBeVaccinated = numberOfWeek in 471..782 && patientGender == "Female"
+                                    }
                                 }
                             }
-                        } else {
-                            //Should only be for Females above 9 years and below 15 years
-                            if (numberOfWeek in 471..782 && patientGender == "Female") {
-                                canBeVaccinated = true
-                            } else {
-                                canBeVaccinated = false
-                            }
-                        }
-                            }
-                        }
-                    }else{
-                        //Should only be for Females above 9 years and below 15 years
-                        canBeVaccinated = if (numberOfWeek in 471..782 && patientGender == "Female"){
-                            true
                         }else{
-                            false
+                            //Should only be for Females above 9 years and below 15 years
+                            canBeVaccinated = if (numberOfWeek in 471..782 && patientGender == "Female"){
+                                true
+                            }else{
+                                false
+                            }
                         }
-                    }
 
                     }
 
@@ -1251,6 +1242,10 @@ class FormatterClass {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+
+        if (statusColor == StatusColors.RED.name){
+            canBeVaccinated = false
         }
 
 
