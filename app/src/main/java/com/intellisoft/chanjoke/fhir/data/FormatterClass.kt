@@ -955,21 +955,69 @@ class FormatterClass {
 
     fun getVaccineGroupDetails(
         vaccines: List<String>?,
-        administeredList: List<DbVaccineData>
+        administeredList: List<DbVaccineData>,
+        recommendationList: ArrayList<DbRecommendationDetails>
     ): String {
+        val immunizationHandler = ImmunizationHandler()
         val administeredVaccineNames = administeredList.map { it.vaccineName }
 
         var statusColor = ""
         if (vaccines != null) {
-            statusColor = if (vaccines.all { administeredVaccineNames.contains(it) }) {
+            if (vaccines.all { administeredVaccineNames.contains(it) }) {
                 // Checks if all have been vaccinated
-                StatusColors.GREEN.name
+                statusColor = StatusColors.GREEN.name
             } else if (vaccines.any { administeredVaccineNames.contains(it) }) {
                 // Checks if there's any that has been vaccinated
-                StatusColors.AMBER.name
+                statusColor = StatusColors.AMBER.name
             } else {
-                // Everything under here does not have any vaccines
-                StatusColors.NORMAL.name
+                statusColor = StatusColors.NORMAL.name
+
+                /**
+                 * Everything under here does not have any vaccines. Check for missed vaccines
+                 * The vaccines list have the vaccine list for the routine vaccines per schedule
+                   e.g. At Birth, 6 weeks, 10 weeks, 14 weeks, 26 weeks etc
+                 * Get the vaccine details and use the vaccine code to check in the recommendationList
+                   i.e. earliestDate
+                 *
+                 */
+                val statusColorList = ArrayList<String>()
+
+                Log.e("------>", "vaccines: $vaccines")
+                vaccines.forEach { vaccineName ->
+
+                    println("------> vaccineName: $vaccineName")
+                    println("------> recommendationList: $recommendationList")
+                    val vaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+                    println("------> vaccineDetails: $vaccineDetails")
+                    if (vaccineDetails != null){
+
+                        val vaccineNameBasic = vaccineDetails.vaccineName
+                        val dbAppointmentDetailsDue = recommendationList.filter {
+                            it.vaccineName == vaccineNameBasic && it.status == "due"
+                        }.map { it }.firstOrNull()
+                        println("------> dbAppointmentDetailsDue: $dbAppointmentDetailsDue")
+                        if (dbAppointmentDetailsDue != null) {
+                            val dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
+                            //Check if dateSchedule is before today
+                            println("------> dateSchedule: $dateSchedule")
+                            if (dateSchedule!= null) {
+                                val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+                                val dateScheduleDate = dateScheduleFormat.parse(dateSchedule)
+                                val todayDate = Calendar.getInstance().time
+                                println("------> dateScheduleDate: $dateScheduleDate")
+                                if (dateScheduleDate != null) {
+                                    if (dateScheduleDate.before(todayDate)) {
+                                        statusColorList.add(StatusColors.RED.name)
+                                        statusColor = StatusColors.RED.name
+                                        println("------> statusColor: $statusColor")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Log.e("------>", "<------")
+
             }
         }
 
@@ -1036,6 +1084,9 @@ class FormatterClass {
                 dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
                 statusColor = StatusColors.NORMAL.name
             }
+
+
+
             //Check if dateSchedule is before today
             if (dateSchedule!= null) {
                 val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())

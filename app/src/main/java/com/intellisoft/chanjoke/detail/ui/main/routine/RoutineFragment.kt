@@ -156,13 +156,20 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 val vaccineList = weekNoList?.toList()
                 vaccineList?.forEach { vaccineName ->
                     val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
-                        requireContext(), "ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
+                        requireContext(),
+                        "ROUTINE",
+                        keyValue,
+                        vaccineName,
+                        administeredList,
+                        recommendationList)
                     dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
 
                 }
 
+
+
                 //Get the group color Code
-                val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList)
+                val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList, recommendationList)
 
                 val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
                     weekNo,
@@ -202,7 +209,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
             fun isWithinPlusOrMinus14(numberOfBirthWeek: Int, numberOfWeek: Int): Boolean {
                 val difference = numberOfBirthWeek - numberOfWeek
-                return difference in -2..2
+                return difference in 0..2
             }
 
             CoroutineScope(Dispatchers.Main).launch {
@@ -321,8 +328,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
             vaccineList,
             this@RoutineFragment,
             requireContext())
-
-        println("vaccineList $vaccineList")
 
         recyclerView.adapter = adapter
 
