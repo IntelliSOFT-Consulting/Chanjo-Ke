@@ -39,6 +39,7 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineAdmin
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.fhir.data.Reasons
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -742,32 +743,64 @@ class AdministerVaccineViewModel(
                      *
                      */
 
-                    if (administrationFlowTitle != null &&
-                        administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name){
+                    if (administrationFlowTitle != null){
 
-                        val immunization = createImmunizationResource(
-                            null,
-                            patientId,
-                            ImmunizationStatus.NOTDONE,
-                            Date()
-                        )
-                        val codeableConcept = CodeableConcept()
-                        codeableConcept.text = "Reasons for not administering"
+                        if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name ||
+                            administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
 
-                        val codingList = ArrayList<Coding>()
-                        val coding = Coding()
-                        coding.code = "371900001"
-                        coding.display = foreCastReason
-                        coding.system = "http://snomed.info/sct"
-                        codingList.add(coding)
+                            val immunization = createImmunizationResource(
+                                null,
+                                patientId,
+                                ImmunizationStatus.NOTDONE,
+                                Date()
+                            )
+                            val codeableConcept = CodeableConcept()
+                            codeableConcept.text = "Reasons for not administering"
 
-                        codeableConcept.coding = codingList
+                            val codingList = ArrayList<Coding>()
+                            val coding = Coding()
+                            coding.code = "371900001"
+                            coding.display = foreCastReason
+                            coding.system = "http://snomed.info/sct"
+                            codingList.add(coding)
 
-                        immunization.statusReason = codeableConcept
+                            codeableConcept.coding = codingList
 
-                        saveResourceToDatabase(immunization, "Imm")
+                            immunization.statusReason = codeableConcept
 
-                        createImmunizationRecommendation(context)
+                            //Reason Code
+                            val reasonCodeValue = if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
+                                Reasons.CONTRAINDICATE.name
+                            }else{
+                                Reasons.NOT_ADMINISTERED.name
+                            }
+
+                            val reasonCodeValueList = ArrayList<CodeableConcept>()
+
+                            val reasonCode = CodeableConcept()
+                            reasonCode.text = reasonCodeValue
+                            reasonCode.id = generateUuid()
+
+                            val reasonCodeList = ArrayList<Coding>()
+                            val reasonCodeCoding = Coding()
+                            reasonCodeCoding.code = "371900001371900001"
+                            reasonCodeCoding.display = reasonCodeValue
+                            reasonCodeCoding.system = "http://snomed.info/sct"
+                            reasonCodeList.add(reasonCodeCoding)
+
+                            reasonCode.coding = reasonCodeList
+
+                            reasonCodeValueList.add(reasonCode)
+
+                            immunization.reasonCode = reasonCodeValueList
+
+                            saveResourceToDatabase(immunization, "Imm")
+
+                            createImmunizationRecommendation(context)
+
+                        }
+
+
 
 
                     }
