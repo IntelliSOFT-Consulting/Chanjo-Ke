@@ -982,41 +982,37 @@ class FormatterClass {
                  */
                 val statusColorList = ArrayList<String>()
 
-                Log.e("------>", "vaccines: $vaccines")
                 vaccines.forEach { vaccineName ->
 
-                    println("------> vaccineName: $vaccineName")
-                    println("------> recommendationList: $recommendationList")
                     val vaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
-                    println("------> vaccineDetails: $vaccineDetails")
+
                     if (vaccineDetails != null){
 
                         val vaccineNameBasic = vaccineDetails.vaccineName
                         val dbAppointmentDetailsDue = recommendationList.filter {
                             it.vaccineName == vaccineNameBasic && it.status == "due"
                         }.map { it }.firstOrNull()
-                        println("------> dbAppointmentDetailsDue: $dbAppointmentDetailsDue")
+
                         if (dbAppointmentDetailsDue != null) {
                             val dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
                             //Check if dateSchedule is before today
-                            println("------> dateSchedule: $dateSchedule")
+
                             if (dateSchedule!= null) {
                                 val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
                                 val dateScheduleDate = dateScheduleFormat.parse(dateSchedule)
                                 val todayDate = Calendar.getInstance().time
-                                println("------> dateScheduleDate: $dateScheduleDate")
+
                                 if (dateScheduleDate != null) {
                                     if (dateScheduleDate.before(todayDate)) {
                                         statusColorList.add(StatusColors.RED.name)
                                         statusColor = StatusColors.RED.name
-                                        println("------> statusColor: $statusColor")
+
                                     }
                                 }
                             }
                         }
                     }
                 }
-                Log.e("------>", "<------")
 
             }
         }
