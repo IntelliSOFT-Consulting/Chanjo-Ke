@@ -392,7 +392,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         listOf(
             RoutineVaccine(
                 hpvVaccine,
-                "Cervical Cancer",
+                "HPV",
                 2,
                 0,
                 listOf(

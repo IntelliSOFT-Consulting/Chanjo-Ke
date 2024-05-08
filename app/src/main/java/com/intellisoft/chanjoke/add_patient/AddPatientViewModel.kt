@@ -593,6 +593,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             getApplication<Application>().applicationContext
         )
 
+
         if (patientYears != null && patientId != null && patientWeeks != null && patientDob != null){
             val patientYearsInt = patientYears.toIntOrNull()
             val patientWeeksInt = patientWeeks.toIntOrNull()
@@ -604,6 +605,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             } else {
                 null
             }
+
 
             if (patientYearsInt != null && patientYearsInt < 6 && patientWeeksInt != null && selectedDate != null) {
 

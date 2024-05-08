@@ -355,6 +355,7 @@ class FormatterClass {
                 saveSharedPref("patientMonth", months.toString(), context)
                 saveSharedPref("patientDays", days.toString(), context)
                 saveSharedPref("patientWeeks", totalWeeks.toString(), context)
+                saveSharedPref("patientDob", dobDate.toString(), context)
 
                 val ageStringBuilder = StringBuilder()
 

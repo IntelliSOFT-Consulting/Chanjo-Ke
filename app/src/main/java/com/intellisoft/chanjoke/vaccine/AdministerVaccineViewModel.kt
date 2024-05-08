@@ -215,258 +215,93 @@ class AdministerVaccineViewModel(
 
             val formatterClass = FormatterClass()
             val immunizationHandler = ImmunizationHandler()
+            val immunizationDataList = ArrayList<Immunization>()
 
-            for (vaccineNameValue in immunizationList) {
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
 
-                val vaccineBasicVaccine =
-                    ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
+                for (vaccineNameValue in immunizationList) {
 
-                if (vaccineBasicVaccine != null) {
-                    val seriesVaccine =
-                        immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
-                    val targetDisease = seriesVaccine?.targetDisease
+                    val vaccineBasicVaccine =
+                        ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineNameValue)
 
-                    val job = Job()
-                    CoroutineScope(Dispatchers.IO + job).launch {
-                        //Save resources to Shared preference
-                        if (targetDisease != null) {
-                            formatterClass.saveStockValue(
-                                vaccineNameValue,
-                                targetDisease,
-                                getApplication<Application>().applicationContext
-                            )
+                    if (vaccineBasicVaccine != null) {
+                        val seriesVaccine =
+                            immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
+                        val targetDisease = seriesVaccine?.targetDisease
+
+                        val job = Job()
+                        CoroutineScope(Dispatchers.IO + job).launch {
+                            //Save resources to Shared preference
+                            if (targetDisease != null) {
+                                formatterClass.saveStockValue(
+                                    vaccineNameValue,
+                                    targetDisease,
+                                    getApplication<Application>().applicationContext
+                                )
+                            }
+                        }.join()
+
+                        val date = if(dateValue != null) {
+                            formatterClass.convertStringToDate(dateValue, "MMM d yyyy") ?: Date()
+                        }else{
+                            Date()
                         }
-                    }.join()
 
-                    val date = if(dateValue != null) {
-                        formatterClass.convertStringToDate(dateValue, "MMM d yyyy") ?: Date()
-                    }else{
-                        Date()
+                        val immunization = createImmunizationResource(
+                            encounterId,
+                            patientId,
+                            status,
+                            date
+                        )
+
+                        immunizationDataList.add(immunization)
+
+
+                        //Create Immunization Recommendation
+                        formatterClass.saveSharedPref("immunizationId",immunization.id,context)
+                        formatterClass.saveSharedPref("administeredProduct",vaccineNameValue,context)
+                        formatterClass.saveSharedPref("patientId",patientId,context)
+                        formatterClass.saveSharedPref("immunizationDate",date.toString(),context)
+
+                        saveResourceToDatabase(immunization, "immunization")
                     }
+                }
+            }.join()
 
-                    val immunization = createImmunizationResource(
-                        encounterId,
-                        patientId,
-                        status,
-                        date
-                    )
+            for (immunization in immunizationDataList) {
 
-                    //Create Immunization Recommendation
-                    formatterClass.saveSharedPref("immunizationId",immunization.id,context)
-                    formatterClass.saveSharedPref("administeredProduct",vaccineNameValue,context)
-                    formatterClass.saveSharedPref("patientId",patientId,context)
-                    formatterClass.saveSharedPref("immunizationDate",date.toString(),context)
-
-                    saveResourceToDatabase(immunization, "immunization")
-
-                    createImmunizationRecommendation(context)
-
-
-
-
+                if (immunization.hasVaccineCode()){
+                    if (immunization.vaccineCode.hasCoding()){
+                        if (immunization.vaccineCode.codingFirstRep.hasDisplay()){
+                            formatterClass.saveSharedPref(
+                                "administeredProduct",
+                                immunization.vaccineCode.codingFirstRep.display,
+                                context)
+                        }
+                    }
+                }
+                if (immunization.hasOccurrenceDateTimeType()){
+                    val occurrenceDateTime = immunization.occurrenceDateTimeType.value.toString()
+                    formatterClass.saveSharedPref("immunizationDate",occurrenceDateTime.toString(),context)
                 }
 
+                createImmunizationRecommendation(context)
 
             }
-
 
         }
     }
 
-    //Create an immunization resource
-    private fun createImmunizationResource(
-        encounterId: String?,
-        patientId: String,
-        immunisationStatus: ImmunizationStatus,
-        date: Date
-    ): Immunization {
 
-        val immunization = Immunization()
-        val immunizationId = generateUuid()
-        if (encounterId != null){
-            val encounterReference = Reference("Encounter/$encounterId")
-            immunization.encounter = encounterReference
-        }
-        val patientReference = Reference("Patient/$patientId")
-
-        immunization.patient = patientReference
-        immunization.id = immunizationId
-
-        FormatterClass().saveSharedPref(
-            "immunizationId",
-            immunizationId,
-            getApplication<Application>().applicationContext
-        )
-        immunization.status = immunisationStatus
-
-        val annotationList = ArrayList<Annotation>()
-
-        val practitionerFacility = FormatterClass().getSharedPref("practitionerFacility", getApplication<Application>().applicationContext)
-        if (practitionerFacility != null){
-            val facilityDetails = practitionerFacility.replace("Location/","")
-            val locationReference = Reference("Location/$facilityDetails")
-            immunization.location = locationReference
-
-            val annotation = Annotation()
-            annotation.text = practitionerFacility
-            annotationList.add(annotation)
-        }
-        //Include a location
-        val location = FormatterClass().getSharedPref("selectedFacility", getApplication<Application>().applicationContext)
-        if (location != null) {
-            val annotation = Annotation()
-            annotation.text = location
-            annotationList.add(annotation)
-        }
-        if (annotationList.isNotEmpty()) immunization.note = annotationList
-
-
-        //Date administered
-
-        /**
-         * TODO: Set to pick the saved data not the current date
-         */
-
-        immunization.occurrenceDateTimeType.value = date
-
-        //Target Disease
-        val targetDisease = FormatterClass().getSharedPref(
-            "vaccinationTargetDisease",
-            getApplication<Application>().applicationContext
-        )
-        val protocolList = Immunization().protocolApplied
-        val immunizationProtocolAppliedComponent =
-            Immunization.ImmunizationProtocolAppliedComponent()
-
-        val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
-        val diseaseTargetCodeableConcept = CodeableConcept()
-        diseaseTargetCodeableConcept.text = targetDisease
-        diseaseTargetCodeableConceptList.add(diseaseTargetCodeableConcept)
-        immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
-
-        //Series - Name of vaccine series
-        val vaccinationSeries = FormatterClass().getSharedPref(
-            "vaccinationSeriesDoses",
-            getApplication<Application>().applicationContext
-        )
-        if (vaccinationSeries != null) {
-            immunizationProtocolAppliedComponent.series = vaccinationSeries
-        }
-
-        //Add Performer
-        val fhirPractitionerId = FormatterClass().getSharedPref(
-            "fhirPractitionerId",
-            getApplication<Application>().applicationContext
-        )
-        if (fhirPractitionerId != null){
-            val practitionerReference = Reference("Practitioner/$fhirPractitionerId")
-            val immunizationPerformerComponentList = ArrayList<Immunization.ImmunizationPerformerComponent>()
-            val immunizationPerformerComponent = Immunization.ImmunizationPerformerComponent()
-            immunizationPerformerComponent.actor = practitionerReference
-            immunizationPerformerComponentList.add(immunizationPerformerComponent)
-
-            immunization.performer = immunizationPerformerComponentList
-        }
-
-
-
-        //Dose number - Recommended number of doses for immunity
-        val vaccinationDoseNumber = FormatterClass().getSharedPref(
-            "vaccinationDoseNumber",
-            getApplication<Application>().applicationContext
-        )
-        if (vaccinationDoseNumber != null) {
-            val stringType = StringType()
-            stringType.value = vaccinationDoseNumber
-            immunizationProtocolAppliedComponent.seriesDoses = stringType
-        }
-
-        protocolList.add(immunizationProtocolAppliedComponent)
-
-        immunization.protocolApplied = protocolList
-
-        //Dose Quantity is the amount of vaccine administered
-        val dosage = FormatterClass().getSharedPref(
-            "vaccinationDoseQuantity",
-            getApplication<Application>().applicationContext
-        )
-        if (dosage != null) {
-            val nonDosage = FormatterClass().removeNonNumeric(dosage)
-            val bigDecimalValue = BigDecimal(nonDosage)
-            val simpleQuantity = SimpleQuantity()
-            simpleQuantity.value = bigDecimalValue
-            immunization.doseQuantity = simpleQuantity
-        }
-
-        //Administration Method
-        val vaccinationAdministrationMethod = FormatterClass().getSharedPref(
-            "vaccinationAdministrationMethod", getApplication<Application>().applicationContext
-        )
-        if (vaccinationAdministrationMethod != null) {
-            val codeableConcept = CodeableConcept()
-            codeableConcept.text = vaccinationAdministrationMethod
-            codeableConcept.id = generateUuid()
-
-            immunization.site = codeableConcept
-        }
-
-        //Batch number
-        val vaccinationBatchNumber = FormatterClass().getSharedPref(
-            "vaccinationBatchNumber", getApplication<Application>().applicationContext
-        )
-        if (vaccinationBatchNumber != null) {
-            immunization.lotNumber = vaccinationBatchNumber
-        }
-
-        //Expiration date
-        val vaccinationExpirationDate = FormatterClass().getSharedPref(
-            "vaccinationExpirationDate", getApplication<Application>().applicationContext
-        )
-        if (vaccinationExpirationDate != null) {
-            val dateExp = FormatterClass().convertStringToDate(
-                vaccinationExpirationDate, "YYYY-MM-DD"
-            )
-            if (dateExp != null) {
-                immunization.expirationDate = dateExp
-            }
-
-        }
-        //Vaccine code
-        val administeredProduct = FormatterClass().getSharedPref(
-            "administeredProduct", getApplication<Application>().applicationContext
-        )
-        //Get info on the vaccine
-        if (administeredProduct != null) {
-            val vaccineCode =
-                ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
-            if (vaccineCode != null) {
-                val vaccineCodeConcept = CodeableConcept()
-                vaccineCodeConcept.text = vaccineCode.vaccineName
-
-                val codingList = ArrayList<Coding>()
-                val vaccineCoding = Coding()
-                vaccineCoding.code = vaccineCode.vaccineCode
-                vaccineCoding.display = vaccineCode.vaccineName
-                codingList.add(vaccineCoding)
-                vaccineCodeConcept.coding = codingList
-
-                immunization.vaccineCode = vaccineCodeConcept
-            }
-        }
-
-        return immunization
-
-
-    }
 
     fun createImmunizationRecommendation(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            val immunizationId = FormatterClass().getSharedPref("immunizationId", context)
-            createNextImmunization(immunizationId)
+            createNextImmunization()
         }
     }
 
-    private suspend fun createNextImmunization(immunizationId: String?) {
+    private suspend fun createNextImmunization() {
 
         val formatterClass = FormatterClass()
 
@@ -490,7 +325,8 @@ class AdministerVaccineViewModel(
          */
         if (administeredProduct != null && patientId != null && immunizationDate != null) {
 
-            val date = formatterClass.convertStringToDate(immunizationDate, "MMM d yyyy")
+            //Make sure the format is the same as the immunizationDate
+            val date = formatterClass.convertStringToDate(immunizationDate, "EEE MMM dd HH:mm:ss 'GMT'Z yyyy")
 
             val immunizationHandler = ImmunizationHandler()
             val vaccineBasicVaccine =
@@ -667,6 +503,192 @@ class AdministerVaccineViewModel(
 
 
         }
+
+
+    }
+
+    //Create an immunization resource
+    private fun createImmunizationResource(
+        encounterId: String?,
+        patientId: String,
+        immunisationStatus: ImmunizationStatus,
+        date: Date
+    ): Immunization {
+
+        val immunization = Immunization()
+        val immunizationId = generateUuid()
+        if (encounterId != null){
+            val encounterReference = Reference("Encounter/$encounterId")
+            immunization.encounter = encounterReference
+        }
+        val patientReference = Reference("Patient/$patientId")
+
+        immunization.patient = patientReference
+        immunization.id = immunizationId
+
+        FormatterClass().saveSharedPref(
+            "immunizationId",
+            immunizationId,
+            getApplication<Application>().applicationContext
+        )
+        immunization.status = immunisationStatus
+
+        val annotationList = ArrayList<Annotation>()
+
+        val practitionerFacility = FormatterClass().getSharedPref("practitionerFacility", getApplication<Application>().applicationContext)
+        if (practitionerFacility != null){
+            val facilityDetails = practitionerFacility.replace("Location/","")
+            val locationReference = Reference("Location/$facilityDetails")
+            immunization.location = locationReference
+
+            val annotation = Annotation()
+            annotation.text = practitionerFacility
+            annotationList.add(annotation)
+        }
+        //Include a location
+        val location = FormatterClass().getSharedPref("selectedFacility", getApplication<Application>().applicationContext)
+        if (location != null) {
+            val annotation = Annotation()
+            annotation.text = location
+            annotationList.add(annotation)
+        }
+        if (annotationList.isNotEmpty()) immunization.note = annotationList
+
+
+        //Date administered
+
+        /**
+         * TODO: Set to pick the saved data not the current date
+         */
+
+        immunization.occurrenceDateTimeType.value = date
+
+        //Target Disease
+        val targetDisease = FormatterClass().getSharedPref(
+            "vaccinationTargetDisease",
+            getApplication<Application>().applicationContext
+        )
+        val protocolList = Immunization().protocolApplied
+        val immunizationProtocolAppliedComponent =
+            Immunization.ImmunizationProtocolAppliedComponent()
+
+        val diseaseTargetCodeableConceptList = immunizationProtocolAppliedComponent.targetDisease
+        val diseaseTargetCodeableConcept = CodeableConcept()
+        diseaseTargetCodeableConcept.text = targetDisease
+        diseaseTargetCodeableConceptList.add(diseaseTargetCodeableConcept)
+        immunizationProtocolAppliedComponent.targetDisease = diseaseTargetCodeableConceptList
+
+        //Series - Name of vaccine series
+        val vaccinationSeries = FormatterClass().getSharedPref(
+            "vaccinationSeriesDoses",
+            getApplication<Application>().applicationContext
+        )
+        if (vaccinationSeries != null) {
+            immunizationProtocolAppliedComponent.series = vaccinationSeries
+        }
+
+        //Add Performer
+        val fhirPractitionerId = FormatterClass().getSharedPref(
+            "fhirPractitionerId",
+            getApplication<Application>().applicationContext
+        )
+        if (fhirPractitionerId != null){
+            val practitionerReference = Reference("Practitioner/$fhirPractitionerId")
+            val immunizationPerformerComponentList = ArrayList<Immunization.ImmunizationPerformerComponent>()
+            val immunizationPerformerComponent = Immunization.ImmunizationPerformerComponent()
+            immunizationPerformerComponent.actor = practitionerReference
+            immunizationPerformerComponentList.add(immunizationPerformerComponent)
+
+            immunization.performer = immunizationPerformerComponentList
+        }
+
+
+
+        //Dose number - Recommended number of doses for immunity
+        val vaccinationDoseNumber = FormatterClass().getSharedPref(
+            "vaccinationDoseNumber",
+            getApplication<Application>().applicationContext
+        )
+        if (vaccinationDoseNumber != null) {
+            val stringType = StringType()
+            stringType.value = vaccinationDoseNumber
+            immunizationProtocolAppliedComponent.seriesDoses = stringType
+        }
+
+        protocolList.add(immunizationProtocolAppliedComponent)
+
+        immunization.protocolApplied = protocolList
+
+        //Dose Quantity is the amount of vaccine administered
+        val dosage = FormatterClass().getSharedPref(
+            "vaccinationDoseQuantity",
+            getApplication<Application>().applicationContext
+        )
+        if (dosage != null) {
+            val nonDosage = FormatterClass().removeNonNumeric(dosage)
+            val bigDecimalValue = BigDecimal(nonDosage)
+            val simpleQuantity = SimpleQuantity()
+            simpleQuantity.value = bigDecimalValue
+            immunization.doseQuantity = simpleQuantity
+        }
+
+        //Administration Method
+        val vaccinationAdministrationMethod = FormatterClass().getSharedPref(
+            "vaccinationAdministrationMethod", getApplication<Application>().applicationContext
+        )
+        if (vaccinationAdministrationMethod != null) {
+            val codeableConcept = CodeableConcept()
+            codeableConcept.text = vaccinationAdministrationMethod
+            codeableConcept.id = generateUuid()
+
+            immunization.site = codeableConcept
+        }
+
+        //Batch number
+        val vaccinationBatchNumber = FormatterClass().getSharedPref(
+            "vaccinationBatchNumber", getApplication<Application>().applicationContext
+        )
+        if (vaccinationBatchNumber != null) {
+            immunization.lotNumber = vaccinationBatchNumber
+        }
+
+        //Expiration date
+        val vaccinationExpirationDate = FormatterClass().getSharedPref(
+            "vaccinationExpirationDate", getApplication<Application>().applicationContext
+        )
+        if (vaccinationExpirationDate != null && vaccinationExpirationDate != "") {
+            val dateExp = FormatterClass().convertStringToDate(
+                vaccinationExpirationDate, "YYYY-MM-DD"
+            )
+            if (dateExp != null) {
+                immunization.expirationDate = dateExp
+            }
+
+        }
+        //Vaccine code
+        val administeredProduct = FormatterClass().getSharedPref(
+            "administeredProduct", getApplication<Application>().applicationContext
+        )
+        //Get info on the vaccine
+        if (administeredProduct != null) {
+            val basicVaccine =
+                ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
+            if (basicVaccine != null) {
+                val vaccineCodeConcept = CodeableConcept()
+                vaccineCodeConcept.text = basicVaccine.vaccineName
+
+                val codingList = ArrayList<Coding>()
+                val vaccineCoding = Coding()
+                vaccineCoding.code = basicVaccine.vaccineCode
+                vaccineCoding.display = basicVaccine.vaccineName
+                codingList.add(vaccineCoding)
+                vaccineCodeConcept.coding = codingList
+
+                immunization.vaccineCode = vaccineCodeConcept
+            }
+        }
+
+        return immunization
 
 
     }

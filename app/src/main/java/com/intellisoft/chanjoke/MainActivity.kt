@@ -270,6 +270,11 @@ class MainActivity : AppCompatActivity() {
             "new-patient-registration-paginated.json"
         )
 
+        FormatterClass().deleteSharedPref("patientYears", this)
+        FormatterClass().deleteSharedPref("patientWeeks", this)
+        FormatterClass().deleteSharedPref("patientDob", this)
+        FormatterClass().deleteSharedPref("patientId", this)
+
         startActivity(Intent(this@MainActivity, RegistrationActivity::class.java))
 //        findNavController(R.id.nav_host_fragment_activity_bottem_navigation).navigate(
 //            R.id.addPatientFragment,
