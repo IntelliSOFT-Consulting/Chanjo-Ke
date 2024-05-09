@@ -1,8 +1,6 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
 import android.content.Context
-import android.util.Log
-import com.intellisoft.chanjoke.fhir.data.DbVaccineSchedule
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 // Interface segregation principle
@@ -139,6 +137,26 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     /**
      * TODO: Check about the dosages
      */
+
+    val deworming = "IMDEWORM-"
+    val dewormingSeries = RoutineVaccine(
+        deworming,
+        "Worms",
+        9,
+        11742,
+        listOf(
+            BasicVaccine(deworming+"I", "Dose 1", "Oral", 52, arrayListOf(), "0.5ml","1"),
+            BasicVaccine(deworming+"II", "Dose 2", "Oral", 78, arrayListOf(), "0.5ml","2"),
+            BasicVaccine(deworming+"III", "Dose 3", "Oral", 104, arrayListOf(), "0.5ml","3"),
+            BasicVaccine(deworming+"IV", "Dose 4", "Oral", 130, arrayListOf(), "0.5ml","4"),
+            BasicVaccine(deworming+"V", "Dose 5", "Oral", 156, arrayListOf(), "0.5ml","5"),
+            BasicVaccine(deworming+"VI", "Dose 6", "Oral", 182, arrayListOf(), "0.5ml","6"),
+            BasicVaccine(deworming+"VII", "Dose 7", "Oral", 208, arrayListOf(), "0.5ml","7"),
+            BasicVaccine(deworming+"VII", "Dose 8", "Oral", 234, arrayListOf(), "0.5ml","8"),
+            BasicVaccine(deworming+"IX", "Dose 9", "Oral", 256, arrayListOf(), "0.5ml","9"),
+        )
+    )
+
     val bcg = "IMBCG-"
     val bcgSeries = RoutineVaccine(
         bcg,
@@ -444,7 +462,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
 
 
 
-    val routineList = listOf(polioSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries)
+    val routineList = listOf(polioSeries, bcgSeries, dptSeries, pcvSeries, measlesSeries,rotaSeries,vitaminASeries,malariaSeries,dewormingSeries)
     val nonRoutineList = listOf(covidMainSeries,yellowFeverSeries, rabiesMainSeries, influenzaSeries, tetanusToxoidSeries, hpvVaccineSeries)
     val pregnancyList = listOf(tetanusSeries)
 
