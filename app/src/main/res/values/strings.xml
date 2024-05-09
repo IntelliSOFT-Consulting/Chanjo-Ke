@@ -89,7 +89,9 @@
     <string name="update_password">Update Password</string>
     <string name="reset_code">Reset code</string>
     <string name="estimated_dob">Estimated DoB</string>
-    <string name="referrals_details">Referrals Details</string>
+    <string name="referral_details">Referral Details</string>
+    <string name="back">Back</string>
+    <string name="administer">Administer</string>
 
 
 </resources>

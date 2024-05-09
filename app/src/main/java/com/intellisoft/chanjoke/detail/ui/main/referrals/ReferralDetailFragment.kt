@@ -64,6 +64,21 @@ class ReferralDetailFragment : Fragment() {
         }
         setHasOptionsMenu(true)
         onBackPressed()
+
+
+        binding.apply {
+            previousButton.apply {
+                setOnClickListener {
+                    showCancelScreenerQuestionnaireAlertDialog()
+                }
+            }
+
+            nextButton.apply {
+                setOnClickListener {
+                    //proceed to administer the vaccine
+                }
+            }
+        }
     }
 
 
