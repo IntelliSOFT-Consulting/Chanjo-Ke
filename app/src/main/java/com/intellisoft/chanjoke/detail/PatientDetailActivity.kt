@@ -63,6 +63,7 @@ class PatientDetailActivity : AppCompatActivity() {
         binding = ActivityPatientDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         patientId = FormatterClass().getSharedPref("patientId", this).toString()
+
         val patientDob = FormatterClass().getSharedPref("patientDob", this).toString()
         val convertedDob = formatterClass.convertChildDateFormat(patientDob)
         if (convertedDob != null) {

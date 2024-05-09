@@ -936,6 +936,16 @@ class PatientDetailsViewModel(
             status = immunization.statusElement.value.name
         }
 
+
+        if (status == "NOTDONE"){
+            if (immunization.hasReasonCode()){
+                if (immunization.reasonCode.isNotEmpty() && immunization.reasonCode[0].hasText()){
+                    status = immunization.reasonCode[0].text
+                }
+            }
+        }
+
+
         /**
          * 1. Get the vaccine name, get series number, get the previous series number, get the previous Basic Vaccine
          * 2. From the Previous Basic Vaccine, get the date administered

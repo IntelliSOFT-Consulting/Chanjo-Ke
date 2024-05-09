@@ -281,16 +281,19 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     binding.groupLayout.addView(groupLayout)
 
                     if (patientDob != null){
-                       try{ val numberOfBirthWeek = formatterClass.calculateWeeksFromDate(patientDob!!)
-                        if (numberOfBirthWeek != null){
-                            val numberOfWeek = formatterClass.convertVaccineScheduleToWeeks(vaccineSchedule)
+                       try{
+                           val numberOfBirthWeek = formatterClass.calculateWeeksFromDate(patientDob!!)
 
-                            if (isWithinPlusOrMinus14(numberOfBirthWeek, numberOfWeek)){
-                                generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
-                            }
-                        }}catch (e:Exception){
-                            e.printStackTrace()
-                        }
+                           if (numberOfBirthWeek != null){
+                               val numberOfWeek = formatterClass.convertVaccineScheduleToWeeks(vaccineSchedule)
+
+                               if (isWithinPlusOrMinus14(numberOfBirthWeek, numberOfWeek)){
+                                   generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
+                               }
+                           }
+                       }catch (e:Exception){
+                           e.printStackTrace()
+                       }
                     }
                 }
             }

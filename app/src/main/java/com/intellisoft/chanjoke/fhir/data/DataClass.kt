@@ -34,6 +34,7 @@ data class DbVaccineListData(
 enum class Reasons {
     CONTRAINDICATE,
     NOT_ADMINISTERED,
+    COMPLETED
 }
 
 enum class StatusColors {
