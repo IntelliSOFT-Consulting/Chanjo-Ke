@@ -9,11 +9,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.Administrative
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.utils.AppUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -56,6 +59,7 @@ class ReferralAdapter(
     }
 
     override fun onBindViewHolder(holder: Pager2ViewHolder, position: Int) {
+        val payload = entryList[position]
         val tvType = entryList[position].authoredOn
         val tvDate = entryList[position].vaccineName
         try {
@@ -71,6 +75,13 @@ class ReferralAdapter(
         holder.tvName.text = tvDate
         holder.imvNextAction.apply {
             setOnClickListener {
+
+                FormatterClass().saveSharedPref(
+                    "selected_referral",
+                    Gson().toJson(payload),
+                    context
+                )
+
 
                 val patientId = FormatterClass().getSharedPref("patientId", context).toString()
                 val intent =

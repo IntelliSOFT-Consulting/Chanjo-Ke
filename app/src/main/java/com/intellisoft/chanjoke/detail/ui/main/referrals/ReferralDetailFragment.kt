@@ -10,11 +10,14 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentReferralDetailBinding
 import com.intellisoft.chanjoke.databinding.FragmentReferralsBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
+import com.intellisoft.chanjoke.fhir.data.CustomPatient
+import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
@@ -66,6 +69,8 @@ class ReferralDetailFragment : Fragment() {
         onBackPressed()
 
 
+        handleDataPopulation()
+
         binding.apply {
             previousButton.apply {
                 setOnClickListener {
@@ -78,6 +83,28 @@ class ReferralDetailFragment : Fragment() {
                     //proceed to administer the vaccine
                 }
             }
+        }
+    }
+
+    private fun handleDataPopulation() {
+        try {
+
+            val referral = FormatterClass().getSharedPref("selected_referral", requireContext())
+            if (referral != null) {
+                val data = Gson().fromJson(referral, DbServiceRequest::class.java)
+                binding.apply {
+                    referringCHPTextView.text = data.referringCHP
+                    vaccineReferredTextView.text = data.vaccineName
+                    detailsTextView.text = data.detailsGiven
+                    dateOfReferralTextView.text = data.referralDate
+                    scheduledVaccineDateTextView.text = data.scheduledDate
+                    dateVaccineAdministeredTextView.text = data.dateAdministered
+                    healthFacilityReferredToTextView.text = data.healthFacility
+
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

@@ -78,13 +78,26 @@ data class DbVaccineData(
     val status: String,
 )
 
+data class DbTempData(
+    val name: String,
+    val dob: String,
+    val gender: String,
+    val age: String,
+)
+
 data class DbServiceRequest(
     val logicalId: String,
     val status: String,
     val intent: String,
     var priority: String,
     val authoredOn: String,
-    val vaccineName:String
+    val vaccineName: String,
+    val referringCHP: String,
+    val detailsGiven: String,
+    val referralDate: String,
+    val scheduledDate: String,
+    val dateAdministered: String,
+    val healthFacility: String
 )
 
 data class AllergicReaction(
@@ -189,6 +202,7 @@ data class DbSignIn(
     val idNumber: String,
     val password: String
 )
+
 data class DbSetPasswordReq(
     val resetCode: String,
     val idNumber: String,
@@ -201,10 +215,12 @@ data class DbSignInResponse(
     val refresh_expires_in: String,
     val refresh_token: String,
 )
+
 data class DbResetPassword(
     val status: String,
     val response: String,
 )
+
 data class DbResetPasswordData(
     val idNumber: String,
     val email: String

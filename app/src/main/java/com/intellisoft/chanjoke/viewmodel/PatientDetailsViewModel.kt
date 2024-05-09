@@ -908,15 +908,27 @@ class PatientDetailsViewModel(
         val intent = if (data.hasIntent()) data.intent.toString() else ""
         val priority = if (data.hasPriority()) data.priority.toString() else ""
         val authoredOn = if (data.hasAuthoredOn()) data.authoredOn.toString() else ""
-        val vaccineName = if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasDisplay()) data.reasonCodeFirstRep.codingFirstRep.display else "" else "" else ""
-
+        val vaccineName =
+            if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasDisplay()) data.reasonCodeFirstRep.codingFirstRep.display else "" else "" else ""
+        val referringCHP = "CHP XYZ"
+        val detailsGiven = "This is a sample details of the referral"
+        val referralDate = "03 May 2024"
+        val scheduledDate = "13 May 2024"
+        val dateAdministered = "-"
+        val healthFacility = "Facility ABC"
         return DbServiceRequest(
             logicalId,
             status,
             intent,
             priority,
             authoredOn,
-            vaccineName
+            vaccineName,
+            referringCHP,
+            detailsGiven,
+            referralDate,
+            scheduledDate,
+            dateAdministered,
+            healthFacility
         )
     }
 

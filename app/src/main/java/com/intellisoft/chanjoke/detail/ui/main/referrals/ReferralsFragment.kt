@@ -19,12 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.QuestionnaireFragment
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentReferralsBinding
 import com.intellisoft.chanjoke.databinding.FragmentUpdateBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineAefiAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
+import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -104,16 +107,27 @@ class ReferralsFragment : Fragment() {
 
         loadServiceRequests()
 
+        try {
+            val referral = FormatterClass().getSharedPref("temp_data", requireContext())
+            if (referral != null) {
+                val data = Gson().fromJson(referral, DbTempData::class.java)
+                binding.apply {
+                    tvName.text = data.name
+                    tvAge.text = data.age
+                    tvGender.text = data.gender
+                    tvDob.text = data.dob
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
 
     }
 
     private fun loadServiceRequests() {
         try {
             val data = patientDetailsViewModel.loadServiceRequests()
-            data.forEach {
-                Timber.e("TAG **** ${it.authoredOn} \n ${it.vaccineName}")
-            }
-
             val vaccineAdapter =
                 ReferralAdapter(
                     data,
