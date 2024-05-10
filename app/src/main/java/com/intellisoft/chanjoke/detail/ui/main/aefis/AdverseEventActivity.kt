@@ -179,7 +179,6 @@ class AdverseEventActivity : AppCompatActivity() {
             if (adverseEvent != null) {
 
                 // Process the adverse event (e.g., display details, perform actions)
-                println("Found Adverse Event: ${adverseEvent.practitionerId}")
                 binding.apply {
                     healthcareWorkerTextView.apply {
                         text = adverseEvent.practitionerId.name

@@ -435,7 +435,10 @@ class PersonalFragment : Fragment() {
     }
 
     private fun calculateUserAge(valueCurrent: String) {
+
         val result = formatter.calculateAge(valueCurrent)
+
+
         binding.calculatedAge.setText(result)
 
         // check the year as well

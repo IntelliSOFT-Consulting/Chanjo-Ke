@@ -141,6 +141,16 @@
         android:name="com.intellisoft.chanjoke.UpdateVaccineHistoryFragment"
         android:label="fragment_update_vaccine_history"
         tools:layout="@layout/fragment_update_vaccine_history" />
+    <fragment
+        android:id="@+id/referralsFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.referrals.ReferralsFragment"
+        android:label="fragment_referrals"
+        tools:layout="@layout/fragment_referrals" />
+    <fragment
+        android:id="@+id/referralDetailFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.referrals.ReferralDetailFragment"
+        android:label="fragment_referral_detail"
+        tools:layout="@layout/fragment_referral_detail" />
 
 
 </navigation>

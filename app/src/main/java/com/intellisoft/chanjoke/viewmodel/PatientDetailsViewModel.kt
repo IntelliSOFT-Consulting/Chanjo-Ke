@@ -28,6 +28,7 @@ import com.intellisoft.chanjoke.fhir.data.Contraindication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
+import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
@@ -66,6 +67,7 @@ import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ResourceType
 import org.hl7.fhir.r4.model.RiskAssessment
+import org.hl7.fhir.r4.model.ServiceRequest
 import timber.log.Timber
 
 /**
@@ -310,8 +312,7 @@ class PatientDetailsViewModel(
                 sort(Encounter.DATE, Order.DESCENDING)
             }
             .map { getRecommendationData(it) }
-            .let { immunizationRecommendationList.addAll(it)}
-
+            .let { immunizationRecommendationList.addAll(it) }
 
 
         val dbRecommendationDetailsList = ArrayList<DbRecommendationDetails>()
@@ -330,45 +331,45 @@ class PatientDetailsViewModel(
                 var doseNumber = ""
                 var status = ""
 
-                if (recommendation.hasVaccineCode()){
-                    if (recommendation.vaccineCode[0].hasCoding()){
+                if (recommendation.hasVaccineCode()) {
+                    if (recommendation.vaccineCode[0].hasCoding()) {
                         vaccineCode = recommendation.vaccineCode[0].codingFirstRep.code
                     }
-                    if (recommendation.vaccineCode[0].hasText()){
+                    if (recommendation.vaccineCode[0].hasText()) {
                         vaccineName = recommendation.vaccineCode[0].text
                     }
                 }
-                if (recommendation.hasTargetDisease()){
-                    if (recommendation.targetDisease.hasText()){
+                if (recommendation.hasTargetDisease()) {
+                    if (recommendation.targetDisease.hasText()) {
                         targetDisease = recommendation.targetDisease.text
                     }
                 }
-                if (recommendation.hasDateCriterion()){
+                if (recommendation.hasDateCriterion()) {
                     val dateCriterionList = recommendation.dateCriterion
                     dateCriterionList.forEach { dateCriterion ->
 
-                        if (dateCriterion.hasCode()){
-                            if (dateCriterion.code.codingFirstRep.display == "Earliest-date-to-administer"){
+                        if (dateCriterion.hasCode()) {
+                            if (dateCriterion.code.codingFirstRep.display == "Earliest-date-to-administer") {
                                 earliestDate = dateCriterion.value.toString()
                             }
-                            if (dateCriterion.code.codingFirstRep.display == "Latest-date-to-administer"){
+                            if (dateCriterion.code.codingFirstRep.display == "Latest-date-to-administer") {
                                 latestDate = dateCriterion.value.toString()
                             }
                         }
                     }
                 }
-                if (recommendation.hasDescription()){
+                if (recommendation.hasDescription()) {
                     description = recommendation.description
                 }
-                if (recommendation.hasSeries()){
+                if (recommendation.hasSeries()) {
                     series = recommendation.series
                 }
-                if (recommendation.hasDoseNumberPositiveIntType()){
+                if (recommendation.hasDoseNumberPositiveIntType()) {
                     doseNumber = recommendation.doseNumberPositiveIntType.value.toString()
                 }
-                if(recommendation.hasForecastStatus()){
-                    if (recommendation.forecastStatus.hasCoding()){
-                        if (recommendation.forecastStatus.codingFirstRep.hasDisplay()){
+                if (recommendation.hasForecastStatus()) {
+                    if (recommendation.forecastStatus.hasCoding()) {
+                        if (recommendation.forecastStatus.codingFirstRep.hasDisplay()) {
                             status = recommendation.forecastStatus.codingFirstRep.display
                         }
                     }
@@ -573,6 +574,10 @@ class PatientDetailsViewModel(
         getVaccineListDetails()
     }
 
+    fun loadServiceRequests() = runBlocking {
+        getServiceRequests()
+    }
+
     fun getVaccineList() = runBlocking {
         getVaccineListDetailsOld()
     }
@@ -587,6 +592,21 @@ class PatientDetailsViewModel(
                 sort(AllergyIntolerance.DATE, Order.DESCENDING)
             }
             .map { createAllergyIntoleranceItem(it) }
+            .let { vaccineList.addAll(it) }
+
+
+        return ArrayList(vaccineList)
+    }
+
+    private suspend fun getServiceRequests(): ArrayList<DbServiceRequest> {
+
+        val vaccineList = ArrayList<DbServiceRequest>()
+
+        fhirEngine
+            .search<ServiceRequest> {
+                sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
+            }
+            .map { createServiceRequestItem(it) }
             .let { vaccineList.addAll(it) }
 
 
@@ -878,6 +898,37 @@ class PatientDetailsViewModel(
             doseNumberValue,
             dateScheduled,
             status
+        )
+    }
+
+    private fun createServiceRequestItem(data: ServiceRequest): DbServiceRequest {
+
+        val logicalId = if (data.hasId()) data.id.toString() else ""
+        val status = if (data.hasStatus()) data.status.toString() else ""
+        val intent = if (data.hasIntent()) data.intent.toString() else ""
+        val priority = if (data.hasPriority()) data.priority.toString() else ""
+        val authoredOn = if (data.hasAuthoredOn()) data.authoredOn.toString() else ""
+        val vaccineName =
+            if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasDisplay()) data.reasonCodeFirstRep.codingFirstRep.display else "" else "" else ""
+        val referringCHP = "CHP XYZ"
+        val detailsGiven = "This is a sample details of the referral"
+        val referralDate = "03 May 2024"
+        val scheduledDate = "13 May 2024"
+        val dateAdministered = "-"
+        val healthFacility = "Facility ABC"
+        return DbServiceRequest(
+            logicalId,
+            status,
+            intent,
+            priority,
+            authoredOn,
+            vaccineName,
+            referringCHP,
+            detailsGiven,
+            referralDate,
+            scheduledDate,
+            dateAdministered,
+            healthFacility
         )
     }
 
