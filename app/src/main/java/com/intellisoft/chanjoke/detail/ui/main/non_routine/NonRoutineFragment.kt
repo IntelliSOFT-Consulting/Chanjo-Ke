@@ -110,16 +110,6 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         return binding.root
     }
 
-    private fun checkAge() {
-        if (patientYears != null){
-            val patientYearsInt = patientYears!!.toIntOrNull()
-            if (patientYearsInt != null){
-                if (patientYearsInt > 12){
-                    getNonRoutine()
-                }
-            }
-        }
-    }
 
     override fun onResume() {
         super.onResume()
@@ -250,35 +240,37 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                             }
                         }
 
+                        vaccineList.sortBy { it.vaccineName }
+
                         /**
                          * Check if client is below 9 months; Maintain Yellow fever alone
                          * Otherwise have all non routines
                          */
                         var newVaccineList = ArrayList<DbVaccineScheduleChild>()
 
-                        if (patientYears != null){
-                            val patientYearsInt = patientYears!!.toIntOrNull()
-                            if (patientYearsInt != null){
-                                if (patientYearsInt in 1..12){
-                                    //Return only Yellow fever
-                                    newVaccineList = ArrayList(vaccineList.filter { it.vaccineName == "Yellow Fever" }.toMutableList())
-                                }else {
-                                    //Return all non routines
-
-                                    newVaccineList = vaccineList
-
-                                    if (patientYearsInt > 60){
-                                        vaccineList.removeIf { it.vaccineName.contains("Sinopharm") }
-                                    }
-
-                                }
-                            }
-                        }
+//                        if (patientYears != null){
+//                            val patientYearsInt = patientYears!!.toIntOrNull()
+//                            if (patientYearsInt != null){
+//                                if (patientYearsInt in 1..12){
+//                                    //Return only Yellow fever
+//                                    newVaccineList = ArrayList(vaccineList.filter { it.vaccineName == "Yellow Fever" }.toMutableList())
+//                                }else {
+//                                    //Return all non routines
+//
+//                                    newVaccineList = vaccineList
+//
+//                                    if (patientYearsInt > 60){
+//                                        vaccineList.removeIf { it.vaccineName.contains("Sinopharm") }
+//                                    }
+//
+//                                }
+//                            }
+//                        }
 
 
                         val adapter = VaccineDetailsAdapter(
                             patientDetailsViewModel,
-                            newVaccineList,
+                            vaccineList,
                             this@NonRoutineFragment,
                             requireContext())
 
