@@ -97,6 +97,10 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                     "selectedUnContraindicatedVaccine",
                     selectedVaccineList.joinToString(","),
                     requireContext())
+                formatterClass.saveSharedPref(
+                    "workflowVaccinationType",
+                    "NON-ROUTINE", requireContext()
+                )
 
                 val bottomSheet = BottomSheetDialog()
                 fragmentManager?.let { it1 ->
@@ -144,7 +148,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                     /**
                      * TODO: CHECK ON NON-ROUTINE
                      */
-                    val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
+                    val dbVaccineScheduleChild =  formatterClass.getVaccineChildNonRoutineStatus(
                         requireContext(),"NON-ROUTINE", keyValue, vaccineName, administeredList, recommendationList)
                     dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
                 }

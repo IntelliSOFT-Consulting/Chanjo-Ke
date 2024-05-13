@@ -298,7 +298,15 @@ class AdministerVaccineViewModel(
 
     fun createImmunizationRecommendation(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            createNextImmunization()
+            val formatterClass = FormatterClass()
+            val workflowVaccinationType = formatterClass.getSharedPref("workflowVaccinationType", context)
+
+            if (workflowVaccinationType == "NON-ROUTINE") {
+                createNextNonRoutineImmunization()
+            }else{
+                createNextImmunization()
+            }
+
         }
     }
 
@@ -343,8 +351,11 @@ class AdministerVaccineViewModel(
                 vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
 
             val targetDisease = seriesVaccine?.targetDisease
+
             val vaccineName = nextBasicVaccine?.vaccineName
             val vaccineCode = nextBasicVaccine?.vaccineCode
+
+
 
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
@@ -360,6 +371,7 @@ class AdministerVaccineViewModel(
 
             //Generate the next immunisation recommendation
             if (nextBasicVaccine != null && date != null) {
+
 
                 val administrativeWeeksSincePreviousList =
                     nextBasicVaccine.administrativeWeeksSincePrevious
@@ -386,6 +398,9 @@ class AdministerVaccineViewModel(
                 fhirEngine
                     .search<ImmunizationRecommendation> {
                         filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
+//                        filter(ImmunizationRecommendation.TARGET_DISEASE, {
+//                            value = of(patientId)
+//                        })
                         sort(Encounter.DATE, Order.DESCENDING)
                     }
                     .map { getRecommendationData(it) }
@@ -497,8 +512,11 @@ class AdministerVaccineViewModel(
 
                 }
 
-                val recommendation = immunizationNewRecommendationList[0]
-                updateResourceToDatabase(recommendation, "ImmRec")
+                if (immunizationNewRecommendationList.isNotEmpty()){
+                    val recommendation = immunizationNewRecommendationList[0]
+                    updateResourceToDatabase(recommendation, "ImmRec")
+                }
+
 
             }
 
@@ -507,6 +525,108 @@ class AdministerVaccineViewModel(
 
 
     }
+    private suspend fun createNextNonRoutineImmunization() {
+
+        val formatterClass = FormatterClass()
+
+        /**
+         * TODO: Check if the Vaccine exists
+         */
+
+        //Vaccine code
+        val administeredProduct = formatterClass.getSharedPref(
+            "administeredProduct", getApplication<Application>().applicationContext
+        )
+        val patientId = formatterClass.getSharedPref(
+            "patientId", getApplication<Application>().applicationContext
+        )
+        val immunizationDate = formatterClass.getSharedPref(
+            "immunizationDate", getApplication<Application>().applicationContext
+        )
+
+        /**
+         * Get the current administered product and generate the next vaccine
+         */
+        if (administeredProduct != null && patientId != null && immunizationDate != null) {
+
+            //Make sure the format is the same as the immunizationDate
+            val date = formatterClass.convertStringToDate(immunizationDate, "EEE MMM dd HH:mm:ss 'GMT'Z yyyy")
+
+            val immunizationHandler = ImmunizationHandler()
+            val vaccineBasicVaccine =
+                ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
+
+            val nextBasicVaccine = vaccineBasicVaccine?.let {
+                immunizationHandler.getNextDoseDetails(
+                    it
+                )
+            }
+
+            val seriesVaccine =
+                nextBasicVaccine?.let { immunizationHandler.getSeriesByBasicVaccine(it) }
+
+            val targetDisease = seriesVaccine?.targetDisease
+
+            val vaccineName = nextBasicVaccine?.vaccineName
+            val vaccineCode = nextBasicVaccine?.vaccineCode
+
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+                //Save resources to Shared preference
+                if (vaccineName != null && targetDisease != null) {
+                    FormatterClass().saveStockValue(
+                        vaccineName,
+                        targetDisease,
+                        getApplication<Application>().applicationContext
+                    )
+                }
+            }.join()
+
+            //Generate the next immunisation recommendation
+            if (nextBasicVaccine != null && date != null) {
+
+                val administrativeWeeksSincePreviousList = nextBasicVaccine.administrativeWeeksSincePrevious
+                val administrativeWeeksSinceDob = nextBasicVaccine.administrativeWeeksSinceDOB
+//
+
+                //Check if the above list is more than one.
+
+                val nextImmunizationDate = if (administrativeWeeksSincePreviousList.isNotEmpty()) {
+                    //This is not the first vaccine, check on administrative weeks after birth
+                    val weeksToAdd = administrativeWeeksSincePreviousList[0]
+                    formatterClass.getNextDate(date, weeksToAdd)
+                } else {
+                    formatterClass.getNextDate(date, administrativeWeeksSinceDob.toDouble())
+                }
+                val localDate = formatterClass.convertDateToLocalDate(nextImmunizationDate)
+                val administrativeWeeksSinceDOBLong = administrativeWeeksSinceDob.toLong()
+                val earliestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, administrativeWeeksSinceDOBLong)
+                val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
+
+
+                /**
+                 * Get the immunization recommendation
+                 */
+
+                val immunizationRecommendation = createImmunizationRecommendationResource(
+                    patientId,
+                    earliestAdministerLocalDate,
+                    "Due",
+                    "Next Immunization date",
+                    null
+                )
+
+                saveResourceToDatabase(immunizationRecommendation, "ImmmRec")
+
+            }
+
+
+        }
+
+
+    }
+
+
 
     //Create an immunization resource
     private fun createImmunizationResource(
@@ -879,7 +999,7 @@ class AdministerVaccineViewModel(
                 ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
 
             val codeableConcept = CodeableConcept()
-            codeableConcept.text = "Earliest date to give"
+            codeableConcept.text = "Earliest-date-to-administer"
 
             dateCriterion.code = codeableConcept
             dateCriterion.value = recommendedDate

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -204,6 +205,7 @@ class FormatterClass {
             "appointmentVaccineTitle",
             "appointmentFlow",
             "patientGender",
+            "workflowVaccinationType",
         )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
@@ -1077,8 +1079,11 @@ class FormatterClass {
         val numberOfWeek = calculateWeeksFromDate(patientDob)
         val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
         val seriesVaccine = basicVaccine?.let { immunizationHandler.getSeriesByBasicVaccine(it) }
-
-
+        val nextBasicVaccine = basicVaccine?.let { immunizationHandler.getNextDoseDetails(it) }
+        val previousBasicVaccine = seriesVaccine?.let {
+            immunizationHandler.getPreviousBasicVaccineInSeries(
+                it, basicVaccine.doseNumber)
+        }
 
         val vaccineCode = basicVaccine?.vaccineCode
         val targetDisease = seriesVaccine?.targetDisease
@@ -1133,10 +1138,10 @@ class FormatterClass {
                                 val dateScheduleDate = dateScheduleFormat.parse(dateAdministered)
 
                                 val strDate = calculateNextVaccineDate(dateScheduleFormat,dateScheduleDate, administrativeWeeksSincePreviousList)
-                                if (strDate != null){
-                                    dateValue = strDate
-                                    canBeVaccinated = true
-                                }
+//                                if (strDate != null){
+//                                    dateValue = strDate
+//                                    canBeVaccinated = true
+//                                }
 
                             }
                         }
@@ -1149,11 +1154,10 @@ class FormatterClass {
             }
             //Yellow Fever
             if (targetDisease == "Yellow Fever"){
-                canBeVaccinated = false
-                isVaccinatedValue = true
                 val yellowFever = instancesOfVaccines.find { it.vaccineName == "Yellow Fever" }
                 if (yellowFever != null){
                     statusValue = yellowFever.status
+                    isVaccinatedValue = true
                 }else{
                     canBeVaccinated = true
                 }
@@ -1176,28 +1180,32 @@ class FormatterClass {
 
                 if (patientYears != null && patientYears in 18..60){
                     //Sinopharm
+                    if (sinopharm1 != null){
+                        val administrativeWeeksSincePreviousSinopharm1List = basicVaccine.administrativeWeeksSincePrevious
+                        val dateAdministeredSinopharm1 = sinopharm1.dateAdministered
+                        val dateScheduleDateSinopharm1 = dateAdministeredSinopharm1.let { dateScheduleFormat.parse(it) }
+                        val strDateSinopharm1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateSinopharm1, administrativeWeeksSincePreviousSinopharm1List)
 
-                    val administrativeWeeksSincePreviousSinopharm1List = basicVaccine.administrativeWeeksSincePrevious
-                    val dateAdministeredSinopharm1 = sinopharm1?.dateAdministered
-                    val dateScheduleDateSinopharm1 = dateAdministeredSinopharm1?.let { dateScheduleFormat.parse(it) }
-                    val strDateSinopharm1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateSinopharm1, administrativeWeeksSincePreviousSinopharm1List)
-
-                    if (strDateSinopharm1 != null && sinopharm2 == null && vaccineName == "Sinopharm 2nd Dose"){
-                        dateValue = strDateSinopharm1
-                        canBeVaccinated = true
-                    }else if (sinopharm2 != null && sinopharm1 != null){
-                        canBeVaccinated = false
-                    }else if (sinopharm2 == null && sinopharm1 == null && vaccineName == "Sinopharm 1st Dose"){
-                        canBeVaccinated = true
-                    }else{
-                        canBeVaccinated = false
+//                        if (strDateSinopharm1 != null && sinopharm2 == null && vaccineName == "Sinopharm 2nd Dose"){
+//                            dateValue = strDateSinopharm1
+//                            canBeVaccinated = true
+//                        }else if (sinopharm2 != null ){
+//                            isVaccinatedValue = true
+//                            canBeVaccinated = false
+//                        }else if (vaccineName == "Sinopharm 1st Dose"){
+//                            canBeVaccinated = true
+//                        }else{
+//                            canBeVaccinated = false
+//                        }
                     }
+
                 }
 
                 if (patientYears != null && patientYears >= 18){
 
                     //John and Johnson
                     if (jnj != null) {
+                        isVaccinatedValue = true
                         canBeVaccinated = false
                     }
 
@@ -1209,16 +1217,17 @@ class FormatterClass {
                         val dateScheduleDate = dateAdministered.let { dateScheduleFormat.parse(it) }
                         val strDateAstra1 = calculateNextVaccineDate(dateScheduleFormat,dateScheduleDate, administrativeWeeksSincePreviousList)
 
-                        if (strDateAstra1 != null && astrazeneca2 == null && vaccineName == "Astrazeneca 2nd Dose"){
-                            dateValue = strDateAstra1
-                            canBeVaccinated = true
-                        }else if (astrazeneca2 != null){
-                            canBeVaccinated = false
-                        }else if (vaccineName == "Astrazeneca 1st Dose"){
-                            canBeVaccinated = true
-                        }else{
-                            canBeVaccinated = false
-                        }
+//                        if (strDateAstra1 != null && astrazeneca2 == null && vaccineName == "Astrazeneca 2nd Dose"){
+//                            dateValue = strDateAstra1
+//                            canBeVaccinated = true
+//                        }else if (astrazeneca2 != null){
+//                            isVaccinatedValue = true
+//                            canBeVaccinated = false
+//                        }else if (vaccineName == "Astrazeneca 1st Dose"){
+//                            canBeVaccinated = true
+//                        }else{
+//                            canBeVaccinated = false
+//                        }
                     }
 
 
@@ -1230,16 +1239,17 @@ class FormatterClass {
                         val dateScheduleDatePfizer1 = dateAdministeredPfizer1.let { dateScheduleFormat.parse(it) }
                         val strDatePfizer1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDatePfizer1, administrativeWeeksSincePreviousPfizer1List)
 
-                        if (strDatePfizer1 != null && pfizer2 == null && vaccineName == "Pfizer-BioNTech 2nd Dose"){
-                            dateValue = strDatePfizer1
-                            canBeVaccinated = true
-                        }else if (pfizer2 != null){
-                            canBeVaccinated = false
-                        }else if (vaccineName == "Pfizer-BioNTech 1st Dose"){
-                            canBeVaccinated = true
-                        }else{
-                            canBeVaccinated = false
-                        }
+//                        if (strDatePfizer1 != null && pfizer2 == null && vaccineName == "Pfizer-BioNTech 2nd Dose"){
+//                            dateValue = strDatePfizer1
+//                            canBeVaccinated = true
+//                        }else if (pfizer2 != null){
+//                            isVaccinatedValue = true
+//                            canBeVaccinated = false
+//                        }else if (vaccineName == "Pfizer-BioNTech 1st Dose"){
+//                            canBeVaccinated = true
+//                        }else{
+//                            canBeVaccinated = false
+//                        }
                     }
 
 
@@ -1251,16 +1261,17 @@ class FormatterClass {
                         val dateScheduleDateModerna1 = dateAdministeredModerna1.let { dateScheduleFormat.parse(it) }
                         val strDateModerna1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateModerna1, administrativeWeeksSincePreviousModerna1List)
 
-                        if (strDateModerna1 != null && moderna2 == null && vaccineName == "Moderna 2nd Dose"){
-                            dateValue = strDateModerna1
-                            canBeVaccinated = true
-                        }else if (moderna2 != null){
-                            canBeVaccinated = false
-                        }else if (vaccineName == "Moderna 1st Dose"){
-                            canBeVaccinated = true
-                        }else{
-                            canBeVaccinated = false
-                        }
+//                        if (strDateModerna1 != null && moderna2 == null && vaccineName == "Moderna 2nd Dose"){
+//                            dateValue = strDateModerna1
+//                            canBeVaccinated = true
+//                        }else if (moderna2 != null){
+//                            isVaccinatedValue = true
+//                            canBeVaccinated = false
+//                        }else if (vaccineName == "Moderna 1st Dose"){
+//                            canBeVaccinated = true
+//                        }else{
+//                            canBeVaccinated = false
+//                        }
                     }
 
 
@@ -1296,13 +1307,20 @@ class FormatterClass {
                     val dateScheduleDateInfluenza1 = dateAdministeredInfluenza1.let { dateScheduleFormat.parse(it) }
                     val strDateInfluenza1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateInfluenza1, administrativeWeeksSincePreviousInfluenza1List)
 
-                    if (strDateInfluenza1 != null && influenza2 == null && vaccineName == "Influenza 2nd Dose"){
-                        dateValue = strDateInfluenza1
-                        canBeVaccinated = true
+//                    if (strDateInfluenza1 != null && influenza2 == null && vaccineName == "Influenza 2nd Dose"){
+//                        dateValue = strDateInfluenza1
+//                        canBeVaccinated = true
+//                    }else{
+//                        isVaccinatedValue = true
+//                        canBeVaccinated = false
+//                    }
+                }else{
+                    if (influenza2 != null){
+                        isVaccinatedValue = true
+                        canBeVaccinated = false
                     }
                 }
 
-                isVaccinatedValue = influenza1 != null || influenza2 != null
                 statusValue = influenza1?.status?: influenza2?.status ?: ""
 
             }
@@ -1317,36 +1335,47 @@ class FormatterClass {
                     val dateScheduleDateRabies = dateAdministeredRabies.let { dateScheduleFormat.parse(it) }
                     val strDateRabies = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateRabies, administrativeWeeksSincePreviousRabiesList)
 
-                    if (strDateRabies != null){
-                        dateValue = strDateRabies
-                        canBeVaccinated = true
-                    }
+//                    if (strDateRabies != null){
+//                        dateValue = strDateRabies
+//                        canBeVaccinated = true
+//                    }
 
                     isVaccinatedValue = true
                     statusValue = rabiesDose.status
 
+                }else{
+                    isVaccinatedValue = true
+                    canBeVaccinated = true
                 }
 
             }
             //Tetanus
             if (targetDisease == "Tetanus"){
-                val tetanus = instancesOfVaccines.lastOrNull()
-                if (tetanus != null){
+                Log.e("---->","<-----")
 
-                    val administrativeWeeksSincePreviousList = basicVaccine.administrativeWeeksSincePrevious
-                    val dateAdministered = tetanus.dateAdministered
-                    val dateScheduleDate = dateAdministered.let { dateScheduleFormat.parse(it) }
-                    val strDate = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDate, administrativeWeeksSincePreviousList)
+                //Check if there is a tetanus dose
+                val tetanus = instancesOfVaccines.find { it.vaccineName == vaccineName }
+                dateValue = tetanus?.dateAdministered ?: ""
+                val administrativeWeeksSincePrevious = basicVaccine.administrativeWeeksSincePrevious
 
-                    if (strDate != null){
-                        dateValue = strDate
-                        canBeVaccinated = true
-                    }
+                println("vaccineName $vaccineName")
+                println("tetanus $tetanus")
+                println("previousBasicVaccine $previousBasicVaccine")
 
-                    isVaccinatedValue = true
-                    statusValue = tetanus.status
+                /**
+                 * 1. Get administrativeWeeksSincePrevious for the current passed basic vaccine
+                 * 2. Get the previous basic vaccine
+                 * 3. Check if the previous basic vaccine has a tetanus dose
+                 * 4. If the previous basic vaccine has a tetanus dose, get the date administered of the previous basic vaccine
+                 * 5. Calculate the date of the next tetanus dose; should be date administered of the previous basic vaccine + administrativeWeeksSincePrevious
+                 */
 
-                }
+
+
+
+                Log.e("---->","<-----")
+
+
             }
         }
 
@@ -1360,6 +1389,8 @@ class FormatterClass {
         if (statusValue == Reasons.COMPLETED.name) {
             statusColor = StatusColors.GREEN.name
         }
+
+        canBeVaccinated  = true
 
         return DbVaccineScheduleChild(
             vaccineName,
@@ -1376,7 +1407,10 @@ class FormatterClass {
         dateScheduleFormat: SimpleDateFormat,
         dateScheduleDate: Date?,
         administrativeWeeksSincePreviousList: ArrayList<Double>
-    ): String? {
+    ): Pair<Boolean, String?> {
+
+        println("dateScheduleDate $dateScheduleDate")
+        println("administrativeWeeksSincePreviousList $administrativeWeeksSincePreviousList")
 
         if(dateScheduleDate != null && administrativeWeeksSincePreviousList.isNotEmpty()){
             // Now, you can use newDateForVaccine2 as the new date for HPV Vaccine 2
@@ -1385,12 +1419,14 @@ class FormatterClass {
 
             //Convert from Double to Long
             val newDateAdministered = dateSchedule.plusWeeks(administrativeWeeksSincePrevious.toLong())
+            println("newDateAdministered $newDateAdministered")
+
             if (newDateAdministered != null) {
 
-                //Convert newDateAdministered to String
-                val newDateAdministeredStr = dateScheduleFormat.format(newDateAdministered)
+                val newDateAdministeredStr = convertLocalDateToDate(newDateAdministered)
 
-                val newDateAdministeredDate = dateScheduleFormat.parse(newDateAdministeredStr)
+                val newDateAdministeredDate = convertStringToDate(newDateAdministeredStr, "yyyy-MM-dd")
+                println("newDateAdministeredDate $newDateAdministeredDate")
 
                 if (newDateAdministeredDate != null){
                     val performCalculationPair = performCalculation(newDateAdministeredDate)
@@ -1401,17 +1437,20 @@ class FormatterClass {
                     // Combine the conditions
                     val isWithinRange = isAfterToday && isWithin14Days
 
-                    if (isWithinRange) {
-                        //Convert newDateAdministeredDate to String
-                        val localDate = convertDateToLocalDate(newDateAdministeredDate)
-                        return convertLocalDateToDate(localDate)
+                    println("isAfterToday $isAfterToday")
+                    println("isWithin14Days $isWithin14Days")
+                    //Convert newDateAdministeredDate to String
+                    val localDate = convertDateToLocalDate(newDateAdministeredDate)
+                    val newCalculatedDateAdministeredStr = convertLocalDateToDate(localDate)
 
-                    }
+                    return Pair(isWithinRange, newCalculatedDateAdministeredStr)
+
+
                 }
 
             }
         }
-        return null
+        return Pair(false, null)
 
 
     }

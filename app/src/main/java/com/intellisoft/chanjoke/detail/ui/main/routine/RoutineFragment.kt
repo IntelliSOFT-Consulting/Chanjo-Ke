@@ -116,6 +116,10 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     "selectedUnContraindicatedVaccine",
                     selectedVaccineList.joinToString(","),
                     requireContext())
+                formatterClass.saveSharedPref(
+                    "workflowVaccinationType",
+                    "ROUTINE", requireContext()
+                )
 
                 val bottomSheet = BottomSheetDialog()
                 fragmentManager?.let { it1 ->
