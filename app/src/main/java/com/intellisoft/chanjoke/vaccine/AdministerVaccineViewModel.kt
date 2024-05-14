@@ -1049,6 +1049,8 @@ class AdministerVaccineViewModel(
                 val baseVaccineDetails =
                     immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
                 if (baseVaccineDetails != null) {
+
+                    //Contraindicated vaccine code
                     val vaccineCode = baseVaccineDetails.vaccineCode
                     val contraindicationCodeableConceptList = ArrayList<CodeableConcept>()
                     val codeableConceptContraindicatedVaccineCode = CodeableConcept()
@@ -1056,9 +1058,12 @@ class AdministerVaccineViewModel(
                     contraindicationCodeableConceptList.add(
                         codeableConceptContraindicatedVaccineCode
                     )
-
                     immunizationRequest.contraindicatedVaccineCode =
                         contraindicationCodeableConceptList
+
+                    //Vaccine code
+                    immunizationRequest.vaccineCode = contraindicationCodeableConceptList
+
                 }
             }
         }
