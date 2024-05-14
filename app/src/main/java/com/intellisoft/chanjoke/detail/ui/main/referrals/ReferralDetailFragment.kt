@@ -1,6 +1,5 @@
 package com.intellisoft.chanjoke.detail.ui.main.referrals
 
-import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,30 +8,18 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.fhir.FhirEngine
-import com.google.android.fhir.datacapture.QuestionnaireFragment
 import com.google.gson.Gson
+import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.databinding.FragmentReferralDetailBinding
 import com.intellisoft.chanjoke.databinding.FragmentReferralsBinding
-import com.intellisoft.chanjoke.databinding.FragmentUpdateBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
-import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineAefiAdapter
-import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
-import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
-import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
-import com.intellisoft.chanjoke.viewmodel.ScreenerViewModel
-import timber.log.Timber
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,10 +28,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ReferralsFragment.newInstance] factory method to
+ * Use the [ReferralDetailFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ReferralsFragment : Fragment() {
+class ReferralDetailFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -57,19 +44,13 @@ class ReferralsFragment : Fragment() {
         }
     }
 
-    private val viewModel: ScreenerViewModel by viewModels()
-    private lateinit var binding: FragmentReferralsBinding
-    private lateinit var patientDetailsViewModel: PatientDetailsViewModel
-    private lateinit var patientId: String
-    private lateinit var fhirEngine: FhirEngine
-    private val formatterClass = FormatterClass()
-    private lateinit var layoutManager: RecyclerView.LayoutManager
+    private lateinit var binding: FragmentReferralDetailBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentReferralsBinding.inflate(inflater, container, false)
+        binding = FragmentReferralDetailBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -87,59 +68,46 @@ class ReferralsFragment : Fragment() {
         setHasOptionsMenu(true)
         onBackPressed()
 
-        fhirEngine = FhirApplication.fhirEngine(requireContext())
-        patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
-        patientDetailsViewModel = ViewModelProvider(
-            this,
-            PatientDetailsViewModelFactory(
-                requireContext().applicationContext as Application,
-                fhirEngine,
-                patientId
-            )
-        )[PatientDetailsViewModel::class.java]
-        layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-        binding.aefiParentList.layoutManager = layoutManager
-        binding.aefiParentList.setHasFixedSize(true)
 
-        loadServiceRequests()
+        handleDataPopulation()
 
+        binding.apply {
+            previousButton.apply {
+                setOnClickListener {
+                    showCancelScreenerQuestionnaireAlertDialog()
+                }
+            }
+
+            nextButton.apply {
+                setOnClickListener {
+                    //proceed to administer the vaccine
+                }
+            }
+        }
+    }
+
+    private fun handleDataPopulation() {
         try {
-            val referral = FormatterClass().getSharedPref("temp_data", requireContext())
+
+            val referral = FormatterClass().getSharedPref("selected_referral", requireContext())
             if (referral != null) {
-                val data = Gson().fromJson(referral, DbTempData::class.java)
+                val data = Gson().fromJson(referral, DbServiceRequest::class.java)
                 binding.apply {
-                    tvName.text = data.name
-                    tvAge.text = data.age
-                    tvGender.text = data.gender
-                    tvDob.text = data.dob
+                    referringCHPTextView.text = data.referringCHP
+                    vaccineReferredTextView.text = data.vaccineName
+                    detailsTextView.text = data.detailsGiven
+                    dateOfReferralTextView.text = data.referralDate
+                    scheduledVaccineDateTextView.text = data.scheduledDate
+                    dateVaccineAdministeredTextView.text = data.dateAdministered
+                    healthFacilityReferredToTextView.text = data.healthFacility
+
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
-
     }
 
-    private fun loadServiceRequests() {
-        try {
-            val data = patientDetailsViewModel.loadServiceRequests()
-            val vaccineAdapter =
-                ReferralAdapter(
-                    data,
-                    requireContext()
-                )
-
-            binding.aefiParentList.adapter = vaccineAdapter
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -152,10 +120,10 @@ class ReferralsFragment : Fragment() {
         }
     }
 
-
     private fun showCancelScreenerQuestionnaireAlertDialog() {
         val patientId = FormatterClass().getSharedPref("patientId", requireContext())
-        val intent = Intent(context, PatientDetailActivity::class.java)
+        val intent = Intent(context, MainActivity::class.java)
+        intent.putExtra("functionToCall", NavigationDetails.REFERRALS.name)
         intent.putExtra("patientId", patientId)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         requireContext().startActivity(intent)
@@ -167,7 +135,6 @@ class ReferralsFragment : Fragment() {
         }
     }
 
-
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -175,12 +142,12 @@ class ReferralsFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ReferralsFragment.
+         * @return A new instance of fragment ReferralDetailFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ReferralsFragment().apply {
+            ReferralDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

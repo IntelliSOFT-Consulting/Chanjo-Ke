@@ -216,6 +216,16 @@ class CaregiverFragment : Fragment() {
         if (existingCareGiverIndex != -1) {
             careGivers.remove(careGiver)
             adapter.removeItem(careGiver)
+
+            /**
+             * Clear form data
+             **/
+
+            binding.apply {
+                identificationType.setText(null, false)
+                name.text = null
+                phone.text = null
+            }
         }
     }
 

@@ -26,11 +26,13 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
 import com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment
 import com.intellisoft.chanjoke.detail.ui.main.referrals.ReferralsFragment
 import com.intellisoft.chanjoke.detail.ui.main.registration.CompleteDetailsActivity
 import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
+import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
@@ -236,18 +238,24 @@ class PatientDetailActivity : AppCompatActivity() {
                         }
 
                         "Referrals" -> {
-//                            adapterSection.removeAllFragments()
-//                            adapterSection.notifyDataSetChanged()
-//                            patientId = FormatterClass().getSharedPref(
-//                                "patientId",
-//                                this@PatientDetailActivity
-//                            ).toString()
-//
-//                            val bundle =
-//                                bundleOf("patient_id" to patientId)
-//                            val referrals = ReferralsFragment()
-//                            referrals.arguments = bundle
-//                            adapterSection.addFragment(referrals, "Referrals")
+
+                            // temporarily store details
+                            val temp = DbTempData(
+                                name = binding.tvName.text.toString(),
+                                dob =  binding.tvDob.text.toString(),
+                                gender =  binding.tvGender.text.toString(),
+                                age =  binding.tvAge.text.toString(),
+                            )
+                            FormatterClass().saveSharedPref(
+                                "temp_data",
+                                Gson().toJson(temp),
+                                this@PatientDetailActivity
+                            )
+                            val intent =
+                                Intent(this@PatientDetailActivity, MainActivity::class.java)
+                            intent.putExtra("functionToCall", NavigationDetails.REFERRALS.name)
+                            intent.putExtra("patientId", patientId)
+                            startActivity(intent)
 
                         }
 

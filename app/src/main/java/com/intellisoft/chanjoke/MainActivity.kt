@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
             "registerFunction" -> {
                 registerFunction()
             }
+
             "listClients" -> {
                 navController.navigate(R.id.patient_list)
             }
@@ -114,13 +115,14 @@ class MainActivity : AppCompatActivity() {
             NavigationDetails.APPOINTMENT.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
-                    contraindicationFunction(patientId,  R.id.appointmentsFragment)
+                    contraindicationFunction(patientId, R.id.appointmentsFragment)
                 }
             }
+
             NavigationDetails.VACCINE_DETAILS.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
-                    contraindicationFunction(patientId,  R.id.vaccineDetailsFragment)
+                    contraindicationFunction(patientId, R.id.vaccineDetailsFragment)
                 }
             }
 
@@ -134,12 +136,12 @@ class MainActivity : AppCompatActivity() {
             NavigationDetails.UPDATE_VACCINE_DETAILS.name -> {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
-                    contraindicationFunction(patientId,  R.id.updateVaccineHistoryFragment)
+                    contraindicationFunction(patientId, R.id.updateVaccineHistoryFragment)
                 }
             }
 
             NavigationDetails.CONTRAINDICATIONS.name -> {
-                contraindicationFunction("",  R.id.contraindicationsFragment)
+                contraindicationFunction("", R.id.contraindicationsFragment)
             }
 
             NavigationDetails.LIST_VACCINE_DETAILS.name -> {
@@ -190,6 +192,20 @@ class MainActivity : AppCompatActivity() {
                 val patientId = intent.getStringExtra("patientId")
                 if (patientId != null) {
                     navController.navigate(R.id.editPatientFragment)
+                }
+            }
+
+            NavigationDetails.REFERRALS.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    navController.navigate(R.id.referralsFragment)
+                }
+            }
+
+            NavigationDetails.REFERRAL_DETAILS.name -> {
+                val patientId = intent.getStringExtra("patientId")
+                if (patientId != null) {
+                    navController.navigate(R.id.referralDetailFragment)
                 }
             }
         }
@@ -261,9 +277,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun registerFunction() {
-        formatter.deleteSharedPref("personal",this)
-        formatter.deleteSharedPref("personal",this)
-        formatter.deleteSharedPref("personal",this)
+        formatter.deleteSharedPref("personal", this)
+        formatter.deleteSharedPref("personal", this)
+        formatter.deleteSharedPref("personal", this)
         val bundle = Bundle()
         bundle.putString(
             AddPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY,
