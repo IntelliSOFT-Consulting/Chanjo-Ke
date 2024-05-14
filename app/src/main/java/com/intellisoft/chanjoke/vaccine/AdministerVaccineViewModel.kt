@@ -596,10 +596,9 @@ class AdministerVaccineViewModel(
                     formatterClass.getNextDate(date, administrativeWeeksSinceDob.toDouble())
                 }
                 val localDate = formatterClass.convertDateToLocalDate(nextImmunizationDate)
-                val administrativeWeeksSinceDOBLong = administrativeWeeksSinceDob.toLong()
-                val earliestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, administrativeWeeksSinceDOBLong)
-                val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
+                val localDateString = formatterClass.convertLocalDateToDate(localDate)
 
+                val earliestAdministerLocalDate = formatterClass.convertStringToDate(localDateString, "yyyy-MM-dd")
 
                 /**
                  * Get the immunization recommendation
@@ -1050,14 +1049,32 @@ class AdministerVaccineViewModel(
                     immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
                 if (baseVaccineDetails != null) {
 
-                    //Contraindicated vaccine code
                     val vaccineCode = baseVaccineDetails.vaccineCode
+                    val vaccineName = baseVaccineDetails.vaccineName
+
+                    val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(baseVaccineDetails)
+                    val nhdd = seriesVaccine?.NHDD ?: ""
+
                     val contraindicationCodeableConceptList = ArrayList<CodeableConcept>()
+
                     val codeableConceptContraindicatedVaccineCode = CodeableConcept()
-                    codeableConceptContraindicatedVaccineCode.text = vaccineCode
-                    contraindicationCodeableConceptList.add(
-                        codeableConceptContraindicatedVaccineCode
-                    )
+                    codeableConceptContraindicatedVaccineCode.id = generateUuid()
+
+                    codeableConceptContraindicatedVaccineCode.text = vaccineName
+
+                    val codeableConceptContraindicatedVaccineCodeList = ArrayList<Coding>()
+                    val codeableConceptContraindicatedVaccineCodeCoding = Coding()
+                    codeableConceptContraindicatedVaccineCodeCoding.code = nhdd.toString()
+                    codeableConceptContraindicatedVaccineCodeCoding.display = vaccineCode
+                    codeableConceptContraindicatedVaccineCodeCoding.system = "http://snomed.info/sct"
+                    codeableConceptContraindicatedVaccineCodeList.add(codeableConceptContraindicatedVaccineCodeCoding)
+                    codeableConceptContraindicatedVaccineCode.coding = codeableConceptContraindicatedVaccineCodeList
+
+                    contraindicationCodeableConceptList.add(codeableConceptContraindicatedVaccineCode)
+
+
+
+                    //Contraindicated vaccine code
                     immunizationRequest.contraindicatedVaccineCode =
                         contraindicationCodeableConceptList
 
