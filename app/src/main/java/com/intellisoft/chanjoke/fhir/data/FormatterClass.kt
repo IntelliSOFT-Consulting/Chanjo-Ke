@@ -127,6 +127,9 @@ class FormatterClass {
     fun convertViewDateFormats(inputDate: String): String? {
         return mainConvertDate("dd-MM-yyyy", inputDate)
     }
+    fun convertViewFormats(inputDate: String): String? {
+        return mainConvertDate("MMM d yyyy", inputDate)
+    }
 
     private fun mainConvertDate(pattern: String, inputDate: String): String? {
         // Try parsing the input date with each format
@@ -1110,32 +1113,74 @@ class FormatterClass {
             val dateAdministered = dateAdministered
             dateValue = dateAdministered
             statusValue = status
-            canBeVaccinated = false
+
+            //For covid disable other covid vaccines and leave the one which has been started
+
+            if (seriesVaccine != null){
+                val vaccineList = seriesVaccine.vaccineList.map { it.vaccineName }
+                val instancesOfVaccines = latestAdministered.filter { it.vaccineName in vaccineList }
+
+                /**
+                 * Get the number of vaccines in the series
+                 * Get the number of vaccines that have been administered in the series
+                 * If the number of vaccines in the series is equal to the number of vaccines that have been administered
+                 * then set canBeVaccinated to true
+                 * If the number of vaccines in the series is not equal to the number of vaccines
+                 * then set canBeVaccinated to false
+                 * Check if the vaccine Name is in the
+                 */
+//                if(targetDisease == "Covid 19") {
+//
+//                    val occurrences = instancesOfVaccines.filter {
+//                        it.vaccineName.contains(
+//                            vaccineName,
+//                            ignoreCase = true
+//                        )
+//                    }
+//
+//                    if (occurrences.size < vaccineList.size) {
+//                        if (vaccineList.contains(vaccineName)) {
+//                            canBeVaccinated = true
+//                        } else {
+//                            canBeVaccinated = false
+//                        }
+//
+//                    }
+//                }
+            }
             isVaccinatedValue = true
+            canBeVaccinated = true
 
 
             // Process status and dateAdministered as needed
         } ?: recommendedVaccine?.run {
             // Vaccine name exists in latestRecommendations
             val earliestDateStr = earliestDate
-            val earliestDate = convertStringToDate(earliestDateStr, "MMM d yyyy")
-            if (earliestDate != null) {
-                val performCalculationPair = performCalculation(earliestDate)
+            val newDateFormat = convertViewFormats(earliestDateStr)
 
-                val isAfterToday = performCalculationPair.first
-                // Check if the date is not more than 14 days after today
-                val isWithin14Days = performCalculationPair.second
 
-                // Combine the conditions
-                val isWithinRange = isAfterToday && isWithin14Days
-                canBeVaccinated = isWithinRange
+            if(newDateFormat != null){
+                val earliestDate = convertStringToDate(newDateFormat, "MMM d yyyy")
+                if (earliestDate != null) {
+                    val performCalculationPair = performCalculation(earliestDate)
+
+
+                    val isAfterToday = performCalculationPair.first
+                    // Check if the date is not more than 14 days after today
+                    val isWithin14Days = performCalculationPair.second
+
+                    // Combine the conditions
+                    val isWithinRange = isAfterToday && isWithin14Days
+                    canBeVaccinated = isWithinRange
+                }
+
+                val newDate = convertDateFormat(earliestDateStr)
+                if (newDate != null) {
+                    dateValue = newDate
+                }
+                isVaccinatedValue = false
             }
 
-            val newDate = convertDateFormat(earliestDateStr)
-            if (newDate != null) {
-                dateValue = newDate
-            }
-            isVaccinatedValue = false
 
             // Process earliestDate as needed
         } ?: run {
