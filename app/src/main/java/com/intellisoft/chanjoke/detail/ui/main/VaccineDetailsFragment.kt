@@ -2,7 +2,6 @@ package com.intellisoft.chanjoke.detail.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -17,7 +16,6 @@ import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentVaccineDetailsBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
-import com.intellisoft.chanjoke.detail.ui.main.adapters.EventsAdapter
 import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContrasActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass

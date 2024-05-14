@@ -73,7 +73,11 @@ class ReportsFragment : Fragment() {
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
 
         patientDetailsViewModel = ViewModelProvider(this,
-            PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
+            PatientDetailsViewModelFactory(
+                requireContext().applicationContext as Application,
+                fhirEngine,
+                patientId
+            )
         )[PatientDetailsViewModel::class.java]
 
         getStats()

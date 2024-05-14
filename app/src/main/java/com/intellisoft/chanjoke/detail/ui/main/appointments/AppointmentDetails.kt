@@ -1,6 +1,5 @@
 package com.intellisoft.chanjoke.detail.ui.main.appointments
 
-import android.R.string
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -16,7 +15,6 @@ import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAppointmentDetailsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
-import com.intellisoft.chanjoke.fhir.data.DbAppointmentDataDetails
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
@@ -25,7 +23,6 @@ import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Arrays
 
 
 class AppointmentDetails : AppCompatActivity() {

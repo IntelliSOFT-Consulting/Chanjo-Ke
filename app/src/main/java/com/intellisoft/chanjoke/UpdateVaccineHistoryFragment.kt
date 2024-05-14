@@ -13,8 +13,6 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -94,7 +92,11 @@ class UpdateVaccineHistoryFragment : Fragment() {
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
 
         patientDetailsViewModel = ViewModelProvider(this,
-            PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
+            PatientDetailsViewModelFactory(
+                requireContext().applicationContext as Application,
+                fhirEngine,
+                patientId
+            )
         )[PatientDetailsViewModel::class.java]
 
         binding.nextSubmit.setOnClickListener {

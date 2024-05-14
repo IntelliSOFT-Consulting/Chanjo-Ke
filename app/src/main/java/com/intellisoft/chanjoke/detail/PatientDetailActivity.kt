@@ -2,7 +2,6 @@ package com.intellisoft.chanjoke.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,32 +17,24 @@ import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.ui.main.SectionsPagerAdapter
 import com.intellisoft.chanjoke.databinding.ActivityPatientDetailBinding
-import com.intellisoft.chanjoke.detail.ui.main.RecommendationFragment
-import com.intellisoft.chanjoke.detail.ui.main.VaccinesFragment
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
-import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.google.android.fhir.FhirEngine
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
 import com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment
-import com.intellisoft.chanjoke.detail.ui.main.referrals.ReferralsFragment
 import com.intellisoft.chanjoke.detail.ui.main.registration.CompleteDetailsActivity
 import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
 import com.intellisoft.chanjoke.fhir.data.DbTempData
-import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.Period
-import java.util.ArrayList
 
 class PatientDetailActivity : AppCompatActivity() {
     private lateinit var fhirEngine: FhirEngine
@@ -86,7 +77,11 @@ class PatientDetailActivity : AppCompatActivity() {
         patientDetailsViewModel =
             ViewModelProvider(
                 this,
-                PatientDetailsViewModelFactory(this.application, fhirEngine, patientId),
+                PatientDetailsViewModelFactory(
+                    this.application,
+                    fhirEngine,
+                    patientId
+                ),
             )
                 .get(PatientDetailsViewModel::class.java)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

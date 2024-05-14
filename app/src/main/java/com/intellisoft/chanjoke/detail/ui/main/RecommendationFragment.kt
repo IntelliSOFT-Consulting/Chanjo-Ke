@@ -68,7 +68,11 @@ class RecommendationFragment : Fragment() {
         binding.recyclerView.setHasFixedSize(true)
 
         patientDetailsViewModel = ViewModelProvider(this,
-            PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
+            PatientDetailsViewModelFactory(
+                requireContext().applicationContext as Application,
+                fhirEngine,
+                patientId
+            )
         )[PatientDetailsViewModel::class.java]
 
         getImmunisationRecommendations()
