@@ -231,8 +231,8 @@ class AdministerVaccineViewModel(
                             immunizationHandler.getSeriesByBasicVaccine(vaccineBasicVaccine)
                         val targetDisease = seriesVaccine?.targetDisease
 
-                        val job = Job()
-                        CoroutineScope(Dispatchers.IO + job).launch {
+                        val job1 = Job()
+                        CoroutineScope(Dispatchers.IO + job1).launch {
                             //Save resources to Shared preference
                             if (targetDisease != null) {
                                 formatterClass.saveStockValue(
@@ -355,8 +355,6 @@ class AdministerVaccineViewModel(
             val vaccineName = nextBasicVaccine?.vaccineName
             val vaccineCode = nextBasicVaccine?.vaccineCode
 
-
-
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
                 //Save resources to Shared preference
@@ -371,7 +369,6 @@ class AdministerVaccineViewModel(
 
             //Generate the next immunisation recommendation
             if (nextBasicVaccine != null && date != null) {
-
 
                 val administrativeWeeksSincePreviousList =
                     nextBasicVaccine.administrativeWeeksSincePrevious
