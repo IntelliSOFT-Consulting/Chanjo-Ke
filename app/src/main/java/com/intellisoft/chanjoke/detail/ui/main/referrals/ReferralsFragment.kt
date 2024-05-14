@@ -9,30 +9,23 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
-import com.google.android.fhir.datacapture.QuestionnaireFragment
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentReferralsBinding
-import com.intellisoft.chanjoke.databinding.FragmentUpdateBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
-import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineAefiAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
-import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.intellisoft.chanjoke.viewmodel.ScreenerViewModel
-import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

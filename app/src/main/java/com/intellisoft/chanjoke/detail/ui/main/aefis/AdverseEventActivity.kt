@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
@@ -15,7 +14,6 @@ import com.intellisoft.chanjoke.fhir.data.AEFIData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
-import timber.log.Timber
 
 class AdverseEventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdverseEventBinding

@@ -305,6 +305,7 @@ class PatientDetailsViewModel(
 
     private suspend fun getRecommendationList(statusValue: String?): ArrayList<DbRecommendationDetails> {
 
+        val dbRecommendationDetailsList = ArrayList<DbRecommendationDetails>()
         val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
         fhirEngine
             .search<ImmunizationRecommendation> {
@@ -315,8 +316,6 @@ class PatientDetailsViewModel(
             .let { immunizationRecommendationList.addAll(it) }
 
 
-
-        val dbRecommendationDetailsList = ArrayList<DbRecommendationDetails>()
         immunizationRecommendationList.forEach { immunizationRecommendation ->
 
             val recommendationList = immunizationRecommendation.recommendation
@@ -361,39 +360,40 @@ class PatientDetailsViewModel(
                 }
                 if (recommendation.hasDescription()) {
 
-                if (recommendation.hasDescription()){
-                    description = recommendation.description
-                }
-                if (recommendation.hasSeries()) {
-                    series = recommendation.series
-                }
-                if (recommendation.hasDoseNumberPositiveIntType()) {
-                    doseNumber = recommendation.doseNumberPositiveIntType.value.toString()
-                }
-                if (recommendation.hasForecastStatus()) {
-                    if (recommendation.forecastStatus.hasCoding()) {
-                        if (recommendation.forecastStatus.codingFirstRep.hasDisplay()) {
-                            status = recommendation.forecastStatus.codingFirstRep.display
+                    if (recommendation.hasDescription()) {
+                        description = recommendation.description
+                    }
+                    if (recommendation.hasSeries()) {
+                        series = recommendation.series
+                    }
+                    if (recommendation.hasDoseNumberPositiveIntType()) {
+                        doseNumber = recommendation.doseNumberPositiveIntType.value.toString()
+                    }
+                    if (recommendation.hasForecastStatus()) {
+                        if (recommendation.forecastStatus.hasCoding()) {
+                            if (recommendation.forecastStatus.codingFirstRep.hasDisplay()) {
+                                status = recommendation.forecastStatus.codingFirstRep.display
+                            }
                         }
                     }
-                }
 
-                val dbRecommendationDetails = DbRecommendationDetails(
-                    vaccineCode = vaccineCode,
-                    vaccineName = vaccineName,
-                    targetDisease = targetDisease,
-                    earliestDate = earliestDate,
-                    latestDate = latestDate,
-                    description = description,
-                    series = series,
-                    doseNumber = doseNumber,
-                    status = status,
-                )
-                dbRecommendationDetailsList.add(dbRecommendationDetails)
+                    val dbRecommendationDetails = DbRecommendationDetails(
+                        vaccineCode = vaccineCode,
+                        vaccineName = vaccineName,
+                        targetDisease = targetDisease,
+                        earliestDate = earliestDate,
+                        latestDate = latestDate,
+                        description = description,
+                        series = series,
+                        doseNumber = doseNumber,
+                        status = status,
+                    )
+                    dbRecommendationDetailsList.add(dbRecommendationDetails)
+                }
             }
         }
-
         return dbRecommendationDetailsList
+
     }
 
     private fun getRecommendationData(it: ImmunizationRecommendation): ImmunizationRecommendation {
@@ -991,9 +991,9 @@ class PatientDetailsViewModel(
         }
 
 
-        if (status == "NOTDONE"){
-            if (immunization.hasReasonCode()){
-                if (immunization.reasonCode.isNotEmpty() && immunization.reasonCode[0].hasText()){
+        if (status == "NOTDONE") {
+            if (immunization.hasReasonCode()) {
+                if (immunization.reasonCode.isNotEmpty() && immunization.reasonCode[0].hasText()) {
                     status = immunization.reasonCode[0].text
                 }
             }
@@ -1285,7 +1285,6 @@ class PatientDetailsViewModel(
         return "$counter"
     }
 
-
 }
 
 class PatientDetailsViewModelFactory(
@@ -1301,3 +1300,4 @@ class PatientDetailsViewModelFactory(
         return PatientDetailsViewModel(application, fhirEngine, patientId) as T
     }
 }
+
