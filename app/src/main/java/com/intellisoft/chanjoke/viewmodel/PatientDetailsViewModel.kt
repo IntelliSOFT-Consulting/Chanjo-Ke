@@ -315,6 +315,7 @@ class PatientDetailsViewModel(
             .let { immunizationRecommendationList.addAll(it) }
 
 
+
         val dbRecommendationDetailsList = ArrayList<DbRecommendationDetails>()
         immunizationRecommendationList.forEach { immunizationRecommendation ->
 
@@ -359,6 +360,8 @@ class PatientDetailsViewModel(
                     }
                 }
                 if (recommendation.hasDescription()) {
+
+                if (recommendation.hasDescription()){
                     description = recommendation.description
                 }
                 if (recommendation.hasSeries()) {
@@ -986,6 +989,16 @@ class PatientDetailsViewModel(
         if (immunization.hasStatus()) {
             status = immunization.statusElement.value.name
         }
+
+
+        if (status == "NOTDONE"){
+            if (immunization.hasReasonCode()){
+                if (immunization.reasonCode.isNotEmpty() && immunization.reasonCode[0].hasText()){
+                    status = immunization.reasonCode[0].text
+                }
+            }
+        }
+
 
         /**
          * 1. Get the vaccine name, get series number, get the previous series number, get the previous Basic Vaccine

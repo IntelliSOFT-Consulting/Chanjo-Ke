@@ -21,7 +21,7 @@ class LayoutListViewModel(application: Application, private val state: SavedStat
     ) {
         SEARCH_CLIENT(R.drawable.search, "Search Client"),
         REGISTER_CLIENT(R.drawable.register, "Register Client"),
-        UPDATE_CLIENT_HISTORY(R.drawable.update_client, "Update Client History"),
+        UPDATE_CLIENT_HISTORY(R.drawable.update_client, "Update Vaccine History"),
         ADMINISTER_VACCINE(R.drawable.administer, "Administer vaccine"),
         REFERRALS(R.drawable.referral, "Referrals"),
         REPORTS(R.drawable.ic_action_reports, "Reports"),

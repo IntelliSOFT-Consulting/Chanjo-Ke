@@ -17,7 +17,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Period
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -94,7 +93,7 @@ class FormatterClass {
         val instant = date.toInstant()
         val localDate = instant.atZone(ZoneOffset.UTC).toLocalDate()
 
-        return localDate
+        return localDate.plusDays(2)
 
     }
 
@@ -128,6 +127,9 @@ class FormatterClass {
 
     fun convertViewDateFormats(inputDate: String): String? {
         return mainConvertDate("dd-MM-yyyy", inputDate)
+    }
+    fun convertViewFormats(inputDate: String): String? {
+        return mainConvertDate("MMM d yyyy", inputDate)
     }
 
     private fun mainConvertDate(pattern: String, inputDate: String): String? {
@@ -207,6 +209,7 @@ class FormatterClass {
             "appointmentVaccineTitle",
             "appointmentFlow",
             "patientGender",
+            "workflowVaccinationType",
         )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
@@ -357,6 +360,9 @@ class FormatterClass {
                 saveSharedPref("patientDays", days.toString(), context)
                 saveSharedPref("patientWeeks", totalWeeks.toString(), context)
 
+                val convertedDob = convertChildDateFormat(dob)
+                saveSharedPref("patientDob", convertedDob.toString(), context)
+
                 val ageStringBuilder = StringBuilder()
 
                 if (years > 0) {
@@ -468,6 +474,7 @@ class FormatterClass {
 
         return weeksDifference.toString().toIntOrNull()
     }
+
 
     fun getNextDate(date: Date, weeksToAdd: Double): Date {
 
@@ -959,21 +966,65 @@ class FormatterClass {
 
     fun getVaccineGroupDetails(
         vaccines: List<String>?,
-        administeredList: List<DbVaccineData>
+        administeredList: List<DbVaccineData>,
+        recommendationList: ArrayList<DbRecommendationDetails>
     ): String {
+        val immunizationHandler = ImmunizationHandler()
         val administeredVaccineNames = administeredList.map { it.vaccineName }
 
         var statusColor = ""
         if (vaccines != null) {
-            statusColor = if (vaccines.all { administeredVaccineNames.contains(it) }) {
+            if (vaccines.all { administeredVaccineNames.contains(it) }) {
                 // Checks if all have been vaccinated
-                StatusColors.GREEN.name
+                statusColor = StatusColors.GREEN.name
             } else if (vaccines.any { administeredVaccineNames.contains(it) }) {
                 // Checks if there's any that has been vaccinated
-                StatusColors.AMBER.name
+                statusColor = StatusColors.AMBER.name
             } else {
-                // Everything under here does not have any vaccines
-                StatusColors.NORMAL.name
+                statusColor = StatusColors.NORMAL.name
+
+                /**
+                 * Everything under here does not have any vaccines. Check for missed vaccines
+                 * The vaccines list have the vaccine list for the routine vaccines per schedule
+                   e.g. At Birth, 6 weeks, 10 weeks, 14 weeks, 26 weeks etc
+                 * Get the vaccine details and use the vaccine code to check in the recommendationList
+                   i.e. earliestDate
+                 *
+                 */
+                val statusColorList = ArrayList<String>()
+
+                vaccines.forEach { vaccineName ->
+
+                    val vaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+
+                    if (vaccineDetails != null){
+
+                        val vaccineNameBasic = vaccineDetails.vaccineName
+                        val dbAppointmentDetailsDue = recommendationList.filter {
+                            it.vaccineName == vaccineNameBasic && it.status == "due"
+                        }.map { it }.firstOrNull()
+
+                        if (dbAppointmentDetailsDue != null) {
+                            val dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
+                            //Check if dateSchedule is before today
+
+                            if (dateSchedule!= null) {
+                                val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+                                val dateScheduleDate = dateScheduleFormat.parse(dateSchedule)
+                                val todayDate = Calendar.getInstance().time
+
+                                if (dateScheduleDate != null) {
+                                    if (dateScheduleDate.before(todayDate)) {
+                                        statusColorList.add(StatusColors.RED.name)
+                                        statusColor = StatusColors.RED.name
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
 
@@ -1005,6 +1056,299 @@ class FormatterClass {
         }
     }
 
+    fun getVaccineChildNonRoutineStatus(
+        context: Context,
+        flowType: String,
+        weekNumber: String,
+        vaccineName: String,
+        administeredList: List<DbVaccineData>,
+        recommendationList: ArrayList<DbRecommendationDetails>
+    ): DbVaccineScheduleChild {
+
+        var vaccineNameValue = vaccineName
+        var dateValue = ""
+        var statusValue = ""
+
+        var isVaccinatedValue = false
+        var canBeVaccinated = false
+        var statusColor = ""
+
+
+        // Group recommendations by vaccine name
+        val groupedRecommendations = recommendationList.groupBy { it.vaccineName }
+
+        // Filter and keep only the recommendations with the latest earliest date for each vaccine name
+        val latestRecommendations = groupedRecommendations.mapValues { (_, recommendations) ->
+            recommendations.filter { it.earliestDate.isNotEmpty() } // Filter out recommendations with empty earliestDate
+                .maxByOrNull { it.earliestDate } // Find the recommendation with the latest earliest date
+        }.values.filterNotNull() // Filter out null values (if any)
+
+        // Group recommendations by vaccine name
+        val groupedAdministered = administeredList.groupBy { it.vaccineName }
+
+        // Filter and keep only the recommendations with the latest earliest date for each vaccine name
+        val latestAdministered = groupedAdministered.mapValues { (_, administered) ->
+            administered.filter { it.dateAdministered.isNotEmpty() } // Filter out recommendations with empty earliestDate
+                .maxByOrNull { it.dateAdministered } // Find the recommendation with the latest earliest date
+        }.values.filterNotNull() // Filter out null values (if any)
+
+        val administeredVaccine = latestAdministered.firstOrNull { it.vaccineName == vaccineName }
+        val recommendedVaccine = latestRecommendations.firstOrNull { it.vaccineName == vaccineName }
+
+        val immunizationHandler = ImmunizationHandler()
+
+        val patientDob = getSharedPref("patientDob", context).toString()
+        val patientGender = getSharedPref("patientGender", context).toString()
+        val patientYearStr = getSharedPref("patientYears", context)
+        val patientYears = patientYearStr?.toIntOrNull()
+
+        val numberOfWeek = calculateWeeksFromDate(patientDob)
+        val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+        val seriesVaccine = basicVaccine?.let { immunizationHandler.getSeriesByBasicVaccine(it) }
+
+        val vaccineCode = basicVaccine?.vaccineCode
+        val targetDisease = seriesVaccine?.targetDisease
+        val nhdd = seriesVaccine?.NHDD.toString()
+
+        administeredVaccine?.run {
+            // Vaccine name exists in latestAdministered
+            val status = status
+
+            val dateAdministered = dateAdministered
+            dateValue = dateAdministered
+            statusValue = status
+
+            //For covid disable other covid vaccines and leave the one which has been started
+
+            if (seriesVaccine != null){
+                val vaccineList = seriesVaccine.vaccineList.map { it.vaccineName }
+                val instancesOfVaccines = latestAdministered.filter { it.vaccineName in vaccineList }
+
+                /**
+                 * Get the number of vaccines in the series
+                 * Get the number of vaccines that have been administered in the series
+                 * If the number of vaccines in the series is equal to the number of vaccines that have been administered
+                 * then set canBeVaccinated to true
+                 * If the number of vaccines in the series is not equal to the number of vaccines
+                 * then set canBeVaccinated to false
+                 * Check if the vaccine Name is in the
+                 */
+//                if(targetDisease == "Covid 19") {
+//
+//                    val occurrences = instancesOfVaccines.filter {
+//                        it.vaccineName.contains(
+//                            vaccineName,
+//                            ignoreCase = true
+//                        )
+//                    }
+//
+//                    if (occurrences.size < vaccineList.size) {
+//                        if (vaccineList.contains(vaccineName)) {
+//                            canBeVaccinated = true
+//                        } else {
+//                            canBeVaccinated = false
+//                        }
+//
+//                    }
+//                }
+            }
+            isVaccinatedValue = true
+            canBeVaccinated = true
+
+
+            // Process status and dateAdministered as needed
+        } ?: recommendedVaccine?.run {
+            // Vaccine name exists in latestRecommendations
+            val earliestDateStr = earliestDate
+            val newDateFormat = convertViewFormats(earliestDateStr)
+
+
+            if(newDateFormat != null){
+                val earliestDate = convertStringToDate(newDateFormat, "MMM d yyyy")
+                if (earliestDate != null) {
+                    val performCalculationPair = performCalculation(earliestDate)
+
+
+                    val isAfterToday = performCalculationPair.first
+                    // Check if the date is not more than 14 days after today
+                    val isWithin14Days = performCalculationPair.second
+
+                    // Combine the conditions
+                    val isWithinRange = isAfterToday && isWithin14Days
+                    canBeVaccinated = isWithinRange
+                }
+
+                val newDate = convertDateFormat(earliestDateStr)
+                if (newDate != null) {
+                    dateValue = newDate
+                }
+                isVaccinatedValue = false
+            }
+
+
+            // Process earliestDate as needed
+        } ?: run {
+            // Vaccine name does not exist in either list
+            // Handle this case as needed
+            canBeVaccinated = false
+            isVaccinatedValue = false
+
+            /**
+             * 1.) Check if vaccine exists in the administration workflow
+             * 2.) Check the recommendation list for the vaccine
+             * The above have been done in the above code block
+             *
+             * 3.) Validations
+             *
+             * i.) Yellow fever = 9 months and above. Single dose
+             *
+             * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
+             * iii.) Pfizer = 18 years and above. 2 dose 4 weeks apart
+             * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
+             * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
+             * vi.) J n J & H = 18 years and above till age 60 years. Single dose
+             *
+             * vii.) HPV = 10 years and above till age 14 years. 2 dose 6 months apart
+             *
+             * viii.) Rabies = From Birth and above. 5 doses
+             *
+             * ix.) Influenza = From 6 month and above. 2 doses but one could be a single dose
+             *
+             * x.) Tetanus = From 92 weeks (This is because the first dose is given after 18 months after DPT3 which is given after 14 weeks of birth)
+             *              5 doses given as follows:
+             *              1st dose after 18 months after DPT 4 ,
+             *              2nd dose is 1 month after 1st dose,
+             *              3rd dose is 6 months after 2nd dose,
+             *              4th dose is 1 year after 3rd dose,
+             *              5th dose is 1 year after 4th dose.
+             */
+            //Yellow Fever
+            if (targetDisease == "Yellow Fever") {
+                if (numberOfWeek != null && numberOfWeek > 39){
+                    canBeVaccinated = true
+                }
+            }
+            //HPV
+            if (targetDisease == "HPV") {
+                if (patientGender == "female" && patientYears != null && patientYears in 10..14) {
+                    canBeVaccinated = true
+                }
+            }
+            //Covid 19
+            //Astrazeneca
+            if (targetDisease == "Covid 19" && patientYears != null){
+                if (patientYears >= 18){
+                    if (nhdd == "16927" || nhdd == "0" || nhdd == "16931" || nhdd == "16929"){
+                        //Astrazeneca, JnJ, Moderna, Pfizer
+                        canBeVaccinated = true
+                    }
+                    if(nhdd == "16489" && patientYears in 18..60){
+                        //Sinopharm
+                        canBeVaccinated = true
+                    }
+                }
+            }
+            //Rabies
+            if (targetDisease == "Rabies Post Exposure" && patientYears != null){
+                if (patientYears >= 0){
+                    canBeVaccinated = true
+                }
+            }
+            //Tetanus
+            if(targetDisease == "Tetanus" && patientYears != null){
+                if (patientYears >= 92){
+                    canBeVaccinated = true
+                }
+            }
+
+        }
+
+        if (statusValue == Reasons.CONTRAINDICATE.name){
+            statusColor = StatusColors.AMBER.name
+        }
+        if (statusValue == Reasons.NOT_ADMINISTERED.name){
+            statusColor = StatusColors.NOT_DONE.name
+        }
+        if (statusValue == Reasons.COMPLETED.name) {
+            statusColor = StatusColors.GREEN.name
+        }
+
+        return DbVaccineScheduleChild(
+            vaccineName,
+            dateValue,
+            statusColor,
+            isVaccinatedValue,
+            canBeVaccinated
+        )
+
+
+    }
+
+    private fun calculateNextVaccineDate(
+        dateScheduleFormat: SimpleDateFormat,
+        dateScheduleDate: Date?,
+        administrativeWeeksSincePreviousList: ArrayList<Double>
+    ): Pair<Boolean, String?> {
+
+        println("dateScheduleDate $dateScheduleDate")
+        println("administrativeWeeksSincePreviousList $administrativeWeeksSincePreviousList")
+
+        if(dateScheduleDate != null && administrativeWeeksSincePreviousList.isNotEmpty()){
+            // Now, you can use newDateForVaccine2 as the new date for HPV Vaccine 2
+            val dateSchedule = convertDateToLocalDate(dateScheduleDate)
+            val administrativeWeeksSincePrevious = administrativeWeeksSincePreviousList[0]
+
+            //Convert from Double to Long
+            val newDateAdministered = dateSchedule.plusWeeks(administrativeWeeksSincePrevious.toLong())
+            println("newDateAdministered $newDateAdministered")
+
+            if (newDateAdministered != null) {
+
+                val newDateAdministeredStr = convertLocalDateToDate(newDateAdministered)
+
+                val newDateAdministeredDate = convertStringToDate(newDateAdministeredStr, "yyyy-MM-dd")
+                println("newDateAdministeredDate $newDateAdministeredDate")
+
+                if (newDateAdministeredDate != null){
+                    val performCalculationPair = performCalculation(newDateAdministeredDate)
+                    val isAfterToday = performCalculationPair.first
+                    // Check if the date is not more than 14 days after today
+                    val isWithin14Days = performCalculationPair.second
+
+                    // Combine the conditions
+                    val isWithinRange = isAfterToday && isWithin14Days
+
+                    println("isAfterToday $isAfterToday")
+                    println("isWithin14Days $isWithin14Days")
+                    //Convert newDateAdministeredDate to String
+                    val localDate = convertDateToLocalDate(newDateAdministeredDate)
+                    val newCalculatedDateAdministeredStr = convertLocalDateToDate(localDate)
+
+                    return Pair(isWithinRange, newCalculatedDateAdministeredStr)
+
+
+                }
+
+            }
+        }
+        return Pair(false, null)
+
+
+    }
+
+    private fun performCalculation(dateScheduleDate: Date):Pair<Boolean, Boolean> {
+
+        val today = LocalDate.now()
+        val dateSchedule = convertDateToLocalDate(dateScheduleDate)
+
+        val isAfterToday = !dateSchedule.isBefore(today)
+
+        // Check if the date is not more than 14 days after today
+        val isWithin14Days = ChronoUnit.DAYS.between(today, dateSchedule) <= 14
+
+        return Pair(isAfterToday, isWithin14Days)
+
+    }
 
     fun getVaccineChildStatus(
         context: Context,
@@ -1015,70 +1359,148 @@ class FormatterClass {
         recommendationList: ArrayList<DbRecommendationDetails>
     ): DbVaccineScheduleChild {
 
-        var dateSchedule: String? = null
+        var vaccineNameValue = vaccineName
+        var dateValue = ""
+        var statusValue = ""
 
-        val contraindicatedList = recommendationList.map { it.vaccineName }
-        val administeredVaccineNamesList = administeredList.map { it.vaccineName }
-
+        var isVaccinatedValue = false
+        var canBeVaccinated = false
+        var canBeVaccinatedValue = ""
         var statusColor = ""
-        if (contraindicatedList.contains(vaccineName)) {
 
-            val dbAppointmentDetailsContra = recommendationList.filter {
-                it.vaccineName == vaccineName && it.status.contains("contraindicated")
-            }.map { it }.firstOrNull()
+//        val upcomingRecommendationList = recommendationList.map { it.vaccineName }
+//        val administeredVaccineNamesList = administeredList.map { it.vaccineName }
 
-            val dbAppointmentDetailsDue = recommendationList.filter {
-                it.vaccineName == vaccineName && it.status == "due"
-            }.map { it }.firstOrNull()
+        val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val patientDob = getSharedPref("patientDob", context).toString()
+        val numberOfWeek = calculateWeeksFromDate(patientDob)
+        val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
 
+        //1. Upcoming Recommendation
+        val dbAppointmentDetailsDue = recommendationList.filter {
+            it.vaccineName == vaccineName && it.status == "due"
+        }.map { it }.firstOrNull()
 
-            if (dbAppointmentDetailsContra != null) {
-                dateSchedule = convertDateFormat(dbAppointmentDetailsContra.earliestDate)
-                statusColor = StatusColors.AMBER.name
+        if (dbAppointmentDetailsDue != null){
+            val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
+            if (earliestDate!= null) {
+                dateValue = earliestDate
             }
-            if (dbAppointmentDetailsDue != null) {
-                dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
-                statusColor = StatusColors.NORMAL.name
-            }
-            //Check if dateSchedule is before today
-            if (dateSchedule!= null) {
-                val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
-                val dateScheduleDate = dateScheduleFormat.parse(dateSchedule)
-                val todayDate = Calendar.getInstance().time
-                if (dateScheduleDate != null) {
-                    if (dateScheduleDate.before(todayDate)) {
-                        statusColor = StatusColors.RED.name
+            statusValue = dbAppointmentDetailsDue.status
+        }
+
+        //2. Contraindicated Vaccine
+        val dbAppointmentDetailsContra = administeredList.filter {
+            it.vaccineName == vaccineName && it.status == Reasons.CONTRAINDICATE.name
+        }.map { it }.firstOrNull()
+
+        //3. Not Administered Vaccine
+        val dbAppointmentDetailsNotDone = administeredList.filter {
+            it.vaccineName == vaccineName && it.status == Reasons.NOT_ADMINISTERED.name
+        }.map { it }.firstOrNull()
+
+        //Check between the two the latest one
+        val latestDateToBeAdministered = listOfNotNull(dbAppointmentDetailsContra, dbAppointmentDetailsNotDone)
+            .maxByOrNull { it.dateAdministered }
+        if (latestDateToBeAdministered != null){
+
+            statusValue = latestDateToBeAdministered.status
+            dateValue = latestDateToBeAdministered.dateAdministered
+
+        }
+
+
+        //4. Administered Vaccine
+        val dbAppointmentDetails = administeredList.filter {
+            it.vaccineName == vaccineName && it.status == Reasons.COMPLETED.name
+        }.map { it }.firstOrNull()
+
+        if (dbAppointmentDetails != null){
+            isVaccinatedValue = true
+            statusValue = dbAppointmentDetails.status
+            dateValue = dbAppointmentDetails.dateAdministered
+        }
+
+        if (statusValue == "due" && dateValue != "") {
+            val dateScheduleDate = dateScheduleFormat.parse(dateValue)
+            if (dateScheduleDate != null) {
+
+                val today = LocalDate.now()
+                val dateSchedule = convertDateToLocalDate(dateScheduleDate)
+
+                val isBeforeToday = dateSchedule.isBefore(today)
+                if (isBeforeToday){
+                    statusColor = StatusColors.RED.name
+                    canBeVaccinated = false
+
+                    if (basicVaccine != null && numberOfWeek != null) {
+                        val vaccineCode = basicVaccine.vaccineCode
+
+                        if (vaccineCode == "IMBCG-I") {
+                            //BCG can be administered from 0 weeks to 255 weeks
+                            if (numberOfWeek in 0..255) {
+                                canBeVaccinated = true
+                            }
+                        }
                     }
+                }else{
+                    //Check if dateSchedule is after / equal to today but is less than 14 days after today
+                    // Check if the date is equal to or after today
+                    val performCalculationPair = performCalculation(dateScheduleDate)
+
+                    val isAfterToday = performCalculationPair.first
+
+                    // Check if the date is not more than 14 days after today
+                    val isWithin14Days = performCalculationPair.second
+
+
+                    // Combine the conditions
+                    val isWithinRange = isAfterToday && isWithin14Days
+
+                    if (isWithinRange) {
+                        canBeVaccinated = true
+
+                        if (basicVaccine != null && numberOfWeek != null) {
+                            val vaccineCode = basicVaccine.vaccineCode
+                            //bOPV is allowed for less than 2 weeks
+                            if (vaccineCode == "IMPO-bOPV") {
+                                if (numberOfWeek < 2) {
+                                    canBeVaccinated = true
+                                } else {
+                                    canBeVaccinated = false
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
-
         }
-        if (administeredVaccineNamesList.contains(vaccineName)) {
-
-            val dbAppointmentDetailsNotDone = administeredList.filter {
-                it.vaccineName == vaccineName && it.status == "NOTDONE"
-            }.map { it }.firstOrNull()
-
-            statusColor = if (dbAppointmentDetailsNotDone != null){
-                StatusColors.NOT_DONE.name
-            }else{
-                StatusColors.GREEN.name
-            }
-            dateSchedule = administeredList.filter { it.vaccineName == vaccineName }
-                .map { it.dateAdministered }
-                .firstOrNull()
-
+        if (statusValue == Reasons.CONTRAINDICATE.name){
+            statusColor = StatusColors.AMBER.name
+        }
+        if (statusValue == Reasons.NOT_ADMINISTERED.name){
+            statusColor = StatusColors.NOT_DONE.name
+        }
+        if (statusValue == Reasons.COMPLETED.name) {
+            statusColor = StatusColors.GREEN.name
         }
 
-        if (dateSchedule == null) dateSchedule = ""
+        return DbVaccineScheduleChild(
+            vaccineName,
+            dateValue,
+            statusColor,
+            isVaccinatedValue,
+            canBeVaccinated
+        )
+    }
 
-        val isVaccinated = statusColor == StatusColors.GREEN.name
-
+    fun checkValidations(vaccineName: String, context: Context, flowType: String, weekNumber: String): Boolean {
         /**
          * Use the week number to check eligibility of the vaccine
          */
+        var canBeVaccinated = false
         val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
-        var canBeVaccinated: Boolean? = null
         val patientDob = getSharedPref("patientDob", context)
 
         val patientGender = getSharedPref("patientGender", context)?.let {
@@ -1087,7 +1509,14 @@ class FormatterClass {
             )
         }
 
-        if (patientDob != null) {
+        /**
+         * Validations
+         * 1. bOPV is allowed for less than 2 weeks
+         * 2. BCG can be administered from 0 weeks to 256 weeks
+         * 3.
+         */
+
+        if (patientDob != null){
             try {
                 val numberOfWeek = calculateWeeksFromDate(patientDob)
                 if (numberOfWeek != null && basicVaccine != null) {
@@ -1095,129 +1524,45 @@ class FormatterClass {
                     val vaccineCode = basicVaccine.vaccineCode
                     val weekNumberInt = weekNumber.toIntOrNull()
 
-
                     if (flowType == "ROUTINE") {
-
                         /**
                          * All routines are under 5 YEARS apart from HPV
                          * -> numberOfWeek = Weeks after birth
                          * -> weekNumber = Current Vaccine schedule
                          */
 
-
-                        if (!vaccineCode.contains("IMHPV-")) {
-                            if (numberOfWeek > 256) {
-                                canBeVaccinated = false
-                            } else {
-                                //bOPV is allowed for less than 2 weeks
-                                if (vaccineCode == "IMPO-bOPV") {
-                                    if (numberOfWeek < 2) {
-                                        canBeVaccinated = true
-                                    } else {
-                                        canBeVaccinated = false
-                                    }
-                                } else {
-                    if (!vaccineCode.contains("IMHPV-")){
                         if (numberOfWeek > 256){
                             canBeVaccinated = false
                         }else{
                             //bOPV is allowed for less than 2 weeks
-                            if (vaccineCode == "IMPO-bOPV"){
-                                canBeVaccinated = if (numberOfWeek < 2){
-                                    true
-                                }else{
-                                    false
-                                }
-                            }else{
-
-                                if (weekNumberInt != null){
-                                    canBeVaccinated = if (numberOfWeek >= weekNumberInt){
-                                        true
-                                    }else{
-                                        false
-                                    }
-                                }
-                                    if (weekNumberInt != null) {
-                                        if (numberOfWeek >= weekNumberInt) {
-                                            canBeVaccinated = true
-                                        } else {
-                                            canBeVaccinated = false
-                                        }
-                                    }
-
-                                }
-                            }
-                        } else {
-                            //Should only be for Females above 9 years and below 15 years
-                            if (numberOfWeek in 471..782 && patientGender == "Female") {
-                                canBeVaccinated = true
-                            } else {
-                                canBeVaccinated = false
-                            }
-                        }
-                            }
-                        }
-                    }else{
-                        //Should only be for Females above 9 years and below 15 years
-                        canBeVaccinated = if (numberOfWeek in 471..782 && patientGender == "Female"){
-                            true
-                        }else{
-                            false
-                        }
-                    }
-
-                    }
-
-                    if (flowType == "NON-ROUTINE") {
-                        canBeVaccinated = false
-
-                        /**
-                         * Non Routine Vaccines have their own validations
-                         */
-                        if (vaccineCode.contains("IMCOV-")) {
-                            //All these are covid vaccines
-
-                            if (vaccineCode.contains("PFIZER-")) {
-                                //For PFIZER, should be above 12 years
-                                if (numberOfWeek > 625) {
+                            if (vaccineCode == "IMPO-bOPV") {
+                                if (numberOfWeek < 2) {
                                     canBeVaccinated = true
-                                }
-                            } else {
-                                //All other covid vaccines are given after 18
-                                if (vaccineCode.contains("SINO-")) {
-                                    if (numberOfWeek in 938..3128) {
-                                        canBeVaccinated = true
-                                    }
                                 } else {
-                                    if (numberOfWeek > 938) {
-                                        canBeVaccinated = true
-                                    }
+                                    canBeVaccinated = false
                                 }
-
+                            }
+                            if (vaccineCode == "IMBCG-I"){
+                                //BCG can be administered from 0 weeks to 255 weeks
+                                if (numberOfWeek in 0..255){
+                                    canBeVaccinated = true
+                                }else{
+                                    canBeVaccinated = false
+                                }
                             }
 
-                        } else {
-                            if (numberOfWeek > 938) {
-                                canBeVaccinated = true
-                            }
                         }
 
                     }
 
                 }
-            } catch (e: Exception) {
+            }catch (e: Exception){
                 e.printStackTrace()
             }
         }
-
-
-        return DbVaccineScheduleChild(
-            vaccineName,
-            dateSchedule,
-            statusColor,
-            isVaccinated,
-            canBeVaccinated
-        )
+        return canBeVaccinated
     }
+
+
 
 }

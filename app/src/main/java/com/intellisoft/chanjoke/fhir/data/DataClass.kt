@@ -31,6 +31,12 @@ data class DbVaccineListData(
     val statusColor: String,
 )
 
+enum class Reasons {
+    CONTRAINDICATE,
+    NOT_ADMINISTERED,
+    COMPLETED
+}
+
 enum class StatusColors {
     GREEN, //All administered
     AMBER, //Some administered

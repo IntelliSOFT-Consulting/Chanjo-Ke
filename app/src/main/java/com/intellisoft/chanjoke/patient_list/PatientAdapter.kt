@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.patient_list
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,10 +60,13 @@ class PatientAdapter(
 
             val birthDateElement = FormatterClass().convertLocalDateToDate(dob)
 
+
             FormatterClass().getFormattedAge(
                 birthDateElement,
                 context.resources,
                 context)
+
+            FormatterClass().saveSharedPref("patientDob", birthDateElement, context)
 
             if (readyToUpdate != null) {
                 createDialog()

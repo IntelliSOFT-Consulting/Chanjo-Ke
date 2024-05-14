@@ -535,8 +535,6 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 FormatterClass().deleteSharedPref("isUpdate", context)
             } else {
 
-
-
                 patient.id = patientId
                 fhirEngine.create(patient)
 
@@ -595,6 +593,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             getApplication<Application>().applicationContext
         )
 
+
         if (patientYears != null && patientId != null && patientWeeks != null && patientDob != null){
             val patientYearsInt = patientYears.toIntOrNull()
             val patientWeeksInt = patientWeeks.toIntOrNull()
@@ -606,6 +605,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             } else {
                 null
             }
+
 
             if (patientYearsInt != null && patientYearsInt < 6 && patientWeeksInt != null && selectedDate != null) {
 
@@ -658,6 +658,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
                             val earlyAdministerDate = DbVaccineAdmin(earliestAdministerLocalDate, "Earliest-date-to-administer")
                             val lateAdministerDate = DbVaccineAdmin(latestAdministerLocalDate, "Latest-date-to-administer")
+
 
                             val administerTimeList = ArrayList<DbVaccineAdmin>()
                             administerTimeList.addAll(

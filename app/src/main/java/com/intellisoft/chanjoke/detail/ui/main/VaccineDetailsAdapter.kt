@@ -73,13 +73,17 @@ class VaccineDetailsAdapter(
             vaccineStatus = ""
         }
 
-
-
-
         if (canBeVaccinated != null) {
             holder.checkBox.isEnabled = canBeVaccinated
+            if (!canBeVaccinated){
+                holder.iconDisabled.visibility = View.VISIBLE
+                holder.checkBox.visibility = View.INVISIBLE
+            }
         }
 
+        holder.iconDisabled.setOnClickListener {
+            Toast.makeText(context, "You are not eligible for this vaccine.", Toast.LENGTH_SHORT).show()
+        }
 
 
         holder.tvScheduleStatus.text = vaccineStatus
@@ -108,6 +112,7 @@ class VaccineDetailsAdapter(
         val tvVaccineDate: TextView = itemView.findViewById(R.id.tvVaccineDate)
         val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
         val checked: ImageButton = itemView.findViewById(R.id.checked)
+        val iconDisabled: ImageButton = itemView.findViewById(R.id.iconDisabled)
 
 
         init {
