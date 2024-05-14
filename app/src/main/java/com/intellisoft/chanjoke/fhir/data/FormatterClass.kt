@@ -1066,20 +1066,30 @@ class FormatterClass {
         var canBeVaccinated = false
         var statusColor = ""
 
+
         // Group recommendations by vaccine name
         val groupedRecommendations = recommendationList.groupBy { it.vaccineName }
 
         // Filter and keep only the recommendations with the latest earliest date for each vaccine name
         val latestRecommendations = groupedRecommendations.mapValues { (_, recommendations) ->
-            recommendations.maxByOrNull { it.earliestDate } // Find the recommendation with the latest earliest date
+            recommendations.filter { it.earliestDate.isNotEmpty() } // Filter out recommendations with empty earliestDate
+                .maxByOrNull { it.earliestDate } // Find the recommendation with the latest earliest date
         }.values.filterNotNull() // Filter out null values (if any)
 
-        val upcomingRecommendationList = latestRecommendations.map { it.vaccineName }
-        val administeredVaccineNamesList = administeredList.map { it.vaccineName }
+        // Group recommendations by vaccine name
+        val groupedAdministered = administeredList.groupBy { it.vaccineName }
+
+        // Filter and keep only the recommendations with the latest earliest date for each vaccine name
+        val latestAdministered = groupedAdministered.mapValues { (_, administered) ->
+            administered.filter { it.dateAdministered.isNotEmpty() } // Filter out recommendations with empty earliestDate
+                .maxByOrNull { it.dateAdministered } // Find the recommendation with the latest earliest date
+        }.values.filterNotNull() // Filter out null values (if any)
+
+        val administeredVaccine = latestAdministered.firstOrNull { it.vaccineName == vaccineName }
+        val recommendedVaccine = latestRecommendations.firstOrNull { it.vaccineName == vaccineName }
 
         val immunizationHandler = ImmunizationHandler()
 
-        val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
         val patientDob = getSharedPref("patientDob", context).toString()
         val patientGender = getSharedPref("patientGender", context).toString()
         val patientYearStr = getSharedPref("patientYears", context)
@@ -1091,288 +1101,118 @@ class FormatterClass {
 
         val vaccineCode = basicVaccine?.vaccineCode
         val targetDisease = seriesVaccine?.targetDisease
+        val nhdd = seriesVaccine?.NHDD.toString()
+
+        administeredVaccine?.run {
+            // Vaccine name exists in latestAdministered
+            val status = status
+
+            val dateAdministered = dateAdministered
+            dateValue = dateAdministered
+            statusValue = status
+            canBeVaccinated = false
+            isVaccinatedValue = true
 
 
-        /**
-         * 1.) Check if vaccine exists in the administration workflow
-         * 2.) Check the recommendation list for the vaccine
-         * 3.) Validations
-         *
-         * i.) Yellow fever = 9 months and above. Single dose
-         *
-         * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
-         * iii.) Pfizer = 182 years and above. 2 dose 4 weeks apart
-         * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
-         * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
-         * vi.) J n J & H = 18 years and above till age 60 years. Single dose
-         *
-         * vii.) HPV = 10 years and above till age 14 years. 2 dose 6 months apart
-         */
+            // Process status and dateAdministered as needed
+        } ?: recommendedVaccine?.run {
+            // Vaccine name exists in latestRecommendations
+            val earliestDateStr = earliestDate
+            val earliestDate = convertStringToDate(earliestDateStr, "MMM d yyyy")
+            if (earliestDate != null) {
+                val performCalculationPair = performCalculation(earliestDate)
 
-        //Tetanus
-        if (targetDisease == "Tetanus"){
-            Log.e("---->","<-----")
-            println("upcomingRecommendationList $upcomingRecommendationList")
-            println("administeredVaccineNamesList $administeredVaccineNamesList")
-            Log.e("---->","<-----")
+                val isAfterToday = performCalculationPair.first
+                // Check if the date is not more than 14 days after today
+                val isWithin14Days = performCalculationPair.second
 
-        }
+                // Combine the conditions
+                val isWithinRange = isAfterToday && isWithin14Days
+                canBeVaccinated = isWithinRange
+            }
 
+            val newDate = convertDateFormat(earliestDateStr)
+            if (newDate != null) {
+                dateValue = newDate
+            }
+            isVaccinatedValue = false
 
-
-
-        if (seriesVaccine != null){
-            val vaccineList = seriesVaccine.vaccineList.map { it.vaccineName }
-            val instancesOfAdministeredVaccines = administeredList.filter { it.vaccineName in vaccineList }
-
-
-
-
-
+            // Process earliestDate as needed
+        } ?: run {
+            // Vaccine name does not exist in either list
+            // Handle this case as needed
+            canBeVaccinated = false
+            isVaccinatedValue = false
 
             /**
-             * This works for all vaccines that are in the immunization list
-             * 1. For HPV we want to get the vaccine details for HPV 2 if HPV 1 was administered
-             * 2. For all other covid vaccines (JnJ, Sinopharm, Pfizer, Moderna, Astrazeneca) we want to get the vaccine details for the next vaccine series
-             * 3. For Yellow Fever, we want to make sure we don't have multiple instances of the same vaccine
+             * 1.) Check if vaccine exists in the administration workflow
+             * 2.) Check the recommendation list for the vaccine
+             * The above have been done in the above code block
+             *
+             * 3.) Validations
+             *
+             * i.) Yellow fever = 9 months and above. Single dose
+             *
+             * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
+             * iii.) Pfizer = 18 years and above. 2 dose 4 weeks apart
+             * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
+             * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
+             * vi.) J n J & H = 18 years and above till age 60 years. Single dose
+             *
+             * vii.) HPV = 10 years and above till age 14 years. 2 dose 6 months apart
+             *
+             * viii.) Rabies = From Birth and above. 5 doses
+             *
+             * ix.) Influenza = From 6 month and above. 2 doses but one could be a single dose
+             *
+             * x.) Tetanus = From 92 weeks (This is because the first dose is given after 18 months after DPT3 which is given after 14 weeks of birth)
+             *              5 doses given as follows:
+             *              1st dose after 18 months after DPT 4 ,
+             *              2nd dose is 1 month after 1st dose,
+             *              3rd dose is 6 months after 2nd dose,
+             *              4th dose is 1 year after 3rd dose,
+             *              5th dose is 1 year after 4th dose.
              */
-
-//            //HPV
-//            if (targetDisease == "HPV") {
-//                if (patientGender == "female" && patientYears != null && patientYears in 10..14) {
-//
-//                    val hpvVaccine1 = instancesOfVaccines.find { it.vaccineName == "HPV Vaccine 1" }
-//                    val hpvVaccine2 = instancesOfVaccines.find { it.vaccineName == "HPV Vaccine 2" }
-//
-//                    isVaccinatedValue = hpvVaccine1 != null || hpvVaccine2 != null
-//                    statusValue = hpvVaccine1?.status ?: (hpvVaccine2?.status ?: "")
-//
-//                    if (hpvVaccine1 != null) {
-//                        // HPV Vaccine 1 exists, check if HPV Vaccine 2 exists and add weeks to HPV Vaccine 1 details to get vaccine 2 date
-//
-//                        if (hpvVaccine2 == null) {
-//
-//                            if (vaccineName == "HPV Vaccine 2"){
-//                                // HPV Vaccine 2 does not exist, get vaccine details and add weeks to HPV Vaccine 1 details
-//                                val administrativeWeeksSincePreviousList = basicVaccine.administrativeWeeksSincePrevious
-//                                val dateAdministered = hpvVaccine1.dateAdministered
-//                                val dateScheduleDate = dateScheduleFormat.parse(dateAdministered)
-//
-//                                val strDate = calculateNextVaccineDate(dateScheduleFormat,dateScheduleDate, administrativeWeeksSincePreviousList)
-////                                if (strDate != null){
-////                                    dateValue = strDate
-////                                    canBeVaccinated = true
-////                                }
-//
-//                            }
-//                        }
-//
-//                    }else{
-//                        canBeVaccinated = false
-//                    }
-//
-//                }
-//            }
-//            //Yellow Fever
-//            if (targetDisease == "Yellow Fever"){
-//                val yellowFever = instancesOfVaccines.find { it.vaccineName == "Yellow Fever" }
-//                if (yellowFever != null){
-//                    statusValue = yellowFever.status
-//                    isVaccinatedValue = true
-//                }else{
-//                    canBeVaccinated = true
-//                }
-//            }
-//            //Covid
-//            if (targetDisease == "Covid 19"){
-//                val jnj = instancesOfVaccines.find { it.vaccineName == "Johnson & Johnson" }
-//
-//                val astrazeneca1 = instancesOfVaccines.find { it.vaccineName == "Astrazeneca 1st Dose" }
-//                val astrazeneca2 = instancesOfVaccines.find { it.vaccineName == "Astrazeneca 2nd Dose" }
-//
-//                val pfizer1 = instancesOfVaccines.find { it.vaccineName == "Pfizer-BioNTech 1st Dose" }
-//                val pfizer2 = instancesOfVaccines.find { it.vaccineName == "Pfizer-BioNTech 2nd Dose" }
-//
-//                val moderna1 = instancesOfVaccines.find { it.vaccineName == "Moderna 1st Dose" }
-//                val moderna2 = instancesOfVaccines.find { it.vaccineName == "Moderna 2nd Dose" }
-//
-//                val sinopharm1 = instancesOfVaccines.find { it.vaccineName == "Sinopharm 1st Dose" }
-//                val sinopharm2 = instancesOfVaccines.find { it.vaccineName == "Sinopharm 2nd Dose" }
-//
-//                if (patientYears != null && patientYears in 18..60){
-//                    //Sinopharm
-//                    if (sinopharm1 != null){
-//                        val administrativeWeeksSincePreviousSinopharm1List = basicVaccine.administrativeWeeksSincePrevious
-//                        val dateAdministeredSinopharm1 = sinopharm1.dateAdministered
-//                        val dateScheduleDateSinopharm1 = dateAdministeredSinopharm1.let { dateScheduleFormat.parse(it) }
-//                        val strDateSinopharm1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateSinopharm1, administrativeWeeksSincePreviousSinopharm1List)
-//
-////                        if (strDateSinopharm1 != null && sinopharm2 == null && vaccineName == "Sinopharm 2nd Dose"){
-////                            dateValue = strDateSinopharm1
-////                            canBeVaccinated = true
-////                        }else if (sinopharm2 != null ){
-////                            isVaccinatedValue = true
-////                            canBeVaccinated = false
-////                        }else if (vaccineName == "Sinopharm 1st Dose"){
-////                            canBeVaccinated = true
-////                        }else{
-////                            canBeVaccinated = false
-////                        }
-//                    }
-//
-//                }
-//
-//                if (patientYears != null && patientYears >= 18){
-//
-//                    //John and Johnson
-//                    if (jnj != null) {
-//                        isVaccinatedValue = true
-//                        canBeVaccinated = false
-//                    }
-//
-//                    //Astrazeneca
-//
-//                    if (astrazeneca1 != null) {
-//                        val administrativeWeeksSincePreviousList = basicVaccine.administrativeWeeksSincePrevious
-//                        val dateAdministered = astrazeneca1.dateAdministered
-//                        val dateScheduleDate = dateAdministered.let { dateScheduleFormat.parse(it) }
-//                        val strDateAstra1 = calculateNextVaccineDate(dateScheduleFormat,dateScheduleDate, administrativeWeeksSincePreviousList)
-//
-////                        if (strDateAstra1 != null && astrazeneca2 == null && vaccineName == "Astrazeneca 2nd Dose"){
-////                            dateValue = strDateAstra1
-////                            canBeVaccinated = true
-////                        }else if (astrazeneca2 != null){
-////                            isVaccinatedValue = true
-////                            canBeVaccinated = false
-////                        }else if (vaccineName == "Astrazeneca 1st Dose"){
-////                            canBeVaccinated = true
-////                        }else{
-////                            canBeVaccinated = false
-////                        }
-//                    }
-//
-//
-//                    //Pfizer
-//
-//                    if (pfizer1 != null) {
-//                        val administrativeWeeksSincePreviousPfizer1List = basicVaccine.administrativeWeeksSincePrevious
-//                        val dateAdministeredPfizer1 = pfizer1.dateAdministered
-//                        val dateScheduleDatePfizer1 = dateAdministeredPfizer1.let { dateScheduleFormat.parse(it) }
-//                        val strDatePfizer1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDatePfizer1, administrativeWeeksSincePreviousPfizer1List)
-//
-////                        if (strDatePfizer1 != null && pfizer2 == null && vaccineName == "Pfizer-BioNTech 2nd Dose"){
-////                            dateValue = strDatePfizer1
-////                            canBeVaccinated = true
-////                        }else if (pfizer2 != null){
-////                            isVaccinatedValue = true
-////                            canBeVaccinated = false
-////                        }else if (vaccineName == "Pfizer-BioNTech 1st Dose"){
-////                            canBeVaccinated = true
-////                        }else{
-////                            canBeVaccinated = false
-////                        }
-//                    }
-//
-//
-//
-//                    //Moderna
-//                    if (moderna1 != null){
-//                        val administrativeWeeksSincePreviousModerna1List = basicVaccine.administrativeWeeksSincePrevious
-//                        val dateAdministeredModerna1 = moderna1.dateAdministered
-//                        val dateScheduleDateModerna1 = dateAdministeredModerna1.let { dateScheduleFormat.parse(it) }
-//                        val strDateModerna1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateModerna1, administrativeWeeksSincePreviousModerna1List)
-//
-////                        if (strDateModerna1 != null && moderna2 == null && vaccineName == "Moderna 2nd Dose"){
-////                            dateValue = strDateModerna1
-////                            canBeVaccinated = true
-////                        }else if (moderna2 != null){
-////                            isVaccinatedValue = true
-////                            canBeVaccinated = false
-////                        }else if (vaccineName == "Moderna 1st Dose"){
-////                            canBeVaccinated = true
-////                        }else{
-////                            canBeVaccinated = false
-////                        }
-//                    }
-//
-//
-//                }
-//
-//                isVaccinatedValue = jnj != null
-//                        || astrazeneca1 != null || astrazeneca2 != null
-//                        || pfizer1 != null || pfizer2 != null
-//                        || moderna1 != null || moderna2 != null
-//                        || sinopharm1 != null || sinopharm2 != null
-//
-//                statusValue = jnj?.status
-//                    ?: astrazeneca1?.status ?: astrazeneca2?.status
-//                            ?: pfizer1?.status?: pfizer2?.status
-//                            ?: moderna1?.status ?: moderna2?.status
-//                            ?: sinopharm1?.status?: sinopharm2?.status ?: ""
-//
-//            }
-//            //Influenza
-//            if (targetDisease == "Influenza" && numberOfWeek != null && numberOfWeek > 26){
-//                val influenza1 = instancesOfVaccines.find { it.vaccineName == "Influenza 1st Dose" }
-//                val influenza2 = instancesOfVaccines.find { it.vaccineName == "Influenza 2nd Dose" }
-//
-//                val influenzaSingleDose = instancesOfVaccines.find { it.vaccineName == "Influenza Single Dose" }
-//
-//                if (influenzaSingleDose == null){
-//                    canBeVaccinated = true
-//                }
-//
-//                if (influenza1 != null){
-//                    val administrativeWeeksSincePreviousInfluenza1List = basicVaccine.administrativeWeeksSincePrevious
-//                    val dateAdministeredInfluenza1 = influenza1.dateAdministered
-//                    val dateScheduleDateInfluenza1 = dateAdministeredInfluenza1.let { dateScheduleFormat.parse(it) }
-//                    val strDateInfluenza1 = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateInfluenza1, administrativeWeeksSincePreviousInfluenza1List)
-//
-////                    if (strDateInfluenza1 != null && influenza2 == null && vaccineName == "Influenza 2nd Dose"){
-////                        dateValue = strDateInfluenza1
-////                        canBeVaccinated = true
-////                    }else{
-////                        isVaccinatedValue = true
-////                        canBeVaccinated = false
-////                    }
-//                }else{
-//                    if (influenza2 != null){
-//                        isVaccinatedValue = true
-//                        canBeVaccinated = false
-//                    }
-//                }
-//
-//                statusValue = influenza1?.status?: influenza2?.status ?: ""
-//
-//            }
-//            //Rabies
-//            if (targetDisease == "Rabies"){
-//
-//                val rabiesDose = instancesOfVaccines.lastOrNull()
-//                if (rabiesDose != null){
-//
-//                    val administrativeWeeksSincePreviousRabiesList = basicVaccine.administrativeWeeksSincePrevious
-//                    val dateAdministeredRabies = rabiesDose.dateAdministered
-//                    val dateScheduleDateRabies = dateAdministeredRabies.let { dateScheduleFormat.parse(it) }
-//                    val strDateRabies = calculateNextVaccineDate(dateScheduleFormat, dateScheduleDateRabies, administrativeWeeksSincePreviousRabiesList)
-//
-////                    if (strDateRabies != null){
-////                        dateValue = strDateRabies
-////                        canBeVaccinated = true
-////                    }
-//
-//                    isVaccinatedValue = true
-//                    statusValue = rabiesDose.status
-//
-//                }else{
-//                    isVaccinatedValue = true
-//                    canBeVaccinated = true
-//                }
-//
-//            }
+            //Yellow Fever
+            if (targetDisease == "Yellow Fever") {
+                if (numberOfWeek != null && numberOfWeek > 39){
+                    canBeVaccinated = true
+                }
+            }
+            //HPV
+            if (targetDisease == "HPV") {
+                if (patientGender == "female" && patientYears != null && patientYears in 10..14) {
+                    canBeVaccinated = true
+                }
+            }
+            //Covid 19
+            //Astrazeneca
+            if (targetDisease == "Covid 19" && patientYears != null){
+                if (patientYears >= 18){
+                    if (nhdd == "16927" || nhdd == "0" || nhdd == "16931" || nhdd == "16929"){
+                        //Astrazeneca, JnJ, Moderna, Pfizer
+                        canBeVaccinated = true
+                    }
+                    if(nhdd == "16489" && patientYears in 18..60){
+                        //Sinopharm
+                        canBeVaccinated = true
+                    }
+                }
+            }
+            //Rabies
+            if (targetDisease == "Rabies Post Exposure" && patientYears != null){
+                if (patientYears >= 0){
+                    canBeVaccinated = true
+                }
+            }
+            //Tetanus
+            if(targetDisease == "Tetanus" && patientYears != null){
+                if (patientYears >= 92){
+                    canBeVaccinated = true
+                }
+            }
 
         }
-
 
         if (statusValue == Reasons.CONTRAINDICATE.name){
             statusColor = StatusColors.AMBER.name
@@ -1383,8 +1223,6 @@ class FormatterClass {
         if (statusValue == Reasons.COMPLETED.name) {
             statusColor = StatusColors.GREEN.name
         }
-
-        canBeVaccinated = true
 
         return DbVaccineScheduleChild(
             vaccineName,

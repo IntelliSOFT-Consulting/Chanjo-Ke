@@ -350,13 +350,13 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
                 td+"TD",
                 "Tetanus",
                 1,
-                0,
+                1,
                 listOf(
-                    BasicVaccine(td+"I", "Tetanus 1st Dose", "Intramuscular (IM)", 625, arrayListOf(), "0.5ml","1"),
-                    BasicVaccine(td+"II", "Tetanus 2nd Dose", "Intramuscular (IM)", 625, arrayListOf(4.0), "0.5ml","2"),
-                    BasicVaccine(td+"III", "Tetanus 3rd Dose", "Intramuscular (IM)", 625, arrayListOf(26.0), "0.5ml","3"),
-                    BasicVaccine(td+"IV", "Tetanus 4th Dose", "Intramuscular (IM)", 625, arrayListOf(52.0), "0.5ml","4"),
-                    BasicVaccine(td+"V", "Tetanus 5th Dose", "Intramuscular (IM)", 625, arrayListOf(52.0), "0.5ml","5"),
+                    BasicVaccine(td+"I", "Tetanus 1st Dose", "Intramuscular (IM)", 92, arrayListOf(), "0.5ml","1"),
+                    BasicVaccine(td+"II", "Tetanus 2nd Dose", "Intramuscular (IM)", 92, arrayListOf(4.0), "0.5ml","2"),
+                    BasicVaccine(td+"III", "Tetanus 3rd Dose", "Intramuscular (IM)", 92, arrayListOf(26.0), "0.5ml","3"),
+                    BasicVaccine(td+"IV", "Tetanus 4th Dose", "Intramuscular (IM)", 92, arrayListOf(52.0), "0.5ml","4"),
+                    BasicVaccine(td+"V", "Tetanus 5th Dose", "Intramuscular (IM)", 92, arrayListOf(52.0), "0.5ml","5"),
                 )
             )
         )

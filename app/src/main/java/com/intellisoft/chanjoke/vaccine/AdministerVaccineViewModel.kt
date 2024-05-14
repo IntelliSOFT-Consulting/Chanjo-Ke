@@ -994,10 +994,13 @@ class AdministerVaccineViewModel(
             val dateCriterion =
                 ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
 
-            val codeableConcept = CodeableConcept()
-            codeableConcept.text = "Earliest-date-to-administer"
-
-            dateCriterion.code = codeableConcept
+            val code = CodeableConcept()
+            val codeCoding = Coding()
+            codeCoding.system = "http://snomed.info/sct"
+            codeCoding.code = "Earliest-date-to-administer"
+            codeCoding.display = "Earliest-date-to-administer"
+            code.coding = listOf(codeCoding)
+            dateCriterion.code = code
             dateCriterion.value = recommendedDate
 
             dateCriterionList.add(dateCriterion)

@@ -357,6 +357,7 @@ class PatientDetailsViewModel(
                         }
                     }
                 }
+
                 if (recommendation.hasDescription()){
                     description = recommendation.description
                 }
