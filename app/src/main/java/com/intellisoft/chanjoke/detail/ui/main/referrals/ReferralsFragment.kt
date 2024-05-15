@@ -121,6 +121,9 @@ class ReferralsFragment : Fragment() {
     private fun loadServiceRequests() {
         try {
             val data = patientDetailsViewModel.loadServiceRequests()
+            if (data.isEmpty()){
+
+            }
             val vaccineAdapter =
                 ReferralAdapter(
                     data,

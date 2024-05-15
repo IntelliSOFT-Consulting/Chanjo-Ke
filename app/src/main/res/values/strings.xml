@@ -94,6 +94,7 @@
     <string name="back">Back</string>
     <string name="administer">Administer</string>
     <string name="update_vaccine_history">Update Vaccine History</string>
+    <string name="no_referral_record_found">No Referral record found !!</string>
 
 
 </resources>

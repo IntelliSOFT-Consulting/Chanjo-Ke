@@ -96,6 +96,7 @@ data class DbServiceRequest(
     val status: String,
     val intent: String,
     var priority: String,
+    var patientReference: String,
     val authoredOn: String,
     val vaccineName: String,
     val referringCHP: String,

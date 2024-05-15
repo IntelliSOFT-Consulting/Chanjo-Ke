@@ -607,10 +607,17 @@ class PatientDetailsViewModel(
 
         fhirEngine
             .search<ServiceRequest> {
+//                filter(ServiceRequest.SUBJECT, { value = "Patient/$patientId" })
                 sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
             }
             .map { createServiceRequestItem(it) }
-            .let { vaccineList.addAll(it) }
+            .let { q ->
+                q.forEach {
+                    if (it.patientReference == patientId) {
+                        vaccineList.add(it)
+                    }
+                }
+            }
 
 
         return ArrayList(vaccineList)
@@ -911,6 +918,9 @@ class PatientDetailsViewModel(
         val intent = if (data.hasIntent()) data.intent.toString() else ""
         val priority = if (data.hasPriority()) data.priority.toString() else ""
         val authoredOn = if (data.hasAuthoredOn()) data.authoredOn.toString() else ""
+        val patientId =
+            if (data.hasSubject()) if (data.subject.hasReference()) data.subject.reference else "" else ""
+
         val vaccineName =
             if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasDisplay()) data.reasonCodeFirstRep.codingFirstRep.display else "" else "" else ""
         val referringCHP = "CHP XYZ"
@@ -919,10 +929,16 @@ class PatientDetailsViewModel(
         val scheduledDate = "13 May 2024"
         val dateAdministered = "-"
         val healthFacility = "Facility ABC"
+        var patientReference = ""
+        if (patientId.isNotEmpty()) {
+
+            patientReference = patientId.toString().replace("Patient/", "")
+        }
         return DbServiceRequest(
             logicalId,
             status,
             intent,
+            patientReference,
             priority,
             authoredOn,
             vaccineName,
