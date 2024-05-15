@@ -1442,6 +1442,13 @@ class FormatterClass {
                                 canBeVaccinated = true
                             }
                         }
+                        if (vaccineCode == "IMPO-bOPV") {
+                            if (numberOfWeek < 2) {
+                                canBeVaccinated = true
+                            } else {
+                                canBeVaccinated = false
+                            }
+                        }
                     }
                 }else{
                     //Check if dateSchedule is after / equal to today but is less than 14 days after today
