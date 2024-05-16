@@ -605,19 +605,29 @@ class PatientDetailsViewModel(
 
         val vaccineList = ArrayList<DbServiceRequest>()
 
-        fhirEngine
-            .search<ServiceRequest> {
-//                filter(ServiceRequest.SUBJECT, { value = "Patient/$patientId" })
-                sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
-            }
-            .map { createServiceRequestItem(it) }
-            .let { q ->
-                q.forEach {
-                    if (it.patientReference == patientId) {
-                        vaccineList.add(it)
-                    }
+//        fhirEngine
+//            .search<ServiceRequest> {
+////                filter(ServiceRequest.SUBJECT, { value = "Patient/$patientId" })
+//                sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
+//            }
+//            .map { createServiceRequestItem(it) }
+//            .let { q ->
+//                q.forEach {
+//                    if (it.patientReference == patientId) {
+//                        vaccineList.add(it)
+//                    }
+//                }
+//            }
+        fhirEngine.search<ServiceRequest> {
+            sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
+        }.map { createServiceRequestItem(it) }.let { serviceRequests ->
+            serviceRequests.forEach { serviceRequest ->
+                if (serviceRequest.patientReference == "Patient/$patientId") {
+                    vaccineList.add(serviceRequest)
                 }
             }
+        }
+
 
 
         return ArrayList(vaccineList)
@@ -918,28 +928,27 @@ class PatientDetailsViewModel(
         val intent = if (data.hasIntent()) data.intent.toString() else ""
         val priority = if (data.hasPriority()) data.priority.toString() else ""
         val authoredOn = if (data.hasAuthoredOn()) data.authoredOn.toString() else ""
-        val patientId =
+        val patientIdRef =
             if (data.hasSubject()) if (data.subject.hasReference()) data.subject.reference else "" else ""
 
         val vaccineName =
             if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasDisplay()) data.reasonCodeFirstRep.codingFirstRep.display else "" else "" else ""
-        val referringCHP = "CHP XYZ"
-        val detailsGiven = "This is a sample details of the referral"
-        val referralDate = "03 May 2024"
-        val scheduledDate = "13 May 2024"
+        val referringCHP = ""
+        val detailsGiven =
+            if (data.hasNote()) if (data.noteFirstRep.hasText()) data.noteFirstRep.text else "" else ""
+        val referralDate =
+            if (data.hasOccurrencePeriod()) if (data.occurrencePeriod.hasStart()) data.occurrencePeriod.start.toString() else "" else ""
+        val scheduledDate =
+            if (data.hasOccurrencePeriod()) if (data.occurrencePeriod.hasEnd()) data.occurrencePeriod.end.toString() else "" else ""
         val dateAdministered = "-"
-        val healthFacility = "Facility ABC"
-        var patientReference = ""
-        if (patientId.isNotEmpty()) {
-
-            patientReference = patientId.toString().replace("Patient/", "")
-        }
+        val healthFacility =
+            if (data.hasPerformer()) if (data.performerFirstRep.hasDisplay()) data.performerFirstRep.display else "" else ""
         return DbServiceRequest(
             logicalId,
             status,
             intent,
-            patientReference,
             priority,
+            patientIdRef,
             authoredOn,
             vaccineName,
             referringCHP,

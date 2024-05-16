@@ -26,6 +26,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import com.intellisoft.chanjoke.viewmodel.ScreenerViewModel
+import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -115,14 +116,17 @@ class ReferralsFragment : Fragment() {
             e.printStackTrace()
         }
     }
+
     private fun loadServiceRequests() {
         try {
             val data = patientDetailsViewModel.loadServiceRequests()
+
             if (data.isEmpty()) {
                 binding.apply {
-                    tvEmptyList.visibility = View.GONE
+                    tvEmptyList.visibility = View.VISIBLE
                 }
             }
+
             val vaccineAdapter =
                 ReferralAdapter(
                     data,
