@@ -73,13 +73,6 @@ class VaccineDetailsAdapter(
             vaccineStatus = ""
         }
 
-        if (canBeVaccinated != null) {
-            holder.checkBox.isEnabled = canBeVaccinated
-            if (!canBeVaccinated){
-                holder.iconDisabled.visibility = View.VISIBLE
-                holder.checkBox.visibility = View.INVISIBLE
-            }
-        }
 
         holder.iconDisabled.setOnClickListener {
             Toast.makeText(context, "You are not eligible for this vaccine.", Toast.LENGTH_SHORT).show()
@@ -90,8 +83,25 @@ class VaccineDetailsAdapter(
         holder.tvVaccineName.text = vaccineName
         holder.tvVaccineDate.text = date
 
+        if (canBeVaccinated != null) {
+            holder.checkBox.isEnabled = canBeVaccinated
+            if (!canBeVaccinated){
+                holder.iconDisabled.visibility = View.VISIBLE
+                holder.checkBox.visibility = View.GONE
+            }
+        }
+
+        if(holder.checked.visibility == View.GONE &&
+            holder.iconDisabled.visibility == View.GONE &&
+            holder.imgBtnView.visibility == View.GONE)
+        {
+            holder.linearVisibility.visibility = View.GONE
+        }else{
+            holder.linearVisibility.visibility = View.VISIBLE
+        }
+
         if(isVaccinated){
-            holder.checkBox.visibility = View.INVISIBLE
+            holder.checkBox.visibility = View.GONE
             holder.checked.visibility = View.VISIBLE
         }
 
@@ -113,6 +123,8 @@ class VaccineDetailsAdapter(
         val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
         val checked: ImageButton = itemView.findViewById(R.id.checked)
         val iconDisabled: ImageButton = itemView.findViewById(R.id.iconDisabled)
+        val imgBtnView: ImageButton = itemView.findViewById(R.id.imgBtnView)
+        val linearVisibility: LinearLayout = itemView.findViewById(R.id.linearVisibility)
 
 
         init {

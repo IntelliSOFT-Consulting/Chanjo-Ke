@@ -87,6 +87,7 @@ class VaccineScheduleAdapter(
         val checked = convertView.findViewById<ImageButton>(R.id.checked)
         val imgBtnView = convertView.findViewById<ImageButton>(R.id.imgBtnView)
         val linearVaccineName = convertView.findViewById<LinearLayout>(R.id.linearVaccineName)
+        val linearVisibility = convertView.findViewById<LinearLayout>(R.id.linearVisibility)
 
         val vaccineName = expandedListText.vaccineName
         val isVaccinated = expandedListText.isVaccinated
