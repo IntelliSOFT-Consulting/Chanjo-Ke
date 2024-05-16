@@ -84,7 +84,7 @@ class CaregiverFragment : Fragment() {
             this::handleClick
         ) // Initialize with an empty list
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
-        Timber.e("TAG******* Caregiver Message $isUpdate")
+
         if (isUpdate != null) {
             displayInitialData()
         }
@@ -148,10 +148,12 @@ class CaregiverFragment : Fragment() {
                         val kinType = binding.identificationType.text.toString()
                         val kinName = binding.name.text.toString()
                         val kinPhone = binding.phone.text.toString()
+                        val nationalID = binding.nationalId.text.toString()
                         val careGiver = CareGiver(
                             phone = kinPhone,
                             name = kinName,
-                            type = kinType
+                            type = kinType,
+                            nationalID = nationalID
                         )
                         val existingCareGiverIndex = careGivers.indexOfFirst { it.type == kinType }
                         if (existingCareGiverIndex != -1) {
@@ -234,10 +236,12 @@ class CaregiverFragment : Fragment() {
             val kinType = binding.identificationType.text.toString()
             val kinName = binding.name.text.toString()
             val kinPhone = binding.phone.text.toString()
+            val nationalID = binding.nationalId.text.toString()
             val careGiver = CareGiver(
                 phone = kinPhone,
                 name = AppUtils().capitalizeFirstLetter(kinName),
-                type = kinType
+                type = kinType,
+                nationalID = nationalID
             )
             //only add if there is no caregiver type, else update that index
             val existingCareGiverIndex = careGivers.indexOfFirst { it.type == kinType }
@@ -274,6 +278,7 @@ class CaregiverFragment : Fragment() {
                         identificationType.setText(data.type)
                         name.setText(data.name)
                         phone.setText(data.phone)
+                        nationalId.setText(data.nationalID)
                     }
 
                     //add initial caregiver
@@ -328,14 +333,14 @@ class CaregiverFragment : Fragment() {
             Toast.makeText(requireContext(), "Please enter name", Toast.LENGTH_SHORT).show()
             return false
         }
-        if (kinPhone.isEmpty()) {
-            Toast.makeText(requireContext(), "Please enter phone", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        if (kinPhone.length != 10) {
-            Toast.makeText(requireContext(), "Please valid enter phone", Toast.LENGTH_SHORT).show()
-            return false
-        }
+//        if (kinPhone.isEmpty()) {
+//            Toast.makeText(requireContext(), "Please enter phone", Toast.LENGTH_SHORT).show()
+//            return false
+//        }
+//        if (kinPhone.length != 10) {
+//            Toast.makeText(requireContext(), "Please valid enter phone", Toast.LENGTH_SHORT).show()
+//            return false
+//        }
 //        val payload = CareGiver(kinType, kinName, kinPhone)
 //        formatter.saveSharedPref("caregiver", Gson().toJson(payload), requireContext())
         return true

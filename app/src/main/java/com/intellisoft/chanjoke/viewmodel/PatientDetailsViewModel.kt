@@ -145,7 +145,7 @@ class PatientDetailsViewModel(
                     val name = it.name.nameAsSingleString
                     val phone = it.telecomFirstRep.value
                     val type = it.relationshipFirstRep.text
-                    kins.add(CareGiver(phone = phone, name = name, type = type))
+                    kins.add(CareGiver(phone = phone, name = name, type = type, nationalID = ""))
                 }
 
                 if (it.contactFirstRep.hasName()) contact_name =

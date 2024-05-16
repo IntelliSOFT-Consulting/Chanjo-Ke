@@ -242,10 +242,12 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/tv_empty_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/no_referral_record_found"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:visibility="gone" />
             </LinearLayout>
 
 

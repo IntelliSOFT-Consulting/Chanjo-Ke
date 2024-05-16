@@ -229,7 +229,6 @@ class CompleteDetailsActivity : AppCompatActivity() {
 
     private fun handleClientDetailsEdit(data: PatientDetailsViewModel.PatientData) {
         try {
-            Timber.e("TAG **********Kins ${data.kins}")
             saveTempData("patientId", data.logicalId)
             val payload = CustomPatient(
                 firstname = data.name,
@@ -244,11 +243,7 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 estimate = false
             )
             saveTempData("personal", Gson().toJson(payload))
-            val careGiver = CareGiver(
-                data.contact_gender.toString(),
-                data.contact_name.toString(),
-                data.contact_phone.toString()
-            )
+
             val caregiver = Gson().toJson(data.kins)
             saveTempData("caregiver", caregiver)
             val administrative = Administrative(

@@ -114,15 +114,14 @@ class ReferralsFragment : Fragment() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
-
     }
-
     private fun loadServiceRequests() {
         try {
             val data = patientDetailsViewModel.loadServiceRequests()
-            if (data.isEmpty()){
-
+            if (data.isEmpty()) {
+                binding.apply {
+                    tvEmptyList.visibility = View.GONE
+                }
             }
             val vaccineAdapter =
                 ReferralAdapter(

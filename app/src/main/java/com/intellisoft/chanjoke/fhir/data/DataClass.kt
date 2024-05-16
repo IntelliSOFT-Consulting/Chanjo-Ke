@@ -287,7 +287,8 @@ data class CustomPatient(
 data class CareGiver(
     val type: String,
     val name: String,
-    val phone: String
+    val phone: String,
+    val nationalID: String
 )
 
 data class Administrative(
