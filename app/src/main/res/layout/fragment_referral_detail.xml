@@ -87,7 +87,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Vaccine Referred" />
+                    android:text="Vaccine Referred: " />
 
                 <TextView
                     android:id="@+id/vaccineReferredTextView"
@@ -115,7 +115,7 @@
                     android:layout_weight="1"
                     android:padding="5dp"
 
-                    android:text="Details" />
+                    android:text="Details: " />
 
                 <TextView
                     android:id="@+id/detailsTextView"
@@ -143,7 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Date of Referral" />
+                    android:text="Date of Referral: " />
 
                 <TextView
                     android:id="@+id/dateOfReferralTextView"
@@ -170,7 +170,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Scheduled vaccine date" />
+                    android:text="Scheduled vaccine date: " />
 
                 <TextView
                     android:id="@+id/scheduledVaccineDateTextView"
@@ -197,7 +197,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Date vaccine administered" />
+                    android:text="Date vaccine administered: " />
 
                 <TextView
                     android:id="@+id/dateVaccineAdministeredTextView"
@@ -224,7 +224,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Health facility referred to" />
+                    android:text="Health facility referred to: " />
 
                 <TextView
                     android:id="@+id/healthFacilityReferredToTextView"

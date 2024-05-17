@@ -68,6 +68,7 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ResourceType
 import org.hl7.fhir.r4.model.RiskAssessment
 import org.hl7.fhir.r4.model.ServiceRequest
+import org.hl7.fhir.r4.model.ServiceRequest.ServiceRequestStatus
 import timber.log.Timber
 
 /**
@@ -605,19 +606,6 @@ class PatientDetailsViewModel(
 
         val vaccineList = ArrayList<DbServiceRequest>()
 
-//        fhirEngine
-//            .search<ServiceRequest> {
-////                filter(ServiceRequest.SUBJECT, { value = "Patient/$patientId" })
-//                sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
-//            }
-//            .map { createServiceRequestItem(it) }
-//            .let { q ->
-//                q.forEach {
-//                    if (it.patientReference == patientId) {
-//                        vaccineList.add(it)
-//                    }
-//                }
-//            }
         fhirEngine.search<ServiceRequest> {
             sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
         }.map { createServiceRequestItem(it) }.let { serviceRequests ->
@@ -931,6 +919,9 @@ class PatientDetailsViewModel(
         val patientIdRef =
             if (data.hasSubject()) if (data.subject.hasReference()) data.subject.reference else "" else ""
 
+        val vaccineCode =
+            if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasCode()) data.reasonCodeFirstRep.codingFirstRep.code else "" else "" else ""
+
         val vaccineName =
             if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasDisplay()) data.reasonCodeFirstRep.codingFirstRep.display else "" else "" else ""
         val referringCHP = ""
@@ -951,6 +942,7 @@ class PatientDetailsViewModel(
             patientIdRef,
             authoredOn,
             vaccineName,
+            vaccineCode,
             referringCHP,
             detailsGiven,
             referralDate,

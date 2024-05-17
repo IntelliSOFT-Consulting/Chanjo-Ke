@@ -99,6 +99,7 @@ data class DbServiceRequest(
     var patientReference: String,
     val authoredOn: String,
     val vaccineName: String,
+    val vaccineCode: String,
     val referringCHP: String,
     val detailsGiven: String,
     val referralDate: String,

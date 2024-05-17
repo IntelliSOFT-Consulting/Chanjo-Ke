@@ -117,6 +117,15 @@ class ReferralsFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        try {
+            loadServiceRequests()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun loadServiceRequests() {
         try {
             val data = patientDetailsViewModel.loadServiceRequests()
