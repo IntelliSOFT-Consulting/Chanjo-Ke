@@ -1015,14 +1015,6 @@ class FormatterClass {
                             }else{
                                 earliestDate
                             }
-                            //Check if dateSchedule is before today
-
-                            Log.e("----->","<-----")
-                            println("vaccineCode $vaccineCode")
-                            println("earliestDate $earliestDate")
-                            println("latestDate $latestDate")
-                            println("dateSchedule $dateSchedule")
-                            Log.e("----->","<-----")
 
                             if (dateSchedule!= null) {
                                 val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
@@ -1417,7 +1409,7 @@ class FormatterClass {
 
         //Check between the two the latest one
         val latestDateToBeAdministered = listOfNotNull(dbAppointmentDetailsContra, dbAppointmentDetailsNotDone)
-            .maxByOrNull { it.dateAdministered }
+            .maxByOrNull { it.dateRecorded }
         if (latestDateToBeAdministered != null){
 
             statusValue = latestDateToBeAdministered.status
@@ -1437,6 +1429,7 @@ class FormatterClass {
             dateValue = dbAppointmentDetails.dateAdministered
         }
 
+        //Cater for recommendations
         if (statusValue == "due" && dateValue != "") {
             val dateScheduleDate = dateScheduleFormat.parse(dateValue)
             if (dateScheduleDate != null) {
@@ -1508,12 +1501,31 @@ class FormatterClass {
             }
         }
 
-        if (statusValue == Reasons.CONTRAINDICATE.name){
-            statusColor = StatusColors.AMBER.name
+
+        if (statusValue == Reasons.CONTRAINDICATE.name || statusValue == Reasons.NOT_ADMINISTERED.name){
+
+            val dateScheduleDate = dateScheduleFormat.parse(dateValue)
+            if (dateScheduleDate != null){
+                val today = LocalDate.now()
+                val dateSchedule = convertDateToLocalDate(dateScheduleDate)
+                val isBeforeDateSchedule = today.isBefore(dateSchedule)
+                val isToday = today.equals(dateSchedule)
+                val finalDayDate = isBeforeDateSchedule || isToday
+
+                if (finalDayDate){
+                    canBeVaccinated = true
+                }
+            }
+
+            if (statusValue == Reasons.NOT_ADMINISTERED.name){
+                statusColor = StatusColors.NOT_DONE.name
+            }
+            if (statusValue == Reasons.CONTRAINDICATE.name){
+                statusColor = StatusColors.AMBER.name
+            }
+
         }
-        if (statusValue == Reasons.NOT_ADMINISTERED.name){
-            statusColor = StatusColors.NOT_DONE.name
-        }
+
         if (statusValue == Reasons.COMPLETED.name) {
             statusColor = StatusColors.GREEN.name
         }

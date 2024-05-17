@@ -82,6 +82,7 @@ data class DbVaccineData(
     val doseNumber: String,
     var dateAdministered: String,
     val status: String,
+    val dateRecorded: String = "",
 )
 
 data class DbTempData(

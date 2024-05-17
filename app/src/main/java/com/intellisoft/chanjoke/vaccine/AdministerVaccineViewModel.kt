@@ -675,10 +675,12 @@ class AdministerVaccineViewModel(
         //Date administered
 
         /**
-         * TODO: Set to pick the saved data not the current date
+         * Occurrence will be the date the vaccine was administered or not-done as selected
+         * recorded is the current date
          */
 
         immunization.occurrenceDateTimeType.value = date
+        immunization.recorded = Date()
 
         //Target Disease
         val targetDisease = FormatterClass().getSharedPref(

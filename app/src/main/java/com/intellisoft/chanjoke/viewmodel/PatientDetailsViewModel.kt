@@ -970,6 +970,7 @@ class PatientDetailsViewModel(
         var doseNumberValue = ""
         val logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
         var dateScheduled = ""
+        var dateRecorded = ""
         var status = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
@@ -983,6 +984,13 @@ class PatientDetailsViewModel(
             val convertedDate = FormatterClass().convertDateFormat(fhirDate)
             if (convertedDate != null) {
                 dateScheduled = convertedDate
+            }
+        }
+        if (immunization.hasRecorded()) {
+            val fhirDate = immunization.recorded.toString()
+            val convertedDate = FormatterClass().convertDateFormat(fhirDate)
+            if (convertedDate != null) {
+                dateRecorded = convertedDate
             }
         }
         if (immunization.hasProtocolApplied()) {
@@ -1025,7 +1033,8 @@ class PatientDetailsViewModel(
             vaccineName,
             doseNumberValue,
             dateScheduled,
-            status
+            status,
+            dateRecorded
         )
     }
 
