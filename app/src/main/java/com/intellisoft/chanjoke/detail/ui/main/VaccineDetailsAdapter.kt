@@ -101,6 +101,7 @@ class VaccineDetailsAdapter(
         }
 
         if(isVaccinated){
+            holder.iconDisabled.visibility = View.GONE
             holder.checkBox.visibility = View.GONE
             holder.checked.visibility = View.VISIBLE
         }

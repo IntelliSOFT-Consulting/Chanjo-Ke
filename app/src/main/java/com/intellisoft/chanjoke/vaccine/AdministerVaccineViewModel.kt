@@ -629,7 +629,7 @@ class AdministerVaccineViewModel(
         encounterId: String?,
         patientId: String,
         immunisationStatus: ImmunizationStatus,
-        date: Date
+        date: Date?
     ): Immunization {
 
         val immunization = Immunization()
@@ -868,7 +868,7 @@ class AdministerVaccineViewModel(
                                 null,
                                 patientId,
                                 ImmunizationStatus.NOTDONE,
-                                Date()
+                                nextImmunizationDate
                             )
                             val codeableConcept = CodeableConcept()
                             codeableConcept.text = "Reasons for not administering"
