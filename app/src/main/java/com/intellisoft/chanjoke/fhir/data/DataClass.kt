@@ -202,6 +202,7 @@ data class DbRecommendationDetails(
     val series: String,
     val doseNumber: String,
     val status: String,
+    val nhdd: String? = null,
 )
 
 data class DbSignIn(

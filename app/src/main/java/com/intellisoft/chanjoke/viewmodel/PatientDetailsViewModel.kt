@@ -330,10 +330,12 @@ class PatientDetailsViewModel(
                 var series = ""
                 var doseNumber = ""
                 var status = ""
+                var nhdd = ""
 
                 if (recommendation.hasVaccineCode()) {
                     if (recommendation.vaccineCode[0].hasCoding()) {
-                        vaccineCode = recommendation.vaccineCode[0].codingFirstRep.code
+                        nhdd = recommendation.vaccineCode[0].codingFirstRep.code
+                        vaccineCode = recommendation.vaccineCode[0].codingFirstRep.display
                     }
                     if (recommendation.vaccineCode[0].hasText()) {
                         vaccineName = recommendation.vaccineCode[0].text
@@ -387,6 +389,7 @@ class PatientDetailsViewModel(
                         series = series,
                         doseNumber = doseNumber,
                         status = status,
+                        nhdd = nhdd,
                     )
                     dbRecommendationDetailsList.add(dbRecommendationDetails)
                 }

@@ -1005,8 +1005,24 @@ class FormatterClass {
                         }.map { it }.firstOrNull()
 
                         if (dbAppointmentDetailsDue != null) {
-                            val dateSchedule = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
+                            val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
+
+                            val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+                            val vaccineCode = dbAppointmentDetailsDue.vaccineCode
+
+                            val dateSchedule = if (vaccineCode == "IMPO-bOPV" || vaccineCode == "IMBCG-I") {
+                                latestDate
+                            }else{
+                                earliestDate
+                            }
                             //Check if dateSchedule is before today
+
+                            Log.e("----->","<-----")
+                            println("vaccineCode $vaccineCode")
+                            println("earliestDate $earliestDate")
+                            println("latestDate $latestDate")
+                            println("dateSchedule $dateSchedule")
+                            Log.e("----->","<-----")
 
                             if (dateSchedule!= null) {
                                 val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
@@ -1437,14 +1453,30 @@ class FormatterClass {
                         val vaccineCode = basicVaccine.vaccineCode
 
                         if (vaccineCode == "IMBCG-I") {
+
+                            statusColor = StatusColors.NORMAL.name
                             //BCG can be administered from 0 weeks to 255 weeks
                             if (numberOfWeek in 0..255) {
+                                if (dbAppointmentDetailsDue != null){
+                                    val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+                                    if (latestDate != null) {
+                                        dateValue = latestDate
+                                    }
+                                }
                                 canBeVaccinated = true
                             }
                         }
                         if (vaccineCode == "IMPO-bOPV") {
-                            if (numberOfWeek < 2) {
+                            statusColor = StatusColors.NORMAL.name
+
+                            if (numberOfWeek <= 2) {
                                 canBeVaccinated = true
+                                if (dbAppointmentDetailsDue != null){
+                                    val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+                                    if (latestDate != null) {
+                                        dateValue = latestDate
+                                    }
+                                }
                             } else {
                                 canBeVaccinated = false
                             }
