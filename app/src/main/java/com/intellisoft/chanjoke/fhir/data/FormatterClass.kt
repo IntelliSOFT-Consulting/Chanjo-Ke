@@ -1446,75 +1446,68 @@ class FormatterClass {
 
                 val isBeforeToday = dateSchedule.isBefore(today)
                 if (isBeforeToday){
+                    /**
+                     * The vaccine is passed due.
+                     * Check if BCG and bOPV are within 14 days after dob.
+                     */
                     statusColor = StatusColors.RED.name
                     canBeVaccinated = false
 
                     if (basicVaccine != null && numberOfWeek != null) {
                         val vaccineCode = basicVaccine.vaccineCode
-
-                        if (vaccineCode == "IMBCG-I") {
-
-                            statusColor = StatusColors.NORMAL.name
-                            //BCG can be administered from 0 weeks to 255 weeks
-                            if (numberOfWeek in 0..255) {
-                                if (dbAppointmentDetailsDue != null){
-                                    val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
-                                    if (latestDate != null) {
-                                        dateValue = latestDate
+                        when (vaccineCode) {
+                            "IMBCG-I" -> {
+                                //BCG can be administered from 0 weeks to 255 weeks
+                                if (numberOfWeek in 0..255) {
+                                    if (dbAppointmentDetailsDue != null){
+                                        val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+                                        if (latestDate != null) {
+                                            dateValue = latestDate
+                                        }
                                     }
+                                    canBeVaccinated = true
+                                    statusColor = StatusColors.NORMAL.name
                                 }
-                                canBeVaccinated = true
+                            }
+                            "IMPO-bOPV" -> {
+                                //bOPV can be administered from 0 weeks to 14 weeks
+                                if (numberOfWeek <= 2) {
+                                    if (dbAppointmentDetailsDue != null){
+                                        val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+                                        if (latestDate != null) {
+                                            dateValue = latestDate
+                                        }
+                                    }
+                                    canBeVaccinated = true
+                                    statusColor = StatusColors.NORMAL.name
+                                }
                             }
                         }
-                        if (vaccineCode == "IMPO-bOPV") {
-                            statusColor = StatusColors.NORMAL.name
 
-                            if (numberOfWeek <= 2) {
-                                canBeVaccinated = true
-                                if (dbAppointmentDetailsDue != null){
-                                    val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
-                                    if (latestDate != null) {
-                                        dateValue = latestDate
-                                    }
-                                }
-                            } else {
-                                canBeVaccinated = false
-                            }
-                        }
                     }
+
                 }else{
-                    //Check if dateSchedule is after / equal to today but is less than 14 days after today
-                    // Check if the date is equal to or after today
+                    /**
+                     * Check if the date is equal to or after today but less than 14 days after today
+                     */
+
                     val performCalculationPair = performCalculation(dateScheduleDate)
 
                     val isAfterToday = performCalculationPair.first
-
                     // Check if the date is not more than 14 days after today
                     val isWithin14Days = performCalculationPair.second
-
-
                     // Combine the conditions
                     val isWithinRange = isAfterToday && isWithin14Days
 
                     if (isWithinRange) {
                         canBeVaccinated = true
-
-                        if (basicVaccine != null && numberOfWeek != null) {
-                            val vaccineCode = basicVaccine.vaccineCode
-                            //bOPV is allowed for less than 2 weeks
-                            if (vaccineCode == "IMPO-bOPV") {
-                                if (numberOfWeek < 2) {
-                                    canBeVaccinated = true
-                                } else {
-                                    canBeVaccinated = false
-                                }
-                            }
-                        }
+                        statusColor = StatusColors.NORMAL.name
                     }
 
                 }
             }
         }
+
         if (statusValue == Reasons.CONTRAINDICATE.name){
             statusColor = StatusColors.AMBER.name
         }

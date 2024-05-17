@@ -46,9 +46,7 @@ class VaccineDetailsAdapter(
         val daysTo = formatterClass.daysBetweenTodayAndGivenDate(date)
 
         var vaccineStatus = ""
-        if (status == StatusColors.NORMAL.name){
-            vaccineStatus = ""
-        }else if (status == StatusColors.GREEN.name){
+        if (status == StatusColors.GREEN.name){
             vaccineStatus = "Administered"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.green))
         }else if (status == StatusColors.AMBER.name){
@@ -62,7 +60,6 @@ class VaccineDetailsAdapter(
             }
         }else if (status == StatusColors.NORMAL.name){
             vaccineStatus = "Due"
-            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
         }else if (status == StatusColors.RED.name){
             vaccineStatus = "Missed"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
