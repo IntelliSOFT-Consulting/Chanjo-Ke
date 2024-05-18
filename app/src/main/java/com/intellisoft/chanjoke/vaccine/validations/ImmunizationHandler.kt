@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
 import android.content.Context
+import android.util.Log
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 // Interface segregation principle
@@ -384,7 +385,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val rabiesMain = "IMRABIES-"
     val rabiesMainSeries = NonRoutineVaccine(
         rabiesMain,
-        "Rabies",
+        "Rabies Post Exposure",
         listOf(
             RoutineVaccine(
                 rabiesMain+"RABIES",
@@ -753,6 +754,7 @@ class ImmunizationHandler() {
 
     // Extension function for List<DbVaccine> to find vaccine details by series target name
     fun getRoutineVaccineDetailsBySeriesTargetName(targetDisease: String): Any? {
+
         return vaccineList.firstOrNull {
             when (it) {
                 is RoutineVaccine -> it.targetDisease == targetDisease

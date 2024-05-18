@@ -34,6 +34,7 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContraindicationsFragment
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineAdmin
@@ -257,7 +258,6 @@ class AdministerVaccineViewModel(
                         )
 
                         immunizationDataList.add(immunization)
-
 
                         //Create Immunization Recommendation
                         formatterClass.saveSharedPref("immunizationId",immunization.id,context)
@@ -806,6 +806,7 @@ class AdministerVaccineViewModel(
                 immunization.vaccineCode = vaccineCodeConcept
             }
         }
+
 
         return immunization
 

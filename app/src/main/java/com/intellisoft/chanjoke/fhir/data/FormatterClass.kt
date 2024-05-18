@@ -5,6 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -253,6 +254,7 @@ class FormatterClass {
         val stockList = ArrayList<DbVaccineStockDetails>()
 
         val immunizationHandler = ImmunizationHandler()
+
         val baseVaccineDetails =
             immunizationHandler.getVaccineDetailsByBasicVaccineName(administeredProduct)
         val vaccineDetails =
