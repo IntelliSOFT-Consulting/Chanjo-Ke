@@ -374,7 +374,6 @@ class AdministerVaccineViewModel(
                 val administrativeWeeksSincePreviousList =
                     nextBasicVaccine.administrativeWeeksSincePrevious
                 val administrativeWeeksSinceDob = nextBasicVaccine.administrativeWeeksSinceDOB
-//
 
                 //Check if the above list is more than one.
 
@@ -385,9 +384,7 @@ class AdministerVaccineViewModel(
                 } else {
                     formatterClass.getNextDate(date, administrativeWeeksSinceDob.toDouble())
                 }
-                val localDate = formatterClass.convertDateToLocalDate(nextImmunizationDate)
-                val administrativeWeeksSinceDOBLong = administrativeWeeksSinceDob.toLong()
-
+                val localDate = formatterClass.convertDateToLocalExactDate(nextImmunizationDate)
 
                 /**
                  * Get the immunization recommendation
@@ -431,7 +428,9 @@ class AdministerVaccineViewModel(
                                 recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
                                 recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode){
                                 if (recommendation.hasDateCriterion()) {
-                                    recommendation.dateCriterion = getNewDateCriterion(localDate, administrativeWeeksSinceDOBLong)
+
+                                    val dateCriterion = getNewDateCriterion(localDate)
+                                    recommendation.dateCriterion = dateCriterion
                                 }else{
                                     recommendation
                                 }
@@ -447,13 +446,6 @@ class AdministerVaccineViewModel(
                     updateResourceToDatabase(immunizationRecommendation, "ImmunizationRecommendation Update")
 
                 }
-
-
-
-
-
-
-
 
 //                val immunizationNewRecommendationList = ArrayList<ImmunizationRecommendation>()
 //                immunizationRecommendationList.forEach {immunizationRecommendation ->
@@ -569,27 +561,26 @@ class AdministerVaccineViewModel(
 //                    updateResourceToDatabase(recommendation, "ImmRec")
 //                }
 
-
             }
-
 
         }
 
-
     }
 
-    private fun getNewDateCriterion(localDate: LocalDate, administrativeWeeksSinceDOBLong: Long):
+    private fun getNewDateCriterion(localDate: LocalDate):
             ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>{
         //From selectedDate, calculate the next date plus administrativeWeeksSinceDOB
         val dateCriterionList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
 
         val formatterClass = FormatterClass()
 
-        val earliestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, administrativeWeeksSinceDOBLong)
-        val latestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, (administrativeWeeksSinceDOBLong + 2))
+        val earliestAdministerDate = formatterClass.convertLocalDateToDate(localDate)
+
+        val latestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, 2)
 
         val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
         val latestAdministerLocalDate = formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
+
         if (earliestAdministerLocalDate != null && latestAdministerLocalDate != null){
 
             val earlyAdministerDate = DbVaccineAdmin(earliestAdministerLocalDate, "Earliest-date-to-administer")

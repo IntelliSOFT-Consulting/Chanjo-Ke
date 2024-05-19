@@ -4,15 +4,12 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.util.Log
-import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
 import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
-import timber.log.Timber
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -97,6 +94,12 @@ class FormatterClass {
         return localDate.plusDays(1)
 
     }
+    fun convertDateToLocalExactDate(date: Date): LocalDate {
+        val instant = date.toInstant()
+
+        return instant.atZone(ZoneOffset.UTC).toLocalDate()
+
+    }
 
     fun convertLocalDateToDate(date: LocalDate?): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Define your desired date format
@@ -178,8 +181,8 @@ class FormatterClass {
     }
 
 
-    fun calculateDateAfterWeeksAsString(dob: LocalDate, weeksAfterDob: Long): String {
-        val calculatedDate = dob.plusWeeks(weeksAfterDob)
+    fun calculateDateAfterWeeksAsString(localDate: LocalDate, weeksAfterDob: Long): String {
+        val calculatedDate = localDate.plusWeeks(weeksAfterDob)
         return calculatedDate.toString()
     }
 
