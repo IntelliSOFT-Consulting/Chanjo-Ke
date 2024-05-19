@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -265,12 +266,19 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 //                            }
 //                        }
 
-
                         val adapter = VaccineDetailsAdapter(
                             patientDetailsViewModel,
                             vaccineList,
                             this@NonRoutineFragment,
                             requireContext())
+
+                        Log.e("------>","<-----")
+                        vaccineList.forEach {
+                            println("vaccineName: ${it.vaccineName}")
+                            println("isVaccinated: ${it.isVaccinated}")
+                            println("canBeVaccinated: ${it.canBeVaccinated}")
+                        }
+                        Log.e("------>","<-----")
 
                         recyclerView.adapter = adapter
 

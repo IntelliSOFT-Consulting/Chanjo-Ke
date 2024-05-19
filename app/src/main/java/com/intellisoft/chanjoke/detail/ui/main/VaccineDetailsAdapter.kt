@@ -97,6 +97,7 @@ class VaccineDetailsAdapter(
             holder.linearVisibility.visibility = View.VISIBLE
         }
 
+
         if(isVaccinated){
             holder.iconDisabled.visibility = View.GONE
             holder.checkBox.visibility = View.GONE
@@ -106,6 +107,7 @@ class VaccineDetailsAdapter(
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             onCheckBoxSelectedListener.onCheckBoxSelected(position, isChecked, vaccineName)
         }
+
 
     }
 
