@@ -1452,7 +1452,10 @@ class FormatterClass {
                 val (status, date) = evaluateDateRange(earlyDate, today, lateDate)
 
                 if (status == StatusValues.WITHIN_RANGE.name) {
-                    dateValue = convertLocalDateToDate(earlyDate)
+
+                    val dateValueStr = convertLocalDateToDate(earlyDate)
+                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+
                     canBeVaccinated = true
                     //It can be within range but but the color is red
                     statusColor = if (earlyDate.isBefore(today)){
@@ -1460,6 +1463,20 @@ class FormatterClass {
                     }else{
                         StatusColors.NORMAL.name
                     }
+
+                }else if (status == StatusValues.DUE.name) {
+                    canBeVaccinated = false
+                    statusColor = StatusColors.NORMAL.name
+
+                    val dateValueStr = convertLocalDateToDate(date)
+                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+
+                }else if (status == StatusValues.MISSED.name) {
+                    canBeVaccinated = false
+                    statusColor = StatusColors.RED.name
+
+                    val dateValueStr = convertLocalDateToDate(date)
+                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
 
                     if (basicVaccine != null && numberOfWeek != null) {
 
@@ -1496,18 +1513,14 @@ class FormatterClass {
 
                     }
 
-                }else if (status == StatusValues.DUE.name) {
-                    canBeVaccinated = false
-                    statusColor = StatusColors.NORMAL.name
-                    dateValue = convertLocalDateToDate(date)
-                }else if (status == StatusValues.MISSED.name) {
-                    canBeVaccinated = false
-                    statusColor = StatusColors.RED.name
-                    dateValue = convertLocalDateToDate(date)
+
                 }else{
                     canBeVaccinated = false
                     statusColor = StatusColors.NORMAL.name
-                    dateValue = convertLocalDateToDate(date)
+
+                    val dateValueStr = convertLocalDateToDate(date)
+                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+
                 }
 
             }
