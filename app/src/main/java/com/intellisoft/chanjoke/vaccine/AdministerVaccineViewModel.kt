@@ -57,12 +57,14 @@ import org.hl7.fhir.r4.model.Immunization
 import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
 import org.hl7.fhir.r4.model.Observation
+import org.hl7.fhir.r4.model.PositiveIntType
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.SimpleQuantity
 import org.hl7.fhir.r4.model.StringType
+import org.hl7.fhir.r4.model.Type
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.Date
@@ -352,9 +354,13 @@ class AdministerVaccineViewModel(
                 vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
 
             val targetDisease = seriesVaccine?.targetDisease
+            val seriesDosesNumber = seriesVaccine?.seriesDoses
+
+            val nhdd = seriesVaccine?.NHDD
 
             val vaccineName = nextBasicVaccine?.vaccineName
             val vaccineCode = nextBasicVaccine?.vaccineCode
+            val doseNumber = nextBasicVaccine?.doseNumber
 
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
@@ -418,29 +424,152 @@ class AdministerVaccineViewModel(
                 if (immunizationRecommendation != null) {
 
                     val recommendationList = immunizationRecommendation.recommendation
-                    if (type == "ROUTINE") {
-                        //We will only update the date criterion
-                        recommendationList.map { recommendation ->
+//                    if (type == "ROUTINE") {
+//                        //We will only update the date criterion
+//                        recommendationList.map { recommendation ->
+//
+//                            if (recommendation.hasVaccineCode() &&
+//                                recommendation.vaccineCodeFirstRep.hasCoding() &&
+//                                recommendation.vaccineCodeFirstRep.hasCoding() &&
+//                                recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
+//                                recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode){
+//                                if (recommendation.hasDateCriterion()) {
+//
+//                                    val dateCriterion = getNewDateCriterion(localDate)
+//                                    recommendation.dateCriterion = dateCriterion
+//                                }else{
+//                                    recommendation
+//                                }
+//                            }else{
+//                                recommendation
+//                            }
+//                        }
+//                    }
+//                    if (type == "NON-ROUTINE"){
+//                        //Check if its exists
+//
+//                        val recommendationFound = recommendationList.find {recommendation ->
+//                            recommendation.hasVaccineCode() &&
+//                                    recommendation.vaccineCodeFirstRep.hasCoding() &&
+//                                    recommendation.vaccineCodeFirstRep.hasCoding() &&
+//                                    recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
+//                                    recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode
+//                        }
+//                        if (recommendationFound == null){
+//                            //Create a new recommendation
+//
+//                            val recommendationComponent =  ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
+//                            //vaccine code
+//                            val vaccineCodeList = ArrayList<CodeableConcept>()
+//
+//                            val vaccineCodeableConcept = CodeableConcept()
+//                            vaccineCodeableConcept.text = vaccineName
+//
+//                            val vaccineCodingList = ArrayList<Coding>()
+//                            val vaccineCoding = Coding()
+//                            vaccineCoding.system = "http://snomed.info/sct"
+//                            vaccineCoding.code = nhdd.toString()
+//                            vaccineCoding.display = vaccineCode
+//                            vaccineCodingList.add(vaccineCoding)
+//
+//                            vaccineCodeableConcept.coding =vaccineCodingList
+//
+//                            vaccineCodeList.add(vaccineCodeableConcept)
+//
+//                            recommendationComponent.vaccineCode = vaccineCodeList
+//
+//                            //Target Disease
+//                            val codeableConceptTargetDisease = CodeableConcept()
+//                            codeableConceptTargetDisease.text = targetDisease
+//
+//                            val targetDiseaseCodingList = ArrayList<Coding>()
+//                            val targetDiseaseCoding = Coding()
+//                            targetDiseaseCoding.system = "http://snomed.info/sct"
+//                            targetDiseaseCoding.code = targetDisease
+//                            targetDiseaseCoding.display = targetDisease
+//                            targetDiseaseCodingList.add(targetDiseaseCoding)
+//                            codeableConceptTargetDisease.coding = targetDiseaseCodingList
+//
+//                            recommendationComponent.targetDisease = codeableConceptTargetDisease
+//
+//                            //Forecast Status
+//                            val forecastStatusCodeableConcept = CodeableConcept()
+//                            forecastStatusCodeableConcept.text = "Recommended"
+//                            val forecastStatusCodeableConceptCodingList = ArrayList<Coding>()
+//                            val forecastStatusCodeableConceptCoding = Coding()
+//                            forecastStatusCodeableConceptCoding.system = "http://snomed.info/sct"
+//                            forecastStatusCodeableConceptCoding.code = "due"
+//                            forecastStatusCodeableConceptCoding.display = "due"
+//                            forecastStatusCodeableConceptCodingList.add(forecastStatusCodeableConceptCoding)
+//
+//                            forecastStatusCodeableConcept.coding = forecastStatusCodeableConceptCodingList
+//
+//                            recommendationComponent.forecastStatus = forecastStatusCodeableConcept
+//
+//                            // description
+//                            recommendationComponent.description = "non-routine"
+//
+//                            //Series
+//                            recommendationComponent.series = seriesDosesNumber.toString()
+//
+//                            //Dose Number
+//                            val doseNumberPositiveInt = doseNumber?.toIntOrNull()
+//
+//                            recommendationComponent.doseNumber = doseNumberPositiveInt?.let {
+//                                PositiveIntType(
+//                                    it
+//                                )
+//                            }
+//
+//                            //Date Criterion
+//                            val dateCriterion = getNewDateCriterion(localDate)
+//                            recommendationComponent.dateCriterion = dateCriterion
+//                            recommendationList.add(recommendationComponent)
+//                            immunizationRecommendation.recommendation = recommendationList
+//
+//                        }else{
+//                            // Update the date criterion
+//                            recommendationList.map { recommendation ->
+//
+//                                if (recommendation.hasVaccineCode() &&
+//                                    recommendation.vaccineCodeFirstRep.hasCoding() &&
+//                                    recommendation.vaccineCodeFirstRep.hasCoding() &&
+//                                    recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
+//                                    recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode){
+//                                    if (recommendation.hasDateCriterion()) {
+//
+//                                        val dateCriterion = getNewDateCriterion(localDate)
+//                                        recommendation.dateCriterion = dateCriterion
+//                                    }else{
+//                                        recommendation
+//                                    }
+//                                }else{
+//                                    recommendation
+//                                }
+//                            }
+//                        }
+//
+//
+//                    }
 
-                            if (recommendation.hasVaccineCode() &&
-                                recommendation.vaccineCodeFirstRep.hasCoding() &&
-                                recommendation.vaccineCodeFirstRep.hasCoding() &&
-                                recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
-                                recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode){
-                                if (recommendation.hasDateCriterion()) {
+                    //We will only update the date criterion
+                    recommendationList.map { recommendation ->
 
-                                    val dateCriterion = getNewDateCriterion(localDate)
-                                    recommendation.dateCriterion = dateCriterion
-                                }else{
-                                    recommendation
-                                }
+                        if (recommendation.hasVaccineCode() &&
+                            recommendation.vaccineCodeFirstRep.hasCoding() &&
+                            recommendation.vaccineCodeFirstRep.hasCoding() &&
+                            recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
+                            recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode){
+                            if (recommendation.hasDateCriterion()) {
+
+                                val dateCriterion = getNewDateCriterion(localDate)
+                                recommendation.dateCriterion = dateCriterion
                             }else{
                                 recommendation
                             }
-
+                        }else{
+                            recommendation
                         }
-
-
                     }
 
                     updateResourceToDatabase(immunizationRecommendation, "ImmunizationRecommendation Update")
@@ -580,6 +709,11 @@ class AdministerVaccineViewModel(
 
         val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
         val latestAdministerLocalDate = formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
+
+        Log.e("----->","<-----")
+        println("earliestAdministerLocalDate $earliestAdministerLocalDate")
+        println("latestAdministerLocalDate $latestAdministerLocalDate")
+        Log.e("----->","<-----")
 
         if (earliestAdministerLocalDate != null && latestAdministerLocalDate != null){
 

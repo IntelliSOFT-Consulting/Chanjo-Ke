@@ -1,7 +1,7 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
 import android.content.Context
-import android.util.Log
+import com.intellisoft.chanjoke.fhir.data.DbRoutineVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 // Interface segregation principle
@@ -492,9 +492,19 @@ class ImmunizationHandler() {
         val vaccineName: String
     )
 
-    fun getRoutineTargetDiseases():List<RoutineVaccine>{
-        val (routineList, _,  _) = vaccines
+    fun getRoutineTargetDiseases(): List<RoutineVaccine> {
+        val (routineList, nonRoutineList, _) = vaccines
+
         return routineList
+    }
+
+    fun getVaccineDataList(): Pair<DbRoutineVaccineData, DbRoutineVaccineData>{
+        val (routineList, nonRoutineList, _) = vaccines
+        val newNonRoutineList = nonRoutineList.flatMap { it.vaccineList }
+
+        return Pair(
+            DbRoutineVaccineData("ROUTINE",routineList),
+            DbRoutineVaccineData("NON-ROUTINE", newNonRoutineList))
     }
 
     // Liskov substitution principle
