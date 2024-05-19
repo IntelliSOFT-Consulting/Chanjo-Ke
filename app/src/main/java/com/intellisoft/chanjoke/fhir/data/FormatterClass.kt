@@ -1378,6 +1378,9 @@ class FormatterClass {
         var canBeVaccinatedValue = ""
         var statusColor = ""
 
+        var earliestDateStr = ""
+        var latestDateStr = ""
+
 //        val upcomingRecommendationList = recommendationList.map { it.vaccineName }
 //        val administeredVaccineNamesList = administeredList.map { it.vaccineName }
 
@@ -1393,8 +1396,12 @@ class FormatterClass {
 
         if (dbAppointmentDetailsDue != null){
             val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
+            val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
             if (earliestDate!= null) {
-                dateValue = earliestDate
+                earliestDateStr = earliestDate
+            }
+            if (latestDate!= null) {
+                latestDateStr = latestDate
             }
             statusValue = dbAppointmentDetailsDue.status
         }
@@ -1432,24 +1439,34 @@ class FormatterClass {
         }
 
         //Cater for recommendations
-        if (statusValue == "due" && dateValue != "") {
-            val dateScheduleDate = dateScheduleFormat.parse(dateValue)
-            if (dateScheduleDate != null) {
+        if (statusValue == "due" && earliestDateStr != "" && latestDateStr != "") {
 
+            val earliestDateScheduleDate = dateScheduleFormat.parse(earliestDateStr)
+            val latestDateScheduleDate = dateScheduleFormat.parse(latestDateStr)
+
+            if (earliestDateScheduleDate != null && latestDateScheduleDate != null) {
+                val earlyDate = convertDateToLocalDate(earliestDateScheduleDate)
+                val lateDate = convertDateToLocalDate(latestDateScheduleDate)
                 val today = LocalDate.now()
-                val dateSchedule = convertDateToLocalDate(dateScheduleDate)
 
-                val isBeforeToday = dateSchedule.isBefore(today)
-                if (isBeforeToday){
-                    /**
-                     * The vaccine is passed due.
-                     * Check if BCG and bOPV are within 14 days after dob.
-                     */
-                    statusColor = StatusColors.RED.name
-                    canBeVaccinated = false
+                val (status, date) = evaluateDateRange(earlyDate, today, lateDate)
+
+                if (status == StatusValues.WITHIN_RANGE.name) {
+                    dateValue = convertLocalDateToDate(earlyDate)
+                    canBeVaccinated = true
+                    //It can be within range but but the color is red
+                    statusColor = if (earlyDate.isBefore(today)){
+                        StatusColors.RED.name
+                    }else{
+                        StatusColors.NORMAL.name
+                    }
 
                     if (basicVaccine != null && numberOfWeek != null) {
+
+                        //Those vaccines that are late but can be vaccinated still
                         val vaccineCode = basicVaccine.vaccineCode
+
+                        //Specific Validations
                         when (vaccineCode) {
                             "IMBCG-I" -> {
                                 //BCG can be administered from 0 weeks to 255 weeks
@@ -1461,11 +1478,10 @@ class FormatterClass {
                                         }
                                     }
                                     canBeVaccinated = true
-                                    statusColor = StatusColors.NORMAL.name
                                 }
                             }
                             "IMPO-bOPV" -> {
-                                //bOPV can be administered from 0 weeks to 14 weeks
+                                //bOPV can be administered from 0 weeks to 2 weeks
                                 if (numberOfWeek <= 2) {
                                     if (dbAppointmentDetailsDue != null){
                                         val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
@@ -1474,35 +1490,28 @@ class FormatterClass {
                                         }
                                     }
                                     canBeVaccinated = true
-                                    statusColor = StatusColors.NORMAL.name
                                 }
                             }
                         }
 
                     }
 
+                }else if (status == StatusValues.DUE.name) {
+                    canBeVaccinated = false
+                    statusColor = StatusColors.NORMAL.name
+                    dateValue = convertLocalDateToDate(date)
+                }else if (status == StatusValues.MISSED.name) {
+                    canBeVaccinated = false
+                    statusColor = StatusColors.RED.name
+                    dateValue = convertLocalDateToDate(date)
                 }else{
-                    /**
-                     * Check if the date is equal to or after today but less than 14 days after today
-                     */
-
-                    val performCalculationPair = performCalculation(dateScheduleDate)
-
-                    val isAfterToday = performCalculationPair.first
-                    // Check if the date is not more than 14 days after today
-                    val isWithin14Days = performCalculationPair.second
-                    // Combine the conditions
-                    val isWithinRange = isAfterToday && isWithin14Days
-
-                    if (isWithinRange) {
-                        canBeVaccinated = true
-                        statusColor = StatusColors.NORMAL.name
-                    }
-
+                    canBeVaccinated = false
+                    statusColor = StatusColors.NORMAL.name
+                    dateValue = convertLocalDateToDate(date)
                 }
+
             }
         }
-
 
         if (statusValue == Reasons.CONTRAINDICATE.name || statusValue == Reasons.NOT_ADMINISTERED.name){
 
@@ -1540,6 +1549,31 @@ class FormatterClass {
             canBeVaccinated
         )
     }
+
+    private fun evaluateDateRange(
+        earlyDate: LocalDate,
+        today: LocalDate,
+        lateDate: LocalDate
+    ): Pair<String, LocalDate?> {
+        return when {
+            // Both dates are before today
+            earlyDate.isBefore(today) && lateDate.isBefore(today) -> StatusValues.MISSED.name to lateDate
+
+            // Both dates are after today
+            earlyDate.isAfter(today) && lateDate.isAfter(today) -> StatusValues.DUE.name to earlyDate
+
+            // Today is within the range
+            (today.isAfter(earlyDate) || today.isEqual(earlyDate)) &&
+                    (today.isBefore(lateDate) || today.isEqual(lateDate)) -> {
+                val nextDate = if (lateDate.isAfter(today)) lateDate else earlyDate
+                StatusValues.WITHIN_RANGE.name to nextDate
+            }
+
+            // Fallback case (not expected to reach here)
+            else -> "Error" to null
+        }
+    }
+
 
     fun checkValidations(vaccineName: String, context: Context, flowType: String, weekNumber: String): Boolean {
         /**

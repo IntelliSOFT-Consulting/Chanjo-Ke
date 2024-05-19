@@ -44,6 +44,11 @@ enum class StatusColors {
     NORMAL, //Future
     NOT_DONE, //Not Done
 }
+enum class StatusValues {
+    DUE,
+    WITHIN_RANGE,
+    MISSED
+}
 
 data class AdverseEventItem(
     val encounterId: String,
