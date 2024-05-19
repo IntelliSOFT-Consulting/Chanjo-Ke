@@ -379,6 +379,7 @@ class PatientDetailsViewModel(
                         }
                     }
 
+
                     val dbRecommendationDetails = DbRecommendationDetails(
                         vaccineCode = vaccineCode,
                         vaccineName = vaccineName,

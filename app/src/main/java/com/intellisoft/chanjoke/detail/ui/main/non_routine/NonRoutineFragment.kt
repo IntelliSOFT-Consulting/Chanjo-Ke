@@ -148,7 +148,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                 }
 
                 //Get the group color Code
-                val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList,recommendationList)
+                val statusColor = formatterClass.getNonRoutineVaccineGroupDetails(vaccineList, administeredList,recommendationList)
 
                 val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
                     keyValue,

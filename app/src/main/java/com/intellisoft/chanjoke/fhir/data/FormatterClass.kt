@@ -1044,6 +1044,78 @@ class FormatterClass {
         return statusColor
     }
 
+    fun getNonRoutineVaccineGroupDetails(
+        vaccines: List<String>?,
+        administeredList: List<DbVaccineData>,
+        recommendationList: ArrayList<DbRecommendationDetails>
+    ): String {
+        val immunizationHandler = ImmunizationHandler()
+        val administeredVaccineNames = administeredList.map { it.vaccineName }
+
+        var statusColor = ""
+        if (vaccines != null) {
+            if (vaccines.all { administeredVaccineNames.contains(it) }) {
+                // Checks if all have been vaccinated
+                statusColor = StatusColors.GREEN.name
+            } else if (vaccines.any { administeredVaccineNames.contains(it) }) {
+                // Checks if there's any that has been vaccinated
+                statusColor = StatusColors.AMBER.name
+            } else {
+                statusColor = StatusColors.NORMAL.name
+
+                /**
+                 * Everything under here does not have any vaccines. Check for missed vaccines
+                 * The vaccines list have the vaccine list for the routine vaccines per schedule
+                e.g. At Birth, 6 weeks, 10 weeks, 14 weeks, 26 weeks etc
+                 * Get the vaccine details and use the vaccine code to check in the recommendationList
+                i.e. earliestDate
+                 *
+                 */
+                val statusColorList = ArrayList<String>()
+
+//                vaccines.forEach { vaccineName ->
+//
+//                    val vaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+//
+//                    if (vaccineDetails != null){
+//
+//                        val vaccineNameBasic = vaccineDetails.vaccineName
+//
+//                        val dbAppointmentDetailsDue = recommendationList.filter {
+//                            it.vaccineName == vaccineNameBasic && it.status == "due"
+//                        }.map { it }.firstOrNull()
+//
+//                        if (dbAppointmentDetailsDue != null) {
+//                            val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
+//
+//                            val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+//                            val vaccineCode = dbAppointmentDetailsDue.vaccineCode
+//
+//                            val dateSchedule = earliestDate
+//
+//                            if (dateSchedule!= null) {
+//                                val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+//                                val dateScheduleDate = dateScheduleFormat.parse(dateSchedule)
+//                                val todayDate = Calendar.getInstance().time
+//
+//                                if (dateScheduleDate != null) {
+//                                    if (dateScheduleDate.before(todayDate)) {
+//                                        statusColorList.add(StatusColors.RED.name)
+//                                        statusColor = StatusColors.RED.name
+//
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+
+            }
+        }
+
+        return statusColor
+    }
+
     fun convertVaccineScheduleToWeeks(vaccineSchedule: String): Int {
         return when {
             vaccineSchedule == "At Birth" -> 0
@@ -1123,6 +1195,74 @@ class FormatterClass {
         val targetDisease = seriesVaccine?.targetDisease
         val nhdd = seriesVaccine?.NHDD.toString()
 
+        /**
+         * 1.) Check if vaccine exists in the administration workflow
+         * 2.) Check the recommendation list for the vaccine
+         * The above have been done in the above code block
+         *
+         * 3.) Validations
+         *
+         * i.) Yellow fever = 9 months and above. Single dose
+         *
+         * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
+         * iii.) Pfizer = 18 years and above. 2 dose 4 weeks apart
+         * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
+         * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
+         * vi.) J n J & H = 18 years and above till age 60 years. Single dose
+         *
+         * vii.) HPV = 10 years and above till age 14 years. 2 dose 6 months apart
+         *
+         * viii.) Rabies = From Birth and above. 5 doses
+         *
+         * ix.) Influenza = From 6 month and above. 2 doses but one could be a single dose
+         *
+         * x.) Tetanus = From 92 weeks (This is because the first dose is given after 18 months after DPT3 which is given after 14 weeks of birth)
+         *              5 doses given as follows:
+         *              1st dose after 18 months after DPT 4 ,
+         *              2nd dose is 1 month after 1st dose,
+         *              3rd dose is 6 months after 2nd dose,
+         *              4th dose is 1 year after 3rd dose,
+         *              5th dose is 1 year after 4th dose.
+         */
+        //Yellow Fever
+        if (targetDisease == "Yellow Fever") {
+            if (numberOfWeek != null && numberOfWeek > 39){
+                canBeVaccinated = true
+            }
+        }
+        //HPV
+        if (targetDisease == "HPV") {
+            if (patientGender == "female" && patientYears != null && patientYears in 10..14) {
+                canBeVaccinated = true
+            }
+        }
+        //Covid 19
+        //Astrazeneca
+        if (targetDisease == "Covid 19" && patientYears != null){
+            if (patientYears >= 18){
+                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931" || nhdd == "16929"){
+                    //Astrazeneca, JnJ, Moderna, Pfizer
+                    canBeVaccinated = true
+                }
+                if(nhdd == "16489" && patientYears in 18..60){
+                    //Sinopharm
+                    canBeVaccinated = true
+                }
+            }
+        }
+        //Rabies
+        if (targetDisease == "Rabies Post Exposure" && patientYears != null){
+            if (patientYears >= 0){
+                canBeVaccinated = true
+            }
+        }
+        //Tetanus
+        if(targetDisease == "Tetanus" && patientYears != null){
+            if (patientYears >= 92){
+                canBeVaccinated = true
+            }
+        }
+
         administeredVaccine?.run {
             // Vaccine name exists in latestAdministered
             val status = status
@@ -1176,27 +1316,27 @@ class FormatterClass {
             val newDateFormat = convertViewFormats(earliestDateStr)
 
 
-            if(newDateFormat != null){
-                val earliestDate = convertStringToDate(newDateFormat, "MMM d yyyy")
-                if (earliestDate != null) {
-                    val performCalculationPair = performCalculation(earliestDate)
-
-
-                    val isAfterToday = performCalculationPair.first
-                    // Check if the date is not more than 14 days after today
-                    val isWithin14Days = performCalculationPair.second
-
-                    // Combine the conditions
-                    val isWithinRange = isAfterToday && isWithin14Days
-                    canBeVaccinated = isWithinRange
-                }
-
-                val newDate = convertDateFormat(earliestDateStr)
-                if (newDate != null) {
-                    dateValue = newDate
-                }
-                isVaccinatedValue = false
-            }
+//            if(newDateFormat != null){
+//                val earliestDate = convertStringToDate(newDateFormat, "MMM d yyyy")
+//                if (earliestDate != null) {
+//                    val performCalculationPair = performCalculation(earliestDate)
+//
+//
+//                    val isAfterToday = performCalculationPair.first
+//                    // Check if the date is not more than 14 days after today
+//                    val isWithin14Days = performCalculationPair.second
+//
+//                    // Combine the conditions
+//                    val isWithinRange = isAfterToday && isWithin14Days
+//                    canBeVaccinated = isWithinRange
+//                }
+//
+//                val newDate = convertDateFormat(earliestDateStr)
+//                if (newDate != null) {
+//                    dateValue = newDate
+//                }
+//                isVaccinatedValue = false
+//            }
 
 
             // Process earliestDate as needed
@@ -1206,73 +1346,7 @@ class FormatterClass {
             canBeVaccinated = false
             isVaccinatedValue = false
 
-            /**
-             * 1.) Check if vaccine exists in the administration workflow
-             * 2.) Check the recommendation list for the vaccine
-             * The above have been done in the above code block
-             *
-             * 3.) Validations
-             *
-             * i.) Yellow fever = 9 months and above. Single dose
-             *
-             * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
-             * iii.) Pfizer = 18 years and above. 2 dose 4 weeks apart
-             * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
-             * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
-             * vi.) J n J & H = 18 years and above till age 60 years. Single dose
-             *
-             * vii.) HPV = 10 years and above till age 14 years. 2 dose 6 months apart
-             *
-             * viii.) Rabies = From Birth and above. 5 doses
-             *
-             * ix.) Influenza = From 6 month and above. 2 doses but one could be a single dose
-             *
-             * x.) Tetanus = From 92 weeks (This is because the first dose is given after 18 months after DPT3 which is given after 14 weeks of birth)
-             *              5 doses given as follows:
-             *              1st dose after 18 months after DPT 4 ,
-             *              2nd dose is 1 month after 1st dose,
-             *              3rd dose is 6 months after 2nd dose,
-             *              4th dose is 1 year after 3rd dose,
-             *              5th dose is 1 year after 4th dose.
-             */
-            //Yellow Fever
-            if (targetDisease == "Yellow Fever") {
-                if (numberOfWeek != null && numberOfWeek > 39){
-                    canBeVaccinated = true
-                }
-            }
-            //HPV
-            if (targetDisease == "HPV") {
-                if (patientGender == "female" && patientYears != null && patientYears in 10..14) {
-                    canBeVaccinated = true
-                }
-            }
-            //Covid 19
-            //Astrazeneca
-            if (targetDisease == "Covid 19" && patientYears != null){
-                if (patientYears >= 18){
-                    if (nhdd == "16927" || nhdd == "0" || nhdd == "16931" || nhdd == "16929"){
-                        //Astrazeneca, JnJ, Moderna, Pfizer
-                        canBeVaccinated = true
-                    }
-                    if(nhdd == "16489" && patientYears in 18..60){
-                        //Sinopharm
-                        canBeVaccinated = true
-                    }
-                }
-            }
-            //Rabies
-            if (targetDisease == "Rabies Post Exposure" && patientYears != null){
-                if (patientYears >= 0){
-                    canBeVaccinated = true
-                }
-            }
-            //Tetanus
-            if(targetDisease == "Tetanus" && patientYears != null){
-                if (patientYears >= 92){
-                    canBeVaccinated = true
-                }
-            }
+
 
         }
 
