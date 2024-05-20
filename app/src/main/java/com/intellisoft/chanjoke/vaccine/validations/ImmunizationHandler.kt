@@ -483,6 +483,10 @@ class ImmunizationHandler() {
         return this.vaccineName == name
     }
 
+    fun DbVaccine.matchesVaccineCode(vaccineCode: String): Boolean {
+        return this.vaccineCode == vaccineCode
+    }
+
 
 
 
@@ -856,6 +860,18 @@ class ImmunizationHandler() {
             nonRoutineList.flatMap { it.vaccineList.flatMap { nonRoutine ->  nonRoutine.vaccineList } },
             pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
             .firstOrNull { it.matchesVaccineName(vaccineName) }
+
+    }
+    // Extension function for List<DbVaccine> to find vaccine details by vaccine name
+    fun getVaccineDetailsByBasicVaccineCode(vaccineCode: String): BasicVaccine? {
+
+        val (routineList, nonRoutineList, pregnancyList) = vaccines
+
+        return listOf(
+            routineList.flatMap { it.vaccineList },
+            nonRoutineList.flatMap { it.vaccineList.flatMap { nonRoutine ->  nonRoutine.vaccineList } },
+            pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
+            .firstOrNull { it.matchesVaccineCode(vaccineCode) }
 
     }
 

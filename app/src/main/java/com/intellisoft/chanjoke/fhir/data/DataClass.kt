@@ -66,6 +66,14 @@ data class PractitionerDetails(
     val name: String,
     val role: String,
 )
+data class DbVaccineNotDone(
+    val logicalId: String,
+    val vaccineCode: String,
+    val vaccineName: String,
+    val nextDate: String,
+    val statusReason: String,
+    val status: String,
+)
 
 data class DbVaccineDetailsData(
     val logicalId: String,

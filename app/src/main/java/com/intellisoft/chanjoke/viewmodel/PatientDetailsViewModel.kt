@@ -30,6 +30,7 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
+import com.intellisoft.chanjoke.fhir.data.DbVaccineNotDone
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
@@ -728,8 +729,8 @@ class PatientDetailsViewModel(
     fun getAllImmunizationDetails() =
         runBlocking { getAllImmunizationDetailsData() }
 
-    fun loadContraindications(codeValue: String) =
-        runBlocking { loadContraindicationsInner(codeValue) }
+    fun loadContraindications(vaccineName: String, vaccineDetailsType: String) =
+        runBlocking { loadContraindicationsInner(vaccineName, vaccineDetailsType) }
 
     private suspend fun getImmunizationDetails(codeValue: String): ArrayList<DbVaccineDetailsData> {
         val vaccineList = ArrayList<DbVaccineDetailsData>()
@@ -771,26 +772,95 @@ class PatientDetailsViewModel(
         return vaccineList
     }
 
-    private suspend fun loadContraindicationsInner(codeValue: String): ArrayList<Contraindication> {
-        val vaccineList = ArrayList<Contraindication>()
+    private suspend fun loadContraindicationsInner(vaccineNameValue: String, vaccineDetailsType: String): ArrayList<Contraindication> {
+
+        val contraindicationList = ArrayList<Contraindication>()
+
+        val vaccineList = ArrayList<DbVaccineNotDone>()
 
         fhirEngine
-            .search<ImmunizationRecommendation> {
-                filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
-                sort(ImmunizationRecommendation.DATE, Order.DESCENDING)
+            .search<Immunization> {
+                filter(Immunization.PATIENT, { value = "Patient/$patientId" })
+                sort(Immunization.DATE, Order.DESCENDING)
             }
-            .map { createContraItemDetails(it) }
-            .let { q ->
-                q.forEach {
-                    if (it.vaccineCode.contains(codeValue) && it.status.contains("Contraindicated")) {
-                        vaccineList.add(it)
-                    }
-                }
-            }
+            .map { createVaccineDetails(it) }
+            .let { vaccineList.addAll(it) }
 
-        return vaccineList
+        vaccineList.forEach {
+
+            val id = it.logicalId
+            val vaccineName = it.vaccineName
+            val vaccineCode = it.vaccineCode
+            val nextDate = it.nextDate
+            val statusReason = it.statusReason
+            val status = it.status
+
+            if (vaccineNameValue == vaccineName) {
+                val contraindication = Contraindication(
+                    id,
+                    vaccineCode,
+                    vaccineName,
+                    nextDate,
+                    statusReason,
+                    status)
+                contraindicationList.add(contraindication)
+            }
+        }
+
+//        val newList = contraindicationList.filter { it.status == vaccineDetailsType }
+
+        return ArrayList(contraindicationList)
     }
 
+    private fun createVaccineDetails(immunization: Immunization): DbVaccineNotDone {
+
+        var logicalId = ""
+        var vaccineName = ""
+        var vaccineCode = ""
+        var nextDate = ""
+        var statusReason = ""
+        var status = ""
+
+        if (immunization.hasId()) {
+            logicalId = immunization.id
+        }
+        if (immunization.hasVaccineCode()) {
+            if (immunization.vaccineCode.hasText()) {
+                vaccineName = immunization.vaccineCode.text
+            }
+            if (immunization.vaccineCode.hasCoding()) {
+                vaccineCode = immunization.vaccineCode.coding[0].code
+            }
+        }
+        if (immunization.hasOccurrenceDateTimeType()) {
+            val fhirDate = immunization.occurrenceDateTimeType.valueAsString
+            val convertedDate = FormatterClass().convertDateFormat(fhirDate)
+            if (convertedDate != null) {
+                nextDate = convertedDate
+            }
+        }
+        if (immunization.hasStatusReason()){
+//            statusReason = if (immunization.hasStatusReason() && immunization.statusReason.hasText())
+//                immunization.statusReason.text else ""
+
+            statusReason = if (immunization.hasStatusReason() &&
+                immunization.statusReason.hasCoding() &&
+                immunization.statusReason.codingFirstRep.hasDisplay()){
+                immunization.statusReason.codingFirstRep.display
+            }else ""
+
+        }
+
+
+        if (immunization.hasReasonCode()){
+            status = if (immunization.reasonCode[0].hasText()) immunization.reasonCode[0].text else ""
+        }
+
+
+        return DbVaccineNotDone(
+            logicalId, vaccineCode, vaccineName, nextDate, statusReason, status
+        )
+    }
     private fun createVaccineItemDetails(immunization: Immunization): DbVaccineDetailsData {
 
         var logicalId = ""
