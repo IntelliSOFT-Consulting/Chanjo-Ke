@@ -272,14 +272,6 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                             this@NonRoutineFragment,
                             requireContext())
 
-                        Log.e("------>","<-----")
-                        vaccineList.forEach {
-                            println("vaccineName: ${it.vaccineName}")
-                            println("isVaccinated: ${it.isVaccinated}")
-                            println("canBeVaccinated: ${it.canBeVaccinated}")
-                        }
-                        Log.e("------>","<-----")
-
                         recyclerView.adapter = adapter
 
                     }

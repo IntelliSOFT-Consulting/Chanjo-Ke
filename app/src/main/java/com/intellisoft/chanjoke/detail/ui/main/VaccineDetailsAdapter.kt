@@ -80,36 +80,42 @@ class VaccineDetailsAdapter(
         holder.tvVaccineName.text = vaccineName
         holder.tvVaccineDate.text = date
 
-        if (canBeVaccinated != null) {
-            holder.checkBox.isEnabled = canBeVaccinated
-            if (!canBeVaccinated){
-                holder.iconDisabled.visibility = View.VISIBLE
-                holder.checkBox.visibility = View.GONE
-            }
-        }
+        holder.checkBox.isEnabled = canBeVaccinated ?: false
 
-        if(holder.checked.visibility == View.GONE &&
-            holder.iconDisabled.visibility == View.GONE &&
-            holder.imgBtnView.visibility == View.GONE)
-        {
-            holder.linearVisibility.visibility = View.GONE
-        }else{
-            holder.linearVisibility.visibility = View.VISIBLE
-        }
+        /**
+         * 1. Check if its administered and show administered icon
+         *  Disable the rest of the icons
+         *
+         * 2. Check if it can be vaccinated and show vaccinate icon
+         */
 
+        if (canBeVaccinated == true){
+            holder.checkBox.visibility = View.VISIBLE
 
-        if(isVaccinated){
             holder.iconDisabled.visibility = View.GONE
-            holder.checkBox.visibility = View.GONE
-            holder.checked.visibility = View.VISIBLE
+            holder.imgBtnView.visibility = View.GONE
+            holder.checked.visibility = View.GONE
         }
+
+        if (isVaccinated){
+            holder.checked.visibility = View.VISIBLE
+
+            holder.iconDisabled.visibility = View.GONE
+            holder.imgBtnView.visibility = View.GONE
+            holder.checkBox.visibility = View.GONE
+        }
+
+
+
 
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             onCheckBoxSelectedListener.onCheckBoxSelected(position, isChecked, vaccineName)
         }
 
 
+
     }
+
 
     override fun getItemCount(): Int {
         return vaccineDetailsList.size
@@ -120,11 +126,10 @@ class VaccineDetailsAdapter(
         val tvScheduleStatus: TextView = itemView.findViewById(R.id.tvScheduleStatus)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
         val tvVaccineDate: TextView = itemView.findViewById(R.id.tvVaccineDate)
-        val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
+        val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
         val checked: ImageButton = itemView.findViewById(R.id.checked)
         val iconDisabled: ImageButton = itemView.findViewById(R.id.iconDisabled)
         val imgBtnView: ImageButton = itemView.findViewById(R.id.imgBtnView)
-        val linearVisibility: LinearLayout = itemView.findViewById(R.id.linearVisibility)
 
 
         init {

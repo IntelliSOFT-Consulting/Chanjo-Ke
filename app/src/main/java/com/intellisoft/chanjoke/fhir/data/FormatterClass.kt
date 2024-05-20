@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -1273,41 +1274,12 @@ class FormatterClass {
 
             //For covid disable other covid vaccines and leave the one which has been started
 
-            if (seriesVaccine != null){
-                val vaccineList = seriesVaccine.vaccineList.map { it.vaccineName }
-                val instancesOfVaccines = latestAdministered.filter { it.vaccineName in vaccineList }
-
-                /**
-                 * Get the number of vaccines in the series
-                 * Get the number of vaccines that have been administered in the series
-                 * If the number of vaccines in the series is equal to the number of vaccines that have been administered
-                 * then set canBeVaccinated to true
-                 * If the number of vaccines in the series is not equal to the number of vaccines
-                 * then set canBeVaccinated to false
-                 * Check if the vaccine Name is in the
-                 */
-//                if(targetDisease == "Covid 19") {
-//
-//                    val occurrences = instancesOfVaccines.filter {
-//                        it.vaccineName.contains(
-//                            vaccineName,
-//                            ignoreCase = true
-//                        )
-//                    }
-//
-//                    if (occurrences.size < vaccineList.size) {
-//                        if (vaccineList.contains(vaccineName)) {
-//                            canBeVaccinated = true
-//                        } else {
-//                            canBeVaccinated = false
-//                        }
-//
-//                    }
-//                }
-            }
             isVaccinatedValue = true
             canBeVaccinated = true
 
+            if (status == Reasons.CONTRAINDICATE.name || status == Reasons.NOT_ADMINISTERED.name){
+                isVaccinatedValue = false
+            }
 
             // Process status and dateAdministered as needed
         } ?: recommendedVaccine?.run {
@@ -1315,39 +1287,12 @@ class FormatterClass {
             val earliestDateStr = earliestDate
             val newDateFormat = convertViewFormats(earliestDateStr)
 
-
-//            if(newDateFormat != null){
-//                val earliestDate = convertStringToDate(newDateFormat, "MMM d yyyy")
-//                if (earliestDate != null) {
-//                    val performCalculationPair = performCalculation(earliestDate)
-//
-//
-//                    val isAfterToday = performCalculationPair.first
-//                    // Check if the date is not more than 14 days after today
-//                    val isWithin14Days = performCalculationPair.second
-//
-//                    // Combine the conditions
-//                    val isWithinRange = isAfterToday && isWithin14Days
-//                    canBeVaccinated = isWithinRange
-//                }
-//
-//                val newDate = convertDateFormat(earliestDateStr)
-//                if (newDate != null) {
-//                    dateValue = newDate
-//                }
-//                isVaccinatedValue = false
-//            }
-
-
             // Process earliestDate as needed
         } ?: run {
             // Vaccine name does not exist in either list
             // Handle this case as needed
             canBeVaccinated = false
             isVaccinatedValue = false
-
-
-
         }
 
         if (statusValue == Reasons.CONTRAINDICATE.name){
