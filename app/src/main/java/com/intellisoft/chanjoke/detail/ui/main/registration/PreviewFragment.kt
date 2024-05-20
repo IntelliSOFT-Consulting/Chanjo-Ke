@@ -144,11 +144,13 @@ class PreviewFragment : Fragment() {
                         val tvCname = itemView.findViewById<TextView>(R.id.tv_cname)
                         val tvCtype = itemView.findViewById<TextView>(R.id.tv_ctype)
                         val tvCphone = itemView.findViewById<TextView>(R.id.tv_cphone)
+                        val tvCnational = itemView.findViewById<TextView>(R.id.tv_cnational)
 
                         // Set the text for each TextView with caregiver information
                         tvCname.text = AppUtils().capitalizeFirstLetter(caregiver.name)
                         tvCtype.text = caregiver.type
                         tvCphone.text = caregiver.phone
+                        tvCnational.text = caregiver.phone
 
                         // Add the itemView (LinearLayout) to lnCaregiver (LinearLayout)
                         lnCaregiver.addView(itemView)

@@ -45,7 +45,7 @@ class PatientDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPatientDetailBinding
     private var formatterClass = FormatterClass()
     private val adapterSection = SectionsPagerAdapter(supportFragmentManager)
-    private var patientYears:String? = null
+    private var patientYears: String? = null
 
 
     private val immunizationHandler = ImmunizationHandler()
@@ -96,7 +96,7 @@ class PatientDetailActivity : AppCompatActivity() {
         appointment.arguments = bundle
 
         //Perform a check if user is more than 5 years old
-        if (isBelowFive()){
+        if (isBelowFive()) {
             adapterSection.addFragment(routineFragment, getString(R.string.tab_text_1))
         }
 
@@ -179,11 +179,11 @@ class PatientDetailActivity : AppCompatActivity() {
 
     }
 
-    private fun isBelowFive() :Boolean{
-        if (patientYears != null){
+    private fun isBelowFive(): Boolean {
+        if (patientYears != null) {
             val patientYearsInt = patientYears!!.toIntOrNull()
-            if (patientYearsInt != null){
-                if (patientYearsInt < 6){
+            if (patientYearsInt != null) {
+                if (patientYearsInt < 6) {
                     return true
                 }
             }
@@ -237,9 +237,9 @@ class PatientDetailActivity : AppCompatActivity() {
                             // temporarily store details
                             val temp = DbTempData(
                                 name = binding.tvName.text.toString(),
-                                dob =  binding.tvDob.text.toString(),
-                                gender =  binding.tvGender.text.toString(),
-                                age =  binding.tvAge.text.toString(),
+                                dob = binding.tvDob.text.toString(),
+                                gender = binding.tvGender.text.toString(),
+                                age = binding.tvAge.text.toString(),
                             )
                             FormatterClass().saveSharedPref(
                                 "temp_data",
@@ -265,6 +265,7 @@ class PatientDetailActivity : AppCompatActivity() {
                 }
             }
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -354,10 +355,37 @@ class PatientDetailActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_item_edit -> {
-                // Handle option 1 click
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("functionToCall", NavigationDetails.EDIT_CLIENT.name)
+            R.id.menu_client_details -> {
+                startActivity(
+                    Intent(
+                        this@PatientDetailActivity,
+                        CompleteDetailsActivity::class.java
+                    )
+                )
+                true
+            }
+
+            R.id.menu_appointments -> {
+                goAppointments()
+                true
+            }
+
+            R.id.menu_referrals -> {
+                // temporarily store details
+                val temp = DbTempData(
+                    name = binding.tvName.text.toString(),
+                    dob = binding.tvDob.text.toString(),
+                    gender = binding.tvGender.text.toString(),
+                    age = binding.tvAge.text.toString(),
+                )
+                FormatterClass().saveSharedPref(
+                    "temp_data",
+                    Gson().toJson(temp),
+                    this@PatientDetailActivity
+                )
+                val intent =
+                    Intent(this@PatientDetailActivity, MainActivity::class.java)
+                intent.putExtra("functionToCall", NavigationDetails.REFERRALS.name)
                 intent.putExtra("patientId", patientId)
                 startActivity(intent)
                 true

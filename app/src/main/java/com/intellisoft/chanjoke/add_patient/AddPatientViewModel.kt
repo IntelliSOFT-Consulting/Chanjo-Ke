@@ -487,6 +487,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
                 relative.name = rName
                 relative.telecom = contacts1
+                relative.id
                 relative.addRelationship(code)
                 relatives.add(relative)
             }

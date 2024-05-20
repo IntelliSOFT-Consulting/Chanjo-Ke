@@ -115,8 +115,10 @@ data class DbServiceRequest(
     val status: String,
     val intent: String,
     var priority: String,
+    var patientReference: String,
     val authoredOn: String,
     val vaccineName: String,
+    val vaccineCode: String,
     val referringCHP: String,
     val detailsGiven: String,
     val referralDate: String,
@@ -306,7 +308,8 @@ data class CustomPatient(
 data class CareGiver(
     val type: String,
     val name: String,
-    val phone: String
+    val phone: String,
+    val nationalID: String
 )
 
 data class Administrative(

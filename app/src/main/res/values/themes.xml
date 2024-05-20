@@ -3,8 +3,10 @@
     <style name="Base.Theme.Zanzibar" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
          <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="actionOverflowMenuStyle">@style/MyOverflowMenu</item>
     </style>
-
+    <style name="MyOverflowMenu" parent="Widget.MaterialComponents.PopupMenu.Overflow">
+    </style>
     <style name="Theme.Zanzibar" parent="Base.Theme.Zanzibar" />
 
     <style name="Theme.Zanzibar.NoActionBar">
