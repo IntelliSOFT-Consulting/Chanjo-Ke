@@ -1178,6 +1178,7 @@ class FormatterClass {
                 .maxByOrNull { it.dateAdministered } // Find the recommendation with the latest earliest date
         }.values.filterNotNull() // Filter out null values (if any)
 
+
         val administeredVaccine = latestAdministered.firstOrNull { it.vaccineName == vaccineName }
         val recommendedVaccine = latestRecommendations.firstOrNull { it.vaccineName == vaccineName }
 
@@ -1277,9 +1278,19 @@ class FormatterClass {
             isVaccinatedValue = true
             canBeVaccinated = true
 
-            if (status == Reasons.CONTRAINDICATE.name || status == Reasons.NOT_ADMINISTERED.name){
+            if (status == Reasons.CONTRAINDICATE.name ||
+                status == Reasons.NOT_ADMINISTERED.name){
                 isVaccinatedValue = false
             }
+
+            val completedVaccines = latestAdministered.find { it.status == Reasons.COMPLETED.name }
+            if (completedVaccines != null){
+                canBeVaccinated = false
+                isVaccinatedValue = true
+                dateValue = completedVaccines.dateAdministered
+                statusValue = completedVaccines.status
+            }
+
 
             // Process status and dateAdministered as needed
         } ?: recommendedVaccine?.run {
