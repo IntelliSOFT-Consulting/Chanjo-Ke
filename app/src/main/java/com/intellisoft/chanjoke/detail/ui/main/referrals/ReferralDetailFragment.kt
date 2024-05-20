@@ -20,6 +20,8 @@ import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,11 +95,20 @@ class ReferralDetailFragment : Fragment() {
             if (referral != null) {
                 val data = Gson().fromJson(referral, DbServiceRequest::class.java)
                 binding.apply {
+
+                    val inputDateFormat =
+                        SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+                    val outputDateFormat =
+                        SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH)
+                    val referralDate = inputDateFormat.parse(data.referralDate)
+                    val scheduledDate = inputDateFormat.parse(data.scheduledDate)
+                    val formattedDateStr = outputDateFormat.format(referralDate)
+                    val scheduledDateStr = outputDateFormat.format(scheduledDate)
                     referringCHPTextView.text = data.referringCHP
                     vaccineReferredTextView.text = data.vaccineName
                     detailsTextView.text = data.detailsGiven
-                    dateOfReferralTextView.text = data.referralDate
-                    scheduledVaccineDateTextView.text = data.scheduledDate
+                    dateOfReferralTextView.text = formattedDateStr
+                    scheduledVaccineDateTextView.text = scheduledDateStr
                     dateVaccineAdministeredTextView.text = data.dateAdministered
                     healthFacilityReferredToTextView.text = data.healthFacility
 

@@ -68,6 +68,7 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ResourceType
 import org.hl7.fhir.r4.model.RiskAssessment
 import org.hl7.fhir.r4.model.ServiceRequest
+import org.hl7.fhir.r4.model.ServiceRequest.ServiceRequestStatus
 import timber.log.Timber
 
 /**
@@ -145,7 +146,7 @@ class PatientDetailsViewModel(
                     val name = it.name.nameAsSingleString
                     val phone = it.telecomFirstRep.value
                     val type = it.relationshipFirstRep.text
-                    kins.add(CareGiver(phone = phone, name = name, type = type))
+                    kins.add(CareGiver(phone = phone, name = name, type = type, nationalID = ""))
                 }
 
                 if (it.contactFirstRep.hasName()) contact_name =
@@ -605,12 +606,16 @@ class PatientDetailsViewModel(
 
         val vaccineList = ArrayList<DbServiceRequest>()
 
-        fhirEngine
-            .search<ServiceRequest> {
-                sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
+        fhirEngine.search<ServiceRequest> {
+            sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
+        }.map { createServiceRequestItem(it) }.let { serviceRequests ->
+            serviceRequests.forEach { serviceRequest ->
+                if (serviceRequest.patientReference == "Patient/$patientId") {
+                    vaccineList.add(serviceRequest)
+                }
             }
-            .map { createServiceRequestItem(it) }
-            .let { vaccineList.addAll(it) }
+        }
+
 
 
         return ArrayList(vaccineList)
@@ -911,21 +916,33 @@ class PatientDetailsViewModel(
         val intent = if (data.hasIntent()) data.intent.toString() else ""
         val priority = if (data.hasPriority()) data.priority.toString() else ""
         val authoredOn = if (data.hasAuthoredOn()) data.authoredOn.toString() else ""
+        val patientIdRef =
+            if (data.hasSubject()) if (data.subject.hasReference()) data.subject.reference else "" else ""
+
+        val vaccineCode =
+            if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasCode()) data.reasonCodeFirstRep.codingFirstRep.code else "" else "" else ""
+
         val vaccineName =
             if (data.hasReasonCode()) if (data.reasonCodeFirstRep.hasCoding()) if (data.reasonCodeFirstRep.codingFirstRep.hasDisplay()) data.reasonCodeFirstRep.codingFirstRep.display else "" else "" else ""
-        val referringCHP = "CHP XYZ"
-        val detailsGiven = "This is a sample details of the referral"
-        val referralDate = "03 May 2024"
-        val scheduledDate = "13 May 2024"
+        val referringCHP = ""
+        val detailsGiven =
+            if (data.hasNote()) if (data.noteFirstRep.hasText()) data.noteFirstRep.text else "" else ""
+        val referralDate =
+            if (data.hasOccurrencePeriod()) if (data.occurrencePeriod.hasStart()) data.occurrencePeriod.start.toString() else "" else ""
+        val scheduledDate =
+            if (data.hasOccurrencePeriod()) if (data.occurrencePeriod.hasEnd()) data.occurrencePeriod.end.toString() else "" else ""
         val dateAdministered = "-"
-        val healthFacility = "Facility ABC"
+        val healthFacility =
+            if (data.hasPerformer()) if (data.performerFirstRep.hasDisplay()) data.performerFirstRep.display else "" else ""
         return DbServiceRequest(
             logicalId,
             status,
             intent,
             priority,
+            patientIdRef,
             authoredOn,
             vaccineName,
+            vaccineCode,
             referringCHP,
             detailsGiven,
             referralDate,
