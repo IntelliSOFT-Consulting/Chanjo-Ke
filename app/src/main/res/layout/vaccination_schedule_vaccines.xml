@@ -65,12 +65,14 @@
             android:layout_height="match_parent">
 
             <ImageButton
+                android:visibility="gone"
                 android:id="@+id/checked"
                 android:background="@drawable/ic_action_checkbox"
                 android:layout_width="25dp"
                 android:layout_height="25dp"/>
 
             <ImageButton
+                android:visibility="gone"
                 android:layout_gravity="center"
                 android:id="@+id/iconDisabled"
                 android:background="@drawable/ic_action_icon_disabled"
@@ -78,6 +80,7 @@
                 android:layout_height="25dp"/>
 
             <ImageButton
+                android:visibility="gone"
                 android:backgroundTint="@color/colorPrimary"
                 android:background="@drawable/ic_action_info_test"
                 android:id="@+id/imgBtnView"

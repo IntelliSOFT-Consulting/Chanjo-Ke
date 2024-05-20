@@ -117,6 +117,7 @@ class VaccineDetailsAdapter(
     }
 
 
+
     override fun getItemCount(): Int {
         return vaccineDetailsList.size
     }
