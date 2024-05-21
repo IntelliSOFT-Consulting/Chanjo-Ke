@@ -610,7 +610,7 @@ class PatientDetailsViewModel(
             sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
         }.map { createServiceRequestItem(it) }.let { serviceRequests ->
             serviceRequests.forEach { serviceRequest ->
-                if (serviceRequest.patientReference == "Patient/$patientId") {
+                if (serviceRequest.patientReference == "Patient/$patientId" && serviceRequest.status == "ACTIVE") {
                     vaccineList.add(serviceRequest)
                 }
             }
@@ -671,7 +671,6 @@ class PatientDetailsViewModel(
         var name = ""
         var role = ""
 
-        Timber.e("Location Display From Resource **** $locDisplay")
 
         if (practitionerId.isNotEmpty()) {
 
@@ -710,8 +709,12 @@ class PatientDetailsViewModel(
             name = searchResult.first().name[0].nameAsSingleString
             if (searchResult.first().hasExtension()) {
                 searchResult.first().extension.forEach {
-                    if (it.hasValue()) {
-                        role = it.value.asStringValue()
+                    if (it.hasUrl()) {
+                        if (it.url.contains("http://example.org/fhir/StructureDefinition/role-group")) {
+                            if (it.hasValue()) {
+                                role = it.value.asStringValue()
+                            }
+                        }
                     }
                 }
             }
@@ -911,7 +914,7 @@ class PatientDetailsViewModel(
 
     private fun createServiceRequestItem(data: ServiceRequest): DbServiceRequest {
 
-        val logicalId = if (data.hasId()) data.id.toString() else ""
+        val logicalId = if (data.hasId()) data.logicalId else ""
         val status = if (data.hasStatus()) data.status.toString() else ""
         val intent = if (data.hasIntent()) data.intent.toString() else ""
         val priority = if (data.hasPriority()) data.priority.toString() else ""
@@ -934,6 +937,7 @@ class PatientDetailsViewModel(
         val dateAdministered = "-"
         val healthFacility =
             if (data.hasPerformer()) if (data.performerFirstRep.hasDisplay()) data.performerFirstRep.display else "" else ""
+        Timber.e("Status posted here ******$status***")
         return DbServiceRequest(
             logicalId,
             status,
@@ -1300,6 +1304,26 @@ class PatientDetailsViewModel(
             }
 
         return "$counter"
+    }
+
+    fun updateServiceRequestStatus(serviceRequestId: String) = runBlocking {
+        val serviceRequest =
+            fhirEngine.get(ResourceType.ServiceRequest, serviceRequestId) as ServiceRequest
+        val sr = ServiceRequest()
+        sr.id = serviceRequestId
+        sr.subject = serviceRequest.subject
+        sr.status = ServiceRequestStatus.COMPLETED
+        sr.intent = serviceRequest.intent
+        sr.category = serviceRequest.category
+        sr.priority = serviceRequest.priority
+        sr.authoredOn = serviceRequest.authoredOn
+        sr.setOccurrence(serviceRequest.occurrencePeriod)
+        sr.requester = serviceRequest.requester
+        sr.performer = serviceRequest.performer
+        sr.reasonCode = serviceRequest.reasonCode
+        sr.note = serviceRequest.note
+
+        fhirEngine.update(sr)
     }
 
 }
