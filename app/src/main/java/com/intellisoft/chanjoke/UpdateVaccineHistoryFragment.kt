@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -113,44 +114,58 @@ class UpdateVaccineHistoryFragment : Fragment() {
         administeredVaccineList = administeredList.map { it.vaccineName } as ArrayList<String>
 
         binding.nextSubmit.setOnClickListener {
+            val lastDoseDate = binding.tvDatePicker.text.trim().toString()
 
-            if (vaccineType == "") {
-                binding.vaccineSpinner.requestFocus()
-                Toast.makeText(requireContext(), "Select the type of vaccine", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (lastDose == "") {
-                binding.lastDose.requestFocus()
-                Toast.makeText(requireContext(), "Select the type of last vaccine dose", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (vaccinePlace == "") {
-                binding.vaccinationPlace.requestFocus()
-                Toast.makeText(requireContext(), "Select the place of vaccination", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            val lastDoseDate = binding.tvDatePicker.text.toString()
-            if (lastDoseDate == "Date of last Dose *") {
-                binding.tvDatePicker.requestFocus()
-                Toast.makeText(requireContext(), "Select the Date of last Dose", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            /**
-             * Create an immunization resource,
-             */
-            val resultList = ArrayList<String>()
-            resultList.add(lastDose)
+            if (
+                vaccineType != "" &&
+                lastDose != "" &&
+                vaccinePlace != "" &&
+                lastDoseDate != "Date of last dose *"){
 
-            administerVaccineViewModel.createManualImmunizationResource(
-                resultList,
-                formatterClass.generateUuid(),
-                patientId,
-                requireContext(),
-                lastDoseDate,
-                Immunization.ImmunizationStatus.COMPLETED)
 
-            val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
-            blurBackgroundDialog.show()
+                /**
+                 * Create an immunization resource,
+                 */
+                val resultList = ArrayList<String>()
+                resultList.add(lastDose)
+
+                administerVaccineViewModel.createManualImmunizationResource(
+                    resultList,
+                    formatterClass.generateUuid(),
+                    patientId,
+                    requireContext(),
+                    lastDoseDate,
+                    Immunization.ImmunizationStatus.COMPLETED)
+
+                val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
+                blurBackgroundDialog.show()
+
+            }else{
+
+                if (vaccineType == "") {
+                    binding.vaccineSpinner.requestFocus()
+                    Toast.makeText(requireContext(), "Select the type of vaccine", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if (lastDose == "") {
+                    binding.lastDose.requestFocus()
+                    Toast.makeText(requireContext(), "Select the type of last vaccine dose", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if (vaccinePlace == "") {
+                    binding.vaccinationPlace.requestFocus()
+                    Toast.makeText(requireContext(), "Select the place of vaccination", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if (lastDoseDate == "Date of last dose *") {
+                    binding.tvDatePicker.requestFocus()
+                    Toast.makeText(requireContext(), "Select the Date of last Dose", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+            }
+
+
 
         }
 
