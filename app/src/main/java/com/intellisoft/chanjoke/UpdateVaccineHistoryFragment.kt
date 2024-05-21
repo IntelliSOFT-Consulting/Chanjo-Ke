@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.databinding.FragmentUpdateVaccineHistoryBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
+import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
@@ -30,6 +33,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Immunization
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class UpdateVaccineHistoryFragment : Fragment() {
@@ -48,7 +53,11 @@ class UpdateVaccineHistoryFragment : Fragment() {
     private var lastDose: String = ""
     private var vaccinePlace: String = ""
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
-
+    private var recommendationList = ArrayList<DbRecommendationDetails>()
+    private var administeredList = ArrayList<DbVaccineData>()
+    private var administeredVaccineList = ArrayList<String>()
+    private val today = LocalDate.now()
+    private val formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +90,6 @@ class UpdateVaccineHistoryFragment : Fragment() {
         }
 
 
-
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         sharedPreferences = requireContext()
@@ -91,6 +99,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
 
+
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(
                 requireContext().applicationContext as Application,
@@ -99,45 +108,64 @@ class UpdateVaccineHistoryFragment : Fragment() {
             )
         )[PatientDetailsViewModel::class.java]
 
+        recommendationList = patientDetailsViewModel.recommendationList(null)
+
+        administeredList = patientDetailsViewModel.getVaccineList()
+        administeredVaccineList = administeredList.map { it.vaccineName } as ArrayList<String>
+
         binding.nextSubmit.setOnClickListener {
+            val lastDoseDate = binding.tvDatePicker.text.trim().toString()
 
-            if (vaccineType == "") {
-                binding.vaccineSpinner.requestFocus()
-                Toast.makeText(requireContext(), "Select the type of vaccine", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (lastDose == "") {
-                binding.lastDose.requestFocus()
-                Toast.makeText(requireContext(), "Select the type of last vaccine dose", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (vaccinePlace == "") {
-                binding.vaccinationPlace.requestFocus()
-                Toast.makeText(requireContext(), "Select the place of vaccination", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            val lastDoseDate = binding.tvDatePicker.text.toString()
-            if (lastDoseDate == "Date of last Dose *") {
-                binding.tvDatePicker.requestFocus()
-                Toast.makeText(requireContext(), "Select the Date of last Dose", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            /**
-             * Create an immunization resource,
-             */
-            val resultList = ArrayList<String>()
-            resultList.add(lastDose)
+            if (
+                vaccineType != "" &&
+                lastDose != "" &&
+                vaccinePlace != "" &&
+                lastDoseDate != "Date of last dose *"){
 
-            administerVaccineViewModel.createManualImmunizationResource(
-                resultList,
-                formatterClass.generateUuid(),
-                patientId,
-                requireContext(),
-                lastDoseDate,
-                Immunization.ImmunizationStatus.COMPLETED)
 
-            val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
-            blurBackgroundDialog.show()
+                /**
+                 * Create an immunization resource,
+                 */
+                val resultList = ArrayList<String>()
+                resultList.add(lastDose)
+
+                administerVaccineViewModel.createManualImmunizationResource(
+                    resultList,
+                    formatterClass.generateUuid(),
+                    patientId,
+                    requireContext(),
+                    lastDoseDate,
+                    Immunization.ImmunizationStatus.COMPLETED)
+
+                val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
+                blurBackgroundDialog.show()
+
+            }else{
+
+                if (vaccineType == "") {
+                    binding.vaccineSpinner.requestFocus()
+                    Toast.makeText(requireContext(), "Select the type of vaccine", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if (lastDose == "") {
+                    binding.lastDose.requestFocus()
+                    Toast.makeText(requireContext(), "Select the type of last vaccine dose", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if (vaccinePlace == "") {
+                    binding.vaccinationPlace.requestFocus()
+                    Toast.makeText(requireContext(), "Select the place of vaccination", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                if (lastDoseDate == "Date of last dose *") {
+                    binding.tvDatePicker.requestFocus()
+                    Toast.makeText(requireContext(), "Select the Date of last Dose", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+            }
+
+
 
         }
 
@@ -246,10 +274,22 @@ class UpdateVaccineHistoryFragment : Fragment() {
         val vaccineList = ArrayList<String>()
         val routineBasicVaccine = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
         if (routineBasicVaccine is RoutineVaccine){
+
+            //Get the missed vaccine list
             val routineVaccineList = routineBasicVaccine.vaccineList
-            routineVaccineList.forEach {
-                val vaccineName = it.vaccineName
-                vaccineList.add(vaccineName)
+
+            routineVaccineList.forEach {basicVaccine ->
+                val vaccineName = basicVaccine.vaccineName
+                if (!administeredVaccineList.contains(vaccineName)) {
+                    val recommendedVaccine = recommendationList.find { it.vaccineName == vaccineName }
+                    if (recommendedVaccine != null) {
+                        val recommendedDate = LocalDate.parse(recommendedVaccine.latestDate, formatter)
+                        if (recommendedDate.isBefore(today)) {
+                            vaccineList.add(recommendedVaccine.vaccineName)
+                        }
+                    }
+                }
+
             }
         }
 

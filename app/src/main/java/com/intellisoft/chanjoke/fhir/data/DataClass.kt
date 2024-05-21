@@ -3,11 +3,16 @@ package com.intellisoft.chanjoke.fhir.data
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
+import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import java.util.Date
 
 enum class UrlData(var message: Int) {
     BASE_URL(R.string.base_url),
 }
+data class DbRoutineVaccineData(
+    val type: String,
+    val vaccineList: List<RoutineVaccine>
+)
 
 data class DbVaccineAdmin(
     val dateAdministered: Date,
@@ -44,6 +49,11 @@ enum class StatusColors {
     NORMAL, //Future
     NOT_DONE, //Not Done
 }
+enum class StatusValues {
+    DUE,
+    WITHIN_RANGE,
+    MISSED
+}
 
 data class AdverseEventItem(
     val encounterId: String,
@@ -56,6 +66,14 @@ data class PractitionerDetails(
     val name: String,
     val role: String,
 )
+data class DbVaccineNotDone(
+    val logicalId: String,
+    val vaccineCode: String,
+    val vaccineName: String,
+    val nextDate: String,
+    val statusReason: String,
+    val status: String,
+)
 
 data class DbVaccineDetailsData(
     val logicalId: String,
@@ -64,6 +82,8 @@ data class DbVaccineDetailsData(
     val seriesDosesString: String,
     val series: String,
     val status: String,
+    val facility: String? = null,
+    val practioner: String? = null,
 )
 
 data class Contraindication(
@@ -82,6 +102,7 @@ data class DbVaccineData(
     val doseNumber: String,
     var dateAdministered: String,
     val status: String,
+    val dateRecorded: String = "",
 )
 
 data class DbTempData(
@@ -204,6 +225,7 @@ data class DbRecommendationDetails(
     val series: String,
     val doseNumber: String,
     val status: String,
+    val nhdd: String? = null,
 )
 
 data class DbSignIn(
