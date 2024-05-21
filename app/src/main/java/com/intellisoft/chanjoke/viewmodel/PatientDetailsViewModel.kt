@@ -874,6 +874,8 @@ class PatientDetailsViewModel(
         var seriesDosesString = ""
         var series = ""
         var status = ""
+        var location = ""
+        var practioner = ""
 
         if (immunization.hasId()) {
             logicalId = immunization.id
@@ -901,9 +903,18 @@ class PatientDetailsViewModel(
             status = immunization.statusElement.value.name
         }
 
+        if (immunization.hasLocation() && immunization.location.hasReference()){
+            location = immunization.location.reference
+        }
+        if (immunization.hasPerformer() &&
+            immunization.performer[0].hasActor() &&
+            immunization.performer[0].actor.hasReference()) {
+            practioner = immunization.performer[0].actor.reference
+        }
+
 
         return DbVaccineDetailsData(
-            logicalId, vaccineName, dosesAdministered, seriesDosesString, series, status
+            logicalId, vaccineName, dosesAdministered, seriesDosesString, series, status, location, practioner
         )
     }
 

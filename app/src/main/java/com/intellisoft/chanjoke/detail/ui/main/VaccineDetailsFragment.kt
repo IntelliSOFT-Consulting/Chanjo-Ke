@@ -156,6 +156,12 @@ class VaccineDetailsFragment : Fragment() {
                         tvYearsSince.text =
                             generateDaysSince(dosesAdministered, days = false, month = false)
 
+                        /**
+                         * TODO1: Update these with correct data
+                         */
+                        tvFacility.text = immunizationDetails[0].facility
+                        tvAdministrator.text = immunizationDetails[0].practioner
+
                         val patientDob =
                             FormatterClass().getSharedPref("patientDob", requireContext())
                         val age = generateAgeSince(patientDob, dosesAdministered)

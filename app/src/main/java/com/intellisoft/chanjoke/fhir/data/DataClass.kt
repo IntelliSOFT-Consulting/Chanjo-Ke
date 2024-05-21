@@ -82,6 +82,8 @@ data class DbVaccineDetailsData(
     val seriesDosesString: String,
     val series: String,
     val status: String,
+    val facility: String? = null,
+    val practioner: String? = null,
 )
 
 data class Contraindication(
