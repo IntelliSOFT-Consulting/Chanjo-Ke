@@ -268,7 +268,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 if (!administeredVaccineList.contains(vaccineName)) {
                     val recommendedVaccine = recommendationList.find { it.vaccineName == vaccineName }
                     if (recommendedVaccine != null) {
-                        val recommendedDate = LocalDate.parse(recommendedVaccine.earliestDate, formatter)
+                        val recommendedDate = LocalDate.parse(recommendedVaccine.latestDate, formatter)
                         if (recommendedDate.isBefore(today)) {
                             vaccineList.add(recommendedVaccine.vaccineName)
                         }

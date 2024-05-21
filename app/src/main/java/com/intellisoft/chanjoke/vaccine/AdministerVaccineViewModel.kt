@@ -392,6 +392,8 @@ class AdministerVaccineViewModel(
                 }
                 val localDate = formatterClass.convertDateToLocalExactDate(nextImmunizationDate)
 
+
+
                 /**
                  * Get the immunization recommendation
                  */

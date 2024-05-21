@@ -1528,6 +1528,7 @@ class FormatterClass {
                                         }
                                     }
                                     canBeVaccinated = true
+                                    statusColor = StatusColors.NORMAL.name
                                 }
                             }
                             "IMPO-bOPV" -> {
@@ -1540,6 +1541,7 @@ class FormatterClass {
                                         }
                                     }
                                     canBeVaccinated = true
+                                    statusColor = StatusColors.NORMAL.name
                                 }
                             }
                         }
