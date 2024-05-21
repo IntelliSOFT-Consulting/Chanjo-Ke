@@ -19,6 +19,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.databinding.FragmentUpdateVaccineHistoryBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
+import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
@@ -30,6 +32,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Immunization
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class UpdateVaccineHistoryFragment : Fragment() {
@@ -48,7 +52,11 @@ class UpdateVaccineHistoryFragment : Fragment() {
     private var lastDose: String = ""
     private var vaccinePlace: String = ""
     private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
-
+    private var recommendationList = ArrayList<DbRecommendationDetails>()
+    private var administeredList = ArrayList<DbVaccineData>()
+    private var administeredVaccineList = ArrayList<String>()
+    private val today = LocalDate.now()
+    private val formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +89,6 @@ class UpdateVaccineHistoryFragment : Fragment() {
         }
 
 
-
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         sharedPreferences = requireContext()
@@ -91,6 +98,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
 
+
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(
                 requireContext().applicationContext as Application,
@@ -98,6 +106,11 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 patientId
             )
         )[PatientDetailsViewModel::class.java]
+
+        recommendationList = patientDetailsViewModel.recommendationList(null)
+
+        administeredList = patientDetailsViewModel.getVaccineList()
+        administeredVaccineList = administeredList.map { it.vaccineName } as ArrayList<String>
 
         binding.nextSubmit.setOnClickListener {
 
@@ -246,10 +259,22 @@ class UpdateVaccineHistoryFragment : Fragment() {
         val vaccineList = ArrayList<String>()
         val routineBasicVaccine = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
         if (routineBasicVaccine is RoutineVaccine){
+
+            //Get the missed vaccine list
             val routineVaccineList = routineBasicVaccine.vaccineList
-            routineVaccineList.forEach {
-                val vaccineName = it.vaccineName
-                vaccineList.add(vaccineName)
+
+            routineVaccineList.forEach {basicVaccine ->
+                val vaccineName = basicVaccine.vaccineName
+                if (!administeredVaccineList.contains(vaccineName)) {
+                    val recommendedVaccine = recommendationList.find { it.vaccineName == vaccineName }
+                    if (recommendedVaccine != null) {
+                        val recommendedDate = LocalDate.parse(recommendedVaccine.earliestDate, formatter)
+                        if (recommendedDate.isBefore(today)) {
+                            vaccineList.add(recommendedVaccine.vaccineName)
+                        }
+                    }
+                }
+
             }
         }
 
