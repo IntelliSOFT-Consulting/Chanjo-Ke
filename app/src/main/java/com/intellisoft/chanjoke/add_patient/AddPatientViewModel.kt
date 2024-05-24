@@ -18,25 +18,30 @@ package com.intellisoft.chanjoke.add_patient
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
+import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.search
 import com.intellisoft.chanjoke.fhir.data.CompletePatient
-import com.intellisoft.chanjoke.fhir.data.DbRoutineVaccineData
+import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.DbVaccineAdmin
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.fhir.data.PatientIdentification
 import com.intellisoft.chanjoke.patient_list.toPatientItem
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
@@ -45,6 +50,8 @@ import kotlinx.coroutines.Dispatchers
 import java.util.UUID
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.hl7.fhir.r4.model.AdverseEvent
+import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.ContactPoint
@@ -62,6 +69,8 @@ import org.hl7.fhir.r4.model.ResourceType
 import org.hl7.fhir.r4.model.StringType
 import org.json.JSONObject
 import timber.log.Timber
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 
 /** ViewModel for patient registration screen {@link AddPatientFragment}. */
@@ -603,18 +612,129 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
                 val id = generateUuid()
 
-                val (Pair1, Pair2) = immunizationHandler.getVaccineDataList()
+                val routineVaccineList = immunizationHandler.getRoutineTargetDiseases()
                 val immunizationRecommendation = ImmunizationRecommendation()
 
                 immunizationRecommendation.id = id
                 immunizationRecommendation.patient = Reference("Patient/$patientId")
                 immunizationRecommendation.date = Date()
 
-                val recommendationList1 = createImmunizationRecommendation(selectedDate,Pair1)
-                val recommendationList2 = createImmunizationRecommendation(selectedDate,Pair2)
+                val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
 
-                val recommendationList = recommendationList1 + recommendationList2
+                routineVaccineList.forEach { routineVaccine: RoutineVaccine ->
 
+                    val diseaseCode = routineVaccine.diseaseCode
+                    val targetDiseaseValue = routineVaccine.targetDisease
+                    val seriesDoses = routineVaccine.seriesDoses
+                    val NHDD = routineVaccine.NHDD
+                    val vaccineList = routineVaccine.vaccineList
+
+
+                    vaccineList.forEach { basicVaccine: BasicVaccine ->
+
+                        val recommendation = ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
+
+                        val vaccineCodeValue = basicVaccine.vaccineCode
+                        val vaccineName = basicVaccine.vaccineName
+                        val administrativeMethod = basicVaccine.administrativeMethod
+                        val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
+                        val administrativeWeeksSincePrevious = basicVaccine.administrativeWeeksSincePrevious
+                        val doseQuantity = basicVaccine.doseQuantity
+                        val doseNumber = basicVaccine.doseNumber
+
+                        val administrativeWeeksSinceDOBLong = administrativeWeeksSinceDOB.toLong()
+                        val localDate = formatterClass.convertDateToLocalDate(selectedDate)
+
+                        //From selectedDate, calculate the next date plus administrativeWeeksSinceDOB
+                        val earliestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, administrativeWeeksSinceDOBLong)
+                        val latestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, (administrativeWeeksSinceDOBLong + 2))
+
+                        val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
+                        val latestAdministerLocalDate = formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
+
+
+                        val dateCriterionList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
+
+                        if (earliestAdministerLocalDate != null && latestAdministerLocalDate != null){
+
+                            val earlyAdministerDate = DbVaccineAdmin(earliestAdministerLocalDate, "Earliest-date-to-administer")
+                            val lateAdministerDate = DbVaccineAdmin(latestAdministerLocalDate, "Latest-date-to-administer")
+
+
+                            val administerTimeList = ArrayList<DbVaccineAdmin>()
+                            administerTimeList.addAll(
+                                mutableListOf(earlyAdministerDate, lateAdministerDate)
+                            )
+
+                            /**
+                             * Date Criterion
+                             * TODO: Add earliest date to administered date
+                             * TODO: Add latest date to administered date
+                             */
+                            administerTimeList.forEach { administerTime ->
+                                val dateCriterion = ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
+
+                                val code = CodeableConcept()
+                                val codeCoding = Coding()
+                                codeCoding.system = "http://snomed.info/sct"
+                                codeCoding.code = administerTime.type
+                                codeCoding.display = administerTime.type
+                                code.coding = listOf(codeCoding)
+                                dateCriterion.code = code
+                                dateCriterion.value = administerTime.dateAdministered
+
+                                dateCriterionList.add(dateCriterion)
+                            }
+
+                        }
+
+                        recommendation.dateCriterion = dateCriterionList
+
+                        //Vaccine code
+                        val vaccineCodeList = ArrayList<CodeableConcept>()
+                        val vaccineCode = CodeableConcept()
+                        val coding = Coding()
+                        coding.system = "http://snomed.info/sct"
+                        coding.code = NHDD.toString()
+                        coding.display = vaccineCodeValue
+                        vaccineCode.coding = listOf(coding)
+                        vaccineCode.text = vaccineName
+                        vaccineCodeList.add(vaccineCode)
+
+                        recommendation.vaccineCode = vaccineCodeList
+
+                        val doseNumberType = PositiveIntType()
+                        doseNumberType.value = doseNumber.toInt()
+                        recommendation.doseNumber = doseNumberType
+
+                        //Target Disease
+                        val targetDisease = CodeableConcept()
+                        val targetDiseaseCoding = Coding()
+                        targetDiseaseCoding.system = "http://snomed.info/sct"
+                        targetDiseaseCoding.code = targetDiseaseValue
+                        targetDiseaseCoding.display = targetDiseaseValue
+                        targetDisease.coding = listOf(targetDiseaseCoding)
+                        targetDisease.text = targetDiseaseValue
+                        recommendation.targetDisease = targetDisease
+
+                        //Forecast Status
+                        val forecastStatus = CodeableConcept()
+                        val forecastStatusCoding = Coding()
+                        forecastStatusCoding.system = "http://snomed.info/sct"
+                        forecastStatusCoding.code = "due"
+                        forecastStatusCoding.display = "due"
+                        forecastStatus.coding = listOf(forecastStatusCoding)
+                        recommendation.forecastStatus = forecastStatus
+
+                        recommendation.description = "routine"
+                        recommendation.series = seriesDoses.toString()
+
+                        recommendationList.add(recommendation)
+
+                    }
+
+
+                }
                 immunizationRecommendation.recommendation = recommendationList
 
                 fhirEngine.create(immunizationRecommendation)
@@ -622,131 +742,6 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             }
         }
 
-    }
-
-    private fun createImmunizationRecommendation(selectedDate: Date, pair: DbRoutineVaccineData, ): ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent> {
-
-        val routineVaccineList = pair.vaccineList
-        val type = pair.type
-
-        val formatterClass = FormatterClass()
-        val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
-
-        routineVaccineList.forEach { routineVaccine: RoutineVaccine ->
-
-            val diseaseCode = routineVaccine.diseaseCode
-            val targetDiseaseValue = routineVaccine.targetDisease
-            val seriesDoses = routineVaccine.seriesDoses
-            val NHDD = routineVaccine.NHDD
-            val vaccineList = routineVaccine.vaccineList
-
-
-            vaccineList.forEach { basicVaccine: BasicVaccine ->
-
-                val recommendation = ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
-
-                val vaccineCodeValue = basicVaccine.vaccineCode
-                val vaccineName = basicVaccine.vaccineName
-                val administrativeMethod = basicVaccine.administrativeMethod
-                val administrativeWeeksSinceDOB = basicVaccine.administrativeWeeksSinceDOB
-                val administrativeWeeksSincePrevious = basicVaccine.administrativeWeeksSincePrevious
-                val doseQuantity = basicVaccine.doseQuantity
-                val doseNumber = basicVaccine.doseNumber
-
-                val administrativeWeeksSinceDOBLong = administrativeWeeksSinceDOB.toLong()
-                val localDate = formatterClass.convertDateToLocalDate(selectedDate)
-
-                //From selectedDate, calculate the next date plus administrativeWeeksSinceDOB
-                val earliestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, administrativeWeeksSinceDOBLong)
-                val latestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, (administrativeWeeksSinceDOBLong + 2))
-
-                val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
-                val latestAdministerLocalDate = formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
-
-                val dateCriterionList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
-
-                if (earliestAdministerLocalDate != null && latestAdministerLocalDate != null){
-
-                    val earlyAdministerDate = DbVaccineAdmin(earliestAdministerLocalDate, "Earliest-date-to-administer")
-                    val lateAdministerDate = DbVaccineAdmin(latestAdministerLocalDate, "Latest-date-to-administer")
-
-
-                    val administerTimeList = ArrayList<DbVaccineAdmin>()
-                    administerTimeList.addAll(
-                        mutableListOf(earlyAdministerDate, lateAdministerDate)
-                    )
-
-                    /**
-                     * Date Criterion
-                     * TODO: Add earliest date to administered date
-                     * TODO: Add latest date to administered date
-                     */
-                    administerTimeList.forEach { administerTime ->
-                        val dateCriterion = ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
-
-                        val code = CodeableConcept()
-                        val codeCoding = Coding()
-                        codeCoding.system = "http://snomed.info/sct"
-                        codeCoding.code = administerTime.type
-                        codeCoding.display = administerTime.type
-                        code.coding = listOf(codeCoding)
-                        dateCriterion.code = code
-                        dateCriterion.value = administerTime.dateAdministered
-
-                        dateCriterionList.add(dateCriterion)
-                    }
-
-                }
-
-                recommendation.dateCriterion = dateCriterionList
-
-                //Vaccine code
-                val vaccineCodeList = ArrayList<CodeableConcept>()
-                val vaccineCode = CodeableConcept()
-                val coding = Coding()
-                coding.system = "http://snomed.info/sct"
-                coding.code = NHDD.toString()
-                coding.display = vaccineCodeValue
-                vaccineCode.coding = listOf(coding)
-                vaccineCode.text = vaccineName
-                vaccineCodeList.add(vaccineCode)
-
-                recommendation.vaccineCode = vaccineCodeList
-
-                val doseNumberType = PositiveIntType()
-                doseNumberType.value = doseNumber.toInt()
-                recommendation.doseNumber = doseNumberType
-
-                //Target Disease
-                val targetDisease = CodeableConcept()
-                val targetDiseaseCoding = Coding()
-                targetDiseaseCoding.system = "http://snomed.info/sct"
-                targetDiseaseCoding.code = targetDiseaseValue
-                targetDiseaseCoding.display = targetDiseaseValue
-                targetDisease.coding = listOf(targetDiseaseCoding)
-                targetDisease.text = targetDiseaseValue
-                recommendation.targetDisease = targetDisease
-
-                //Forecast Status
-                val forecastStatus = CodeableConcept()
-                val forecastStatusCoding = Coding()
-                forecastStatusCoding.system = "http://snomed.info/sct"
-                forecastStatusCoding.code = "due"
-                forecastStatusCoding.display = "due"
-                forecastStatus.coding = listOf(forecastStatusCoding)
-                recommendation.forecastStatus = forecastStatus
-
-                recommendation.description = type.toLowerCase()
-                recommendation.series = seriesDoses.toString()
-
-                recommendationList.add(recommendation)
-
-            }
-
-
-        }
-
-        return recommendationList
     }
 
 

@@ -11,23 +11,16 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentActionBinding
 import com.intellisoft.chanjoke.databinding.FragmentTypeBinding
 import com.intellisoft.chanjoke.detail.ui.main.registration.OnButtonClickListener
 import com.intellisoft.chanjoke.fhir.data.AEFIData
-import com.intellisoft.chanjoke.fhir.data.AdministeredDetails
-import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Parent
 import com.intellisoft.chanjoke.utils.AppUtils
-import timber.log.Timber
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -113,8 +106,6 @@ class TypeFragment : Fragment() {
                         calendar.get(Calendar.DAY_OF_MONTH)
                     )
                     datePickerDialog.datePicker.maxDate = calendar.getTimeInMillis()
-                    datePickerDialog.datePicker.minDate =
-                        calculateAdministrationLastData(calendar.getTimeInMillis())
                     datePickerDialog.show()
                 }
             }
@@ -132,46 +123,6 @@ class TypeFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun calculateAdministrationLastData(timeInMillis: Long): Long {
-
-        var minTimeInMillis = timeInMillis
-
-        /**
-         * Return current date just in case
-         * **/
-        val vaccineList = FormatterClass().getSharedPref(
-            "vaccine_administration_data",
-            requireContext()
-        )
-        try {
-
-            val type = object : TypeToken<List<AdministeredDetails>>() {}.type
-            val refinedVaccineList: List<AdministeredDetails> = Gson().fromJson(vaccineList, type)
-            var minimumDate = ""
-            val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.getDefault())
-
-            refinedVaccineList.forEach {
-                minimumDate = it.vaccineDate
-            }
-            if (minimumDate.isNotEmpty()) {
-                try {
-                    val date = dateFormat.parse(minimumDate)
-                    if (date != null) {
-                        minTimeInMillis = date.time
-                    }
-                    Timber.e("vaccineList ****** $minTimeInMillis ")
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return minTimeInMillis
-
     }
 
     private fun validateData(): Boolean {

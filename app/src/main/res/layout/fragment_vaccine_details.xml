@@ -33,30 +33,12 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textStyle="bold" />
 
-            <LinearLayout
-                android:orientation="vertical"
+            <Button
+                android:id="@+id/btn_contraindication"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/btn_contraindication"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Contraindications"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:id="@+id/btnNotAdminister"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Not Administer"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
-
+                android:layout_height="wrap_content"
+                android:text="Contraindications"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

@@ -46,7 +46,9 @@ class VaccineDetailsAdapter(
         val daysTo = formatterClass.daysBetweenTodayAndGivenDate(date)
 
         var vaccineStatus = ""
-        if (status == StatusColors.GREEN.name){
+        if (status == StatusColors.NORMAL.name){
+            vaccineStatus = ""
+        }else if (status == StatusColors.GREEN.name){
             vaccineStatus = "Administered"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.green))
         }else if (status == StatusColors.AMBER.name){
@@ -60,6 +62,7 @@ class VaccineDetailsAdapter(
             }
         }else if (status == StatusColors.NORMAL.name){
             vaccineStatus = "Due"
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
         }else if (status == StatusColors.RED.name){
             vaccineStatus = "Missed"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
@@ -70,6 +73,13 @@ class VaccineDetailsAdapter(
             vaccineStatus = ""
         }
 
+        if (canBeVaccinated != null) {
+            holder.checkBox.isEnabled = canBeVaccinated
+            if (!canBeVaccinated){
+                holder.iconDisabled.visibility = View.VISIBLE
+                holder.checkBox.visibility = View.INVISIBLE
+            }
+        }
 
         holder.iconDisabled.setOnClickListener {
             Toast.makeText(context, "You are not eligible for this vaccine.", Toast.LENGTH_SHORT).show()
@@ -80,43 +90,16 @@ class VaccineDetailsAdapter(
         holder.tvVaccineName.text = vaccineName
         holder.tvVaccineDate.text = date
 
-        holder.checkBox.isEnabled = canBeVaccinated ?: false
-
-        /**
-         * 1. Check if its administered and show administered icon
-         *  Disable the rest of the icons
-         *
-         * 2. Check if it can be vaccinated and show vaccinate icon
-         */
-
-        if (canBeVaccinated == true){
-            holder.checkBox.visibility = View.VISIBLE
-
-            holder.iconDisabled.visibility = View.GONE
-            holder.imgBtnView.visibility = View.GONE
-            holder.checked.visibility = View.GONE
-        }
-
-        if (isVaccinated){
+        if(isVaccinated){
+            holder.checkBox.visibility = View.INVISIBLE
             holder.checked.visibility = View.VISIBLE
-
-            holder.iconDisabled.visibility = View.GONE
-            holder.imgBtnView.visibility = View.GONE
-            holder.checkBox.visibility = View.GONE
         }
-
-
-
 
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             onCheckBoxSelectedListener.onCheckBoxSelected(position, isChecked, vaccineName)
         }
 
-
-
     }
-
-
 
     override fun getItemCount(): Int {
         return vaccineDetailsList.size
@@ -127,10 +110,9 @@ class VaccineDetailsAdapter(
         val tvScheduleStatus: TextView = itemView.findViewById(R.id.tvScheduleStatus)
         val tvVaccineName: TextView = itemView.findViewById(R.id.tvVaccineName)
         val tvVaccineDate: TextView = itemView.findViewById(R.id.tvVaccineDate)
-        val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
+        val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
         val checked: ImageButton = itemView.findViewById(R.id.checked)
         val iconDisabled: ImageButton = itemView.findViewById(R.id.iconDisabled)
-        val imgBtnView: ImageButton = itemView.findViewById(R.id.imgBtnView)
 
 
         init {

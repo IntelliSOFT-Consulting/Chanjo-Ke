@@ -33,12 +33,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/type_of_aefi"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/type_of_aefi" />
 
                 <TextView
                     android:id="@+id/typeOfAEFITextView"
@@ -62,10 +57,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/typeOfAEFIOtherTextView"
@@ -93,12 +84,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/brief_details_on_aefi"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/brief_details_on_aefi" />
 
                 <TextView
                     android:id="@+id/briefDetailsTextView"
@@ -125,12 +111,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/onset_of_event"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/onset_of_event" />
 
                 <TextView
                     android:id="@+id/onsetOfEventTextView"
@@ -157,12 +138,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/past_medical_history"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/past_medical_history" />
 
                 <TextView
                     android:id="@+id/pastMedicalHistoryTextView"
@@ -189,12 +165,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/specimen_collected"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/specimen_collected" />
 
                 <TextView
                     android:id="@+id/specimenTextView"
@@ -202,7 +173,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3" />
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -221,12 +191,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/reaction_severity"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/reaction_severity" />
 
                 <TextView
                     android:id="@+id/reactionSeverityTextView"
@@ -253,12 +218,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/action_taken"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/action_taken" />
 
                 <TextView
                     android:id="@+id/actionTakenTextView"
@@ -285,12 +245,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/aefi_outcome"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/aefi_outcome" />
 
                 <TextView
                     android:id="@+id/aefiOutcomeTextView"
@@ -318,12 +273,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/name_of_person_reporting"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/name_of_person_reporting" />
 
                 <TextView
                     android:id="@+id/nameOfPersonTextView"
@@ -350,12 +300,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/contact"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/contact" />
 
                 <TextView
                     android:id="@+id/contactTextView"

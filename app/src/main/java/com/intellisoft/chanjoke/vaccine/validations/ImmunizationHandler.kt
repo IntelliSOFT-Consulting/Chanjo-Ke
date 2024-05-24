@@ -1,7 +1,6 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
 import android.content.Context
-import com.intellisoft.chanjoke.fhir.data.DbRoutineVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
 // Interface segregation principle
@@ -128,9 +127,9 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         listOf(
             BasicVaccine(polio+"bOPV", "bOPV", "Oral", 0, arrayListOf(), "2 drops","1"),
             BasicVaccine(polio+"OPV-I", "OPV I", "Oral", 6, arrayListOf(), "2 drops","2"),
-            BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, arrayListOf(4.0), "2 drops","3"),
-            BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, arrayListOf(4.0), "2 drops","4"),
-            BasicVaccine(polio+"IPV", "IPV", "Oral", 14, arrayListOf(4.0), "2 drops","5")
+            BasicVaccine(polio+"OPV-II", "OPV II", "Oral", 10, arrayListOf(10.0), "2 drops","3"),
+            BasicVaccine(polio+"OPV-III", "OPV III", "Oral", 14, arrayListOf(14.0), "2 drops","4"),
+            BasicVaccine(polio+"IPV", "IPV", "Oral", 14, arrayListOf(14.0), "2 drops","5")
         )
     )
 
@@ -385,7 +384,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
     val rabiesMain = "IMRABIES-"
     val rabiesMainSeries = NonRoutineVaccine(
         rabiesMain,
-        "Rabies Post Exposure",
+        "Rabies",
         listOf(
             RoutineVaccine(
                 rabiesMain+"RABIES",
@@ -409,15 +408,15 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
         "Influenza",
         listOf(
             RoutineVaccine(
-                influenza+"INFLUENZA",
+                influenza+"YELLOWFEVER",
                 "Influenza",
                 2,
                 6306,
                 listOf(
-                    BasicVaccine(influenza+"1", "Influenza 1st Dose", "Intramuscular Injection", 26, arrayListOf(), "0.5ml","1"),
-                    BasicVaccine(influenza+"2", "Influenza 2nd Dose", "Intramuscular Injection", 26, arrayListOf(4.0), "0.5ml","2"),
+                    BasicVaccine(influenza+"1", "Influenza 1st Dose", "Intramuscular Injection", 0, arrayListOf(), "0.5ml","1"),
+                    BasicVaccine(influenza+"2", "Influenza 2nd Dose", "Intramuscular Injection", 0, arrayListOf(4.0), "0.5ml","2"),
 
-                    BasicVaccine(influenza+"IIV", "Influenza Single Dose", "Intramuscular Injection", 26, arrayListOf(), "0.5ml","0"),
+                    BasicVaccine(influenza+"IIV", "Influenza Single Dose", "Intramuscular Injection", 0, arrayListOf(), "0.5ml","0"),
                 )
             )
         )
@@ -483,10 +482,6 @@ class ImmunizationHandler() {
         return this.vaccineName == name
     }
 
-    fun DbVaccine.matchesVaccineCode(vaccineCode: String): Boolean {
-        return this.vaccineCode == vaccineCode
-    }
-
 
 
 
@@ -496,19 +491,9 @@ class ImmunizationHandler() {
         val vaccineName: String
     )
 
-    fun getRoutineTargetDiseases(): List<RoutineVaccine> {
-        val (routineList, nonRoutineList, _) = vaccines
-
+    fun getRoutineTargetDiseases():List<RoutineVaccine>{
+        val (routineList, _,  _) = vaccines
         return routineList
-    }
-
-    fun getVaccineDataList(): Pair<DbRoutineVaccineData, DbRoutineVaccineData>{
-        val (routineList, nonRoutineList, _) = vaccines
-        val newNonRoutineList = nonRoutineList.flatMap { it.vaccineList }
-
-        return Pair(
-            DbRoutineVaccineData("ROUTINE",routineList),
-            DbRoutineVaccineData("NON-ROUTINE", newNonRoutineList))
     }
 
     // Liskov substitution principle
@@ -768,7 +753,6 @@ class ImmunizationHandler() {
 
     // Extension function for List<DbVaccine> to find vaccine details by series target name
     fun getRoutineVaccineDetailsBySeriesTargetName(targetDisease: String): Any? {
-
         return vaccineList.firstOrNull {
             when (it) {
                 is RoutineVaccine -> it.targetDisease == targetDisease
@@ -860,18 +844,6 @@ class ImmunizationHandler() {
             nonRoutineList.flatMap { it.vaccineList.flatMap { nonRoutine ->  nonRoutine.vaccineList } },
             pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
             .firstOrNull { it.matchesVaccineName(vaccineName) }
-
-    }
-    // Extension function for List<DbVaccine> to find vaccine details by vaccine name
-    fun getVaccineDetailsByBasicVaccineCode(vaccineCode: String): BasicVaccine? {
-
-        val (routineList, nonRoutineList, pregnancyList) = vaccines
-
-        return listOf(
-            routineList.flatMap { it.vaccineList },
-            nonRoutineList.flatMap { it.vaccineList.flatMap { nonRoutine ->  nonRoutine.vaccineList } },
-            pregnancyList.flatMap { it.vaccineList }).flatten().filterIsInstance<BasicVaccine>()
-            .firstOrNull { it.matchesVaccineCode(vaccineCode) }
 
     }
 
