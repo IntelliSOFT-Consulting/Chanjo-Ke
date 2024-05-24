@@ -16,11 +16,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentAefisBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.adapters.VaccineAefiAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.AdministeredDetails
 import com.intellisoft.chanjoke.fhir.data.AllergicReaction
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -150,6 +152,13 @@ class AefisFragment : Fragment() {
         if (age != null) {
             val vaccineList = retrieveAdministered(age)
             if (vaccineList.isNotEmpty()) {
+                // save for further processing
+
+                FormatterClass().saveSharedPref(
+                    "vaccine_administration_data",
+                    Gson().toJson(vaccineList),
+                    requireContext()
+                )
                 hasReceived = true
             }
         } else {
@@ -158,10 +167,10 @@ class AefisFragment : Fragment() {
         return hasReceived
     }
 
-    private fun retrieveAdministered(status: String): ArrayList<String> {
+    private fun retrieveAdministered(status: String): ArrayList<AdministeredDetails> {
         val expandableListDetail = ImmunizationHandler().generateDbVaccineSchedule()
         val administeredVaccines = patientDetailsViewModel.getAllImmunizationDetails()
-        val alreadyAdministered = ArrayList<String>()
+        val alreadyAdministered = ArrayList<AdministeredDetails>()
 
         try {
             if (status == "At Birth") {
@@ -171,7 +180,13 @@ class AefisFragment : Fragment() {
                 basic?.forEach { q ->
                     val administered = administeredVaccines.find { it.vaccineName == q.vaccineName }
                     if (administered != null) {
-                        alreadyAdministered.add(q.vaccineName)
+                        alreadyAdministered.add(
+                            AdministeredDetails(
+                                vaccineCode = q.vaccineCode,
+                                vaccineName = q.vaccineName,
+                                vaccineDate = administered.recorded.toString()
+                            )
+                        )
                     }
                 }
 
@@ -192,7 +207,13 @@ class AefisFragment : Fragment() {
                 basic?.forEach { q ->
                     val administered = administeredVaccines.find { it.vaccineName == q.vaccineName }
                     if (administered != null) {
-                        alreadyAdministered.add(q.vaccineName)
+                        alreadyAdministered.add(
+                            AdministeredDetails(
+                                vaccineCode = q.vaccineCode,
+                                vaccineName = q.vaccineName,
+                                vaccineDate = q.vaccineName
+                            )
+                        )
                     }
                 }
 

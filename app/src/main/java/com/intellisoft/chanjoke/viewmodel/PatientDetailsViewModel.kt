@@ -714,6 +714,7 @@ class PatientDetailsViewModel(
             name = searchResult.first().name[0].nameAsSingleString
             if (searchResult.first().hasExtension()) {
                 searchResult.first().extension.forEach {
+                    Timber.e("searchResult **** ${it.value}\n${it.url}\nID $resId")
                     if (it.hasUrl()) {
                         if (it.url.contains("http://example.org/fhir/StructureDefinition/role-group")) {
                             if (it.hasValue()) {
@@ -780,7 +781,10 @@ class PatientDetailsViewModel(
         return vaccineList
     }
 
-    private suspend fun loadContraindicationsInner(vaccineNameValue: String, vaccineDetailsType: String): ArrayList<Contraindication> {
+    private suspend fun loadContraindicationsInner(
+        vaccineNameValue: String,
+        vaccineDetailsType: String
+    ): ArrayList<Contraindication> {
 
         val contraindicationList = ArrayList<Contraindication>()
 
@@ -810,7 +814,8 @@ class PatientDetailsViewModel(
                     vaccineName,
                     nextDate,
                     statusReason,
-                    status)
+                    status
+                )
                 contraindicationList.add(contraindication)
             }
         }
@@ -847,21 +852,23 @@ class PatientDetailsViewModel(
                 nextDate = convertedDate
             }
         }
-        if (immunization.hasStatusReason()){
+        if (immunization.hasStatusReason()) {
 //            statusReason = if (immunization.hasStatusReason() && immunization.statusReason.hasText())
 //                immunization.statusReason.text else ""
 
             statusReason = if (immunization.hasStatusReason() &&
                 immunization.statusReason.hasCoding() &&
-                immunization.statusReason.codingFirstRep.hasDisplay()){
+                immunization.statusReason.codingFirstRep.hasDisplay()
+            ) {
                 immunization.statusReason.codingFirstRep.display
-            }else ""
+            } else ""
 
         }
 
 
-        if (immunization.hasReasonCode()){
-            status = if (immunization.reasonCode[0].hasText()) immunization.reasonCode[0].text else ""
+        if (immunization.hasReasonCode()) {
+            status =
+                if (immunization.reasonCode[0].hasText()) immunization.reasonCode[0].text else ""
         }
 
 
@@ -869,6 +876,7 @@ class PatientDetailsViewModel(
             logicalId, vaccineCode, vaccineName, nextDate, statusReason, status
         )
     }
+
     private fun createVaccineItemDetails(immunization: Immunization): DbVaccineDetailsData {
 
         var logicalId = ""
@@ -906,18 +914,27 @@ class PatientDetailsViewModel(
             status = immunization.statusElement.value.name
         }
 
-        if (immunization.hasLocation() && immunization.location.hasReference()){
+        if (immunization.hasLocation() && immunization.location.hasReference()) {
             location = immunization.location.reference
         }
         if (immunization.hasPerformer() &&
             immunization.performer[0].hasActor() &&
-            immunization.performer[0].actor.hasReference()) {
+            immunization.performer[0].actor.hasReference()
+        ) {
             practioner = immunization.performer[0].actor.reference
         }
-
+        val recorded = if (immunization.hasRecorded()) immunization.recorded.toString() else ""
 
         return DbVaccineDetailsData(
-            logicalId, vaccineName, dosesAdministered, seriesDosesString, series, status, location, practioner
+            logicalId,
+            vaccineName,
+            dosesAdministered,
+            seriesDosesString,
+            series,
+            status,
+            location,
+            practioner,
+            recorded
         )
     }
 
