@@ -30,6 +30,7 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
+import com.intellisoft.chanjoke.fhir.data.DbVaccineNotDone
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
 import com.intellisoft.chanjoke.fhir.data.ObservationDateValue
@@ -331,10 +332,12 @@ class PatientDetailsViewModel(
                 var series = ""
                 var doseNumber = ""
                 var status = ""
+                var nhdd = ""
 
                 if (recommendation.hasVaccineCode()) {
                     if (recommendation.vaccineCode[0].hasCoding()) {
-                        vaccineCode = recommendation.vaccineCode[0].codingFirstRep.code
+                        nhdd = recommendation.vaccineCode[0].codingFirstRep.code
+                        vaccineCode = recommendation.vaccineCode[0].codingFirstRep.display
                     }
                     if (recommendation.vaccineCode[0].hasText()) {
                         vaccineName = recommendation.vaccineCode[0].text
@@ -378,6 +381,7 @@ class PatientDetailsViewModel(
                         }
                     }
 
+
                     val dbRecommendationDetails = DbRecommendationDetails(
                         vaccineCode = vaccineCode,
                         vaccineName = vaccineName,
@@ -388,6 +392,7 @@ class PatientDetailsViewModel(
                         series = series,
                         doseNumber = doseNumber,
                         status = status,
+                        nhdd = nhdd,
                     )
                     dbRecommendationDetailsList.add(dbRecommendationDetails)
                 }
@@ -610,7 +615,7 @@ class PatientDetailsViewModel(
             sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
         }.map { createServiceRequestItem(it) }.let { serviceRequests ->
             serviceRequests.forEach { serviceRequest ->
-                if (serviceRequest.patientReference == "Patient/$patientId") {
+                if (serviceRequest.patientReference == "Patient/$patientId" && serviceRequest.status == "ACTIVE") {
                     vaccineList.add(serviceRequest)
                 }
             }
@@ -671,7 +676,6 @@ class PatientDetailsViewModel(
         var name = ""
         var role = ""
 
-        Timber.e("Location Display From Resource **** $locDisplay")
 
         if (practitionerId.isNotEmpty()) {
 
@@ -710,8 +714,13 @@ class PatientDetailsViewModel(
             name = searchResult.first().name[0].nameAsSingleString
             if (searchResult.first().hasExtension()) {
                 searchResult.first().extension.forEach {
-                    if (it.hasValue()) {
-                        role = it.value.asStringValue()
+                    Timber.e("searchResult **** ${it.value}\n${it.url}\nID $resId")
+                    if (it.hasUrl()) {
+                        if (it.url.contains("http://example.org/fhir/StructureDefinition/role-group")) {
+                            if (it.hasValue()) {
+                                role = it.value.asStringValue()
+                            }
+                        }
                     }
                 }
             }
@@ -729,8 +738,8 @@ class PatientDetailsViewModel(
     fun getAllImmunizationDetails() =
         runBlocking { getAllImmunizationDetailsData() }
 
-    fun loadContraindications(codeValue: String) =
-        runBlocking { loadContraindicationsInner(codeValue) }
+    fun loadContraindications(vaccineName: String, vaccineDetailsType: String) =
+        runBlocking { loadContraindicationsInner(vaccineName, vaccineDetailsType) }
 
     private suspend fun getImmunizationDetails(codeValue: String): ArrayList<DbVaccineDetailsData> {
         val vaccineList = ArrayList<DbVaccineDetailsData>()
@@ -772,24 +781,100 @@ class PatientDetailsViewModel(
         return vaccineList
     }
 
-    private suspend fun loadContraindicationsInner(codeValue: String): ArrayList<Contraindication> {
-        val vaccineList = ArrayList<Contraindication>()
+    private suspend fun loadContraindicationsInner(
+        vaccineNameValue: String,
+        vaccineDetailsType: String
+    ): ArrayList<Contraindication> {
+
+        val contraindicationList = ArrayList<Contraindication>()
+
+        val vaccineList = ArrayList<DbVaccineNotDone>()
 
         fhirEngine
-            .search<ImmunizationRecommendation> {
-                filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
-                sort(ImmunizationRecommendation.DATE, Order.DESCENDING)
+            .search<Immunization> {
+                filter(Immunization.PATIENT, { value = "Patient/$patientId" })
+                sort(Immunization.DATE, Order.DESCENDING)
             }
-            .map { createContraItemDetails(it) }
-            .let { q ->
-                q.forEach {
-                    if (it.vaccineCode.contains(codeValue) && it.status.contains("Contraindicated")) {
-                        vaccineList.add(it)
-                    }
-                }
-            }
+            .map { createVaccineDetails(it) }
+            .let { vaccineList.addAll(it) }
 
-        return vaccineList
+        vaccineList.forEach {
+
+            val id = it.logicalId
+            val vaccineName = it.vaccineName
+            val vaccineCode = it.vaccineCode
+            val nextDate = it.nextDate
+            val statusReason = it.statusReason
+            val status = it.status
+
+            if (vaccineNameValue == vaccineName) {
+                val contraindication = Contraindication(
+                    id,
+                    vaccineCode,
+                    vaccineName,
+                    nextDate,
+                    statusReason,
+                    status
+                )
+                contraindicationList.add(contraindication)
+            }
+        }
+
+//        val newList = contraindicationList.filter { it.status == vaccineDetailsType }
+
+        return ArrayList(contraindicationList)
+    }
+
+    private fun createVaccineDetails(immunization: Immunization): DbVaccineNotDone {
+
+        var logicalId = ""
+        var vaccineName = ""
+        var vaccineCode = ""
+        var nextDate = ""
+        var statusReason = ""
+        var status = ""
+
+        if (immunization.hasId()) {
+            logicalId = immunization.id
+        }
+        if (immunization.hasVaccineCode()) {
+            if (immunization.vaccineCode.hasText()) {
+                vaccineName = immunization.vaccineCode.text
+            }
+            if (immunization.vaccineCode.hasCoding()) {
+                vaccineCode = immunization.vaccineCode.coding[0].code
+            }
+        }
+        if (immunization.hasOccurrenceDateTimeType()) {
+            val fhirDate = immunization.occurrenceDateTimeType.valueAsString
+            val convertedDate = FormatterClass().convertDateFormat(fhirDate)
+            if (convertedDate != null) {
+                nextDate = convertedDate
+            }
+        }
+        if (immunization.hasStatusReason()) {
+//            statusReason = if (immunization.hasStatusReason() && immunization.statusReason.hasText())
+//                immunization.statusReason.text else ""
+
+            statusReason = if (immunization.hasStatusReason() &&
+                immunization.statusReason.hasCoding() &&
+                immunization.statusReason.codingFirstRep.hasDisplay()
+            ) {
+                immunization.statusReason.codingFirstRep.display
+            } else ""
+
+        }
+
+
+        if (immunization.hasReasonCode()) {
+            status =
+                if (immunization.reasonCode[0].hasText()) immunization.reasonCode[0].text else ""
+        }
+
+
+        return DbVaccineNotDone(
+            logicalId, vaccineCode, vaccineName, nextDate, statusReason, status
+        )
     }
 
     private fun createVaccineItemDetails(immunization: Immunization): DbVaccineDetailsData {
@@ -800,6 +885,8 @@ class PatientDetailsViewModel(
         var seriesDosesString = ""
         var series = ""
         var status = ""
+        var location = ""
+        var practioner = ""
 
         if (immunization.hasId()) {
             logicalId = immunization.id
@@ -827,9 +914,27 @@ class PatientDetailsViewModel(
             status = immunization.statusElement.value.name
         }
 
+        if (immunization.hasLocation() && immunization.location.hasReference()) {
+            location = immunization.location.reference
+        }
+        if (immunization.hasPerformer() &&
+            immunization.performer[0].hasActor() &&
+            immunization.performer[0].actor.hasReference()
+        ) {
+            practioner = immunization.performer[0].actor.reference
+        }
+        val recorded = if (immunization.hasRecorded()) immunization.recorded.toString() else ""
 
         return DbVaccineDetailsData(
-            logicalId, vaccineName, dosesAdministered, seriesDosesString, series, status
+            logicalId,
+            vaccineName,
+            dosesAdministered,
+            seriesDosesString,
+            series,
+            status,
+            location,
+            practioner,
+            recorded
         )
     }
 
@@ -911,7 +1016,7 @@ class PatientDetailsViewModel(
 
     private fun createServiceRequestItem(data: ServiceRequest): DbServiceRequest {
 
-        val logicalId = if (data.hasId()) data.id.toString() else ""
+        val logicalId = if (data.hasId()) data.logicalId else ""
         val status = if (data.hasStatus()) data.status.toString() else ""
         val intent = if (data.hasIntent()) data.intent.toString() else ""
         val priority = if (data.hasPriority()) data.priority.toString() else ""
@@ -934,6 +1039,7 @@ class PatientDetailsViewModel(
         val dateAdministered = "-"
         val healthFacility =
             if (data.hasPerformer()) if (data.performerFirstRep.hasDisplay()) data.performerFirstRep.display else "" else ""
+        Timber.e("Status posted here ******$status***")
         return DbServiceRequest(
             logicalId,
             status,
@@ -984,6 +1090,7 @@ class PatientDetailsViewModel(
         var doseNumberValue = ""
         val logicalId = if (immunization.hasEncounter()) immunization.encounter.reference else ""
         var dateScheduled = ""
+        var dateRecorded = ""
         var status = ""
 
         val ref = logicalId.toString().replace("Encounter/", "")
@@ -997,6 +1104,13 @@ class PatientDetailsViewModel(
             val convertedDate = FormatterClass().convertDateFormat(fhirDate)
             if (convertedDate != null) {
                 dateScheduled = convertedDate
+            }
+        }
+        if (immunization.hasRecorded()) {
+            val fhirDate = immunization.recorded.toString()
+            val convertedDate = FormatterClass().convertDateFormat(fhirDate)
+            if (convertedDate != null) {
+                dateRecorded = convertedDate
             }
         }
         if (immunization.hasProtocolApplied()) {
@@ -1039,7 +1153,8 @@ class PatientDetailsViewModel(
             vaccineName,
             doseNumberValue,
             dateScheduled,
-            status
+            status,
+            dateRecorded
         )
     }
 
@@ -1300,6 +1415,26 @@ class PatientDetailsViewModel(
             }
 
         return "$counter"
+    }
+
+    fun updateServiceRequestStatus(serviceRequestId: String) = runBlocking {
+        val serviceRequest =
+            fhirEngine.get(ResourceType.ServiceRequest, serviceRequestId) as ServiceRequest
+        val sr = ServiceRequest()
+        sr.id = serviceRequestId
+        sr.subject = serviceRequest.subject
+        sr.status = ServiceRequestStatus.COMPLETED
+        sr.intent = serviceRequest.intent
+        sr.category = serviceRequest.category
+        sr.priority = serviceRequest.priority
+        sr.authoredOn = serviceRequest.authoredOn
+        sr.setOccurrence(serviceRequest.occurrencePeriod)
+        sr.requester = serviceRequest.requester
+        sr.performer = serviceRequest.performer
+        sr.reasonCode = serviceRequest.reasonCode
+        sr.note = serviceRequest.note
+
+        fhirEngine.update(sr)
     }
 
 }

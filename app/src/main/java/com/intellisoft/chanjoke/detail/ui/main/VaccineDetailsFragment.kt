@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -19,6 +20,8 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContrasActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.fhir.data.Reasons
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -33,6 +36,7 @@ class VaccineDetailsFragment : Fragment() {
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private val immunizationHandler = ImmunizationHandler()
     private var patientId = ""
+    private val formatterClass = FormatterClass()
 
     /**/
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,22 +79,42 @@ class VaccineDetailsFragment : Fragment() {
         getVaccineDetails()
 
         binding.apply {
-            btnContraindication.apply {
-                setOnClickListener {
-                    val vaccineCode =
-                        FormatterClass().getSharedPref("vaccineCode", requireContext())
 
-                    if(vaccineCode != null){
-                        val contras = patientDetailsViewModel.loadContraindications(vaccineCode)
+            val vaccineCode =
+                FormatterClass().getSharedPref("vaccineCode", requireContext())
+            val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineCode(vaccineCode.toString())
+
+            val contras = basicVaccine?.let { patientDetailsViewModel.loadContraindications(it.vaccineName, "") }
+
+            btnNotAdminister.apply {
+                setOnClickListener {
+
+                    if (contras != null) {
                         if (contras.isNotEmpty()){
+                            formatterClass.saveSharedPref("vaccineDetailsType",
+                                Reasons.NOT_ADMINISTERED.name, requireContext())
                             startActivity(Intent(requireContext(), ContrasActivity::class.java))
                         }else {
                             Toast.makeText(requireContext(),
-                                "There were no contraindications recorded for this vaccine",
+                                "There were no recorded data for this vaccine",
                                 Toast.LENGTH_SHORT).show()
                         }
                     }
-
+                }
+            }
+            btnContraindication.apply {
+                setOnClickListener {
+                    if (contras != null) {
+                        if (contras.isNotEmpty()){
+                            formatterClass.saveSharedPref("vaccineDetailsType",
+                                Reasons.CONTRAINDICATE.name, requireContext())
+                            startActivity(Intent(requireContext(), ContrasActivity::class.java))
+                        }else {
+                            Toast.makeText(requireContext(),
+                                "There were no recorded contraindication data for this vaccine",
+                                Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }
@@ -131,6 +155,12 @@ class VaccineDetailsFragment : Fragment() {
                             generateDaysSince(dosesAdministered, days = false, month = true)
                         tvYearsSince.text =
                             generateDaysSince(dosesAdministered, days = false, month = false)
+
+                        /**
+                         * TODO1: Update these with correct data
+                         */
+                        tvFacility.text = immunizationDetails[0].facility
+                        tvAdministrator.text = immunizationDetails[0].practioner
 
                         val patientDob =
                             FormatterClass().getSharedPref("patientDob", requireContext())
@@ -220,6 +250,8 @@ class VaccineDetailsFragment : Fragment() {
     }
 
     private fun exitPageSection() {
+        formatterClass.deleteSharedPref("vaccineDetailsType", requireContext())
+
         val patientId = FormatterClass().getSharedPref("patientId", requireContext())
         val intent = Intent(context, PatientDetailActivity::class.java)
         intent.putExtra("patientId", patientId)

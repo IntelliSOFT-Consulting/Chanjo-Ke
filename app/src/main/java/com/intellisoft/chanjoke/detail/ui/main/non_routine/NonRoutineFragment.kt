@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -54,6 +56,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
     private var patientYears:String? = null
     private var selectedVaccineList = ArrayList<String>()
     private var dbRecyclerList = HashSet<DbRecycler>()
+    private val immunizationHandler = ImmunizationHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,23 +86,31 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         binding.tvAdministerVaccine.setOnClickListener {
 
             if (selectedVaccineList.isNotEmpty()){
-                formatterClass.saveSharedPref(
-                    "selectedVaccineName",
-                    selectedVaccineList.joinToString(","),
-                    requireContext())
-                formatterClass.saveSharedPref(
-                    "selectedUnContraindicatedVaccine",
-                    selectedVaccineList.joinToString(","),
-                    requireContext())
-                formatterClass.saveSharedPref(
-                    "workflowVaccinationType",
-                    "NON-ROUTINE", requireContext()
-                )
 
-                val bottomSheet = BottomSheetDialog()
-                fragmentManager?.let { it1 ->
-                    bottomSheet.show(it1,
-                        "ModalBottomSheet") }
+                val shouldBeIn = listHasSimilarNames(selectedVaccineList)
+
+                if (!shouldBeIn){
+                    formatterClass.saveSharedPref(
+                        "selectedVaccineName",
+                        selectedVaccineList.joinToString(","),
+                        requireContext())
+                    formatterClass.saveSharedPref(
+                        "selectedUnContraindicatedVaccine",
+                        selectedVaccineList.joinToString(","),
+                        requireContext())
+                    formatterClass.saveSharedPref(
+                        "workflowVaccinationType",
+                        "NON-ROUTINE", requireContext()
+                    )
+
+                    val bottomSheet = BottomSheetDialog()
+                    fragmentManager?.let { it1 ->
+                        bottomSheet.show(it1,
+                            "ModalBottomSheet") }
+                }else{
+                    Toast.makeText(requireContext(), "You cannot have the same vaccine type.", Toast.LENGTH_SHORT).show()
+                }
+
             }else
                 Toast.makeText(requireContext(), "Select at least one vaccine", Toast.LENGTH_SHORT).show()
 
@@ -148,7 +159,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                 }
 
                 //Get the group color Code
-                val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList,recommendationList)
+                val statusColor = formatterClass.getNonRoutineVaccineGroupDetails(vaccineList, administeredList,recommendationList)
 
                 val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
                     keyValue,
@@ -265,7 +276,6 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 //                            }
 //                        }
 
-
                         val adapter = VaccineDetailsAdapter(
                             patientDetailsViewModel,
                             vaccineList,
@@ -324,6 +334,15 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
     }
     override fun onCheckBoxSelected(position: Int, isChecked: Boolean, vaccineName: String) {
 
+        //Get the series of the selected vaccines
+//        val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+//        val routineVaccine = basicVaccine?.let { immunizationHandler.getSeriesByBasicVaccine(it) }
+//        val vaccineList = routineVaccine?.vaccineList?.map { it.vaccineName }
+//
+//        val shouldBeIn = checkForOtherVaccines(vaccineName, vaccineList!!, selectedVaccineList)
+//
+//
+
         if (isChecked){
             selectedVaccineList.add(vaccineName)
         }else{
@@ -333,5 +352,41 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         val administerText = "Administer (${selectedVaccineList.size})"
         binding.tvAdministerVaccine.text = administerText
 
+
+    }
+
+    // Function to compute the Levenshtein distance between two strings
+    private fun levenshteinDistance(str1: String, str2: String): Int {
+        val dp = Array(str1.length + 1) { IntArray(str2.length + 1) }
+
+        for (i in 0..str1.length) {
+            for (j in 0..str2.length) {
+                if (i == 0) {
+                    dp[i][j] = j
+                } else if (j == 0) {
+                    dp[i][j] = i
+                } else {
+                    dp[i][j] = minOf(
+                        dp[i - 1][j] + 1, // Deletion
+                        dp[i][j - 1] + 1, // Insertion
+                        dp[i - 1][j - 1] + (if (str1[i - 1] == str2[j - 1]) 0 else 1) // Substitution
+                    )
+                }
+            }
+        }
+
+        return dp[str1.length][str2.length]
+    }
+
+    // Function to check if the list has similar names
+    fun listHasSimilarNames(list: List<String>, threshold: Int = 3): Boolean {
+        for (i in list.indices) {
+            for (j in i + 1 until list.size) {
+                if (levenshteinDistance(list[i], list[j]) <= threshold) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 }
