@@ -707,10 +707,9 @@ class PatientDetailsViewModel(
             val searchResult = fhirEngine.search<Location>{
                 filter(Location.RES_ID, {value = of(resId)})
             }
-
-            Log.e("******","*****")
-            println("searchResult $searchResult")
-            Log.e("******","*****")
+            if (searchResult.isNotEmpty() && searchResult.first().hasName()){
+                return searchResult.first().name
+            }
 
         }catch (e:Exception){
             e.printStackTrace()

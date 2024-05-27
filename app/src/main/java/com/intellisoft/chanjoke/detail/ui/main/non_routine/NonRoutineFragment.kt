@@ -51,6 +51,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
     private lateinit var binding: FragmentNonRoutineBinding
     private lateinit var patientDetailsViewModel: PatientDetailsViewModel
     private lateinit var patientId: String
+    private lateinit var patientGender: String
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
     private var patientYears:String? = null
@@ -76,6 +77,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
+        patientGender = formatterClass.getSharedPref("patientGender", requireContext()).toString()
 
         patientDetailsViewModel = ViewModelProvider(this,
             PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
@@ -137,6 +139,11 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
             val routineKeyList = sharedPreferences.getString("nonRoutineList", null)
             val expandableListTitle = routineKeyList!!.split(",").toList()
 
+            var filteredList = ArrayList<String>()
+            if (patientGender == "male"){
+                filteredList = ArrayList(expandableListTitle.filterNot { it.contains("HPV") })
+            }
+
 //            Get the administered list
             val recommendationList = patientDetailsViewModel.recommendationList("Contraindicated")
 
@@ -144,10 +151,12 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
             val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
 
             val dbVaccineScheduleGroupList = ArrayList<DbVaccineScheduleGroup>()
-            expandableListTitle.forEach { keyValue->
+            filteredList.forEach { keyValue->
 
                 val weekNoList = sharedPreferences.getStringSet(keyValue, null)
                 val vaccineList = weekNoList?.toList()
+
+
                 vaccineList?.forEach { vaccineName ->
 
                     /**
@@ -170,6 +179,8 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                 dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
 
             }
+
+
 
             val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
 
@@ -250,6 +261,11 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                         }
 
                         vaccineList.sortBy { it.vaccineName }
+
+                        //Remove HPV if it's a male
+                        if (patientGender == "male"){
+                            vaccineList.removeIf { it.vaccineName.contains("HPV") }
+                        }
 
                         /**
                          * Check if client is below 9 months; Maintain Yellow fever alone

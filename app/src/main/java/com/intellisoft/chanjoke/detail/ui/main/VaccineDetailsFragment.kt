@@ -158,7 +158,6 @@ class VaccineDetailsFragment : Fragment() {
                         /**
                          * TODO1: Update these with correct data
                          */
-                        tvFacility.text = immunizationDetails[0].facility //Location
 
                         try {
                             val practitionerId = immunizationDetails[0].practioner?.replace("Practitioner/","")
@@ -169,6 +168,8 @@ class VaccineDetailsFragment : Fragment() {
                                     it
                                 )
                             }
+                            tvFacility.text = locationDetails //Location
+
 
                             println("locationId $locationId")
                             println("locationDetails $locationDetails")
