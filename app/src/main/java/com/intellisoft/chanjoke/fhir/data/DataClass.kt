@@ -9,6 +9,7 @@ import java.util.Date
 enum class UrlData(var message: Int) {
     BASE_URL(R.string.base_url),
 }
+
 data class DbRoutineVaccineData(
     val type: String,
     val vaccineList: List<RoutineVaccine>
@@ -49,6 +50,7 @@ enum class StatusColors {
     NORMAL, //Future
     NOT_DONE, //Not Done
 }
+
 enum class StatusValues {
     DUE,
     WITHIN_RANGE,
@@ -66,6 +68,7 @@ data class PractitionerDetails(
     val name: String,
     val role: String,
 )
+
 data class DbVaccineNotDone(
     val logicalId: String,
     val vaccineCode: String,
@@ -84,6 +87,7 @@ data class DbVaccineDetailsData(
     val status: String,
     val facility: String? = null,
     val practioner: String? = null,
+    val recorded: String? = null,
 )
 
 data class Contraindication(
@@ -404,3 +408,10 @@ data class PatientIdentification(
     val number: String
 
 )
+
+data class AdministeredDetails(
+    val vaccineCode: String,
+    val vaccineName: String,
+    val vaccineDate: String,
+
+    )

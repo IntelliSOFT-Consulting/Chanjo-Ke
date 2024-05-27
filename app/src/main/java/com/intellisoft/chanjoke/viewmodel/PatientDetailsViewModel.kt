@@ -615,7 +615,7 @@ class PatientDetailsViewModel(
             sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
         }.map { createServiceRequestItem(it) }.let { serviceRequests ->
             serviceRequests.forEach { serviceRequest ->
-                if (serviceRequest.patientReference == "Patient/$patientId") {
+                if (serviceRequest.patientReference == "Patient/$patientId" && serviceRequest.status == "ACTIVE") {
                     vaccineList.add(serviceRequest)
                 }
             }
@@ -676,7 +676,6 @@ class PatientDetailsViewModel(
         var name = ""
         var role = ""
 
-        Timber.e("Location Display From Resource **** $locDisplay")
 
         if (practitionerId.isNotEmpty()) {
 
@@ -735,8 +734,13 @@ class PatientDetailsViewModel(
             name = searchResult.first().name[0].nameAsSingleString
             if (searchResult.first().hasExtension()) {
                 searchResult.first().extension.forEach {
-                    if (it.hasValue()) {
-                        role = it.value.asStringValue()
+                    Timber.e("searchResult **** ${it.value}\n${it.url}\nID $resId")
+                    if (it.hasUrl()) {
+                        if (it.url.contains("http://example.org/fhir/StructureDefinition/role-group")) {
+                            if (it.hasValue()) {
+                                role = it.value.asStringValue()
+                            }
+                        }
                     }
                 }
             }
@@ -801,7 +805,10 @@ class PatientDetailsViewModel(
         return vaccineList
     }
 
-    private suspend fun loadContraindicationsInner(vaccineNameValue: String, vaccineDetailsType: String): ArrayList<Contraindication> {
+    private suspend fun loadContraindicationsInner(
+        vaccineNameValue: String,
+        vaccineDetailsType: String
+    ): ArrayList<Contraindication> {
 
         val contraindicationList = ArrayList<Contraindication>()
 
@@ -831,7 +838,8 @@ class PatientDetailsViewModel(
                     vaccineName,
                     nextDate,
                     statusReason,
-                    status)
+                    status
+                )
                 contraindicationList.add(contraindication)
             }
         }
@@ -868,21 +876,23 @@ class PatientDetailsViewModel(
                 nextDate = convertedDate
             }
         }
-        if (immunization.hasStatusReason()){
+        if (immunization.hasStatusReason()) {
 //            statusReason = if (immunization.hasStatusReason() && immunization.statusReason.hasText())
 //                immunization.statusReason.text else ""
 
             statusReason = if (immunization.hasStatusReason() &&
                 immunization.statusReason.hasCoding() &&
-                immunization.statusReason.codingFirstRep.hasDisplay()){
+                immunization.statusReason.codingFirstRep.hasDisplay()
+            ) {
                 immunization.statusReason.codingFirstRep.display
-            }else ""
+            } else ""
 
         }
 
 
-        if (immunization.hasReasonCode()){
-            status = if (immunization.reasonCode[0].hasText()) immunization.reasonCode[0].text else ""
+        if (immunization.hasReasonCode()) {
+            status =
+                if (immunization.reasonCode[0].hasText()) immunization.reasonCode[0].text else ""
         }
 
 
@@ -890,6 +900,7 @@ class PatientDetailsViewModel(
             logicalId, vaccineCode, vaccineName, nextDate, statusReason, status
         )
     }
+
     private fun createVaccineItemDetails(immunization: Immunization): DbVaccineDetailsData {
 
         var logicalId = ""
@@ -927,18 +938,27 @@ class PatientDetailsViewModel(
             status = immunization.statusElement.value.name
         }
 
-        if (immunization.hasLocation() && immunization.location.hasReference()){
+        if (immunization.hasLocation() && immunization.location.hasReference()) {
             location = immunization.location.reference
         }
         if (immunization.hasPerformer() &&
             immunization.performer[0].hasActor() &&
-            immunization.performer[0].actor.hasReference()) {
+            immunization.performer[0].actor.hasReference()
+        ) {
             practioner = immunization.performer[0].actor.reference
         }
-
+        val recorded = if (immunization.hasRecorded()) immunization.recorded.toString() else ""
 
         return DbVaccineDetailsData(
-            logicalId, vaccineName, dosesAdministered, seriesDosesString, series, status, location, practioner
+            logicalId,
+            vaccineName,
+            dosesAdministered,
+            seriesDosesString,
+            series,
+            status,
+            location,
+            practioner,
+            recorded
         )
     }
 
@@ -1020,7 +1040,7 @@ class PatientDetailsViewModel(
 
     private fun createServiceRequestItem(data: ServiceRequest): DbServiceRequest {
 
-        val logicalId = if (data.hasId()) data.id.toString() else ""
+        val logicalId = if (data.hasId()) data.logicalId else ""
         val status = if (data.hasStatus()) data.status.toString() else ""
         val intent = if (data.hasIntent()) data.intent.toString() else ""
         val priority = if (data.hasPriority()) data.priority.toString() else ""
@@ -1043,6 +1063,7 @@ class PatientDetailsViewModel(
         val dateAdministered = "-"
         val healthFacility =
             if (data.hasPerformer()) if (data.performerFirstRep.hasDisplay()) data.performerFirstRep.display else "" else ""
+        Timber.e("Status posted here ******$status***")
         return DbServiceRequest(
             logicalId,
             status,
@@ -1418,6 +1439,26 @@ class PatientDetailsViewModel(
             }
 
         return "$counter"
+    }
+
+    fun updateServiceRequestStatus(serviceRequestId: String) = runBlocking {
+        val serviceRequest =
+            fhirEngine.get(ResourceType.ServiceRequest, serviceRequestId) as ServiceRequest
+        val sr = ServiceRequest()
+        sr.id = serviceRequestId
+        sr.subject = serviceRequest.subject
+        sr.status = ServiceRequestStatus.COMPLETED
+        sr.intent = serviceRequest.intent
+        sr.category = serviceRequest.category
+        sr.priority = serviceRequest.priority
+        sr.authoredOn = serviceRequest.authoredOn
+        sr.setOccurrence(serviceRequest.occurrencePeriod)
+        sr.requester = serviceRequest.requester
+        sr.performer = serviceRequest.performer
+        sr.reasonCode = serviceRequest.reasonCode
+        sr.note = serviceRequest.note
+
+        fhirEngine.update(sr)
     }
 
 }

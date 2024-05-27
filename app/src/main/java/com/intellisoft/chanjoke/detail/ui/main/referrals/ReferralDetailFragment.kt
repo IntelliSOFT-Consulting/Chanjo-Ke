@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.detail.ui.main.referrals
 
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,19 +8,25 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentReferralDetailBinding
 import com.intellisoft.chanjoke.databinding.FragmentReferralsBinding
 import com.intellisoft.chanjoke.detail.PatientDetailActivity
+import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -47,6 +54,11 @@ class ReferralDetailFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentReferralDetailBinding
+
+    private lateinit var patientDetailsViewModel: PatientDetailsViewModel
+    private lateinit var patientId: String
+    private lateinit var fhirEngine: FhirEngine
+    private val formatterClass = FormatterClass()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,7 +84,16 @@ class ReferralDetailFragment : Fragment() {
 
 
         handleDataPopulation()
-
+        fhirEngine = FhirApplication.fhirEngine(requireContext())
+        patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
+        patientDetailsViewModel = ViewModelProvider(
+            this,
+            PatientDetailsViewModelFactory(
+                requireContext().applicationContext as Application,
+                fhirEngine,
+                patientId
+            )
+        )[PatientDetailsViewModel::class.java]
         binding.apply {
             previousButton.apply {
                 setOnClickListener {
@@ -83,6 +104,19 @@ class ReferralDetailFragment : Fragment() {
             nextButton.apply {
                 setOnClickListener {
                     //proceed to administer the vaccine
+
+                    val serviceRequestId = tvServiceId.text.toString()
+                    Toast.makeText(
+                        requireContext(),
+                        "Service Request::: \n $serviceRequestId",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    if (serviceRequestId != null) {
+                        patientDetailsViewModel.updateServiceRequestStatus(serviceRequestId)
+
+                    }
+
                 }
             }
         }
@@ -104,6 +138,7 @@ class ReferralDetailFragment : Fragment() {
                     val scheduledDate = inputDateFormat.parse(data.scheduledDate)
                     val formattedDateStr = outputDateFormat.format(referralDate)
                     val scheduledDateStr = outputDateFormat.format(scheduledDate)
+                    tvServiceId.text = data.logicalId
                     referringCHPTextView.text = data.referringCHP
                     vaccineReferredTextView.text = data.vaccineName
                     detailsTextView.text = data.detailsGiven
