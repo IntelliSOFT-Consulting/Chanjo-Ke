@@ -120,7 +120,7 @@ class PatientDetailsViewModel(
             logicalId = it.logicalId
             name = if (it.hasName()) {
                 // display name in order as fname, then others
-                "${it.name[0].family} ${it.name[0].givenAsSingleString}"
+                "${it.name[0].givenAsSingleString} ${it.name[0].family} "
             } else ""
 
             phone = ""

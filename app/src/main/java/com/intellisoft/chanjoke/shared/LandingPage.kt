@@ -155,7 +155,7 @@ class LandingPage : Fragment() {
                     "patientListAction",
                     NavigationDetails.REFERRALS.name, requireContext()
                 )
-                findNavController().navigate(R.id.patient_list)
+                findNavController().navigate(R.id.activeReferralsFragment)
             }
 
             "Appointments" -> {

@@ -116,6 +116,15 @@ data class DbTempData(
     val age: String,
 )
 
+data class ServiceRequestPatient(
+    val logicalId: String,
+    val status: String,
+    val patientId: String,
+    val patientName: String,
+    val patientNational: String,
+    val patientPhone: String
+)
+
 data class DbServiceRequest(
     val logicalId: String,
     val status: String,
