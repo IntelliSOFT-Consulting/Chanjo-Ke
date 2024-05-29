@@ -51,7 +51,7 @@
                     android:id="@+id/btnNotAdminister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not Administer"
+                    android:text="Not Administered"
                     android:textColor="@color/white" />
 
             </LinearLayout>
