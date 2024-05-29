@@ -20,7 +20,6 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.detail.ui.main.contraindications.ContrasActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
-import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.Reasons
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -159,8 +158,42 @@ class VaccineDetailsFragment : Fragment() {
                         /**
                          * TODO1: Update these with correct data
                          */
-                        tvFacility.text = immunizationDetails[0].facility
-                        tvAdministrator.text = immunizationDetails[0].practioner
+
+                        try {
+                            val practitionerId = immunizationDetails[0].practioner?.replace("Practitioner/","")
+                            val locationId = immunizationDetails[0].facility?.replace("Location/","")
+
+                            val locationDetails = locationId?.let {
+                                patientDetailsViewModel.getLocationName(
+                                    it
+                                )
+                            }
+                            tvFacility.text = locationDetails //Location
+
+
+                            println("locationId $locationId")
+                            println("locationDetails $locationDetails")
+
+                            Log.e("---->","<-----")
+
+
+                            val myPair = practitionerId?.let {
+                                patientDetailsViewModel.getPractitionerName(
+                                    it
+                                )
+                            }
+                            val name = myPair?.first ?: ""
+                            tvAdministrator.text = name //Practitioner
+
+                            println(practitionerId)
+                            println(myPair)
+                            println(name)
+                            Log.e("---->","<-----")
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+
 
                         val patientDob =
                             FormatterClass().getSharedPref("patientDob", requireContext())

@@ -1316,6 +1316,8 @@ class FormatterClass {
             statusColor = StatusColors.GREEN.name
         }
 
+
+
         return DbVaccineScheduleChild(
             vaccineName,
             dateValue,

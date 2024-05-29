@@ -715,8 +715,26 @@ class PatientDetailsViewModel(
         )
     }
 
+    fun getLocationName(locationId: String) = runBlocking {
+        getLocationNameInner(locationId)
+    }
+    private suspend fun getLocationNameInner(resId: String):String{
+        try {
 
-    private fun getPractitionerName(locationId: String) = runBlocking {
+            val searchResult = fhirEngine.search<Location>{
+                filter(Location.RES_ID, {value = of(resId)})
+            }
+            if (searchResult.isNotEmpty() && searchResult.first().hasName()){
+                return searchResult.first().name
+            }
+
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+        return ""
+    }
+
+    fun getPractitionerName(locationId: String) = runBlocking {
         getPractitionerNameInner(locationId)
     }
 
@@ -728,6 +746,7 @@ class PatientDetailsViewModel(
             val searchResult = fhirEngine.search<Practitioner> {
                 filter(Practitioner.RES_ID, { value = of(resId) })
             }
+
             name = searchResult.first().name[0].nameAsSingleString
             if (searchResult.first().hasExtension()) {
                 searchResult.first().extension.forEach {
@@ -754,6 +773,10 @@ class PatientDetailsViewModel(
 
     fun getAllImmunizationDetails() =
         runBlocking { getAllImmunizationDetailsData() }
+
+    fun loadPractioner(){
+
+    }
 
     fun loadContraindications(vaccineName: String, vaccineDetailsType: String) =
         runBlocking { loadContraindicationsInner(vaccineName, vaccineDetailsType) }

@@ -91,14 +91,22 @@ class PractionerDetails : Fragment() {
         val subCountyName = formatterClass.getSharedPref("subCountyName", requireContext())
         val wardName = formatterClass.getSharedPref("wardName", requireContext())
 
-        binding.tvEmailAddress.text = practitionerEmail
-        binding.tvPhoneNumber.text = practitionerPhone
-        binding.tvIdNumber.text = practitionerIdNumber
+        val email = "Email: $practitionerEmail"
+        val phone = "Phone Number: $practitionerPhone"
+        val pracId = "User Id $practitionerIdNumber"
+
+        binding.tvEmailAddress.text = email
+        binding.tvPhoneNumber.text = phone
+        binding.tvIdNumber.text = pracId
         binding.tvFullName.text = practitionerFullNames
 
-        binding.tvCounty.text = countyName ?: ""
-        binding.tvSubCounty.text = subCountyName ?: ""
-        binding.tvWardName.text = wardName ?: ""
+        val county = "County $countyName"
+        val subCounty = "Sub County $subCountyName"
+        val ward = "Ward $wardName"
+
+        binding.tvCounty.text = county
+        binding.tvSubCounty.text = subCounty
+        binding.tvWardName.text = ward
 
     }
 }
