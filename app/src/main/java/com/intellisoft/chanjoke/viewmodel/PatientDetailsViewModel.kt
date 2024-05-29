@@ -115,6 +115,9 @@ class PatientDetailsViewModel(
         var trading = ""
         var estate = ""
         var logicalId = ""
+        var firstName = ""
+        var middleName = ""
+        var lastName = ""
         val kins = mutableListOf<CareGiver>()
         searchResult.first().let {
             logicalId = it.logicalId
@@ -122,7 +125,15 @@ class PatientDetailsViewModel(
                 // display name in order as fname, then others
                 "${it.name[0].givenAsSingleString} ${it.name[0].family} "
             } else ""
+            lastName = if (it.hasName()) it.nameFirstRep.family else ""
 
+            val givenNames = if (it.hasName() && it.nameFirstRep.hasGiven()) {
+                it.nameFirstRep.given.map { givenName -> givenName.valueAsString }
+            } else {
+                emptyList()
+            }
+            firstName = givenNames.getOrElse(0) { "" }
+            middleName = givenNames.getOrElse(1) { "" }
             phone = ""
             if (it.hasTelecom()) {
                 if (it.telecom.isNotEmpty()) {
@@ -230,7 +241,10 @@ class PatientDetailsViewModel(
 
         return PatientData(
             logicalId = logicalId,
-            name,
+            name = name,
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
             phone,
             dob,
             gender,
@@ -251,6 +265,9 @@ class PatientDetailsViewModel(
     data class PatientData(
         val logicalId: String,
         val name: String,
+        val firstName: String,
+        val middleName: String,
+        val lastName: String,
         val phone: String,
         val dob: String,
         val gender: String,
