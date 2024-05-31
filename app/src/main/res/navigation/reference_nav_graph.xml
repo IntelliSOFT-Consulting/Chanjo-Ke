@@ -151,6 +151,11 @@
         android:name="com.intellisoft.chanjoke.detail.ui.main.referrals.ReferralDetailFragment"
         android:label="fragment_referral_detail"
         tools:layout="@layout/fragment_referral_detail" />
+    <fragment
+        android:id="@+id/activeReferralsFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.referrals.ActiveReferralsFragment"
+        android:label="fragment_active_referrals"
+        tools:layout="@layout/fragment_active_referrals" />
 
 
 </navigation>

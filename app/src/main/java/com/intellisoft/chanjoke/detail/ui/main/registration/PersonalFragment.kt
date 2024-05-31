@@ -313,32 +313,36 @@ class PersonalFragment : Fragment() {
                 val data = Gson().fromJson(personal, CustomPatient::class.java)
                 binding.apply {
                     //remove commas
-                    val parts = data.firstname.split(" ")
-                    when (parts.size) {
-                        2 -> {
-                            val (firstName, lastName) = parts
-                            firstname.setText(firstName)
-                            lastname.setText(lastName)
-                        }
-
-                        3 -> {
-                            val (firstName, middleName, lastName) = parts
-                            firstname.setText(firstName)
-                            lastname.setText(lastName)
-                            middlename.setText(middleName)
-                        }
-
-                        4 -> {
-                            val (firstName, middleName, lastName) = parts
-                            firstname.setText(firstName)
-                            lastname.setText(lastName)
-                            middlename.setText(middleName)
-                        }
-
-                        else -> {
-                            println("Invalid name format")
-                        }
-                    }
+                    Timber.e("Name Split ${data.firstname}")
+                    firstname.setText(data.firstname)
+                    middlename.setText(data.middlename)
+                    lastname.setText(data.lastname)
+//                    val parts = data.firstname.split(" ")
+//                    when (parts.size) {
+//                        2 -> {
+//                            val (firstName, lastName) = parts
+//                            firstname.setText(firstName)
+//                            lastname.setText(lastName)
+//                        }
+//
+//                        3 -> {
+//                            val (firstName, middleName, lastName) = parts
+//                            firstname.setText(firstName)
+//                            lastname.setText(lastName)
+//                            middlename.setText(middleName)
+//                        }
+//
+//                        4 -> {
+//                            val (firstName, middleName, lastName) = parts
+//                            firstname.setText(firstName)
+//                            lastname.setText(lastName)
+//                            middlename.setText(middleName)
+//                        }
+//
+//                        else -> {
+//                            println("Invalid name format")
+//                        }
+//                    }
 
                     val gender = data.gender
                     if (gender.lowercase() == "male") {

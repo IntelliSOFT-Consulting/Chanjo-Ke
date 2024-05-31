@@ -18,24 +18,34 @@ package com.intellisoft.chanjoke.patient_list
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.get
+import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.Identifiers
+import com.intellisoft.chanjoke.fhir.data.ServiceRequestPatient
 import com.intellisoft.chanjoke.utils.AppUtils
+import kotlinx.coroutines.Dispatchers
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.hl7.fhir.r4.model.Location
 import org.hl7.fhir.r4.model.Patient
+import org.hl7.fhir.r4.model.ResourceType
+import org.hl7.fhir.r4.model.ServiceRequest
+import timber.log.Timber
 import java.sql.DataTruncation
 
 /**
@@ -47,6 +57,10 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
 
     val liveSearchedPatients = MutableLiveData<List<PatientItem>>()
     val patientCount = MutableLiveData<Long>()
+
+    private val _liveServiceRequests = MutableLiveData<List<ServiceRequestPatient>>()
+    val liveServiceRequests: LiveData<List<ServiceRequestPatient>> get() = _liveServiceRequests
+
 
     init {
         updatePatientListAndPatientCount({ getSearchResults() }, { count() })
@@ -183,7 +197,77 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             .mapIndexed { index, fhirPatient -> fhirPatient.toLocationItem(index + 1) }
             .let { locations.addAll(it) }
 
-        return locations
+        return withContext(Dispatchers.IO) { locations }
+    }
+
+    private suspend fun retrieveActiveServiceRequest(): List<ServiceRequestPatient> {
+        val serviceRequests = ArrayList<ServiceRequestPatient>()
+
+        fhirEngine.search<ServiceRequest> {
+            sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
+        }.map { createServiceRequestItem(it) }.let { q ->
+            q.forEach { serviceRequest ->
+                if (serviceRequest.status == "ACTIVE") {
+                    serviceRequests.add(serviceRequest)
+                }
+            }
+        }
+        return withContext(Dispatchers.IO) { serviceRequests }
+    }
+
+    private suspend fun createServiceRequestItem(data: ServiceRequest): ServiceRequestPatient {
+
+        val logicalId = if (data.hasId()) data.logicalId else ""
+        val status = if (data.hasStatus()) data.status.toString() else ""
+        val patientIdRef =
+            if (data.hasSubject()) if (data.subject.hasReference()) data.subject.reference else "" else ""
+
+        Timber.e("Status posted here ******$status***")
+        val patientId = patientIdRef.toString().replace("Patient/", "")
+
+        var systemId = ""
+        var type = ""
+        val patient = getPatientDetails(patientId)
+        if (patient.hasIdentifier()) {
+            patient.identifier.forEach {
+                if (it.hasType()) {
+                    if (it.type.hasCoding()) {
+                        if (it.type.codingFirstRep.code == "identification_type") {
+                            systemId = it.value
+                            type = it.type.codingFirstRep.display
+                        }
+                    }
+                }
+            }
+        }
+        var patientPhone = ""
+        if (patient.hasTelecom()) {
+            if (patient.telecom.isNotEmpty()) {
+                if (patient.telecom.first().hasValue()) {
+                    patientPhone = patient.telecom.first().value
+                }
+            }
+        }
+
+        return ServiceRequestPatient(
+            logicalId = logicalId,
+            status = status,
+            patientId = patientId,
+            patientName = patient.nameFirstRep.nameAsSingleString,
+            patientNational = systemId,
+            patientPhone = patientPhone
+        )
+    }
+
+    private suspend fun getPatientDetails(patientId: String): Patient {
+        return fhirEngine.get(ResourceType.Patient, patientId) as Patient
+
+    }
+
+    fun loadActiveServiceRequest() {
+        viewModelScope.launch {
+            _liveServiceRequests.postValue(retrieveActiveServiceRequest())
+        }
     }
 
 
@@ -262,7 +346,7 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
 
     val patientId = if (hasIdElement()) idElement.idPart else ""
     val name = if (hasName()) {
-        "${name[0].family} ${name[0].givenAsSingleString}"
+        "${name[0].givenAsSingleString} ${name[0].family}"
     } else ""
     val gender = if (hasGenderElement()) genderElement.valueAsString else ""
     val dob =
@@ -276,7 +360,6 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
                 } else null
             } else null
 
-//            LocalDate.parse(birthDateElement.valueAsString, DateTimeFormatter.ISO_DATE)
         } else null
 
     val phone = if (hasTelecom()) telecom[0].value else ""

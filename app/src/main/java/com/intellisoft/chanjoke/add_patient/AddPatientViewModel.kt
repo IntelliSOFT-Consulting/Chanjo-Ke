@@ -362,12 +362,13 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         viewModelScope.launch {
 
             val givens: MutableList<StringType> = mutableListOf()
-            if (payload.personal.middlename.isNotEmpty()) {
-                val string = StringType(payload.personal.middlename)
+            if (payload.personal.firstname.isNotEmpty()) {
+                val string = StringType(payload.personal.firstname)
                 givens.add(string)
             }
-            if (payload.personal.lastname.isNotEmpty()) {
-                val string = StringType(payload.personal.lastname)
+
+            if (payload.personal.middlename.isNotEmpty()) {
+                val string = StringType(payload.personal.middlename)
                 givens.add(string)
             }
 
@@ -378,7 +379,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val relatives: MutableList<Patient.ContactComponent> = mutableListOf()
             val generalPractitioner: MutableList<Reference> = mutableListOf()
             val name = HumanName()
-            name.family = payload.personal.firstname
+            name.family = payload.personal.lastname
             name.given = givens
             names.add(name)
 
@@ -406,7 +407,6 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             /* Identification Document*/
 
 
-
             val identifierSystem1 = Identifier()
             val typeCodeableConcept1 = CodeableConcept()
 
@@ -420,7 +420,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             typeCodeableConcept1.text = payload.personal.identificationNumber
 
             identifierSystem1.value = payload.personal.identificationNumber
-            identifierSystem1.system = "identification_type"
+            identifierSystem1.system = "http://hl7.org/fhir/administrative-identifier"
             identifierSystem1.type = typeCodeableConcept1
             identifier.add(identifierSystem1)
 
@@ -536,11 +536,12 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                     FormatterClass().getFormattedAge(
                         birthDateElement,
                         context.resources,
-                        context)
+                        context
+                    )
 
                     createImmunizationRecommendationResource()
 
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     println(e)
                 }
 
@@ -557,10 +558,11 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
     /**
      * TODO: MOVE THIS TO A SEPARATE CLASS
      */
-    private fun createImmunizationRecommendationResource(){
+    private fun createImmunizationRecommendationResource() {
         CoroutineScope(Dispatchers.IO).launch { createImmunizationBacRecommendationResource() }
     }
-    private suspend fun createImmunizationBacRecommendationResource(){
+
+    private suspend fun createImmunizationBacRecommendationResource() {
 
         /**
          * Create all the immunization recommendations
@@ -586,7 +588,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
         )
 
 
-        if (patientYears != null && patientId != null && patientWeeks != null && patientDob != null){
+        if (patientYears != null && patientId != null && patientWeeks != null && patientDob != null) {
             val patientYearsInt = patientYears.toIntOrNull()
             val patientWeeksInt = patientWeeks.toIntOrNull()
 
@@ -610,8 +612,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 immunizationRecommendation.patient = Reference("Patient/$patientId")
                 immunizationRecommendation.date = Date()
 
-                val recommendationList1 = createImmunizationRecommendation(selectedDate,Pair1)
-                val recommendationList2 = createImmunizationRecommendation(selectedDate,Pair2)
+                val recommendationList1 = createImmunizationRecommendation(selectedDate, Pair1)
+                val recommendationList2 = createImmunizationRecommendation(selectedDate, Pair2)
 
                 val recommendationList = recommendationList1 + recommendationList2
 
@@ -624,13 +626,17 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
     }
 
-    private fun createImmunizationRecommendation(selectedDate: Date, pair: DbRoutineVaccineData, ): ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent> {
+    private fun createImmunizationRecommendation(
+        selectedDate: Date,
+        pair: DbRoutineVaccineData,
+    ): ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent> {
 
         val routineVaccineList = pair.vaccineList
         val type = pair.type
 
         val formatterClass = FormatterClass()
-        val recommendationList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
+        val recommendationList =
+            ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
 
         routineVaccineList.forEach { routineVaccine: RoutineVaccine ->
 
@@ -643,7 +649,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
             vaccineList.forEach { basicVaccine: BasicVaccine ->
 
-                val recommendation = ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
+                val recommendation =
+                    ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent()
 
                 val vaccineCodeValue = basicVaccine.vaccineCode
                 val vaccineName = basicVaccine.vaccineName
@@ -657,18 +664,29 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 val localDate = formatterClass.convertDateToLocalDate(selectedDate)
 
                 //From selectedDate, calculate the next date plus administrativeWeeksSinceDOB
-                val earliestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, administrativeWeeksSinceDOBLong)
-                val latestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(localDate, (administrativeWeeksSinceDOBLong + 2))
+                val earliestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(
+                    localDate,
+                    administrativeWeeksSinceDOBLong
+                )
+                val latestAdministerDate = formatterClass.calculateDateAfterWeeksAsString(
+                    localDate,
+                    (administrativeWeeksSinceDOBLong + 2)
+                )
 
-                val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
-                val latestAdministerLocalDate = formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
+                val earliestAdministerLocalDate =
+                    formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
+                val latestAdministerLocalDate =
+                    formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
 
-                val dateCriterionList = ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
+                val dateCriterionList =
+                    ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent>()
 
-                if (earliestAdministerLocalDate != null && latestAdministerLocalDate != null){
+                if (earliestAdministerLocalDate != null && latestAdministerLocalDate != null) {
 
-                    val earlyAdministerDate = DbVaccineAdmin(earliestAdministerLocalDate, "Earliest-date-to-administer")
-                    val lateAdministerDate = DbVaccineAdmin(latestAdministerLocalDate, "Latest-date-to-administer")
+                    val earlyAdministerDate =
+                        DbVaccineAdmin(earliestAdministerLocalDate, "Earliest-date-to-administer")
+                    val lateAdministerDate =
+                        DbVaccineAdmin(latestAdministerLocalDate, "Latest-date-to-administer")
 
 
                     val administerTimeList = ArrayList<DbVaccineAdmin>()
@@ -682,7 +700,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                      * TODO: Add latest date to administered date
                      */
                     administerTimeList.forEach { administerTime ->
-                        val dateCriterion = ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
+                        val dateCriterion =
+                            ImmunizationRecommendation.ImmunizationRecommendationRecommendationDateCriterionComponent()
 
                         val code = CodeableConcept()
                         val codeCoding = Coding()
@@ -766,7 +785,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
             .let {
                 it.forEach { q ->
-                     
+
                     documents.add(
                         PatientIdentification(
                             document = q.document,
@@ -775,7 +794,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                     )
                 }
             }
-    
+
         return documents
 
     }
