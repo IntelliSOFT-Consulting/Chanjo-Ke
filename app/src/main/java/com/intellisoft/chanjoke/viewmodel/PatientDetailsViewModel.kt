@@ -317,7 +317,6 @@ class PatientDetailsViewModel(
             .map { getRecommendationData(it) }
             .let { immunizationRecommendationList.addAll(it) }
 
-
         immunizationRecommendationList.forEach { immunizationRecommendation ->
 
             val recommendationList = immunizationRecommendation.recommendation
@@ -398,6 +397,7 @@ class PatientDetailsViewModel(
                 }
             }
         }
+
         return dbRecommendationDetailsList
 
     }
