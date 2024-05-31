@@ -98,7 +98,8 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 tvCtype.text = patientDetail.contact_gender
                 tvCphone.text = patientDetail.contact_phone
                 tvCounty.text = AppUtils().capitalizeFirstLetter(patientDetail.county.toString())
-                tvSubCounty.text = AppUtils().capitalizeFirstLetter(patientDetail.subCounty.toString())
+                tvSubCounty.text =
+                    AppUtils().capitalizeFirstLetter(patientDetail.subCounty.toString())
                 tvWard.text = AppUtils().capitalizeFirstLetter(patientDetail.ward.toString())
                 tvTrading.text = AppUtils().capitalizeFirstLetter(patientDetail.trading.toString())
                 tvVillage.text = AppUtils().capitalizeFirstLetter(patientDetail.estate.toString())
@@ -231,9 +232,9 @@ class CompleteDetailsActivity : AppCompatActivity() {
         try {
             saveTempData("patientId", data.logicalId)
             val payload = CustomPatient(
-                firstname = data.name,
-                middlename = data.name,
-                lastname = data.name,
+                firstname = data.firstName,
+                middlename = data.middleName,
+                lastname = data.lastName,
                 gender = data.gender,
                 age = "",
                 dateOfBirth = data.dob,
