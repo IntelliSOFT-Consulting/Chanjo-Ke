@@ -120,6 +120,9 @@ class BlurBackgroundDialog(
                 }
 
             }
+
+            FormatterClass().deleteSharedPref("isVaccineAdministered", context)
+            FormatterClass().deleteSharedPref("vaccinationFlow", context)
         }
     }
 }
