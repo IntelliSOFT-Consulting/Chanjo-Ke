@@ -1226,44 +1226,6 @@ class FormatterClass {
          *              4th dose is 1 year after 3rd dose,
          *              5th dose is 1 year after 4th dose.
          */
-        //Yellow Fever
-        if (targetDisease == "Yellow Fever") {
-            if (numberOfWeek != null && numberOfWeek > 39){
-                canBeVaccinated = true
-            }
-        }
-        //HPV
-        if (targetDisease == "HPV") {
-            if (patientGender == "female" && patientYears != null && patientYears in 10..14) {
-                canBeVaccinated = true
-            }
-        }
-        //Covid 19
-        //Astrazeneca
-        if (targetDisease == "Covid 19" && patientYears != null){
-            if (patientYears >= 18){
-                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931" || nhdd == "16929"){
-                    //Astrazeneca, JnJ, Moderna, Pfizer
-                    canBeVaccinated = true
-                }
-                if(nhdd == "16489" && patientYears in 18..60){
-                    //Sinopharm
-                    canBeVaccinated = true
-                }
-            }
-        }
-        //Rabies
-        if (targetDisease == "Rabies Post Exposure" && patientYears != null){
-            if (patientYears >= 0){
-                canBeVaccinated = true
-            }
-        }
-        //Tetanus
-        if(targetDisease == "Tetanus" && patientYears != null){
-            if (patientYears >= 92){
-                canBeVaccinated = true
-            }
-        }
 
         administeredVaccine?.run {
             // Vaccine name exists in latestAdministered
@@ -1305,6 +1267,47 @@ class FormatterClass {
             canBeVaccinated = false
             isVaccinatedValue = false
         }
+
+        //Yellow Fever
+        if (targetDisease == "Yellow Fever") {
+            if (numberOfWeek != null && numberOfWeek > 39){
+                canBeVaccinated = true
+            }
+        }
+        //HPV
+        if (targetDisease == "HPV") {
+            if (patientGender == "female" && patientYears != null && patientYears in 10..14) {
+                canBeVaccinated = true
+            }
+        }
+        //Covid 19
+        //Astrazeneca
+        if (targetDisease == "Covid 19" && patientYears != null){
+            if (patientYears >= 18){
+                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931" || nhdd == "16929"){
+                    //Astrazeneca, JnJ, Moderna, Pfizer
+                    canBeVaccinated = true
+                }
+                if(nhdd == "16489" && patientYears in 18..60){
+                    //Sinopharm
+                    canBeVaccinated = true
+                }
+            }
+        }
+        //Rabies
+        if (targetDisease == "Rabies Post Exposure" && patientYears != null){
+            if (patientYears >= 0){
+                canBeVaccinated = true
+            }
+        }
+        //Tetanus
+        if(targetDisease == "Tetanus" && patientYears != null){
+            if (patientYears >= 92){
+                canBeVaccinated = true
+            }
+        }
+
+
 
         if (statusValue == Reasons.CONTRAINDICATE.name){
             statusColor = StatusColors.AMBER.name

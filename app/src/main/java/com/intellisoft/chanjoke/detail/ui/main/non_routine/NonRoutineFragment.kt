@@ -58,6 +58,7 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
     private var selectedVaccineList = ArrayList<String>()
     private var dbRecyclerList = HashSet<DbRecycler>()
     private val immunizationHandler = ImmunizationHandler()
+    private lateinit var sharedPreferences:SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +77,11 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
+        sharedPreferences = requireContext()
+            .getSharedPreferences(getString(R.string.vaccineList),
+                Context.MODE_PRIVATE
+            )
+
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
         patientGender = formatterClass.getSharedPref("patientGender", requireContext()).toString()
 
@@ -84,6 +90,8 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         )[PatientDetailsViewModel::class.java]
 
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
+
+        getNonRoutine()
 
         binding.tvAdministerVaccine.setOnClickListener {
 
@@ -121,12 +129,6 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
         return binding.root
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        getNonRoutine()
-    }
-
     private fun getNonRoutine() {
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -138,11 +140,10 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
             val routineKeyList = sharedPreferences.getString("nonRoutineList", null)
             val expandableListTitle = routineKeyList!!.split(",").toList()
-
-            var filteredList = ArrayList<String>()
-            if (patientGender == "male"){
-                filteredList = ArrayList(expandableListTitle.filterNot { it.contains("HPV") })
-            }
+//            if (patientGender == "male"){
+//                filteredList = ArrayList(expandableListTitle.filterNot { it.contains("HPV") })
+//            }
+            var filteredList = ArrayList(expandableListTitle)
 
 //            Get the administered list
             val recommendationList = patientDetailsViewModel.recommendationList("Contraindicated")
@@ -271,38 +272,18 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                          * Check if client is below 9 months; Maintain Yellow fever alone
                          * Otherwise have all non routines
                          */
-                        var newVaccineList = ArrayList<DbVaccineScheduleChild>()
 
-//                        if (patientYears != null){
-//                            val patientYearsInt = patientYears!!.toIntOrNull()
-//                            if (patientYearsInt != null){
-//                                if (patientYearsInt in 1..12){
-//                                    //Return only Yellow fever
-//                                    newVaccineList = ArrayList(vaccineList.filter { it.vaccineName == "Yellow Fever" }.toMutableList())
-//                                }else {
-//                                    //Return all non routines
-//
-//                                    newVaccineList = vaccineList
-//
-//                                    if (patientYearsInt > 60){
-//                                        vaccineList.removeIf { it.vaccineName.contains("Sinopharm") }
-//                                    }
-//
-//                                }
-//                            }
-//                        }
-
-                        val adapter = VaccineDetailsAdapter(
-                            patientDetailsViewModel,
-                            vaccineList,
-                            this@NonRoutineFragment,
-                            requireContext())
-
-                        recyclerView.adapter = adapter
+                        generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
 
                     }
                     // Add the cardview_item to linearLayoutId2
                     binding.groupLayout.addView(groupLayout)
+
+                    generateVaccineList(
+                        vaccineSchedule,
+                        recyclerView,
+                        dbVaccineScheduleChildList)
+
 
                 }
             }
@@ -310,6 +291,50 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
 
     }
+
+    private fun generateVaccineList(
+        vaccineSchedule: String,
+        recyclerView: RecyclerView,
+        dbVaccineScheduleChildList: ArrayList<DbVaccineScheduleChild>
+    ) {
+
+        val vaccineList = ArrayList<DbVaccineScheduleChild>()
+
+        val weekNoList = mutableSetOf<String>()
+        val scheduleSet = sharedPreferences.getStringSet(vaccineSchedule, null)
+        scheduleSet?.let { weekNoList.addAll(it) }
+
+        val savedVaccineList = weekNoList.toList()
+        for (dbVaccineScheduleChild in dbVaccineScheduleChildList) {
+            if (savedVaccineList.contains(dbVaccineScheduleChild.vaccineName)){
+                vaccineList.add(dbVaccineScheduleChild)
+            }
+        }
+
+        val uniqueVaccineList = vaccineList.distinctBy { it.vaccineName }.toCollection(ArrayList())
+
+        // If you want to reassign it back to the original list variable
+        vaccineList.clear()
+        vaccineList.addAll(uniqueVaccineList)
+
+        val patientGender = formatterClass.getSharedPref("patientGender", requireContext())
+
+        //Remove HPV if it's a male
+        if (patientGender != null && patientGender == "male"){
+            vaccineList.removeIf { it.vaccineName.contains("HPV") }
+        }
+
+
+        val adapter = VaccineDetailsAdapter(
+            patientDetailsViewModel,
+            vaccineList,
+            this@NonRoutineFragment,
+            requireContext())
+
+        recyclerView.adapter = adapter
+
+    }
+
     private fun performVisibility(vaccineSchedule:String) {
 
         dbRecyclerList.forEach {
