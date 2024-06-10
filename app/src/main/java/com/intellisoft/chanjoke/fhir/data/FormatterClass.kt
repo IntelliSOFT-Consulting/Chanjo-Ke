@@ -1245,6 +1245,9 @@ class FormatterClass {
          *              5th dose is 1 year after 4th dose.
          */
 
+        Log.e("---->","<----")
+        println("vaccineName $vaccineName")
+
         administeredVaccine?.run {
             // Vaccine name exists in latestAdministered
             val status = status
@@ -1263,14 +1266,17 @@ class FormatterClass {
                 isVaccinatedValue = false
             }
 
-            val completedVaccines = latestAdministered.find { it.status == Reasons.COMPLETED.name }
+            val completedVaccines = latestAdministered.find{
+                it.status == Reasons.COMPLETED.name &&
+                        it.vaccineName == vaccineName}
+
             if (completedVaccines != null){
                 canBeVaccinated = false
                 isVaccinatedValue = true
                 dateValue = completedVaccines.dateAdministered
                 statusValue = completedVaccines.status
-            }
 
+            }
 
             // Process status and dateAdministered as needed
         } ?: recommendedVaccine?.run {
@@ -1340,7 +1346,6 @@ class FormatterClass {
         if (statusValue == Reasons.COMPLETED.name) {
             statusColor = StatusColors.GREEN.name
         }
-
 
 
         return DbVaccineScheduleChild(

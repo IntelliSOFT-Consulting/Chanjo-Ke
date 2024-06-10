@@ -98,9 +98,6 @@ class VaccineDetailsAdapter(
 
                 }
             }
-
-
-
         }else if (status == StatusColors.NOT_DONE.name){
             vaccineStatus = "Not Administered"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.colorAccent))
