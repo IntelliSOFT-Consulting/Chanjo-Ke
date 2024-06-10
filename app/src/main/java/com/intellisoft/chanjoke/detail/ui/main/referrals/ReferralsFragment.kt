@@ -1,7 +1,9 @@
 package com.intellisoft.chanjoke.detail.ui.main.referrals
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -60,6 +62,8 @@ class ReferralsFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -82,6 +86,11 @@ class ReferralsFragment : Fragment() {
         }
         setHasOptionsMenu(true)
         onBackPressed()
+
+        sharedPreferences = requireContext()
+            .getSharedPreferences(getString(R.string.referralData),
+                Context.MODE_PRIVATE
+            )
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
@@ -130,21 +139,35 @@ class ReferralsFragment : Fragment() {
 
     private fun loadServiceRequests() {
         try {
-            val data = patientDetailsViewModel.loadServiceRequests()
 
-            if (data.isEmpty()) {
-                binding.apply {
-                    tvEmptyList.visibility = View.VISIBLE
+            //Get the service Id and patient Id from shared pref
+            val serviceRequestId = sharedPreferences.getString("serviceRequestId", null)
+
+            if (serviceRequestId != null){
+                val data = patientDetailsViewModel.loadServiceRequests(serviceRequestId)
+                if (data.isEmpty()) {
+                    binding.apply {
+                        tvEmptyList.visibility = View.VISIBLE
+                    }
                 }
+
+                val vaccineAdapter =
+                    ReferralAdapter(
+                        data,
+                        requireContext()
+                    )
+
+                binding.aefiParentList.adapter = vaccineAdapter
             }
 
-            val vaccineAdapter =
-                ReferralAdapter(
-                    data,
-                    requireContext()
-                )
+            val patientId = sharedPreferences.getString("patientId", null)
+            val patientName = sharedPreferences.getString("patientName", null)
+            if (patientId != null){
 
-            binding.aefiParentList.adapter = vaccineAdapter
+            }
+
+
+
 
         } catch (e: Exception) {
             e.printStackTrace()

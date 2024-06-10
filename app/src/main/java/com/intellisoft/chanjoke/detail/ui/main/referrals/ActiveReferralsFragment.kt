@@ -3,6 +3,7 @@ package com.intellisoft.chanjoke.detail.ui.main.referrals
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -134,6 +135,7 @@ class ActiveReferralsFragment : Fragment() {
                         tvEmptyList.visibility = View.VISIBLE
                     }
                 }
+
                 val patientAdapter = ReferralParentAdapter(requests, requireContext())
                 binding.aefiParentList.adapter = patientAdapter
             }

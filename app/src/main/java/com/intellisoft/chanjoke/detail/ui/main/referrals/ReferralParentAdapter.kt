@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.detail.ui.main.referrals
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,14 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.ServiceRequestPatient
@@ -44,7 +47,38 @@ class ReferralParentAdapter(
         }
 
         override fun onClick(p0: View) {
+
+            val logicalId = entryList[position].logicalId
+            val patientId = entryList[position].patientId
+            val patientName = entryList[position].patientName
+
+            //Save to shared pref
+            val sharedPreferences: SharedPreferences =
+                context.getSharedPreferences(context.getString(R.string.referralData),
+                    AppCompatActivity.MODE_PRIVATE
+                )
+            val editor = sharedPreferences.edit()
+
+            editor.putString("serviceRequestId",logicalId)
+            editor.putString("patientId",patientId)
+            editor.putString("patientName",patientName)
+            editor.apply()
+
+            // temporarily store details
+            val temp = DbTempData(
+                name = patientName,
+                dob = "",
+                gender = "",
+                age = "",
+            )
+            FormatterClass().saveSharedPref(
+                "temp_data",
+                Gson().toJson(temp),
+                context
+            )
+
             findNavController(p0).navigate(R.id.referralsFragment)
+
         }
     }
 

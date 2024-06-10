@@ -600,8 +600,8 @@ class PatientDetailsViewModel(
         getVaccineListDetails()
     }
 
-    fun loadServiceRequests() = runBlocking {
-        getServiceRequests()
+    fun loadServiceRequests(serviceRequestId: String) = runBlocking {
+        getServiceRequests(serviceRequestId)
     }
 
     fun getVaccineList() = runBlocking {
@@ -624,23 +624,27 @@ class PatientDetailsViewModel(
         return ArrayList(vaccineList)
     }
 
-    private suspend fun getServiceRequests(): ArrayList<DbServiceRequest> {
+    private suspend fun getServiceRequests(serviceRequestId: String): ArrayList<DbServiceRequest> {
 
-        val vaccineList = ArrayList<DbServiceRequest>()
+//        val vaccineList = ArrayList<DbServiceRequest>()
 
-        fhirEngine.search<ServiceRequest> {
-            sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
-        }.map { createServiceRequestItem(it) }.let { serviceRequests ->
-            serviceRequests.forEach { serviceRequest ->
-                if (serviceRequest.patientReference == "Patient/$patientId" && serviceRequest.status == "ACTIVE") {
-                    vaccineList.add(serviceRequest)
-                }
-            }
-        }
+        val searchResult = fhirEngine.search<ServiceRequest>{
+            filter(ServiceRequest.RES_ID, {value = of(serviceRequestId)})
+        }.map { createServiceRequestItem(it) }
+
+//        fhirEngine.search<ServiceRequest> {
+//            sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
+//        }.map { createServiceRequestItem(it) }.let { serviceRequests ->
+//            serviceRequests.forEach { serviceRequest ->
+//                if (serviceRequest.patientReference == "Patient/$patientId" && serviceRequest.status == "ACTIVE") {
+//                    vaccineList.add(serviceRequest)
+//                }
+//            }
+//        }
 
 
 
-        return ArrayList(vaccineList)
+        return ArrayList(searchResult)
     }
 
     private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {
