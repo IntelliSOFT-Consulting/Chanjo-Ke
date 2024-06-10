@@ -1207,7 +1207,7 @@ class FormatterClass {
          * i.) Yellow fever = 9 months and above. Single dose
          *
          * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
-         * iii.) Pfizer = 18 years and above. 2 dose 4 weeks apart
+         * iii.) Pfizer = 12 years and above. 2 dose 4 weeks apart
          * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
          * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
          * vi.) J n J & H = 18 years and above till age 60 years. Single dose
@@ -1283,9 +1283,13 @@ class FormatterClass {
         //Covid 19
         //Astrazeneca
         if (targetDisease == "Covid 19" && patientYears != null){
+            if (patientYears >= 12 && nhdd == "16929" ){
+                // Pfizer
+                canBeVaccinated = true
+            }
             if (patientYears >= 18){
-                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931" || nhdd == "16929"){
-                    //Astrazeneca, JnJ, Moderna, Pfizer
+                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931"){
+                    //Astrazeneca, JnJ, Moderna
                     canBeVaccinated = true
                 }
                 if(nhdd == "16489" && patientYears in 18..60){
