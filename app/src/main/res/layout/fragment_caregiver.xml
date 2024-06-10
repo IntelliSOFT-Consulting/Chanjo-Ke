@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Names *"
+            android:hint="Name *"
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText
