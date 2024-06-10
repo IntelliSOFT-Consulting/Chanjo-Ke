@@ -145,7 +145,15 @@
         android:id="@+id/referralsFragment"
         android:name="com.intellisoft.chanjoke.detail.ui.main.referrals.ReferralsFragment"
         android:label="fragment_referrals"
-        tools:layout="@layout/fragment_referrals" />
+        tools:layout="@layout/fragment_referrals" >
+        <action
+            android:id="@+id/action_referralsFragment_to_activeReferralsFragment"
+            app:destination="@id/activeReferralsFragment" />
+        <action
+            android:id="@+id/action_referralsFragment_pop"
+            app:popUpTo="@id/referralsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/referralDetailFragment"
         android:name="com.intellisoft.chanjoke.detail.ui.main.referrals.ReferralDetailFragment"

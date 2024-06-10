@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.navigateUp
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
@@ -162,11 +164,12 @@ class ReferralsFragment : Fragment() {
 
 
     private fun showCancelScreenerQuestionnaireAlertDialog() {
-        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
-        val intent = Intent(context, PatientDetailActivity::class.java)
-        intent.putExtra("patientId", patientId)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        requireContext().startActivity(intent)
+        findNavController().navigateUp()
+//        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+//        val intent = Intent(context, PatientDetailActivity::class.java)
+//        intent.putExtra("patientId", patientId)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//        requireContext().startActivity(intent)
     }
 
     private fun onBackPressed() {

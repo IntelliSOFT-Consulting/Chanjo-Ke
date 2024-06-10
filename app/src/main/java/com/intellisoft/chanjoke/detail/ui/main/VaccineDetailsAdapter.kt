@@ -60,7 +60,15 @@ class VaccineDetailsAdapter(
                 }
             }
         }else if (status == StatusColors.NORMAL.name){
-            vaccineStatus = "Due"
+
+            //Check if the date is within 14 days
+            if (daysTo != null) {
+                val daysToInt = daysTo.toInt()
+                if (daysToInt < 14){
+                    vaccineStatus = "Due"
+                }
+            }
+
         }else if (status == StatusColors.RED.name){
             vaccineStatus = "Missed"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
@@ -77,19 +85,18 @@ class VaccineDetailsAdapter(
                      */
                     if (daysTo != null){
                         val daysToInt = daysTo.toInt()
-                        if (daysToInt < 15){
+                        if (daysToInt < 15 && vaccineName == "bOPV"){
                             vaccineStatus = "Upcoming"
                             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
+                        }
+                        if (daysToInt < 255 && vaccineName == "BCG"){
+                            vaccineStatus = "Due"
+                            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
+
                         }
                     }
 
                 }
-
-                Log.e("------>","<-------")
-                println("vaccineName $vaccineName")
-                println("vaccineStatus $vaccineStatus")
-                println("daysTo $daysTo")
-                Log.e("------>","<-------")
             }
 
 

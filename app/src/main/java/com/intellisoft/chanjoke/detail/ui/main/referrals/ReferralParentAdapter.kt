@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.MainActivity
@@ -37,11 +39,12 @@ class ReferralParentAdapter(
         val viewName: TextView = itemView.findViewById(R.id.viewName)
 
         init {
-            itemView.setOnClickListener(this)
+            btnView.setOnClickListener(this)
 
         }
 
         override fun onClick(p0: View) {
+            findNavController(p0).navigate(R.id.referralsFragment)
         }
     }
 
