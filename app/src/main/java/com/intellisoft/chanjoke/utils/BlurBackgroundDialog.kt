@@ -8,6 +8,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.button.MaterialButton
 import com.intellisoft.chanjoke.R
@@ -69,6 +70,9 @@ class BlurBackgroundDialog(
             NavigationDetails.UPDATE_VACCINE_DETAILS.name -> {
                 "Vaccine has been updated successfully!"
             }
+            NavigationDetails.REFERRALS.name -> {
+                "Vaccine has been administered successfully!"
+            }
 
             else -> {
                 "Record has been captured successfully!"
@@ -98,12 +102,17 @@ class BlurBackgroundDialog(
             } else {
                 val vaccinationFlow =
                     FormatterClass().getSharedPref("isVaccineAdministered", context)
+
                 if (vaccinationFlow == "stockManagement") {
                     val intent = Intent(context, VaccineStockManagement::class.java)
                     intent.putExtra("functionToCall", NavigationDetails.ADMINISTER_VACCINE.name)
                     intent.putExtra("patientId", patientId)
                     context.startActivity(intent)
                     FormatterClass().deleteSharedPref("isVaccineAdministered", context)
+                }else if (vaccinationFlow == NavigationDetails.REFERRALS.name){
+                    fragment.view?.let { it1 ->
+                        Navigation.findNavController(it1).navigate(R.id.activeReferralsFragment)
+                    }
                 } else {
                     val intent = Intent(context, PatientDetailActivity::class.java)
                     intent.putExtra("patientId", patientId)

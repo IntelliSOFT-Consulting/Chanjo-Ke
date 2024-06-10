@@ -51,6 +51,24 @@ class FormatterClass {
         // Add more formats as needed
     )
 
+    fun editDistance(s1: String, s2: String): Int {
+        val costs = IntArray(s2.length + 1) { it }
+        for (i in 1..s1.length) {
+            var lastValue = i
+            for (j in 1..s2.length) {
+                val newValue = if (s1[i - 1] == s2[j - 1]) costs[j - 1] else minOf(costs[j - 1] + 1, lastValue + 1, costs[j] + 1)
+                costs[j - 1] = lastValue
+                lastValue = newValue
+            }
+            costs[s2.length] = lastValue
+        }
+        return costs[s2.length]
+    }
+
+    fun isSimilar(str1: String, str2: String, threshold: Int = 3): Boolean {
+        return editDistance(str1, str2) <= threshold
+    }
+
     fun saveSharedPref(key: String, value: String, context: Context) {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)

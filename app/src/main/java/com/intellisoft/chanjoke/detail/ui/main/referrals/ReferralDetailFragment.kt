@@ -3,6 +3,8 @@ package com.intellisoft.chanjoke.detail.ui.main.referrals
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -12,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
@@ -25,8 +28,12 @@ import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
+import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import org.hl7.fhir.r4.model.Immunization
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -44,6 +51,8 @@ class ReferralDetailFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private  var immunizationHandler = ImmunizationHandler()
+    private val administerVaccineViewModel: AdministerVaccineViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,18 +113,78 @@ class ReferralDetailFragment : Fragment() {
             nextButton.apply {
                 setOnClickListener {
                     //proceed to administer the vaccine
+                    /**
+                     * 1. Get the vaccine name and check if the vaccine name exists
+                     * 2. Get a list of all vaccine list and compare if there's a match
+                     * 3. Get the basic vaccine and vaccinate
+                     */
+                    val vaccineNameTxt = vaccineReferredTextView.text.toString()
+                    if(!TextUtils.isEmpty(vaccineNameTxt)){
 
-                    val serviceRequestId = tvServiceId.text.toString()
-                    Toast.makeText(
-                        requireContext(),
-                        "Service Request::: \n $serviceRequestId",
-                        Toast.LENGTH_LONG
-                    ).show()
+                        val resultList = ArrayList<String>()
 
-                    if (serviceRequestId != null) {
-                        patientDetailsViewModel.updateServiceRequestStatus(serviceRequestId)
+                        val routineVaccineList = immunizationHandler.getRoutineTargetDiseases()
+
+                        for(routineVaccine in routineVaccineList){
+                            val targetDisease = routineVaccine.targetDisease
+                            if (vaccineNameTxt.contains(targetDisease)){
+
+                                val basicVaccine = routineVaccine.vaccineList.firstOrNull()
+                                if (basicVaccine != null){
+                                    val vaccineName = basicVaccine.vaccineName
+                                    resultList.add(vaccineName)
+                                    break
+                                }
+
+                            }
+                        }
+
+                        if (resultList.isNotEmpty()){
+
+                            administerVaccineViewModel.createManualImmunizationResource(
+                                resultList,
+                                formatterClass.generateUuid(),
+                                patientId,
+                                requireContext(),
+                                null,
+                                Immunization.ImmunizationStatus.COMPLETED)
+
+                            val serviceRequestId = tvServiceId.text.toString()
+//                        Toast.makeText(
+//                            requireContext(),
+//                            "Service Request::: \n $serviceRequestId",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//
+                            if (serviceRequestId != null) {
+                                patientDetailsViewModel.updateServiceRequestStatus(serviceRequestId)
+                            }
+
+                            FormatterClass().saveSharedPref(
+                                "vaccinationFlow",
+                                NavigationDetails.REFERRALS.name,
+                                requireContext())
+
+                            FormatterClass().saveSharedPref(
+                                "isVaccineAdministered",
+                                NavigationDetails.REFERRALS.name,
+                                requireContext())
+
+                            val blurBackgroundDialog = BlurBackgroundDialog(
+                                this@ReferralDetailFragment,
+                                requireContext())
+                            blurBackgroundDialog.show()
+
+                        }else{
+                            Toast.makeText(
+                                requireContext(),
+                                "We could not find the referred vaccine.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
 
                     }
+
 
                 }
             }
