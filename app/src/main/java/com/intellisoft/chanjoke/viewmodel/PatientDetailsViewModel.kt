@@ -21,6 +21,7 @@ import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.AdverseEventItem
 import com.intellisoft.chanjoke.fhir.data.CareGiver
@@ -29,6 +30,7 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
+import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
 import com.intellisoft.chanjoke.fhir.data.DbVaccineNotDone
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -598,6 +600,48 @@ class PatientDetailsViewModel(
 
     fun getVaccineListWithAefis() = runBlocking {
         getVaccineListDetails()
+    }
+
+    fun getUserDetails(patientId: String, patientName:String, context: Context) = runBlocking {
+        getUserDetailsValue(patientId, patientName, context)
+    }
+
+    private suspend fun getUserDetailsValue(patientId: String,
+                                            patientName:String,
+                                            context: Context):DbTempData? {
+
+        val formatterClass = FormatterClass()
+
+        var dob = ""
+        var gender = ""
+
+        val it = fhirEngine.search<Patient>{
+            filter(Patient.RES_ID, {value = of(patientId)})
+        }.firstOrNull()
+        if (it != null){
+
+            if (it.hasBirthDateElement()) {
+                if (it.birthDateElement.hasValue()) {
+                    val birthDateElement =
+                        formatterClass.convertChildDateFormat(it.birthDateElement.valueAsString)
+                    if (birthDateElement != null) {
+                        dob = birthDateElement
+                    }
+                }
+            }
+
+            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
+
+            val temp = DbTempData(
+                name = patientName,
+                dob = dob,
+                gender = gender,
+                age = "",
+            )
+            return temp
+        }
+        return null
+
     }
 
     fun loadServiceRequests(serviceRequestId: String) = runBlocking {

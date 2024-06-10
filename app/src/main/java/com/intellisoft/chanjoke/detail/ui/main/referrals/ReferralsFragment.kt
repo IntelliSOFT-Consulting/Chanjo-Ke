@@ -112,20 +112,7 @@ class ReferralsFragment : Fragment() {
 
         loadServiceRequests()
 
-        try {
-            val referral = FormatterClass().getSharedPref("temp_data", requireContext())
-            if (referral != null) {
-                val data = Gson().fromJson(referral, DbTempData::class.java)
-                binding.apply {
-                    tvName.text = data.name
-                    tvAge.text = data.age
-                    tvGender.text = data.gender
-                    tvDob.text = data.dob
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+
     }
 
     override fun onResume() {
@@ -162,13 +149,47 @@ class ReferralsFragment : Fragment() {
 
             val patientId = sharedPreferences.getString("patientId", null)
             val patientName = sharedPreferences.getString("patientName", null)
-            if (patientId != null){
+            if (patientId != null && patientName != null){
 
+                val temp =
+                    patientDetailsViewModel
+                        .getUserDetails(
+                            patientId,
+                            patientName,
+                            requireContext())
+                if (temp != null){
+                    FormatterClass().saveSharedPref(
+                        "temp_data",
+                        Gson().toJson(temp),
+                        requireContext()
+                    )
+                    getUserDetails()
+                }
+
+            }else{
+                getUserDetails()
             }
 
 
 
 
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getUserDetails() {
+        try {
+            val referral = FormatterClass().getSharedPref("temp_data", requireContext())
+            if (referral != null) {
+                val data = Gson().fromJson(referral, DbTempData::class.java)
+                binding.apply {
+                    tvName.text = data.name
+                    tvAge.text = data.age
+                    tvGender.text = data.gender
+                    tvDob.text = data.dob
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
