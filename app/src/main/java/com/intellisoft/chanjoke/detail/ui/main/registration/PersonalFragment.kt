@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -285,6 +286,32 @@ class PersonalFragment : Fragment() {
             }
             identificationType.apply {
                 setAdapter(adapterType)
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                        // Code to execute before the text is changed
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        // Code to execute as the text is changing
+
+                        updateNextFieldInputType(s.toString())
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                        // Code to execute after the text has been changed
+                    }
+                })
+
             }
             nextButton.apply {
                 setOnClickListener {
@@ -294,6 +321,32 @@ class PersonalFragment : Fragment() {
             previousButton.apply {
                 setOnClickListener {
                     mListener?.onCancelPageRequested()
+                }
+            }
+        }
+
+    }
+
+    private fun updateNextFieldInputType(selectedInput: String) {
+
+        /**
+         * Check if selected input is in the list with  "Birth Notification Number"    "ID Number", then update input type to numeric only
+         */
+
+        val numericInputs = listOf("Birth Notification Number", "ID Number")
+
+        if (selectedInput in numericInputs) {
+            binding.apply {
+                identificationNumber.apply {
+                    inputType = InputType.TYPE_CLASS_NUMBER
+                    text = null
+                }
+            }
+        } else {
+            binding.apply {
+                identificationNumber.apply {
+                    inputType = InputType.TYPE_CLASS_TEXT
+                    text = null
                 }
             }
         }
@@ -390,6 +443,8 @@ class PersonalFragment : Fragment() {
     }
 
     private fun updateIdentifications(age: Int) {
+
+
         val identifications = when {
             age < 3 -> {
                 arrayOf(
@@ -502,7 +557,11 @@ class PersonalFragment : Fragment() {
         val checkedRadioButtonIdInput = binding.radioGroupChild.checkedRadioButtonId
         if (checkedRadioButtonIdInput == -1) {
             // No RadioButton is selected, handle it as needed
-            Toast.makeText(requireContext(), "Please select vaccination category", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                requireContext(),
+                "Please select vaccination category",
+                Toast.LENGTH_SHORT
+            )
                 .show()
             return
         }

@@ -306,6 +306,7 @@ class CaregiverFragment : Fragment() {
             if (isAbove == "true") {
                 binding.apply {
                     tvTitleName.text = "Next of Kin Details"
+                    telNational.hint="Next of Kin ID * "
                 }
             }
         }
