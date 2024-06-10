@@ -183,9 +183,15 @@ class ReferralsFragment : Fragment() {
             val referral = FormatterClass().getSharedPref("temp_data", requireContext())
             if (referral != null) {
                 val data = Gson().fromJson(referral, DbTempData::class.java)
+                val age = data.dob
+                var ageDob = ""
+                if (age != ""){
+                    ageDob = formatterClass.calculateAge(age)
+                }
+
                 binding.apply {
                     tvName.text = data.name
-                    tvAge.text = data.age
+                    tvAge.text = ageDob
                     tvGender.text = data.gender
                     tvDob.text = data.dob
                 }
