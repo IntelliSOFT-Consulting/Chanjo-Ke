@@ -248,6 +248,19 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
                 }
             }
         }
+        val gender = if (patient.hasGenderElement()) patient.genderElement.valueAsString else ""
+        val dob =
+            if (patient.hasBirthDateElement()) {
+                val birthElement =patient. birthDateElement.valueAsString
+                val dobFormat = FormatterClass().convertDateFormat(birthElement)
+                if (dobFormat != null) {
+                    val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
+                    if (dobDate != null) {
+                        FormatterClass().convertDateToLocalDate(dobDate)
+                    } else null
+                } else null
+
+            } else null
 
         return ServiceRequestPatient(
             logicalId = logicalId,
@@ -255,7 +268,9 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             patientId = patientId,
             patientName = patient.nameFirstRep.nameAsSingleString,
             patientNational = systemId,
-            patientPhone = patientPhone
+            patientPhone = patientPhone,
+            dob=dob.toString(),
+            gender=gender.toString(),
         )
     }
 

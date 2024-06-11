@@ -122,7 +122,9 @@ data class ServiceRequestPatient(
     val patientId: String,
     val patientName: String,
     val patientNational: String,
-    val patientPhone: String
+    val patientPhone: String,
+    val dob:String,
+    val gender:String,
 )
 
 data class DbServiceRequest(
