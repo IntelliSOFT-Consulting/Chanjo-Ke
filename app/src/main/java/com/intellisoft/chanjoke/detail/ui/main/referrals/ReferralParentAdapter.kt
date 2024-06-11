@@ -21,6 +21,7 @@ import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.ServiceRequestPatient
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -108,6 +109,38 @@ class ReferralParentAdapter(
         holder.viewPhoneNumber.text = "Phone Number"
         holder.viewId.text = "Identification No"
         holder.viewName.text = "Name"
+
+        holder.btnView.setOnClickListener {
+            Timber.e("PatientId **** ${payload.patientId}")
+            val patientId = payload.patientId
+            val age = try {
+                FormatterClass().getFormattedAge(
+                    payload.dob,
+                    holder.btnView.context.resources, context
+                )
+            } catch (e: Exception) {
+                ""
+            }
+
+            val temp = DbTempData(
+                name = patientName,
+                dob = payload.dob,
+                gender = payload.gender,
+                age = age,
+            )
+            FormatterClass().saveSharedPref(
+                "temp_data",
+                Gson().toJson(temp),
+                context
+            )
+
+            FormatterClass().saveSharedPref("patientId", patientId, context)
+            val intent =
+                Intent(context, MainActivity::class.java)
+            intent.putExtra("functionToCall", NavigationDetails.REFERRALS.name)
+            intent.putExtra("patientId", patientId)
+            context.startActivity(intent)
+        }
 
 
     }
