@@ -58,8 +58,8 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
     val liveSearchedPatients = MutableLiveData<List<PatientItem>>()
     val patientCount = MutableLiveData<Long>()
 
-    private val _liveServiceRequests = MutableLiveData<List<ServiceRequestPatient>>()
-    val liveServiceRequests: LiveData<List<ServiceRequestPatient>> get() = _liveServiceRequests
+    private val _liveServiceRequests = MutableLiveData<MutableList<ServiceRequestPatient>>()
+    val liveServiceRequests: LiveData<MutableList<ServiceRequestPatient>> get() = _liveServiceRequests
 
 
     init {
@@ -200,7 +200,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         return withContext(Dispatchers.IO) { locations }
     }
 
-    private suspend fun retrieveActiveServiceRequest(): List<ServiceRequestPatient> {
+    private suspend fun retrieveActiveServiceRequest(): MutableList<ServiceRequestPatient> {
         val serviceRequests = ArrayList<ServiceRequestPatient>()
 
         fhirEngine.search<ServiceRequest> {
@@ -222,7 +222,6 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         val patientIdRef =
             if (data.hasSubject()) if (data.subject.hasReference()) data.subject.reference else "" else ""
 
-        Timber.e("Status posted here ******$status***")
         val patientId = patientIdRef.toString().replace("Patient/", "")
 
         var systemId = ""
@@ -248,14 +247,31 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
                 }
             }
         }
+        val gender = if (patient.hasGenderElement()) patient.genderElement.valueAsString else ""
+        val dob =
+            if (patient.hasBirthDateElement()) {
+                val birthElement = patient.birthDateElement.valueAsString
+                val dobFormat = FormatterClass().convertDateFormat(birthElement)
+                if (dobFormat != null) {
+                    val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
+                    if (dobDate != null) {
+                        FormatterClass().convertDateToLocalDate(dobDate)
+                    } else null
+                } else null
 
+            } else null
+
+        val authoredOn = if (data.hasAuthoredOn()) data.authoredOn.toString() else ""
         return ServiceRequestPatient(
             logicalId = logicalId,
             status = status,
             patientId = patientId,
             patientName = patient.nameFirstRep.nameAsSingleString,
             patientNational = systemId,
-            patientPhone = patientPhone
+            patientPhone = patientPhone,
+            dob = dob.toString(),
+            gender = gender.toString(),
+            authoredOn = authoredOn
         )
     }
 
