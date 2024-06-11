@@ -123,12 +123,12 @@ class ReferralDetailFragment : Fragment() {
 
                         val resultList = ArrayList<String>()
 
-                        val routineVaccineList = immunizationHandler.getRoutineTargetDiseases()
+                        val routineVaccineList = immunizationHandler.getAllRoutineDiseases()
 
                         for(routineVaccine in routineVaccineList){
                             val targetDisease = routineVaccine.targetDisease
-                            if (vaccineNameTxt.contains(targetDisease)){
 
+                            if (vaccineNameTxt.contains(targetDisease)){
                                 val basicVaccine = routineVaccine.vaccineList.firstOrNull()
                                 if (basicVaccine != null){
                                     val vaccineName = basicVaccine.vaccineName
@@ -150,12 +150,7 @@ class ReferralDetailFragment : Fragment() {
                                 Immunization.ImmunizationStatus.COMPLETED)
 
                             val serviceRequestId = tvServiceId.text.toString()
-//                        Toast.makeText(
-//                            requireContext(),
-//                            "Service Request::: \n $serviceRequestId",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//
+
                             if (serviceRequestId != null) {
                                 patientDetailsViewModel.updateServiceRequestStatus(serviceRequestId)
                             }
