@@ -3,6 +3,7 @@ package com.intellisoft.chanjoke.detail.ui.main.referrals
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,8 @@ class ReferralParentAdapter(
             val logicalId = entryList[position].logicalId
             val patientId = entryList[position].patientId
             val patientName = entryList[position].patientName
+            val dob = entryList[position].dob
+            val gender = entryList[position].gender
 
             //Save to shared pref
             val sharedPreferences: SharedPreferences =
@@ -65,18 +68,30 @@ class ReferralParentAdapter(
             editor.putString("patientName",patientName)
             editor.apply()
 
+            val age = try {
+                FormatterClass().getFormattedAge(
+                    dob,
+                    btnView.context.resources,
+                    context
+                )
+            } catch (e: Exception) {
+                ""
+            }
+
             // temporarily store details
             val temp = DbTempData(
                 name = patientName,
-                dob = "",
-                gender = "",
-                age = "",
+                dob = dob,
+                gender = gender,
+                age = age,
             )
             FormatterClass().saveSharedPref(
                 "temp_data",
                 Gson().toJson(temp),
                 context
             )
+            FormatterClass().saveSharedPref("patientId", patientId, context)
+
 
             findNavController(p0).navigate(R.id.referralsFragment)
 
@@ -109,38 +124,6 @@ class ReferralParentAdapter(
         holder.viewPhoneNumber.text = "Phone Number"
         holder.viewId.text = "Identification No"
         holder.viewName.text = "Name"
-
-        holder.btnView.setOnClickListener {
-            Timber.e("PatientId **** ${payload.patientId}")
-            val patientId = payload.patientId
-            val age = try {
-                FormatterClass().getFormattedAge(
-                    payload.dob,
-                    holder.btnView.context.resources, context
-                )
-            } catch (e: Exception) {
-                ""
-            }
-
-            val temp = DbTempData(
-                name = patientName,
-                dob = payload.dob,
-                gender = payload.gender,
-                age = age,
-            )
-            FormatterClass().saveSharedPref(
-                "temp_data",
-                Gson().toJson(temp),
-                context
-            )
-
-            FormatterClass().saveSharedPref("patientId", patientId, context)
-            val intent =
-                Intent(context, MainActivity::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.REFERRALS.name)
-            intent.putExtra("patientId", patientId)
-            context.startActivity(intent)
-        }
 
 
     }
