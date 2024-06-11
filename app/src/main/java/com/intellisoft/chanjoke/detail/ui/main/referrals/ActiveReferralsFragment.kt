@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -22,8 +23,12 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentActiveReferralsBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.PatientIdentification
+import com.intellisoft.chanjoke.fhir.data.ServiceRequestPatient
 import com.intellisoft.chanjoke.patient_list.PatientListViewModel
 import com.intellisoft.chanjoke.utils.AppUtils
+import timber.log.Timber
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -57,6 +62,7 @@ class ActiveReferralsFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
+    private var allServiceRequests = mutableListOf<ServiceRequestPatient>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -111,6 +117,80 @@ class ActiveReferralsFragment : Fragment() {
                     showDatePickerDialog(endDate, false)
                 }
             }
+
+            nextButton.apply {
+                setOnClickListener {
+                    val start = startDate.text.toString()
+                    val end = endDate.text.toString()
+
+                    if (start.isEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Please select start date",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+                    if (end.isEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Please select end date",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+
+                    /***
+                     * Filter results based on selected dates  between start and end
+                     * */
+
+                    // Format for start and end dates (MM/dd/yyyy)
+                    val inputDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+                    // Format for authoredOn dates (EEE MMM dd HH:mm:ss zzz yyyy)
+                    val authoredDateFormat =
+                        SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.getDefault())
+
+                    try {
+                        // Parse the start and end dates
+                        val startDate = inputDateFormat.parse(start)
+                        val endDate = inputDateFormat.parse(end)
+
+
+                        if (startDate != null && endDate != null) {
+                            val filteredRequests = allServiceRequests.filter {
+                                val authoredOnDate = authoredDateFormat.parse(it.authoredOn)
+                                authoredOnDate != null && authoredOnDate.after(startDate) && authoredOnDate.before(
+                                    endDate
+                                )
+                            }
+                            // Do something with filteredRequests, for example:
+                            // updateRecyclerView(filteredRequests)
+
+
+                            binding.apply {
+                                pbLoading.visibility = View.GONE
+                                tvEmptyList.visibility = View.GONE
+                            }
+                            if (filteredRequests.isEmpty()) {
+                                binding.apply {
+                                    tvEmptyList.visibility = View.VISIBLE
+                                }
+                            }
+                            val patientAdapter =
+                                ReferralParentAdapter(filteredRequests, requireContext())
+                            binding.aefiParentList.adapter = patientAdapter
+
+                        }
+                    } catch (e: ParseException) {
+                        e.printStackTrace()
+                        Toast.makeText(
+                            requireContext(),
+                            "Invalid date format",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
         loadServiceRequests()
 
@@ -162,7 +242,7 @@ class ActiveReferralsFragment : Fragment() {
         try {
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-            val minimumDate= binding.startDate.text.toString()
+            val minimumDate = binding.startDate.text.toString()
             if (minimumDate.isNotEmpty()) {
                 try {
                     val date = dateFormat.parse(minimumDate)
@@ -197,15 +277,17 @@ class ActiveReferralsFragment : Fragment() {
              *
              **/
             patientListViewModel.liveServiceRequests.observe(viewLifecycleOwner) { requests ->
+                allServiceRequests = requests
                 binding.apply {
                     pbLoading.visibility = View.GONE
+                    tvEmptyList.visibility = View.GONE
                 }
                 if (requests.isEmpty()) {
                     binding.apply {
                         tvEmptyList.visibility = View.VISIBLE
                     }
                 }
-                val patientAdapter = ReferralParentAdapter(requests, requireContext())
+                val patientAdapter = ReferralParentAdapter(allServiceRequests, requireContext())
                 binding.aefiParentList.adapter = patientAdapter
             }
             // Trigger data fetch
