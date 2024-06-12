@@ -37,6 +37,7 @@ class VaccineDetailsAdapter(
     override fun onBindViewHolder(holder: VaccineDetailsViewHolder, position: Int) {
         val currentItem = vaccineDetailsList[position]
         val formatterClass = FormatterClass()
+        val immunizationHandler = ImmunizationHandler()
 //        holder.checkBox.isChecked = currentItem.isVaccinated
         val vaccineName = currentItem.vaccineName
         val isVaccinated = currentItem.isVaccinated
@@ -59,10 +60,44 @@ class VaccineDetailsAdapter(
                 }
             }
         }else if (status == StatusColors.NORMAL.name){
-            vaccineStatus = "Due"
+
+            //Check if the date is within 14 days
+            if (daysTo != null) {
+                val daysToInt = daysTo.toInt()
+                if (daysToInt < 14){
+                    vaccineStatus = "Due"
+                }
+            }
+
         }else if (status == StatusColors.RED.name){
             vaccineStatus = "Missed"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
+
+            //For BCG and bOpv
+            if (vaccineName == "BCG" || vaccineName == "bOPV"){
+                //Check the date and change status
+
+                val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+                if (basicVaccine != null){
+                    /**
+                     * BCG can be given till 255
+                     * bOPV will be till 2 weeks
+                     */
+                    if (daysTo != null){
+                        val daysToInt = daysTo.toInt()
+                        if (daysToInt < 15 && vaccineName == "bOPV"){
+                            vaccineStatus = "Upcoming"
+                            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
+                        }
+                        if (daysToInt < 255 && vaccineName == "BCG"){
+                            vaccineStatus = "Due"
+                            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
+
+                        }
+                    }
+
+                }
+            }
         }else if (status == StatusColors.NOT_DONE.name){
             vaccineStatus = "Not Administered"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.colorAccent))

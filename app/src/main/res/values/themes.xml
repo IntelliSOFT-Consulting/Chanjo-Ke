@@ -7,8 +7,9 @@
     </style>
     <style name="MyOverflowMenu" parent="Widget.MaterialComponents.PopupMenu.Overflow">
     </style>
-    <style name="Theme.Zanzibar" parent="Base.Theme.Zanzibar" />
-
+    <style name="Theme.Zanzibar" parent="Base.Theme.Zanzibar" >
+        <item name="android:itemTextAppearance">@style/ChangeTextColor</item>
+    </style>
     <style name="Theme.Zanzibar.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -36,6 +37,12 @@
     <style name="NoBackgroundDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">false</item>
+    </style>
+    <style name="ChangeTextColor" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="MainActionBar.Popup" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColor">@color/black</item>
     </style>
 
 </resources>

@@ -21,6 +21,7 @@ import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
+import com.google.gson.Gson
 import com.intellisoft.chanjoke.fhir.data.AdverseEventData
 import com.intellisoft.chanjoke.fhir.data.AdverseEventItem
 import com.intellisoft.chanjoke.fhir.data.CareGiver
@@ -29,6 +30,7 @@ import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
 import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
+import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.DbVaccineDetailsData
 import com.intellisoft.chanjoke.fhir.data.DbVaccineNotDone
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -334,7 +336,6 @@ class PatientDetailsViewModel(
             .map { getRecommendationData(it) }
             .let { immunizationRecommendationList.addAll(it) }
 
-
         immunizationRecommendationList.forEach { immunizationRecommendation ->
 
             val recommendationList = immunizationRecommendation.recommendation
@@ -415,6 +416,7 @@ class PatientDetailsViewModel(
                 }
             }
         }
+
         return dbRecommendationDetailsList
 
     }
@@ -600,8 +602,50 @@ class PatientDetailsViewModel(
         getVaccineListDetails()
     }
 
-    fun loadServiceRequests() = runBlocking {
-        getServiceRequests()
+    fun getUserDetails(patientId: String, patientName:String, context: Context) = runBlocking {
+        getUserDetailsValue(patientId, patientName, context)
+    }
+
+    private suspend fun getUserDetailsValue(patientId: String,
+                                            patientName:String,
+                                            context: Context):DbTempData? {
+
+        val formatterClass = FormatterClass()
+
+        var dob = ""
+        var gender = ""
+
+        val it = fhirEngine.search<Patient>{
+            filter(Patient.RES_ID, {value = of(patientId)})
+        }.firstOrNull()
+        if (it != null){
+
+            if (it.hasBirthDateElement()) {
+                if (it.birthDateElement.hasValue()) {
+                    val birthDateElement =
+                        formatterClass.convertChildDateFormat(it.birthDateElement.valueAsString)
+                    if (birthDateElement != null) {
+                        dob = birthDateElement
+                    }
+                }
+            }
+
+            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
+
+            val temp = DbTempData(
+                name = patientName,
+                dob = dob,
+                gender = gender,
+                age = "",
+            )
+            return temp
+        }
+        return null
+
+    }
+
+    fun loadServiceRequests(serviceRequestId: String) = runBlocking {
+        getServiceRequests(serviceRequestId)
     }
 
     fun getVaccineList() = runBlocking {
@@ -624,23 +668,27 @@ class PatientDetailsViewModel(
         return ArrayList(vaccineList)
     }
 
-    private suspend fun getServiceRequests(): ArrayList<DbServiceRequest> {
+    private suspend fun getServiceRequests(serviceRequestId: String): ArrayList<DbServiceRequest> {
 
-        val vaccineList = ArrayList<DbServiceRequest>()
+//        val vaccineList = ArrayList<DbServiceRequest>()
 
-        fhirEngine.search<ServiceRequest> {
-            sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
-        }.map { createServiceRequestItem(it) }.let { serviceRequests ->
-            serviceRequests.forEach { serviceRequest ->
-                if (serviceRequest.patientReference == "Patient/$patientId" && serviceRequest.status == "ACTIVE") {
-                    vaccineList.add(serviceRequest)
-                }
-            }
-        }
+        val searchResult = fhirEngine.search<ServiceRequest>{
+            filter(ServiceRequest.RES_ID, {value = of(serviceRequestId)})
+        }.map { createServiceRequestItem(it) }
+
+//        fhirEngine.search<ServiceRequest> {
+//            sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
+//        }.map { createServiceRequestItem(it) }.let { serviceRequests ->
+//            serviceRequests.forEach { serviceRequest ->
+//                if (serviceRequest.patientReference == "Patient/$patientId" && serviceRequest.status == "ACTIVE") {
+//                    vaccineList.add(serviceRequest)
+//                }
+//            }
+//        }
 
 
 
-        return ArrayList(vaccineList)
+        return ArrayList(searchResult)
     }
 
     private suspend fun getVaccineListDetails(): ArrayList<DbVaccineData> {

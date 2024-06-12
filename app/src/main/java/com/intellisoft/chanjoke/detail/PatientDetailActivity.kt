@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.detail.ui.main.SectionsPagerAdapter
@@ -21,6 +22,7 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.sync.Sync
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
@@ -28,12 +30,15 @@ import com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment
 import com.intellisoft.chanjoke.detail.ui.main.registration.CompleteDetailsActivity
 import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
 import com.intellisoft.chanjoke.fhir.data.DbTempData
+import com.intellisoft.chanjoke.fhir.data.FhirSyncWorker
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class PatientDetailActivity : AppCompatActivity() {
@@ -269,6 +274,9 @@ class PatientDetailActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        Sync.oneTimeSync<FhirSyncWorker>(this)
+
 
         getPatientDetails()
 

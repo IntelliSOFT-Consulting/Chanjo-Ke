@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,6 +62,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private var dbRecyclerList = HashSet<DbRecycler>()
 
     private lateinit var sharedPreferences:SharedPreferences
+    private val dewormingScheduleList = listOf("2 years", "3 years", "4 years", "5 years")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,12 +131,39 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
         }
 
-
-
         return binding.root
 
     }
 
+    private fun combineSchedulesIntoDeworming(schedulesList: ArrayList<DbVaccineScheduleGroup>): List<DbVaccineScheduleGroup> {
+
+        // Filter the schedules that match the deworming criteria
+        val schedulesToCombine = schedulesList.filter { it.vaccineSchedule in dewormingScheduleList }
+
+        // Combine the child lists from the filtered schedules
+        val combinedChildList = arrayListOf<DbVaccineScheduleChild>()
+
+        for (schedule in schedulesToCombine) {
+            combinedChildList.addAll(schedule.dbVaccineScheduleChildList)
+        }
+
+        // Create a new DbVaccineScheduleGroup for the combined schedule
+        val dewormingSchedule = DbVaccineScheduleGroup(
+            vaccineSchedule = "Deworming",
+            colorCode = StatusColors.NORMAL.name, // Set the color code for deworming, adjust as needed
+            aefiValue = null, // Combine or choose an appropriate aefiValue if needed
+            dbVaccineScheduleChildList = combinedChildList
+        )
+
+        // Remove the original deworming schedules from the list
+        schedulesList.removeAll(schedulesToCombine.toSet())
+
+        // Add the new combined deworming schedule to the list
+        schedulesList.add(dewormingSchedule)
+
+        // Return a new list containing the combined schedule and the other schedules
+        return schedulesList
+    }
 
     private fun getRoutine() {
 
@@ -169,8 +198,6 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
                 }
 
-
-
                 //Get the group color Code
                 val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList, recommendationList)
 
@@ -184,10 +211,11 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
             }
 
+            val newDbVaccineScheduleGroupList = combineSchedulesIntoDeworming(dbVaccineScheduleGroupList)
 
             val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
 
-            for (group in dbVaccineScheduleGroupList) {
+            for (group in newDbVaccineScheduleGroupList) {
                 newExpandableListDetail[group] = group.dbVaccineScheduleChildList
             }
 
@@ -251,6 +279,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                             imageViewSchedule.setImageResource(R.drawable.ic_action_schedule_normal_dark)
                         }
                     }
+
                     tvAefi.text = "Aefi(0)"
                     val counter = patientDetailsViewModel.generateCurrentCount(
                         vaccineSchedule,
@@ -311,7 +340,19 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
         val vaccineList = ArrayList<DbVaccineScheduleChild>()
 
-        val weekNoList = sharedPreferences.getStringSet(vaccineSchedule, null)
+        val weekNoList = mutableSetOf<String>()
+
+        if (vaccineSchedule == "Deworming") {
+            dewormingScheduleList.forEach { schedule ->
+                val dewormingSet = sharedPreferences.getStringSet(schedule, null)
+                dewormingSet?.let { weekNoList.addAll(it) }
+            }
+
+        } else {
+            val scheduleSet = sharedPreferences.getStringSet(vaccineSchedule, null)
+            scheduleSet?.let { weekNoList.addAll(it) }
+        }
+
         if (weekNoList != null){
             val savedVaccineList = weekNoList.toList()
             for (dbVaccineScheduleChild in dbVaccineScheduleChildList) {
@@ -319,6 +360,13 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                     vaccineList.add(dbVaccineScheduleChild)
                 }
             }
+
+            val uniqueVaccineList = vaccineList.distinctBy { it.vaccineName }.toCollection(ArrayList())
+
+            // If you want to reassign it back to the original list variable
+            vaccineList.clear()
+            vaccineList.addAll(uniqueVaccineList)
+
         }
 
         val patientGender = formatterClass.getSharedPref("patientGender", requireContext())

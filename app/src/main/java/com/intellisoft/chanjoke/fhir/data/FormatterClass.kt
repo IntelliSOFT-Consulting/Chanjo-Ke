@@ -51,6 +51,24 @@ class FormatterClass {
         // Add more formats as needed
     )
 
+    fun editDistance(s1: String, s2: String): Int {
+        val costs = IntArray(s2.length + 1) { it }
+        for (i in 1..s1.length) {
+            var lastValue = i
+            for (j in 1..s2.length) {
+                val newValue = if (s1[i - 1] == s2[j - 1]) costs[j - 1] else minOf(costs[j - 1] + 1, lastValue + 1, costs[j] + 1)
+                costs[j - 1] = lastValue
+                lastValue = newValue
+            }
+            costs[s2.length] = lastValue
+        }
+        return costs[s2.length]
+    }
+
+    fun isSimilar(str1: String, str2: String, threshold: Int = 3): Boolean {
+        return editDistance(str1, str2) <= threshold
+    }
+
     fun saveSharedPref(key: String, value: String, context: Context) {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)
@@ -1208,7 +1226,7 @@ class FormatterClass {
          * i.) Yellow fever = 9 months and above. Single dose
          *
          * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
-         * iii.) Pfizer = 18 years and above. 2 dose 4 weeks apart
+         * iii.) Pfizer = 12 years and above. 2 dose 4 weeks apart
          * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
          * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
          * vi.) J n J & H = 18 years and above till age 60 years. Single dose
@@ -1227,6 +1245,54 @@ class FormatterClass {
          *              4th dose is 1 year after 3rd dose,
          *              5th dose is 1 year after 4th dose.
          */
+
+        Log.e("---->","<----")
+        println("vaccineName $vaccineName")
+
+        administeredVaccine?.run {
+            // Vaccine name exists in latestAdministered
+            val status = status
+
+            val dateAdministered = dateAdministered
+            dateValue = dateAdministered
+            statusValue = status
+
+            //For covid disable other covid vaccines and leave the one which has been started
+
+            isVaccinatedValue = true
+            canBeVaccinated = true
+
+            if (status == Reasons.CONTRAINDICATE.name ||
+                status == Reasons.NOT_ADMINISTERED.name){
+                isVaccinatedValue = false
+            }
+
+            val completedVaccines = latestAdministered.find{
+                it.status == Reasons.COMPLETED.name &&
+                        it.vaccineName == vaccineName}
+
+            if (completedVaccines != null){
+                canBeVaccinated = false
+                isVaccinatedValue = true
+                dateValue = completedVaccines.dateAdministered
+                statusValue = completedVaccines.status
+
+            }
+
+            // Process status and dateAdministered as needed
+        } ?: recommendedVaccine?.run {
+            // Vaccine name exists in latestRecommendations
+            val earliestDateStr = earliestDate
+            val newDateFormat = convertViewFormats(earliestDateStr)
+
+            // Process earliestDate as needed
+        } ?: run {
+            // Vaccine name does not exist in either list
+            // Handle this case as needed
+            canBeVaccinated = false
+            isVaccinatedValue = false
+        }
+
         //Yellow Fever
         if (targetDisease == "Yellow Fever") {
             if (numberOfWeek != null && numberOfWeek > 39){
@@ -1242,9 +1308,13 @@ class FormatterClass {
         //Covid 19
         //Astrazeneca
         if (targetDisease == "Covid 19" && patientYears != null){
+            if (patientYears >= 12 && nhdd == "16929" ){
+                // Pfizer
+                canBeVaccinated = true
+            }
             if (patientYears >= 18){
-                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931" || nhdd == "16929"){
-                    //Astrazeneca, JnJ, Moderna, Pfizer
+                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931"){
+                    //Astrazeneca, JnJ, Moderna
                     canBeVaccinated = true
                 }
                 if(nhdd == "16489" && patientYears in 18..60){
@@ -1266,46 +1336,7 @@ class FormatterClass {
             }
         }
 
-        administeredVaccine?.run {
-            // Vaccine name exists in latestAdministered
-            val status = status
 
-            val dateAdministered = dateAdministered
-            dateValue = dateAdministered
-            statusValue = status
-
-            //For covid disable other covid vaccines and leave the one which has been started
-
-            isVaccinatedValue = true
-            canBeVaccinated = true
-
-            if (status == Reasons.CONTRAINDICATE.name ||
-                status == Reasons.NOT_ADMINISTERED.name){
-                isVaccinatedValue = false
-            }
-
-            val completedVaccines = latestAdministered.find { it.status == Reasons.COMPLETED.name }
-            if (completedVaccines != null){
-                canBeVaccinated = false
-                isVaccinatedValue = true
-                dateValue = completedVaccines.dateAdministered
-                statusValue = completedVaccines.status
-            }
-
-
-            // Process status and dateAdministered as needed
-        } ?: recommendedVaccine?.run {
-            // Vaccine name exists in latestRecommendations
-            val earliestDateStr = earliestDate
-            val newDateFormat = convertViewFormats(earliestDateStr)
-
-            // Process earliestDate as needed
-        } ?: run {
-            // Vaccine name does not exist in either list
-            // Handle this case as needed
-            canBeVaccinated = false
-            isVaccinatedValue = false
-        }
 
         if (statusValue == Reasons.CONTRAINDICATE.name){
             statusColor = StatusColors.AMBER.name
@@ -1316,7 +1347,6 @@ class FormatterClass {
         if (statusValue == Reasons.COMPLETED.name) {
             statusColor = StatusColors.GREEN.name
         }
-
 
 
         return DbVaccineScheduleChild(
