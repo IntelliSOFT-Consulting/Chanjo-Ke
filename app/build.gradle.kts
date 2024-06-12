@@ -17,7 +17,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["appAuthRedirectScheme"] = applicationId!!
         buildFeatures.buildConfig = true
-        versionCode = 20
+        versionCode = 25
         versionName = "1.0"
     }
     buildTypes {
@@ -95,4 +95,5 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.squareup.retrofit2:converter-moshi:2.6.0")
+
 }

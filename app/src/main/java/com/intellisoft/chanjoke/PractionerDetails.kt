@@ -93,16 +93,16 @@ class PractionerDetails : Fragment() {
 
         val email = "Email: $practitionerEmail"
         val phone = "Phone Number: $practitionerPhone"
-        val pracId = "User Id $practitionerIdNumber"
+        val pracId = "User ID: $practitionerIdNumber"
 
         binding.tvEmailAddress.text = email
         binding.tvPhoneNumber.text = phone
         binding.tvIdNumber.text = pracId
         binding.tvFullName.text = practitionerFullNames
 
-        val county = "County $countyName"
-        val subCounty = "Sub County $subCountyName"
-        val ward = "Ward $wardName"
+        val county = "County: $countyName"
+        val subCounty = "Sub County: $subCountyName"
+        val ward = "Ward: $wardName"
 
         binding.tvCounty.text = county
         binding.tvSubCounty.text = subCounty

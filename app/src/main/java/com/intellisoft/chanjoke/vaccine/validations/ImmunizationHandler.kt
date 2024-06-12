@@ -502,6 +502,19 @@ class ImmunizationHandler() {
         return routineList
     }
 
+    fun getAllRoutineDiseases():List<RoutineVaccine>{
+
+        val allTargetDiseaseList: ArrayList<RoutineVaccine>
+
+        val (routineList, nonRoutineList, _) = vaccines
+        val newNonRoutineList = nonRoutineList.flatMap { it.vaccineList }
+
+        allTargetDiseaseList = ArrayList(routineList + newNonRoutineList)
+
+        return allTargetDiseaseList
+
+    }
+
     fun getVaccineDataList(): Pair<DbRoutineVaccineData, DbRoutineVaccineData>{
         val (routineList, nonRoutineList, _) = vaccines
         val newNonRoutineList = nonRoutineList.flatMap { it.vaccineList }

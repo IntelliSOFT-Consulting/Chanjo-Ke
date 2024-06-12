@@ -1,7 +1,9 @@
 package com.intellisoft.chanjoke.detail.ui.main.referrals
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.navigateUp
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
@@ -58,6 +62,8 @@ class ReferralsFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,6 +87,11 @@ class ReferralsFragment : Fragment() {
         setHasOptionsMenu(true)
         onBackPressed()
 
+        sharedPreferences = requireContext()
+            .getSharedPreferences(getString(R.string.referralData),
+                Context.MODE_PRIVATE
+            )
+
         fhirEngine = FhirApplication.fhirEngine(requireContext())
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
         patientDetailsViewModel = ViewModelProvider(
@@ -101,20 +112,7 @@ class ReferralsFragment : Fragment() {
 
         loadServiceRequests()
 
-        try {
-            val referral = FormatterClass().getSharedPref("temp_data", requireContext())
-            if (referral != null) {
-                val data = Gson().fromJson(referral, DbTempData::class.java)
-                binding.apply {
-                    tvName.text = data.name
-                    tvAge.text = data.age
-                    tvGender.text = data.gender
-                    tvDob.text = data.dob
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+
     }
 
     override fun onResume() {
@@ -128,22 +126,76 @@ class ReferralsFragment : Fragment() {
 
     private fun loadServiceRequests() {
         try {
-            val data = patientDetailsViewModel.loadServiceRequests()
 
-            if (data.isEmpty()) {
-                binding.apply {
-                    tvEmptyList.visibility = View.VISIBLE
+            //Get the service Id and patient Id from shared pref
+            val serviceRequestId = sharedPreferences.getString("serviceRequestId", null)
+
+            if (serviceRequestId != null){
+                val data = patientDetailsViewModel.loadServiceRequests(serviceRequestId)
+                if (data.isEmpty()) {
+                    binding.apply {
+                        tvEmptyList.visibility = View.VISIBLE
+                    }
                 }
+
+                val vaccineAdapter =
+                    ReferralAdapter(
+                        data,
+                        requireContext()
+                    )
+
+                binding.aefiParentList.adapter = vaccineAdapter
             }
 
-            val vaccineAdapter =
-                ReferralAdapter(
-                    data,
-                    requireContext()
-                )
+            val patientId = sharedPreferences.getString("patientId", null)
+            val patientName = sharedPreferences.getString("patientName", null)
+            if (patientId != null && patientName != null){
 
-            binding.aefiParentList.adapter = vaccineAdapter
+                val temp =
+                    patientDetailsViewModel
+                        .getUserDetails(
+                            patientId,
+                            patientName,
+                            requireContext())
+                if (temp != null){
+                    FormatterClass().saveSharedPref(
+                        "temp_data",
+                        Gson().toJson(temp),
+                        requireContext()
+                    )
+                    getUserDetails()
+                }
 
+            }else{
+                getUserDetails()
+            }
+
+
+
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getUserDetails() {
+        try {
+            val referral = FormatterClass().getSharedPref("temp_data", requireContext())
+            if (referral != null) {
+                val data = Gson().fromJson(referral, DbTempData::class.java)
+                val age = data.dob
+                var ageDob = ""
+                if (age != ""){
+                    ageDob = formatterClass.calculateAge(age)
+                }
+
+                binding.apply {
+                    tvName.text = data.name
+                    tvAge.text = ageDob
+                    tvGender.text = data.gender
+                    tvDob.text = data.dob
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -162,11 +214,12 @@ class ReferralsFragment : Fragment() {
 
 
     private fun showCancelScreenerQuestionnaireAlertDialog() {
-        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
-        val intent = Intent(context, PatientDetailActivity::class.java)
-        intent.putExtra("patientId", patientId)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        requireContext().startActivity(intent)
+        findNavController().navigateUp()
+//        val patientId = FormatterClass().getSharedPref("patientId", requireContext())
+//        val intent = Intent(context, PatientDetailActivity::class.java)
+//        intent.putExtra("patientId", patientId)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//        requireContext().startActivity(intent)
     }
 
     private fun onBackPressed() {
