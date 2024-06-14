@@ -60,7 +60,8 @@ class CompleteDetailsActivity : AppCompatActivity() {
             btnClose.apply {
                 setOnClickListener {
 //                    onBackPressed()
-                    createDialog()
+//                    createDialog()
+                    handleClientEdit()
                 }
             }
         }
@@ -210,18 +211,21 @@ class CompleteDetailsActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_item_edit -> {
                 // Handle search action
-                val patientDetail = patientDetailsViewModel.getPatientInfo()
-                formatterClass.deleteSharedPref("personal", this)
-                formatterClass.deleteSharedPref("caregiver", this)
-                formatterClass.deleteSharedPref("administrative", this)
-
-                handleClientDetailsEdit(patientDetail)
+               handleClientEdit()
 
                 true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun handleClientEdit() {
+        val patientDetail = patientDetailsViewModel.getPatientInfo()
+        formatterClass.deleteSharedPref("personal", this)
+        formatterClass.deleteSharedPref("caregiver", this)
+        formatterClass.deleteSharedPref("administrative", this)
+        handleClientDetailsEdit(patientDetail)
     }
 
     private fun saveTempData(key: String, value: String) {
