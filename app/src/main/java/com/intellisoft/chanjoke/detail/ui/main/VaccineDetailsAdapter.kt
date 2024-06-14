@@ -61,6 +61,8 @@ class VaccineDetailsAdapter(
             }
         }else if (status == StatusColors.NORMAL.name){
 
+            // "All the others are upcoming"
+            vaccineStatus = "Upcoming"
             //Check if the date is within 14 days
             if (daysTo != null) {
                 val daysToInt = daysTo.toInt()
@@ -86,10 +88,11 @@ class VaccineDetailsAdapter(
                     if (daysTo != null){
                         val daysToInt = daysTo.toInt()
                         if (daysToInt < 15 && vaccineName == "bOPV"){
-                            vaccineStatus = "Upcoming"
+                            vaccineStatus = "Due"
                             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
                         }
                         if (daysToInt < 255 && vaccineName == "BCG"){
+                            //Due till 59 months
                             vaccineStatus = "Due"
                             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
 
