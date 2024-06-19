@@ -1,15 +1,21 @@
 package com.intellisoft.chanjoke.shared
 
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbResetPasswordData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.network_request.RetrofitCallsAuthentication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class ForgotPassword : AppCompatActivity() {
 
@@ -39,12 +45,35 @@ class ForgotPassword : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val dbResetPasswordData = DbResetPasswordData(idNumber, emailAddress)
-            retrofitCallsAuthentication.getResetPassword(this, dbResetPasswordData)
+            CoroutineScope(Dispatchers.Main).launch {
 
-//            val intent = Intent(this, SetPassword::class.java)
-//            startActivity(intent)
+                val progressDialog = ProgressDialog(this@ForgotPassword)
+                progressDialog.setTitle("Please wait..")
+                progressDialog.setMessage("Authentication in progress..")
+                progressDialog.setCanceledOnTouchOutside(false)
+                progressDialog.show()
 
+                val job = Job()
+                CoroutineScope(Dispatchers.IO + job).launch {
+
+                    val dbResetPasswordData = DbResetPasswordData(idNumber, emailAddress)
+                    val pairReturn = retrofitCallsAuthentication
+                        .getResetPassword(this@ForgotPassword, dbResetPasswordData)
+
+                    val messageCode = pairReturn.first
+                    val messageToast = pairReturn.second
+
+                    Toast.makeText(this@ForgotPassword, messageToast, Toast.LENGTH_SHORT).show()
+
+                    if (messageCode == 200 || messageCode == 201){
+                        val intent = Intent(this@ForgotPassword, SetPassword::class.java)
+                        startActivity(intent)
+                    }
+
+                }.join()
+                progressDialog.dismiss()
+
+            }
 
         }
     }
