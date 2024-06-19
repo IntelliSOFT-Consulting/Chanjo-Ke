@@ -269,91 +269,53 @@ class RetrofitCallsAuthentication {
         }
     }
 
-    fun setPassword(context: Context, dbSetPasswordReq: DbSetPasswordReq){
-
-        CoroutineScope(Dispatchers.Main).launch {
-
-            val job = Job()
-            CoroutineScope(Dispatchers.IO + job).launch {
-                setPasswordBac(context, dbSetPasswordReq)
-            }.join()
-        }
-
+    fun setPassword(context: Context, dbSetPasswordReq: DbSetPasswordReq) = runBlocking{
+        setPasswordBac(context, dbSetPasswordReq)
     }
-    private suspend fun setPasswordBac(context: Context, dbSetPasswordReq: DbSetPasswordReq) {
+    private suspend fun setPasswordBac(context: Context, dbSetPasswordReq: DbSetPasswordReq):
+            Pair<Int, String> {
+
+        var messageToast = ""
+        var messageCode = 400
+
+        val formatter = FormatterClass()
+        val baseUrl = context.getString(UrlData.BASE_URL.message)
+        val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+        try {
 
 
-        val job1 = Job()
-        CoroutineScope(Dispatchers.Main + job1).launch {
+            val apiInterface = apiService.setNewPassword(dbSetPasswordReq)
+            if (apiInterface.isSuccessful){
 
-            val progressDialog = ProgressDialog(context)
-            progressDialog.setTitle("Please wait..")
-            progressDialog.setMessage("Authentication in progress..")
-            progressDialog.setCanceledOnTouchOutside(false)
-            progressDialog.show()
+                val statusCode = apiInterface.code()
+                val body = apiInterface.body()
+                messageCode = statusCode
 
-            var messageToast = ""
-            val job = Job()
-            CoroutineScope(Dispatchers.IO + job).launch {
-
-                val formatter = FormatterClass()
-                val baseUrl = context.getString(UrlData.BASE_URL.message)
-                val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
-                try {
-
-
-                    val apiInterface = apiService.setNewPassword(dbSetPasswordReq)
-                    if (apiInterface.isSuccessful){
-
-                        val statusCode = apiInterface.code()
-                        val body = apiInterface.body()
-
-                        if (statusCode == 200 || statusCode == 201){
-
-                            if (body != null){
-                                messageToast = "Login successful.."
-
-                            }else{
-                                messageToast = "Error: Body is null"
-                            }
-                        }else{
-                            messageToast = "Error: The request was not successful"
-                        }
+                messageToast = if (statusCode == 200 || statusCode == 201){
+                    if (body != null){
+                        "Password Reset was successful.."
                     }else{
-                        apiInterface.errorBody()?.let {
-                            val errorBody = JSONObject(it.string())
-                            messageToast = errorBody.getString("error")
-                        }
+                        "Password Reset was not successful. Try again later"
                     }
-
-
-                }catch (e: Exception){
-
-                    Log.e("******","")
-                    Log.e("******",e.toString())
-                    Log.e("******","")
-
-
-                    messageToast = "Cannot set new password.."
+                }else{
+                    "The request was not successful. Try again!"
                 }
-
-
-            }.join()
-            CoroutineScope(Dispatchers.Main).launch{
-
-                progressDialog.dismiss()
-                Toast.makeText(context, messageToast, Toast.LENGTH_LONG).show()
-
-                val intent = Intent(context, Login::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                context.startActivity(intent)
-                if (context is Activity) {
-                    context.finish()
-                }
-
+            }else{
+                // Parse the error response
+                val errorResponse = parseError(apiInterface)
+                messageToast = errorResponse?.error ?: "Cannot reset user password! Try again"
             }
 
+
+        }catch (e: Exception){
+
+            Log.e("******","")
+            Log.e("******",e.toString())
+            Log.e("******","")
+
+            messageToast = "Cannot set new password.."
         }
+        return Pair(messageCode, messageToast)
 
     }
 
