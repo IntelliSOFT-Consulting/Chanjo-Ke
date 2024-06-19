@@ -267,6 +267,11 @@ data class DbResetPassword(
     val response: String,
 )
 
+data class DbResponseError(
+    val status: String,
+    val error: String,
+)
+
 data class DbResetPasswordData(
     val idNumber: String,
     val email: String

@@ -6,8 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.fhir.data.DbResetPasswordData
+import com.intellisoft.chanjoke.fhir.data.DbResponseError
 import com.intellisoft.chanjoke.fhir.data.DbSetPasswordReq
 import com.intellisoft.chanjoke.fhir.data.DbSignIn
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
@@ -19,6 +22,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+import retrofit2.Response
 
 class RetrofitCallsAuthentication {
 
@@ -227,6 +231,7 @@ class RetrofitCallsAuthentication {
 
                 val statusCode = apiInterface.code()
                 val body = apiInterface.body()
+
                 messageCode = statusCode
 
                 messageToast = if (statusCode == 200 || statusCode == 201) {
@@ -235,7 +240,9 @@ class RetrofitCallsAuthentication {
                     "Cannot reset user password!!"
                 }
             }else{
-                messageToast = "Cannot reset user password!!!"
+                // Parse the error response
+                val errorResponse = parseError(apiInterface)
+                messageToast = errorResponse?.error ?: "Cannot reset user password! Try again"
             }
         }catch (e: Exception){
 
@@ -247,6 +254,19 @@ class RetrofitCallsAuthentication {
         }
         return Pair(messageCode, messageToast)
 
+    }
+
+    // Parse error response using Gson
+    private fun parseError(response: Response<*>): DbResponseError? {
+        return try {
+            response.errorBody()?.let {
+                val gson = Gson()
+                val type = object : TypeToken<DbResponseError>() {}.type
+                gson.fromJson(it.charStream(), type)
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 
     fun setPassword(context: Context, dbSetPasswordReq: DbSetPasswordReq){

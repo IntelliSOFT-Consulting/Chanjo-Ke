@@ -63,11 +63,14 @@ class ForgotPassword : AppCompatActivity() {
                     val messageCode = pairReturn.first
                     val messageToast = pairReturn.second
 
-                    Toast.makeText(this@ForgotPassword, messageToast, Toast.LENGTH_SHORT).show()
-
-                    if (messageCode == 200 || messageCode == 201){
-                        val intent = Intent(this@ForgotPassword, SetPassword::class.java)
-                        startActivity(intent)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(this@ForgotPassword, messageToast,
+                            Toast.LENGTH_SHORT).show()
+                        if (messageCode == 200 || messageCode == 201){
+                            val intent = Intent(this@ForgotPassword,
+                                SetPassword::class.java)
+                            startActivity(intent)
+                        }
                     }
 
                 }.join()
