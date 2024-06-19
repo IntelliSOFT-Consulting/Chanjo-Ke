@@ -99,6 +99,8 @@
     <string name="client_details">Client Details</string>
     <string name="appointments">Appointments</string>
     <string name="referrals">Referrals</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

@@ -234,8 +234,10 @@ class RetrofitCallsAuthentication {
                 val baseUrl = context.getString(UrlData.BASE_URL.message)
                 val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
                 try {
+                    val idNumber = dbResetPasswordData.idNumber
+                    val email = dbResetPasswordData.email
 
-                    val apiInterface = apiService.resetPassword(dbResetPasswordData.idNumber, dbResetPasswordData.email)
+                    val apiInterface = apiService.resetPassword(idNumber, email)
                     if (apiInterface.isSuccessful) {
 
                         val statusCode = apiInterface.code()

@@ -42,8 +42,8 @@ class ForgotPassword : AppCompatActivity() {
             val dbResetPasswordData = DbResetPasswordData(idNumber, emailAddress)
             retrofitCallsAuthentication.getResetPassword(this, dbResetPasswordData)
 
-            val intent = Intent(this, SetPassword::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, SetPassword::class.java)
+//            startActivity(intent)
 
 
         }
