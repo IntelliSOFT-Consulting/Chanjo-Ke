@@ -2,6 +2,7 @@
 <resources>
 
     <string-array name="vaccine_place">
+        <item>Location</item>
         <item>Facility</item>
         <item>Outreach</item>
     </string-array>
