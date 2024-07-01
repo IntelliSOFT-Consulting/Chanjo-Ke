@@ -1677,7 +1677,9 @@ class AdministerVaccineViewModel(
             getApplication<Application>().applicationContext
         )
 
-        val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
+        val patientReference = Reference("Patient/$patientId")
+
+//        val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
 
         val recommendationList = pairRecommendation.first
         val title = pairRecommendation.third
@@ -1685,6 +1687,7 @@ class AdministerVaccineViewModel(
 
             val vaccineName = it.vaccineName
             val dateScheduled = it.dateScheduled
+
             val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
             val selectedDate = if (dobFormat != null) {
                 FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
@@ -1693,6 +1696,7 @@ class AdministerVaccineViewModel(
             }
             val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
             if (basicVaccine != null) {
+                val vaccineCode = basicVaccine.vaccineCode
                 //This works for Routine and non-routine alone
                 val seriesVaccine = immunizationHandler.getSeriesByBasicVaccine(basicVaccine)
                 if (seriesVaccine != null && patientId != null && selectedDate != null) {
@@ -1705,14 +1709,36 @@ class AdministerVaccineViewModel(
                         getApplication<Application>().applicationContext
                     )
 
-                    val immunizationRecommendation = createImmunizationRecommendationResource(
-                        patientId,
-                        selectedDate,
-                        "Due",
-                        "Next Immunization date",
-                        null
-                    )
-                    immunizationRecommendationList.add(immunizationRecommendation)
+                    val appointment = Appointment()
+
+                    val id = generateUuid()
+                    appointment.id = id
+
+                    //Status
+                    appointment.setStatus(Appointment.AppointmentStatus.BOOKED)
+
+                    //desc as the vaccine code
+                    appointment.description = vaccineName
+
+                    /**
+                     * TODO: Change the patient resource from this
+                     */
+                    val supportingInfoList = ArrayList<Reference>()
+                    supportingInfoList.add(patientReference)
+                    appointment.supportingInformation = supportingInfoList
+
+                    //Created
+                    appointment.created = Date()
+
+                    if (dobFormat != null){
+                        val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
+                        if (dobDate != null) {
+                            appointment.start = dobDate
+                        }
+                    }
+
+                    saveResourceToDatabase(appointment, "appointment")
+
                 }
             }
         }
@@ -1720,57 +1746,6 @@ class AdministerVaccineViewModel(
         /**
          * TODO: Create Appointment
          */
-
-        val immunizationRecommendationIdList = ArrayList<String>()
-        immunizationRecommendationList.forEach {
-            saveResourceToDatabase(it, "immRecomm")
-            val id = it.id
-            immunizationRecommendationIdList.add(id)
-        }
-
-        val patientReference = Reference("Patient/$patientId")
-        val appointment = Appointment()
-
-        val id = generateUuid()
-        appointment.id = id
-
-        //Status
-        appointment.setStatus(Appointment.AppointmentStatus.BOOKED)
-
-        //List of based on references
-        val referenceList = ArrayList<Reference>()
-        immunizationRecommendationIdList.forEach {
-            val recommendationReference = Reference("ImmunizationRecommendation/$it")
-            referenceList.add(recommendationReference)
-        }
-        if (referenceList.isNotEmpty()){
-            appointment.basedOn = referenceList
-        }
-
-        //desc
-        appointment.description = title
-
-        /**
-         * TODO: Change the patient resource from this
-         */
-        val supportingInfoList = ArrayList<Reference>()
-        supportingInfoList.add(patientReference)
-        appointment.supportingInformation = supportingInfoList
-
-        //Created
-        appointment.created = Date()
-
-        val dateScheduled = pairRecommendation.second
-        val dobFormat = FormatterClass().convertDateFormat(dateScheduled)
-        if (dobFormat != null){
-            val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
-            if (dobDate != null) {
-                appointment.start = dobDate
-            }
-        }
-        saveResourceToDatabase(appointment, "appointment")
-
-
 
     }
 
