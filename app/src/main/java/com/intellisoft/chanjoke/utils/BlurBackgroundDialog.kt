@@ -64,7 +64,14 @@ class BlurBackgroundDialog(
             }
 
             NavigationDetails.ADMINISTER_VACCINE.name -> {
-                "Vaccine has been administered successfully!"
+                val formatterClass = FormatterClass()
+                val dueDate = formatterClass.getSharedPref("immunizationNextDate", context)
+                val appointmentNo = formatterClass.getSharedPref("appointmentSize", context)
+
+                formatterClass.deleteSharedPref("dueDate", context)
+                formatterClass.deleteSharedPref("appointmentNo", context)
+
+                "Vaccine has been administered successfully!\n Next Vaccine Appointment:\n\nDue Date: $dueDate\n\nNumber of appointments: $appointmentNo"
             }
 
             NavigationDetails.UPDATE_VACCINE_DETAILS.name -> {

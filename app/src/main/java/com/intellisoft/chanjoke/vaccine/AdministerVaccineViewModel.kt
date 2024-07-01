@@ -308,12 +308,12 @@ class AdministerVaccineViewModel(
             }else{
                 "ROUTINE"
             }
-            createNextImmunization(type)
+            createNextImmunization(type,context)
 
         }
     }
 
-    private suspend fun createNextImmunization(type:String) {
+    private suspend fun createNextImmunization(type:String, context: Context) {
 
         val formatterClass = FormatterClass()
 
@@ -392,6 +392,7 @@ class AdministerVaccineViewModel(
                 }
                 val localDate = formatterClass.convertDateToLocalExactDate(nextImmunizationDate)
 
+                formatterClass.saveSharedPref("immunizationNextDate",nextImmunizationDate.toString(),context)
 
 
                 /**

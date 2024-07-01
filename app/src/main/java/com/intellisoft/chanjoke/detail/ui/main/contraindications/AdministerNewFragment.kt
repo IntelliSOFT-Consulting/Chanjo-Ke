@@ -123,6 +123,12 @@ class AdministerNewFragment : Fragment() {
                     null,
                     Immunization.ImmunizationStatus.COMPLETED)
 
+                val appointmentList = patientDetailsViewModel.getAppointmentList()
+                val appointmentSize = appointmentList.size
+
+                formatterClass.saveSharedPref("appointmentSize",appointmentSize.toString(),requireContext())
+
+
                 val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                 blurBackgroundDialog.show()
 
