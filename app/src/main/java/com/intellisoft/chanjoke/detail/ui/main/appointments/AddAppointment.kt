@@ -142,8 +142,16 @@ class AddAppointment : AppCompatActivity() {
             val dbRecommendationData = routineRecommendationList.find { it.vaccineName == selectedItemList.first() }
             binding.tvScheduleDate.text = dbRecommendationData?.earliestDate
 
+
         }
 
+        //Get appointments
+        val appointmentList = patientDetailsViewModel.getAppointmentList()
+        if (appointmentList.isNotEmpty() && selectedItemList.isNotEmpty()){
+
+            binding.tvAppointmentNo.text = "${appointmentList.size} Appointments"
+
+        }
 
     }
 

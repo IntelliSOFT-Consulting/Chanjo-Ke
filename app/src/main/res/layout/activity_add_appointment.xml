@@ -137,7 +137,7 @@
                 android:id="@+id/tvAppointmentNo"
                 android:background="@drawable/edittext_border"
                 android:layout_marginTop="20dp"
-                android:text="0 Appointments"
+                android:text="Appointments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:ignore="UseCompatTextViewDrawableXml" />
