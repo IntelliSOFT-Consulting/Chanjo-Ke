@@ -144,11 +144,14 @@ class AppointmentDetails : AppCompatActivity() {
     private fun getAppointments() {
 
         if (appointmentId != null){
-            val appointmentList = patientDetailsViewModel.getAppointmentList()
-            val recommendationList: ArrayList<DbAppointmentDetails>
-            val dbAppointmentData = appointmentList.find { it.id == appointmentId }
 
-            if (dbAppointmentData != null){
+            val appointmentList = patientDetailsViewModel.getAppointmentById(appointmentId!!)
+            val recommendationList: ArrayList<DbAppointmentDetails>
+//            val dbAppointmentData = appointmentList.find { it.id == appointmentId }
+
+            if (appointmentList.isNotEmpty()){
+                val dbAppointmentData = appointmentList[0]
+
                 recommendationList = dbAppointmentData.recommendationList!!
 
                 val dateScheduled = dbAppointmentData.dateScheduled
@@ -158,6 +161,7 @@ class AppointmentDetails : AppCompatActivity() {
                 val appointmentDetailsAdapter = AppointmentDetailsAdapter(recommendationList, this)
                 binding.recyclerView.adapter = appointmentDetailsAdapter
             }
+
         }else{
             val pairRecommendation = getAppointmentDetails()
             val appointmentDetailsAdapter = AppointmentDetailsAdapter(pairRecommendation.first, this)
