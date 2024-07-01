@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -133,6 +134,16 @@ class AddAppointment : AppCompatActivity() {
 
         val vaccineAdapter = ContraindicationsAdapter(selectedItemList,this)
         binding.recyclerView.adapter = vaccineAdapter
+
+        val routineRecommendationList = patientDetailsViewModel.recommendationList(null)
+        if (routineRecommendationList.isNotEmpty() && selectedItemList.isNotEmpty()){
+
+            //Get date from recommendation list
+            val dbRecommendationData = routineRecommendationList.find { it.vaccineName == selectedItemList.first() }
+            binding.tvScheduleDate.text = dbRecommendationData?.earliestDate
+
+        }
+
 
     }
 

@@ -116,11 +116,11 @@
 
             <TextView
                 android:id="@+id/tvScheduleDate"
-                android:background="@drawable/edittext_border"
-                android:layout_marginTop="20dp"
-                android:text="Scheduled Date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edittext_border"
+                android:text="Scheduled Date"
                 tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
