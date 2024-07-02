@@ -23,10 +23,11 @@ interface Interface {
         @Header("Authorization") token: String, // Add this line to pass the Bearer Token
     ): Response<DbUserInfoResponse>
 
+//    @GET("provider/reset-password?idNumber={idNumber}&email={email}")
     @GET("provider/reset-password")
     suspend fun resetPassword(
-        @Path("idNumber") idNumber:String,
-        @Path("email") email:String,
+        @Query("idNumber") idNumber:String,
+        @Query("email", encoded = true) email:String,
     ): Response<DbResetPassword>
 
     @POST("provider/reset-password")

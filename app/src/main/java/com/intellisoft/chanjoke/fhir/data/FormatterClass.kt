@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.fhir.data
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
@@ -50,6 +51,31 @@ class FormatterClass {
 
         // Add more formats as needed
     )
+
+    @SuppressLint("SimpleDateFormat")
+    fun convertDateToString(inputDateString: String):String{
+        try {
+            // Define the input date format
+            val inputFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+
+            // Parse the input date string to a Date object
+            val date = inputFormat.parse(inputDateString)
+
+            // Define the output date format
+            val outputFormat = SimpleDateFormat("MMM dd yyyy")
+
+            // Format the Date object to the desired output string
+            val outputDateString: String? = date?.let { outputFormat.format(it) }
+            if (outputDateString != null){
+                return outputDateString
+            }
+
+        }catch (e:Exception){
+            return ""
+        }
+        return ""
+
+    }
 
     fun editDistance(s1: String, s2: String): Int {
         val costs = IntArray(s2.length + 1) { it }

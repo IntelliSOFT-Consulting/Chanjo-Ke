@@ -4,8 +4,11 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -64,6 +67,19 @@ class BlurBackgroundDialog(
             }
 
             NavigationDetails.ADMINISTER_VACCINE.name -> {
+                val formatterClass = FormatterClass()
+                val dueDate = formatterClass.getSharedPref("immunizationNextDate", context)
+                val appointmentNo = formatterClass.getSharedPref("appointmentSize", context)
+
+                //Make More text
+                findViewById<LinearLayout>(R.id.linearVaccination).visibility = View.VISIBLE
+
+                findViewById<TextView>(R.id.tvAppointmentNo).text = appointmentNo
+                findViewById<EditText>(R.id.etAppointmentDate).setText(dueDate)
+
+                formatterClass.deleteSharedPref("dueDate", context)
+                formatterClass.deleteSharedPref("appointmentNo", context)
+
                 "Vaccine has been administered successfully!"
             }
 

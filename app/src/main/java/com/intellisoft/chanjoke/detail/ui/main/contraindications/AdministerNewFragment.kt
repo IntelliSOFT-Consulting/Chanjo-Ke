@@ -25,6 +25,7 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbBatchNumbers
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
+import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
@@ -122,6 +123,15 @@ class AdministerNewFragment : Fragment() {
                     requireContext(),
                     null,
                     Immunization.ImmunizationStatus.COMPLETED)
+
+                val appointmentList = patientDetailsViewModel.getAppointmentList()
+                val appointmentSize = appointmentList.size
+
+                formatterClass.saveSharedPref("appointmentSize",appointmentSize.toString(),requireContext())
+                formatterClass.saveSharedPref("vaccinationFlow",
+                    NavigationDetails.ADMINISTER_VACCINE.name,
+                    requireContext())
+
 
                 val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                 blurBackgroundDialog.show()

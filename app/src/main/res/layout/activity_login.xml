@@ -118,18 +118,18 @@
 
                                 <TextView
                                     android:layout_marginStart="5dp"
-                                    android:layout_weight="1"
-                                    android:text="Location *:"
-                                    android:layout_width="0dp"
+                                    android:text=""
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:drawablePadding="10dp"
                                     app:drawableStartCompat="@drawable/ic_action_locations" />
 
                                 <Spinner
+                                    android:layout_weight="1"
                                     android:id="@+id/spinnerLocation"
-                                    android:tooltipText="Select location"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content" />
+
 
 
                             </LinearLayout>

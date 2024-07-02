@@ -529,6 +529,23 @@ class PatientDetailsViewModel(
 
     }
 
+    fun getAppointmentById(appointmentId:String)= runBlocking {
+        getAppointmentByIdBac(appointmentId)
+    }
+
+    private suspend fun getAppointmentByIdBac(appointmentId:String): ArrayList<DbAppointmentData>{
+
+        val id = appointmentId.replace("Appointment/", "")
+
+        val searchResult = fhirEngine.search<Appointment>{
+            filter(Appointment.RES_ID, {value = of(id)})
+        }.map { createAppointment(it) }
+
+        return ArrayList(searchResult)
+    }
+
+
+
 
     fun getAppointmentList() = runBlocking {
         getAppointmentDetails()
@@ -555,7 +572,7 @@ class PatientDetailsViewModel(
 
         val id = if (it.hasId()) it.id else ""
         val status = if (it.hasStatus()) it.status else ""
-        val title = if (it.hasDescription()) it.description else ""
+        val description = if (it.hasDescription()) it.description else ""
         val start = if (it.hasStart()) it.start else ""
         var dateScheduled = ""
 
@@ -564,30 +581,22 @@ class PatientDetailsViewModel(
             dateScheduled = startDate
         }
 
-        Log.e(">>>>>>>>>", "<<<<<<<<")
-        println("title $title")
-        Log.e(">>>>>>>>>", "<<<<<<<<")
-
         var recommendationSavedList = ArrayList<DbAppointmentDetails>()
-        val basedOnImmunizationRecommendationList = if (it.hasBasedOn()) {
-            it.basedOn
-        } else {
-            emptyList()
-        }
-        basedOnImmunizationRecommendationList.forEach { ref ->
-            val immunizationRecommendation = ref.reference
-            val recommendationId =
-                immunizationRecommendation.replace("ImmunizationRecommendation/", "")
-//            val selectedRecommendation =
-//                recommendationList.find { it.appointmentId == recommendationId }
-//            if (selectedRecommendation != null) {
-////                recommendationSavedList.add(selectedRecommendation)
-//            }
-        }
+        val dbAppointmentDetails = DbAppointmentDetails(
+            id,
+            dateScheduled,
+            "",
+            "",
+            description,
+            status.toString()
+        )
+        recommendationSavedList.add(dbAppointmentDetails)
+
+
 
         return DbAppointmentData(
             id,
-            title,
+            description,
             "",
             null,
             dateScheduled,

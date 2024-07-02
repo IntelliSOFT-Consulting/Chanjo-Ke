@@ -142,28 +142,40 @@ class AppointmentDetails : AppCompatActivity() {
     }
 
     private fun getAppointments() {
+        val recommendationList = patientDetailsViewModel.recommendationList(null)
 
         if (appointmentId != null){
-            val appointmentList = patientDetailsViewModel.getAppointmentList()
-            val recommendationList: ArrayList<DbAppointmentDetails>
-            val dbAppointmentData = appointmentList.find { it.id == appointmentId }
 
-            if (dbAppointmentData != null){
-                recommendationList = dbAppointmentData.recommendationList!!
+            val appointmentList = patientDetailsViewModel.getAppointmentById(appointmentId!!)
+            val recommendationAppointmentList: ArrayList<DbAppointmentDetails>
+//            val dbAppointmentData = appointmentList.find { it.id == appointmentId }
+
+            if (appointmentList.isNotEmpty()){
+                val dbAppointmentData = appointmentList[0]
+
+                recommendationAppointmentList = dbAppointmentData.recommendationList!!
 
                 val dateScheduled = dbAppointmentData.dateScheduled
 
-                binding.tvDateScheduled.text = dateScheduled
+                //Get date from recommendation list
+                val dbRecommendationData = recommendationList.find { it.vaccineName == dbAppointmentData.vaccineName }
 
-                val appointmentDetailsAdapter = AppointmentDetailsAdapter(recommendationList, this)
+                binding.tvDateScheduled.text = dateScheduled
+                binding.tvScheduleDate.text = dbRecommendationData?.earliestDate
+
+                val appointmentDetailsAdapter = AppointmentDetailsAdapter(recommendationAppointmentList, this)
                 binding.recyclerView.adapter = appointmentDetailsAdapter
             }
+
         }else{
             val pairRecommendation = getAppointmentDetails()
             val appointmentDetailsAdapter = AppointmentDetailsAdapter(pairRecommendation.first, this)
             binding.recyclerView.adapter = appointmentDetailsAdapter
 
+            val dbRecommendationData = recommendationList.find { it.vaccineName == pairRecommendation.third }
+
             binding.tvDateScheduled.text = pairRecommendation.second
+            binding.tvScheduleDate.text = dbRecommendationData?.earliestDate
 
         }
 
