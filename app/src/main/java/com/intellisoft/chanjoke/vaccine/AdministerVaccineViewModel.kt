@@ -392,7 +392,9 @@ class AdministerVaccineViewModel(
                 }
                 val localDate = formatterClass.convertDateToLocalExactDate(nextImmunizationDate)
 
-                formatterClass.saveSharedPref("immunizationNextDate",nextImmunizationDate.toString(),context)
+                val immunizationNextDateFormat = formatterClass.convertDateToString(nextImmunizationDate.toString())
+                formatterClass.saveSharedPref("immunizationNextDate",
+                    immunizationNextDateFormat,context)
 
 
                 /**

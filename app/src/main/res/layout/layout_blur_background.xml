@@ -65,6 +65,84 @@
                 android:textColor="@color/black"
                 android:textStyle="normal" />
 
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/linearVaccination"
+                android:layout_margin="@dimen/_10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:paddingTop="@dimen/_10dp"
+                    android:paddingBottom="@dimen/_10dp"
+                    android:text="Next Vaccine Appointment:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="normal" />
+
+                <TableLayout
+                    android:paddingTop="@dimen/_10dp"
+                    android:paddingBottom="@dimen/_10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TableRow
+                        android:layout_marginBottom="@dimen/_10dp"
+                        >
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:text="Due Date:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textStyle="normal" />
+
+                        <EditText
+                            android:id="@+id/etAppointmentDate"
+                            android:background="@drawable/edittext_border_less"
+                            android:layout_weight="1"
+                            android:hint="Date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textStyle="normal" />
+
+                    </TableRow>
+
+                    <TableRow
+                        >
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:text="Number of Appointments:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/tvAppointmentNo"
+                            android:padding="@dimen/_10dp"
+                            android:background="@drawable/text_view_border"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textStyle="normal" />
+
+                    </TableRow>
+
+
+
+                </TableLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
