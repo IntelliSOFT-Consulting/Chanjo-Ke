@@ -639,15 +639,15 @@ class PersonalFragment : Fragment() {
             estimate = false
         }
 
-        if (binding.telTelephone.isVisible) {
-            if (tel.length != 10) {
-                binding.apply {
-                    telTelephone.error = "Enter Valid phone number"
-                    telephone.requestFocus()
-                    return
-                }
-            }
-        }
+//        if (binding.telTelephone.isVisible) {
+//            if (tel.length != 10) {
+//                binding.apply {
+//                    telTelephone.error = "Enter Valid phone number"
+//                    telephone.requestFocus()
+//                    return
+//                }
+//            }
+//        }
 
         val payload = CustomPatient(
             firstname = AppUtils().capitalizeFirstLetter(firstName),
