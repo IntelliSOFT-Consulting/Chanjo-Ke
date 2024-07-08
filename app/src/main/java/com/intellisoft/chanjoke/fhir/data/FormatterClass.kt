@@ -1056,6 +1056,7 @@ class FormatterClass {
                         }.map { it }.firstOrNull()
 
                         if (dbAppointmentDetailsDue != null) {
+
                             val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
 
                             val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
@@ -1073,7 +1074,8 @@ class FormatterClass {
                                 val todayDate = Calendar.getInstance().time
 
                                 if (dateScheduleDate != null) {
-                                    if (dateScheduleDate.before(todayDate)) {
+                                    val isBeforeToday = convertToPureDates(dateScheduleDate, todayDate)
+                                    if (isBeforeToday) {
                                         statusColorList.add(StatusColors.RED.name)
                                         statusColor = StatusColors.RED.name
 
@@ -1088,6 +1090,29 @@ class FormatterClass {
         }
 
         return statusColor
+    }
+
+    private fun convertToPureDates(dateScheduleDate: Date, todayDate: Date):Boolean{
+        val sdf = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+        // Create calendar instances and set the time to 00:00:00 for date-only comparison
+        val cal1 = Calendar.getInstance()
+        cal1.time = dateScheduleDate
+        cal1.set(Calendar.HOUR_OF_DAY, 0)
+        cal1.set(Calendar.MINUTE, 0)
+        cal1.set(Calendar.SECOND, 0)
+        cal1.set(Calendar.MILLISECOND, 0)
+
+        val cal2 = Calendar.getInstance()
+        cal2.time = todayDate
+        cal2.set(Calendar.HOUR_OF_DAY, 0)
+        cal2.set(Calendar.MINUTE, 0)
+        cal2.set(Calendar.SECOND, 0)
+        cal2.set(Calendar.MILLISECOND, 0)
+
+        val dateOnlyScheduleDate = cal1.time
+        val dateOnlyTodayDate = cal2.time
+
+        return dateOnlyScheduleDate.before(dateOnlyTodayDate)
     }
 
     fun getNonRoutineVaccineGroupDetails(
@@ -1271,9 +1296,6 @@ class FormatterClass {
          *              4th dose is 1 year after 3rd dose,
          *              5th dose is 1 year after 4th dose.
          */
-
-        Log.e("---->","<----")
-        println("vaccineName $vaccineName")
 
         administeredVaccine?.run {
             // Vaccine name exists in latestAdministered
