@@ -193,6 +193,8 @@ class AddAppointment : AppCompatActivity() {
 
         val spinnerList = getSpinnerList(expandableListDetail)
 
+        //retain only the nearest
+
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, spinnerList)

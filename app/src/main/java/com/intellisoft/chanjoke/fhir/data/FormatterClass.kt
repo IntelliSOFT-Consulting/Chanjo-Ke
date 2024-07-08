@@ -1074,12 +1074,19 @@ class FormatterClass {
                                 val todayDate = Calendar.getInstance().time
 
                                 if (dateScheduleDate != null) {
-                                    val isBeforeToday = convertToPureDates(dateScheduleDate, todayDate)
-                                    if (isBeforeToday) {
+                                    val pairDate = convertToPureDates(dateScheduleDate, todayDate)
+                                    val dateOnlyScheduleDate = pairDate.first
+                                    val dateOnlyTodayDate = pairDate.second
+
+                                    if (dateOnlyScheduleDate.before(dateOnlyTodayDate)){
                                         statusColorList.add(StatusColors.RED.name)
                                         statusColor = StatusColors.RED.name
-
                                     }
+//                                    if (dateOnlyScheduleDate == dateOnlyTodayDate){
+//                                        statusColorList.add(StatusColors.GREY.name)
+//                                        statusColor = StatusColors.GREY.name
+//                                    }
+
                                 }
                             }
                         }
@@ -1092,7 +1099,7 @@ class FormatterClass {
         return statusColor
     }
 
-    private fun convertToPureDates(dateScheduleDate: Date, todayDate: Date):Boolean{
+    private fun convertToPureDates(dateScheduleDate: Date, todayDate: Date):Pair<Date, Date>{
         val sdf = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
         // Create calendar instances and set the time to 00:00:00 for date-only comparison
         val cal1 = Calendar.getInstance()
@@ -1112,7 +1119,8 @@ class FormatterClass {
         val dateOnlyScheduleDate = cal1.time
         val dateOnlyTodayDate = cal2.time
 
-        return dateOnlyScheduleDate.before(dateOnlyTodayDate)
+        return Pair(dateOnlyScheduleDate, dateOnlyTodayDate)
+
     }
 
     fun getNonRoutineVaccineGroupDetails(

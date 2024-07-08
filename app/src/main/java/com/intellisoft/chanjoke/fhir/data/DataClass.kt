@@ -48,6 +48,7 @@ enum class StatusColors {
     AMBER, //Some administered
     RED, //All missed
     NORMAL, //Future
+    GREY, //Future
     NOT_DONE, //Not Done
 }
 
