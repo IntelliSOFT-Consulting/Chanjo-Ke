@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.utils
 
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -7,7 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.EditText
+import android.widget.DatePicker
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -19,6 +20,7 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
+import java.util.Calendar
 
 class BlurBackgroundDialog(
     private val fragment: Fragment,
@@ -45,6 +47,12 @@ class BlurBackgroundDialog(
         setCancelable(false)
         setCanceledOnTouchOutside(false)
         window?.setBackgroundDrawableResource(R.color.colorPrimary)
+
+        val appointmentDate = findViewById<TextView>(R.id.etAppointmentDate)
+        val linearVaccination = findViewById<LinearLayout>(R.id.linearVaccination)
+        val tvAppointmentNo = findViewById<TextView>(R.id.tvAppointmentNo)
+
+
         var valueText = when (FormatterClass().getSharedPref("vaccinationFlow", context)) {
             "addAefi" -> {
                 "The AEFI details have been recorded successfully."
@@ -72,10 +80,10 @@ class BlurBackgroundDialog(
                 val appointmentNo = formatterClass.getSharedPref("appointmentSize", context)
 
                 //Make More text
-                findViewById<LinearLayout>(R.id.linearVaccination).visibility = View.VISIBLE
+                linearVaccination.visibility = View.VISIBLE
 
-                findViewById<TextView>(R.id.tvAppointmentNo).text = appointmentNo
-                findViewById<EditText>(R.id.etAppointmentDate).setText(dueDate)
+                tvAppointmentNo.text = appointmentNo
+                appointmentDate.text = dueDate
 
                 formatterClass.deleteSharedPref("dueDate", context)
                 formatterClass.deleteSharedPref("appointmentNo", context)
@@ -101,6 +109,11 @@ class BlurBackgroundDialog(
         findViewById<TextView>(R.id.info_textview).apply {
             text = valueText
         }
+
+        appointmentDate.setOnClickListener {
+            showDatePickerDialog(context, appointmentDate)
+        }
+
         val closeMaterialButton = findViewById<MaterialButton>(R.id.closeMaterialButton)
         closeMaterialButton.setOnClickListener {
             dismiss()
@@ -140,5 +153,33 @@ class BlurBackgroundDialog(
             FormatterClass().deleteSharedPref("isVaccineAdministered", context)
             FormatterClass().deleteSharedPref("vaccinationFlow", context)
         }
+
+
+    }
+
+    private fun showDatePickerDialog(context: Context, appointmentDate: TextView) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val maxCalendar = Calendar.getInstance()
+//        maxCalendar.add(Calendar.DAY_OF_MONTH, -7)
+
+        val datePickerDialog = DatePickerDialog(
+            context,
+            { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                // Handle the selected date (e.g., update the TextView)
+                val formattedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                appointmentDate.text = formattedDate
+            },
+            year,
+            month,
+            day
+        )
+        datePickerDialog.datePicker.minDate = System.currentTimeMillis() // Set the limit for the last date
+
+        // Show the DatePickerDialog
+        datePickerDialog.show()
     }
 }
