@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -1194,6 +1195,14 @@ class FormatterClass {
 
         return statusColor
     }
+
+    fun isWithinPlusOrMinus14(numberOfBirthWeek: Int, numberOfWeek: Int): Boolean {
+        val difference = numberOfBirthWeek - numberOfWeek
+
+        return difference in 0..2
+    }
+
+
 
     fun convertVaccineScheduleToWeeks(vaccineSchedule: String): Int {
         return when {

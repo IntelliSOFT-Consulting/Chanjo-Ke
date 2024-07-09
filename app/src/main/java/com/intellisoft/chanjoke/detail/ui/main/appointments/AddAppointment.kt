@@ -1,7 +1,9 @@
 package com.intellisoft.chanjoke.detail.ui.main.appointments
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -44,6 +46,8 @@ class AddAppointment : AppCompatActivity() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private var appointmentId: String? = null
     private var selectedItemValue: String? = null
+    private lateinit var sharedPreferences: SharedPreferences
+    private var patientDob:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +61,11 @@ class AddAppointment : AppCompatActivity() {
             findViewById<Toolbar>(R.id.toolbar) // Assuming you have a Toolbar with id 'toolbar' in your layout
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        sharedPreferences = getSharedPreferences(getString(R.string.vaccineList),
+                Context.MODE_PRIVATE
+            )
+        patientDob = formatterClass.getSharedPref("patientDob", this)
 
         fhirEngine = FhirApplication.fhirEngine(this)
         patientDetailsViewModel =
@@ -127,6 +136,7 @@ class AddAppointment : AppCompatActivity() {
     }
 
     private fun createAppointment(selectedItem: String) {
+
         if (selectedItemList.contains(selectedItem)) selectedItemList.remove(selectedItem)
         selectedItemList.add(selectedItem)
 
@@ -186,18 +196,65 @@ class AddAppointment : AppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
+    // Function to add a vaccine to the map
+    private fun addVaccine(
+        map: MutableMap<String, List<BasicVaccine>>,
+        key: String,
+        vaccine: BasicVaccine) {
+        val currentList = map[key] ?: emptyList()
+        map[key] = currentList + vaccine
+    }
+
     private fun createSpinner() {
-
-        val expandableListDetail = immunizationHandler.generateDbVaccineSchedule()
-        val entryList = expandableListDetail.entries.toList()
-
-        val spinnerList = getSpinnerList(expandableListDetail)
 
         //retain only the nearest
 
+        val entryList = mutableMapOf<String, List<BasicVaccine>>()
+        val spinnerList = ArrayList<String>()
+
+        val routineKeyList = sharedPreferences.getString("routineList", null)
+        val expandableListTitle = routineKeyList!!.split(",").toList()
+
+        expandableListTitle.forEach { keyValue ->
+            val weekNo = formatterClass.getVaccineScheduleValue(keyValue)
+            val weekNoList = sharedPreferences.getStringSet(weekNo, null)
+            val vaccineList = weekNoList?.toList()
+
+            if (patientDob != null){
+                try{
+                    val numberOfBirthWeek = formatterClass.calculateWeeksFromDate(patientDob!!)
+
+                    if (numberOfBirthWeek != null){
+                        val numberOfWeek = formatterClass.convertVaccineScheduleToWeeks(weekNo)
+
+                        val isWithinPlusOrMinus14 = numberOfBirthWeek - numberOfWeek
+
+                        if (isWithinPlusOrMinus14 in -4..4){
+                            //Add to list
+                            vaccineList?.forEach { vaccineName ->
+                                val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+                                if (basicVaccine != null){
+                                    spinnerList.add(weekNo)
+                                    addVaccine(entryList, weekNo, basicVaccine)
+                                }
+                            }
+
+                        }
+
+                    }
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }
+
+        }
+
+
+        val uniqueSpinnerList = ArrayList(spinnerList.toSet())
+
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, spinnerList)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, uniqueSpinnerList)
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -209,14 +266,22 @@ class AddAppointment : AppCompatActivity() {
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item
-                val selectedItem = spinnerList[position]
+                val selectedItem = uniqueSpinnerList[position]
+
                 selectedItemValue = selectedItem
                 selectedItemList.clear()
 
-                val entryAtIndex0List = entryList[position]
-                entryAtIndex0List.value.forEach {
-                    createAppointment(it.vaccineName)
+                val weekNoList = sharedPreferences.getStringSet(selectedItem, null)
+                val vaccineList = weekNoList?.toList()
+                vaccineList?.forEach {
+                    createAppointment(it)
                 }
+
+//                for ((key, basicVaccineList) in entryList) {
+//                    basicVaccineList.forEach {
+//                        createAppointment(it.vaccineName)
+//                    }
+//                }
 
             }
 
@@ -224,33 +289,6 @@ class AddAppointment : AppCompatActivity() {
                 // Do nothing here
             }
         }
-
-    }
-
-    private fun getSpinnerList(expandableListDetail: HashMap<String, List<BasicVaccine>>): ArrayList<String> {
-
-        val keysList = ArrayList<String>()
-        val expandableListTitle = ArrayList<String>(expandableListDetail.keys)
-        expandableListTitle.forEach {
-            val listTitle = it
-            var weekNo = ""
-            weekNo = if (listTitle.toIntOrNull() != null) {
-                if (listTitle == "0") {
-                    "At Birth"
-                } else if (listTitle.toInt() in 1..15){
-                    "$listTitle weeks"
-                }else if (listTitle.toInt() in 15..105){
-                    "${(round(listTitle.toInt() * 0.230137)).toString().replace(".0","")} months"
-                }else{
-                    "${(round(listTitle.toInt() * 0.019)).toString().replace(".0","")} years"
-                }
-            } else {
-                listTitle
-            }
-            keysList.add(weekNo)
-        }
-        return keysList
-
 
     }
 }

@@ -238,10 +238,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 }
             }
 
-            fun isWithinPlusOrMinus14(numberOfBirthWeek: Int, numberOfWeek: Int): Boolean {
-                val difference = numberOfBirthWeek - numberOfWeek
-                return difference in 0..2
-            }
+
 
             CoroutineScope(Dispatchers.Main).launch {
 
@@ -319,7 +316,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                            if (numberOfBirthWeek != null){
                                val numberOfWeek = formatterClass.convertVaccineScheduleToWeeks(vaccineSchedule)
 
-                               if (isWithinPlusOrMinus14(numberOfBirthWeek, numberOfWeek)){
+                               if (formatterClass.isWithinPlusOrMinus14(numberOfBirthWeek, numberOfWeek)){
                                    generateVaccineList(vaccineSchedule, recyclerView, dbVaccineScheduleChildList)
                                }
                            }
