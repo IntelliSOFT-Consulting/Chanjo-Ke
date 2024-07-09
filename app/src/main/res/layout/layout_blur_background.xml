@@ -67,6 +67,7 @@
 
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/linearVaccination"
                 android:layout_margin="@dimen/_10dp"
                 android:orientation="vertical"
@@ -76,11 +77,11 @@
                 <TextView
                     android:paddingTop="@dimen/_10dp"
                     android:paddingBottom="@dimen/_10dp"
-                    android:text="Next Vaccine Appointment:"
+                    android:text="@string/next_vaccine_appointment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:textStyle="normal" />
+                    android:textStyle="bold" />
 
                 <TableLayout
                     android:paddingTop="@dimen/_10dp"

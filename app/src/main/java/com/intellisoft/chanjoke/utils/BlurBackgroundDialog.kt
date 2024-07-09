@@ -51,6 +51,7 @@ class BlurBackgroundDialog(
         val appointmentDate = findViewById<TextView>(R.id.etAppointmentDate)
         val linearVaccination = findViewById<LinearLayout>(R.id.linearVaccination)
         val tvAppointmentNo = findViewById<TextView>(R.id.tvAppointmentNo)
+        val closeMaterialButton = findViewById<MaterialButton>(R.id.closeMaterialButton)
 
 
         var valueText = when (FormatterClass().getSharedPref("vaccinationFlow", context)) {
@@ -111,10 +112,9 @@ class BlurBackgroundDialog(
         }
 
         appointmentDate.setOnClickListener {
-            showDatePickerDialog(context, appointmentDate)
+            showDatePickerDialog(context, appointmentDate, closeMaterialButton)
         }
 
-        val closeMaterialButton = findViewById<MaterialButton>(R.id.closeMaterialButton)
         closeMaterialButton.setOnClickListener {
             dismiss()
             val patientId = FormatterClass().getSharedPref("patientId", context)
@@ -157,7 +157,14 @@ class BlurBackgroundDialog(
 
     }
 
-    private fun showDatePickerDialog(context: Context, appointmentDate: TextView) {
+    private fun showDatePickerDialog(
+        context: Context,
+        appointmentDate: TextView,
+        closeMaterialButton: MaterialButton
+    ) {
+
+        closeMaterialButton.text = "Save"
+
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
@@ -170,8 +177,10 @@ class BlurBackgroundDialog(
             context,
             { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
                 // Handle the selected date (e.g., update the TextView)
-                val formattedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                val formattedDate = "$selectedDay-${selectedMonth + 1}-$selectedYear"
                 appointmentDate.text = formattedDate
+
+
             },
             year,
             month,

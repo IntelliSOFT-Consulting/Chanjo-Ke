@@ -26,6 +26,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import kotlin.math.abs
+import kotlin.math.log
 import kotlin.math.round
 import kotlin.random.Random
 
@@ -1016,6 +1017,29 @@ class FormatterClass {
         return weekNo
     }
 
+    fun processAdministeredList(administeredList: List<DbVaccineData>): ArrayList<DbVaccineData> {
+        val groupedByVaccine = administeredList.groupBy { it.vaccineName }
+        val resultList = ArrayList<DbVaccineData>()
+
+        for ((vaccineName, instances) in groupedByVaccine) {
+            if (instances.size > 1) {
+                val contraindicateInstance = instances.find { it.status == "CONTRAINDICATE" }
+                val completedInstance = instances.find { it.status == "COMPLETED" }
+
+                if (contraindicateInstance != null && completedInstance != null) {
+                    // Remove the CONTRAINDICATE instance
+                    resultList.addAll(instances.filter { it.status != "CONTRAINDICATE" })
+                } else {
+                    resultList.addAll(instances)
+                }
+            } else {
+                resultList.addAll(instances)
+            }
+        }
+
+        return resultList
+    }
+
     fun getVaccineGroupDetails(
         vaccines: List<String>?,
         administeredList: List<DbVaccineData>,
@@ -1027,8 +1051,17 @@ class FormatterClass {
         var statusColor = ""
         if (vaccines != null) {
             if (vaccines.all { administeredVaccineNames.contains(it) }) {
-                // Checks if all have been vaccinated
-                statusColor = StatusColors.GREEN.name
+                //Check if there's a contraindicated or not administered
+
+                val processAdministeredList = processAdministeredList(administeredList)
+
+                val allCompleted = processAdministeredList.all { it.status == Reasons.COMPLETED.name }
+                statusColor = if (allCompleted){
+                    StatusColors.GREEN.name
+                }else{
+                    StatusColors.AMBER.name
+                }
+
             } else if (vaccines.any { administeredVaccineNames.contains(it) }) {
                 // Checks if there's any that has been vaccinated
                 statusColor = StatusColors.AMBER.name
