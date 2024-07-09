@@ -732,7 +732,9 @@ class ImmunizationHandler() {
 
 
     // Helper function to check if a vaccine is not present in the administered list
-    private fun administeredVaccineNotPresent(vaccine: BasicVaccine, administeredList: List<BasicVaccine>): Boolean {
+    private fun administeredVaccineNotPresent(
+        vaccine: BasicVaccine,
+        administeredList: List<BasicVaccine>): Boolean {
         return administeredList.none { it.vaccineCode == vaccine.vaccineCode }
     }
 

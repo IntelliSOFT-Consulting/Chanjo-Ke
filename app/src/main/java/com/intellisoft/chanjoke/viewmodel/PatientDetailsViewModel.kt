@@ -319,6 +319,7 @@ class PatientDetailsViewModel(
         return getString(R.string.none)
     }
 
+
     fun recommendationList(status: String?) = runBlocking {
         getRecommendationList(status)
     }

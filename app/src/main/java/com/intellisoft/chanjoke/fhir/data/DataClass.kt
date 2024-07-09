@@ -249,7 +249,8 @@ data class DbRecommendationDetails(
 
 data class DbSignIn(
     val idNumber: String,
-    val password: String
+    val password: String,
+    val location: String,
 )
 
 data class DbSetPasswordReq(
