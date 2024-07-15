@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
+import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 
 class NoPatientDialog(context: Context) : Dialog(context), View.OnClickListener {
@@ -33,6 +34,13 @@ class NoPatientDialog(context: Context) : Dialog(context), View.OnClickListener 
             R.id.btnRegisterClient -> {
                 // Handle the button click event
                 dismiss()
+                /**
+                 * Clear all shared preference data
+                 *
+                 * */
+                FormatterClass().deleteSharedPref("personal", context)
+                FormatterClass().deleteSharedPref("caregiver", context)
+                FormatterClass().deleteSharedPref("administrative", context)
 
                 val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("functionToCall", "registerFunction")
@@ -40,6 +48,7 @@ class NoPatientDialog(context: Context) : Dialog(context), View.OnClickListener 
                 context.startActivity(intent)
 
             }
+
             R.id.btnCancel -> {
                 // Handle the button click event
                 dismiss()
