@@ -37,7 +37,9 @@ class NoPatientDialog(context: Context) : Dialog(context), View.OnClickListener 
                 /**
                  * Clear all shared preference data
                  *
-                 * */
+                 */
+
+
                 FormatterClass().deleteSharedPref("personal", context)
                 FormatterClass().deleteSharedPref("caregiver", context)
                 FormatterClass().deleteSharedPref("administrative", context)
