@@ -12,6 +12,8 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
@@ -122,7 +124,7 @@ class CampaignFragment : Fragment() {
 
     private fun onBackPressed() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-            showCancelScreenerQuestionnaireAlertDialog()
+            findNavController().navigate(R.id.action_campaignFragment_pop)
         }
     }
 
@@ -142,7 +144,7 @@ class CampaignFragment : Fragment() {
 
     private fun populateList(campaignDataList: ArrayList<DbCarePlan>) {
         CoroutineScope(Dispatchers.Main).launch {
-            val vaccineAdapter = CampaignAdapter(campaignDataList,requireContext())
+            val vaccineAdapter = CampaignAdapter(this@CampaignFragment, campaignDataList,requireContext())
             binding.recyclerView.adapter = vaccineAdapter
         }
     }

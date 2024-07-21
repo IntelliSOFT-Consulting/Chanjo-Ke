@@ -9,6 +9,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.intellisoft.chanjoke.MainActivity
@@ -22,6 +26,7 @@ import org.hl7.fhir.r4.model.codesystems.ImmunizationRecommendationStatus
 import java.time.LocalDate
 
 class CampaignAdapter(
+    private val fragment: Fragment,
     private var entryList: ArrayList<DbCarePlan>,
     private val context: Context
 ) : RecyclerView.Adapter<CampaignAdapter.Pager2ViewHolder>() {
@@ -40,6 +45,7 @@ class CampaignAdapter(
                 val formatterClass = FormatterClass()
                 val patientId = FormatterClass().getSharedPref("patientId", context)
 
+                NavHostFragment.findNavController(fragment).navigate(R.id.campaignFragment)
 
 
             }
@@ -49,7 +55,7 @@ class CampaignAdapter(
         override fun onClick(p0: View) {
 
             val pos = adapterPosition
-
+            findNavController(p0).navigate(R.id.action_campaignFragment_to_patient_list)
         }
 
 
