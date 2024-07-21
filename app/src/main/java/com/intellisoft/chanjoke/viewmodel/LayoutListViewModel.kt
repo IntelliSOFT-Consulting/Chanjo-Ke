@@ -26,5 +26,6 @@ class LayoutListViewModel(application: Application, private val state: SavedStat
         REFERRALS(R.drawable.referral, "Referrals"),
         REPORTS(R.drawable.ic_action_reports, "Reports"),
         APPOINMENTS(R.drawable.appoinments, "Appointments"),
+        CAMPAIGNS(R.drawable.ic_action_campaigns, "Campaigns")
     }
 }

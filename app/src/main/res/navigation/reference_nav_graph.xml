@@ -30,6 +30,7 @@
     </fragment>
 
 
+
     <fragment
         android:id="@+id/addPatientFragment"
         android:name="com.intellisoft.chanjoke.add_patient.AddPatientFragment"
@@ -164,6 +165,13 @@
         android:name="com.intellisoft.chanjoke.detail.ui.main.referrals.ActiveReferralsFragment"
         android:label="fragment_active_referrals"
         tools:layout="@layout/fragment_active_referrals" />
+    <fragment
+        android:id="@+id/campaignFragment"
+        android:name="com.intellisoft.chanjoke.CampaignFragment"
+        android:label="fragment_campaign"
+        tools:layout="@layout/fragment_campaign" >
+
+    </fragment>
 
 
 </navigation>

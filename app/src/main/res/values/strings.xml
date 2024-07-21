@@ -102,6 +102,7 @@
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
     <string name="next_vaccine_appointment">Next Vaccine Appointment</string>
+    <string name="start">Start</string>
 
 
 </resources>

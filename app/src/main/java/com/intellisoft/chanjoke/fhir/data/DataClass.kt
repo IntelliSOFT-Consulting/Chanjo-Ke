@@ -181,9 +181,32 @@ data class ObservationDateValue(
     val value: String,
 )
 
+data class DbCarePlan(
+    val id: String,
+    val status: String,
+    val intent: String,
+    val title: String,
+    val description: String,
+    val createdOn:String,
+    val period: DbPeriod,
+    val countyDetails: DbCountyDetails
+
+)
+data class DbCountyDetails(
+    val county: String,
+    val subCounty: String,
+    val ward:String,
+    val facility: String
+)
+data class DbPeriod(
+    val start:String,
+    val end:String
+)
+
 enum class NavigationDetails {
     CONTRAINDICATIONS,
     APPOINTMENT,
+    CAMPAIGN,
     ADMINISTER_VACCINE,
     NOT_ADMINISTER_VACCINE,
     UPDATE_CLIENT_HISTORY,

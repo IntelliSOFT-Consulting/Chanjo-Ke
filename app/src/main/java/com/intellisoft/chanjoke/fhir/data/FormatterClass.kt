@@ -16,8 +16,11 @@ import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Period
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -1038,6 +1041,26 @@ class FormatterClass {
         }
 
         return resultList
+    }
+
+    fun convertMillisToDateTime(millisString: String): String {
+        // Define the GMT+3 time zone
+
+        val millis = millisString.toLong()
+
+        val zoneId = ZoneId.of("GMT+3")
+
+        // Convert milliseconds to Instant
+        val instant = Instant.ofEpochMilli(millis)
+
+        // Convert Instant to LocalDateTime in the specified time zone
+        val dateTime = LocalDateTime.ofInstant(instant, zoneId)
+
+        // Define a formatter to display the date and time in a readable format
+        val formatter = DateTimeFormatter.ofPattern("d MMM yyyy")
+
+        // Return the formatted date and time string
+        return dateTime.format(formatter)
     }
 
     fun getVaccineGroupDetails(
