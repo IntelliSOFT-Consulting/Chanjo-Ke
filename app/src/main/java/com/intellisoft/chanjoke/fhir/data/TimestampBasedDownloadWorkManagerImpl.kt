@@ -26,7 +26,11 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     private val resourceTypeList = ResourceType.values().map { it.name }
     private val urls = LinkedList(
         listOf(
-           "CarePlan"
+            "Patient?_sort=_lastUpdated",
+            "ImmunizationRecommendation", "CarePlan",
+            "Immunization",
+            "Practitioner","ServiceRequest",
+            "RelatedPerson", "AdverseEvent",
         )
     )
 

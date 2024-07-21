@@ -2,7 +2,7 @@ package com.intellisoft.chanjoke
 
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.databinding.FragmentCampaignBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.DbCarePlan
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.campaign.CampaignAdapter
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -34,7 +35,7 @@ class CampaignFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
     private lateinit var layoutManager: RecyclerView.LayoutManager
-
+    private var campaignList = ArrayList<DbCarePlan>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -69,18 +70,53 @@ class CampaignFragment : Fragment() {
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.setHasFixedSize(true)
 
+        binding.btnSearch.setOnClickListener {
+
+            val search = binding.search.text.toString()
+            if (!TextUtils.isEmpty(search)){
+
+                if (campaignList.isNotEmpty()){
+
+                    val returnCampaignList = findTitles(campaignList, search)
+                    populateList(returnCampaignList)
+
+                }else binding.search.error = "Nothing similar was found."
+
+            }else{
+                binding.search.error = "Field cannot be empty."
+            }
+
+        }
+
         return binding.root
 
     }
 
+    private fun findTitles(carePlans: ArrayList<DbCarePlan>, title: String): ArrayList<DbCarePlan> {
+
+        val newCareplanList = ArrayList<DbCarePlan>()
+
+        carePlans.forEach {
+
+            val titleDb = it.title
+            if (titleDb.contains(title)){
+                newCareplanList.add(it)
+            }
+        }
+        return newCareplanList
+    }
+
+    private fun populateList(campaignDataList: ArrayList<DbCarePlan>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val vaccineAdapter = CampaignAdapter(campaignDataList,requireContext())
+            binding.recyclerView.adapter = vaccineAdapter
+        }
+    }
     private fun getCampaignList(){
 
         CoroutineScope(Dispatchers.IO).launch {
-            val campaignList =  patientDetailsViewModel.getCampaignList()
-            CoroutineScope(Dispatchers.Main).launch {
-                val vaccineAdapter = CampaignAdapter(campaignList,requireContext())
-                binding.recyclerView.adapter = vaccineAdapter
-            }
+            campaignList =  patientDetailsViewModel.getCampaignList()
+            populateList(campaignList)
         }
     }
 
