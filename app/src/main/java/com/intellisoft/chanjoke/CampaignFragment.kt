@@ -1,12 +1,16 @@
 package com.intellisoft.chanjoke
 
 import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,6 +54,8 @@ class CampaignFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
+
+
         binding = FragmentCampaignBinding.inflate(inflater, container, false)
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
@@ -90,6 +96,34 @@ class CampaignFragment : Fragment() {
 
         return binding.root
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = "Campaigns"
+            setDisplayShowHomeEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+        }
+        setHasOptionsMenu(true)
+        onBackPressed()
+    }
+
+
+    private fun showCancelScreenerQuestionnaireAlertDialog() {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        requireContext().startActivity(intent)
+    }
+
+    private fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
+            showCancelScreenerQuestionnaireAlertDialog()
+        }
     }
 
     private fun findTitles(carePlans: ArrayList<DbCarePlan>, title: String): ArrayList<DbCarePlan> {

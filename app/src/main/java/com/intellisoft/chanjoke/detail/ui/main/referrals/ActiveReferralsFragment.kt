@@ -320,6 +320,11 @@ class ActiveReferralsFragment : Fragment() {
     private fun onBackPressed() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
             showCancelScreenerQuestionnaireAlertDialog()
+
+            Log.e("--->","<----")
+            println("Back button has been pressed")
+            Log.e("--->","<----")
+
         }
     }
 
