@@ -5,15 +5,23 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.WindowManager
+import com.google.android.fhir.search.Order
+import com.google.android.fhir.search.search
+import com.google.android.fhir.sync.Sync
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivitySplashBinding
+import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.FhirSyncWorker
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.Encounter
+import org.hl7.fhir.r4.model.ImmunizationRecommendation
 
 class Splash : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
@@ -42,6 +50,42 @@ class Splash : AppCompatActivity() {
             }
 
         }, 1000)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            testImm()
+        }
+
+    }
+
+    suspend fun testImm(){
+
+        Sync.oneTimeSync<FhirSyncWorker>(this)
+
+//        val fhirEngine = FhirApplication.fhirEngine(this)
+//        val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
+//
+//        fhirEngine
+//            .search<ImmunizationRecommendation> {
+//                filter(ImmunizationRecommendation.PATIENT, { value = "583b93e6-77e7-4b8c-bebc-3c343726e3fa" })
+//                sort(Encounter.DATE, Order.DESCENDING)
+//            }
+//            .map { getRecommendationData(it) }
+//            .let { immunizationRecommendationList.addAll(it) }
+//
+//        immunizationRecommendationList.forEach {
+//
+//            Log.e("******","*******")
+//            println("it.id ${it.id}")
+//            it.recommendation.forEach {recom->
+//                println("recom.vaccineCode ${recom.vaccineCode}")
+//            }
+//            Log.e("******","*******")
+//
+//        }
+
+    }
+    private fun getRecommendationData(it: ImmunizationRecommendation): ImmunizationRecommendation {
+        return it
     }
 
     override fun onStart() {

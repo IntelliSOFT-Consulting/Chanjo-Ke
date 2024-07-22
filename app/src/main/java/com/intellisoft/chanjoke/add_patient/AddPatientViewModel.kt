@@ -18,6 +18,7 @@ package com.intellisoft.chanjoke.add_patient
 
 import android.app.Application
 import android.content.Context
+import android.provider.Settings.Global.getString
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -30,6 +31,7 @@ import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseValidator
 import com.google.android.fhir.search.search
+import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.CompletePatient
 import com.intellisoft.chanjoke.fhir.data.DbRoutineVaccineData
 import com.intellisoft.chanjoke.fhir.data.DbVaccineAdmin
@@ -539,7 +541,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                         context
                     )
 
-                    createImmunizationRecommendationResource()
+                    createImmunizationRecommendationResource(context)
 
                 } catch (e: Exception) {
                     println(e)
@@ -558,11 +560,11 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
     /**
      * TODO: MOVE THIS TO A SEPARATE CLASS
      */
-    private fun createImmunizationRecommendationResource() {
-        CoroutineScope(Dispatchers.IO).launch { createImmunizationBacRecommendationResource() }
+    private fun createImmunizationRecommendationResource(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch { createImmunizationBacRecommendationResource(context) }
     }
 
-    private suspend fun createImmunizationBacRecommendationResource() {
+    private suspend fun createImmunizationBacRecommendationResource(context: Context) {
 
         /**
          * Create all the immunization recommendations
@@ -601,7 +603,10 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             }
 
 
-            if (patientYearsInt != null && patientYearsInt < 6 && patientWeeksInt != null && selectedDate != null) {
+            if (patientYearsInt != null &&
+                patientYearsInt < 6 &&
+                patientWeeksInt != null &&
+                selectedDate != null) {
 
                 val id = generateUuid()
 
@@ -612,8 +617,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 immunizationRecommendation.patient = Reference("Patient/$patientId")
                 immunizationRecommendation.date = Date()
 
-                val recommendationList1 = createImmunizationRecommendation(selectedDate, Pair1)
-                val recommendationList2 = createImmunizationRecommendation(selectedDate, Pair2)
+                val recommendationList1 = createImmunizationRecommendation(selectedDate, Pair1, context)
+                val recommendationList2 = createImmunizationRecommendation(selectedDate, Pair2, context)
 
                 val recommendationList = recommendationList1 + recommendationList2
 
@@ -629,7 +634,14 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
     private fun createImmunizationRecommendation(
         selectedDate: Date,
         pair: DbRoutineVaccineData,
+        context: Context
     ): ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent> {
+
+        val immunizationHandler = ImmunizationHandler()
+
+        val sharedPreferences = context.getSharedPreferences(context.getString(R.string.vaccineList),
+            Context.MODE_PRIVATE
+        )
 
         val routineVaccineList = pair.vaccineList
         val type = pair.type
@@ -756,7 +768,24 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 recommendation.forecastStatus = forecastStatus
 
                 recommendation.description = type.toLowerCase()
-                recommendation.series = seriesDoses.toString()
+
+                val routineKeyList = sharedPreferences.getString("routineList", null)
+                val expandableListTitle = routineKeyList!!.split(",").toList()
+
+                expandableListTitle.forEach { keyValue ->
+
+                    val weekNo = formatterClass.getVaccineScheduleValue(keyValue)
+                    val weekNoList = sharedPreferences.getStringSet(weekNo, null)
+                    val vaccineNoList = weekNoList?.toList()
+                    if (vaccineNoList != null) {
+                        if (vaccineNoList.contains(vaccineName)){
+                            recommendation.series = weekNo
+                        }
+                    }
+
+                }
+
+
 
                 recommendationList.add(recommendation)
 

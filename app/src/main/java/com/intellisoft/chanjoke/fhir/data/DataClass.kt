@@ -48,8 +48,11 @@ enum class StatusColors {
     AMBER, //Some administered
     RED, //All missed
     NORMAL, //Future
+    GREY, //Future
     NOT_DONE, //Not Done
 }
+
+
 
 enum class StatusValues {
     DUE,
@@ -178,9 +181,32 @@ data class ObservationDateValue(
     val value: String,
 )
 
+data class DbCarePlan(
+    val id: String,
+    val status: String,
+    val intent: String,
+    val title: String,
+    val description: String,
+    val createdOn:String,
+    val period: DbPeriod,
+    val countyDetails: DbCountyDetails
+
+)
+data class DbCountyDetails(
+    val county: String,
+    val subCounty: String,
+    val ward:String,
+    val facility: String
+)
+data class DbPeriod(
+    val start:String,
+    val end:String
+)
+
 enum class NavigationDetails {
     CONTRAINDICATIONS,
     APPOINTMENT,
+    CAMPAIGN,
     ADMINISTER_VACCINE,
     NOT_ADMINISTER_VACCINE,
     UPDATE_CLIENT_HISTORY,
@@ -246,7 +272,8 @@ data class DbRecommendationDetails(
 
 data class DbSignIn(
     val idNumber: String,
-    val password: String
+    val password: String,
+    val location: String,
 )
 
 data class DbSetPasswordReq(

@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -15,8 +16,11 @@ import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Period
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -25,6 +29,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import kotlin.math.abs
+import kotlin.math.log
 import kotlin.math.round
 import kotlin.random.Random
 
@@ -1015,6 +1020,49 @@ class FormatterClass {
         return weekNo
     }
 
+    fun processAdministeredList(administeredList: List<DbVaccineData>): ArrayList<DbVaccineData> {
+        val groupedByVaccine = administeredList.groupBy { it.vaccineName }
+        val resultList = ArrayList<DbVaccineData>()
+
+        for ((vaccineName, instances) in groupedByVaccine) {
+            if (instances.size > 1) {
+                val contraindicateInstance = instances.find { it.status == "CONTRAINDICATE" }
+                val completedInstance = instances.find { it.status == "COMPLETED" }
+
+                if (contraindicateInstance != null && completedInstance != null) {
+                    // Remove the CONTRAINDICATE instance
+                    resultList.addAll(instances.filter { it.status != "CONTRAINDICATE" })
+                } else {
+                    resultList.addAll(instances)
+                }
+            } else {
+                resultList.addAll(instances)
+            }
+        }
+
+        return resultList
+    }
+
+    fun convertMillisToDateTime(millisString: String): String {
+        // Define the GMT+3 time zone
+
+        val millis = millisString.toLong()
+
+        val zoneId = ZoneId.of("GMT+3")
+
+        // Convert milliseconds to Instant
+        val instant = Instant.ofEpochMilli(millis)
+
+        // Convert Instant to LocalDateTime in the specified time zone
+        val dateTime = LocalDateTime.ofInstant(instant, zoneId)
+
+        // Define a formatter to display the date and time in a readable format
+        val formatter = DateTimeFormatter.ofPattern("d MMM yyyy")
+
+        // Return the formatted date and time string
+        return dateTime.format(formatter)
+    }
+
     fun getVaccineGroupDetails(
         vaccines: List<String>?,
         administeredList: List<DbVaccineData>,
@@ -1026,8 +1074,17 @@ class FormatterClass {
         var statusColor = ""
         if (vaccines != null) {
             if (vaccines.all { administeredVaccineNames.contains(it) }) {
-                // Checks if all have been vaccinated
-                statusColor = StatusColors.GREEN.name
+                //Check if there's a contraindicated or not administered
+
+                val processAdministeredList = processAdministeredList(administeredList)
+
+                val allCompleted = processAdministeredList.all { it.status == Reasons.COMPLETED.name }
+                statusColor = if (allCompleted){
+                    StatusColors.GREEN.name
+                }else{
+                    StatusColors.AMBER.name
+                }
+
             } else if (vaccines.any { administeredVaccineNames.contains(it) }) {
                 // Checks if there's any that has been vaccinated
                 statusColor = StatusColors.AMBER.name
@@ -1056,6 +1113,7 @@ class FormatterClass {
                         }.map { it }.firstOrNull()
 
                         if (dbAppointmentDetailsDue != null) {
+
                             val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
 
                             val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
@@ -1073,11 +1131,19 @@ class FormatterClass {
                                 val todayDate = Calendar.getInstance().time
 
                                 if (dateScheduleDate != null) {
-                                    if (dateScheduleDate.before(todayDate)) {
+                                    val pairDate = convertToPureDates(dateScheduleDate, todayDate)
+                                    val dateOnlyScheduleDate = pairDate.first
+                                    val dateOnlyTodayDate = pairDate.second
+
+                                    if (dateOnlyScheduleDate.before(dateOnlyTodayDate)){
                                         statusColorList.add(StatusColors.RED.name)
                                         statusColor = StatusColors.RED.name
-
                                     }
+//                                    if (dateOnlyScheduleDate == dateOnlyTodayDate){
+//                                        statusColorList.add(StatusColors.GREY.name)
+//                                        statusColor = StatusColors.GREY.name
+//                                    }
+
                                 }
                             }
                         }
@@ -1088,6 +1154,30 @@ class FormatterClass {
         }
 
         return statusColor
+    }
+
+    private fun convertToPureDates(dateScheduleDate: Date, todayDate: Date):Pair<Date, Date>{
+        val sdf = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+        // Create calendar instances and set the time to 00:00:00 for date-only comparison
+        val cal1 = Calendar.getInstance()
+        cal1.time = dateScheduleDate
+        cal1.set(Calendar.HOUR_OF_DAY, 0)
+        cal1.set(Calendar.MINUTE, 0)
+        cal1.set(Calendar.SECOND, 0)
+        cal1.set(Calendar.MILLISECOND, 0)
+
+        val cal2 = Calendar.getInstance()
+        cal2.time = todayDate
+        cal2.set(Calendar.HOUR_OF_DAY, 0)
+        cal2.set(Calendar.MINUTE, 0)
+        cal2.set(Calendar.SECOND, 0)
+        cal2.set(Calendar.MILLISECOND, 0)
+
+        val dateOnlyScheduleDate = cal1.time
+        val dateOnlyTodayDate = cal2.time
+
+        return Pair(dateOnlyScheduleDate, dateOnlyTodayDate)
+
     }
 
     fun getNonRoutineVaccineGroupDetails(
@@ -1161,6 +1251,14 @@ class FormatterClass {
 
         return statusColor
     }
+
+    fun isWithinPlusOrMinus14(numberOfBirthWeek: Int, numberOfWeek: Int): Boolean {
+        val difference = numberOfBirthWeek - numberOfWeek
+
+        return difference in 0..2
+    }
+
+
 
     fun convertVaccineScheduleToWeeks(vaccineSchedule: String): Int {
         return when {
@@ -1271,9 +1369,6 @@ class FormatterClass {
          *              4th dose is 1 year after 3rd dose,
          *              5th dose is 1 year after 4th dose.
          */
-
-        Log.e("---->","<----")
-        println("vaccineName $vaccineName")
 
         administeredVaccine?.run {
             // Vaccine name exists in latestAdministered
