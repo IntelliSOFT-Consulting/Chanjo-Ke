@@ -120,7 +120,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
                 count = 100
                 from = 0
             }
-            .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
+            .mapIndexed { index, fhirPatient -> fhirPatient.resource.toPatientItem(index + 1) }
             .let {
                 val sortedPatientItems = it.sortedByDescending { q ->
                     q.lastUpdated // Assuming lastUpdated is a property of PatientItem
@@ -149,7 +149,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
                 count = 100
                 from = 0
             }
-            .mapIndexed { index, fhirPatient -> fhirPatient.toPatientItem(index + 1) }
+            .mapIndexed { index, fhirPatient -> fhirPatient.resource.toPatientItem(index + 1) }
             .let {
                 val sortedPatientItems = it.sortedBy { q ->
                     q.lastUpdated // Assuming lastUpdated is a property of PatientItem
@@ -194,7 +194,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             count = 100
             from = 0
         }
-            .mapIndexed { index, fhirPatient -> fhirPatient.toLocationItem(index + 1) }
+            .mapIndexed { index, fhirPatient -> fhirPatient.resource.toLocationItem(index + 1) }
             .let { locations.addAll(it) }
 
         return withContext(Dispatchers.IO) { locations }
@@ -205,7 +205,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
 
         fhirEngine.search<ServiceRequest> {
             sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
-        }.map { createServiceRequestItem(it) }.let { q ->
+        }.map { createServiceRequestItem(it.resource) }.let { q ->
             q.forEach { serviceRequest ->
                 if (serviceRequest.status == "ACTIVE") {
                     serviceRequests.add(serviceRequest)
