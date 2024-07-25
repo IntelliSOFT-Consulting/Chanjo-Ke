@@ -52,8 +52,9 @@ class FhirApplication : Application(), DataCaptureConfig.Provider {
             DataCaptureConfig().apply {
                 urlResolver = ReferenceUrlResolver(this@FhirApplication as Context)
                 valueSetResolverExternal = object : ValueSetResolver() {}
-                xFhirQueryResolver = XFhirQueryResolver { fhirEngine.search(it) }
-                
+                xFhirQueryResolver =
+                    XFhirQueryResolver { fhirEngine.search(it).map { it.resource } }
+
             }
     }
 
@@ -62,10 +63,12 @@ class FhirApplication : Application(), DataCaptureConfig.Provider {
     }
 
     companion object {
-        fun fhirEngine(context: Context) = (context.applicationContext as FhirApplication).fhirEngine
+        fun fhirEngine(context: Context) =
+            (context.applicationContext as FhirApplication).fhirEngine
 
         fun dataStore(context: Context) = (context.applicationContext as FhirApplication).dataStore
     }
 
-    override fun getDataCaptureConfig(): DataCaptureConfig = dataCaptureConfig ?: DataCaptureConfig()
+    override fun getDataCaptureConfig(): DataCaptureConfig =
+        dataCaptureConfig ?: DataCaptureConfig()
 }
