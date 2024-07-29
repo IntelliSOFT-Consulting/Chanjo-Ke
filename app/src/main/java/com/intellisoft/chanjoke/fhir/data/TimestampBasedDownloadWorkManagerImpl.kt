@@ -23,12 +23,12 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     private val urls = LinkedList(
         listOf(
             "Patient?_sort=_lastUpdated",
-            "Practitioner",
-            "ServiceRequest",
-            "RelatedPerson",
-            "AdverseEvent",
+ 
+            "ImmunizationRecommendation", "CarePlan",
             "Immunization",
-            "ImmunizationRecommendation"
+            "Practitioner","ServiceRequest",
+            "RelatedPerson", "AdverseEvent",
+ 
         )
     )
 
@@ -137,6 +137,12 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
             downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
         }
     }
+ 
+
+//    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ServiceRequest")) {
+//        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
+//    }
+ 
 
     // Do not modify any URL set by a server that specifies the token of the page to return.
     if (downloadUrl.contains("&page_token")) {

@@ -61,8 +61,9 @@ class Login : AppCompatActivity() {
                     this@Login
                 )
 
-                val dbSignIn = DbSignIn(username, password)
+                val dbSignIn = DbSignIn(username, password, selectedItem)
                 retrofitCallsAuthentication.loginUser(this, dbSignIn)
+
 
             } else {
                 if (TextUtils.isEmpty(username)) etUsername.error = "Please Enter Username"

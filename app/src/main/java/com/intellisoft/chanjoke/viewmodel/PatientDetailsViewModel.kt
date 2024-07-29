@@ -28,6 +28,9 @@ import com.intellisoft.chanjoke.fhir.data.CareGiver
 import com.intellisoft.chanjoke.fhir.data.Contraindication
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentData
 import com.intellisoft.chanjoke.fhir.data.DbAppointmentDetails
+import com.intellisoft.chanjoke.fhir.data.DbCarePlan
+import com.intellisoft.chanjoke.fhir.data.DbCountyDetails
+import com.intellisoft.chanjoke.fhir.data.DbPeriod
 import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
 import com.intellisoft.chanjoke.fhir.data.DbServiceRequest
 import com.intellisoft.chanjoke.fhir.data.DbTempData
@@ -58,6 +61,8 @@ import kotlinx.coroutines.withContext
 import org.hl7.fhir.r4.model.AdverseEvent
 import org.hl7.fhir.r4.model.AllergyIntolerance
 import org.hl7.fhir.r4.model.Appointment
+import org.hl7.fhir.r4.model.CarePlan
+import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Immunization
@@ -72,6 +77,7 @@ import org.hl7.fhir.r4.model.ResourceType
 import org.hl7.fhir.r4.model.RiskAssessment
 import org.hl7.fhir.r4.model.ServiceRequest
 import org.hl7.fhir.r4.model.ServiceRequest.ServiceRequestStatus
+import org.hl7.fhir.r4.utils.NPMPackageGenerator.Category
 import timber.log.Timber
 
 /**
@@ -319,6 +325,7 @@ class PatientDetailsViewModel(
         }
         return getString(R.string.none)
     }
+
 
     fun recommendationList(status: String?) = runBlocking {
         getRecommendationList(status)
@@ -657,6 +664,81 @@ class PatientDetailsViewModel(
     fun loadServiceRequests(serviceRequestId: String) = runBlocking {
         getServiceRequests(serviceRequestId)
     }
+
+    fun getCampaignList() = runBlocking {
+        getCampaignListBack()
+    }
+    private suspend fun getCampaignListBack():ArrayList<DbCarePlan>{
+
+        val dbCarePlanList = ArrayList<DbCarePlan>()
+
+        fhirEngine
+            .search<CarePlan> {
+                sort(CarePlan.DATE, Order.DESCENDING)
+            }
+            .map { createCarePlan(it) }
+            .let { dbCarePlanList.addAll(it) }
+
+        return dbCarePlanList
+    }
+
+    private fun createCarePlan(it: CarePlan):DbCarePlan {
+
+        val formatterClass = FormatterClass()
+
+        val id = if (it.hasId()) it.id else ""
+        val status = if (it.hasStatus()) it.status.display else ""
+        val intent = if (it.hasIntent()) it.intent.display else ""
+        val title = if (it.hasTitle()) it.title else ""
+        val description = if (it.hasDescription()) it.description else ""
+        val createdOn = if(it.hasCreated()) formatterClass.convertMillisToDateTime(it.created.time.toString()) else ""
+        val startPeriod = if(it.hasPeriod()){
+            if (it.period.hasStart()) {
+                formatterClass.convertMillisToDateTime(it.period.start.time.toString())
+            } else ""
+        }else ""
+        val endPeriod = if(it.hasPeriod()){
+            if (it.period.hasEnd()) {
+                formatterClass.convertMillisToDateTime(it.period.end.time.toString())
+            } else ""
+        }else ""
+
+        var county = ""
+        var subCounty = ""
+        var ward = ""
+        var facility = ""
+
+        val categoryDetails = if (it.hasCategory()) it.categoryFirstRep else null
+        if (categoryDetails != null && categoryDetails.hasCoding()){
+            val countyDetails = categoryDetails.codingFirstRep
+            if (countyDetails.hasCode() && countyDetails.hasDisplay()){
+                val code = countyDetails.code
+                val display = countyDetails.display
+
+                if (code == "county"){
+                    county = display
+                }
+                if (code == "subCounty"){
+                    subCounty = display
+                }
+                if (code == "ward"){
+                    ward = display
+                }
+                if (code == "facility"){
+                    facility = display
+                }
+            }
+        }
+
+        return DbCarePlan(
+            id, status, intent, title, description, createdOn,
+            DbPeriod(startPeriod, endPeriod),
+            DbCountyDetails(county, subCounty, ward, facility)
+        )
+
+
+    }
+
 
     fun getVaccineList() = runBlocking {
         getVaccineListDetailsOld()

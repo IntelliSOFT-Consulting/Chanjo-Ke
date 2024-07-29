@@ -140,10 +140,12 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
             val routineKeyList = sharedPreferences.getString("nonRoutineList", null)
             val expandableListTitle = routineKeyList!!.split(",").toList()
-//            if (patientGender == "male"){
-//                filteredList = ArrayList(expandableListTitle.filterNot { it.contains("HPV") })
-//            }
+
             var filteredList = ArrayList(expandableListTitle)
+
+            if (patientGender == "male"){
+                filteredList = ArrayList(expandableListTitle.filterNot { it.contains("HPV") })
+            }
 
 //            Get the administered list
             val recommendationList = patientDetailsViewModel.recommendationList("Contraindicated")

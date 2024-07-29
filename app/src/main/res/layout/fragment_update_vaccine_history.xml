@@ -155,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="16dp"
-                        android:text="Next"
+                        android:text="Submit"
                         android:textAllCaps="false"
                         android:textColor="@color/white" />
 
