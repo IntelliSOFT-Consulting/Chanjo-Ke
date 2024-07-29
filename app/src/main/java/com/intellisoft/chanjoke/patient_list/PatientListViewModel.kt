@@ -47,6 +47,7 @@ import org.hl7.fhir.r4.model.ResourceType
 import org.hl7.fhir.r4.model.ServiceRequest
 import timber.log.Timber
 import java.sql.DataTruncation
+import java.util.Date
 
 /**
  * The ViewModel helper class for PatientItemRecyclerViewAdapter, that is responsible for preparing
@@ -223,62 +224,75 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             if (data.hasSubject()) if (data.subject.hasReference()) data.subject.reference else "" else ""
 
         val patientId = patientIdRef.toString().replace("Patient/", "")
-
+        var patientPhone = ""
         var systemId = ""
         var type = ""
+        var gender = ""
+        var name = ""
+        var dob = LocalDate.now()
         val patient = getPatientDetails(patientId)
-        if (patient.hasIdentifier()) {
-            patient.identifier.forEach {
-                if (it.hasType()) {
-                    if (it.type.hasCoding()) {
-                        if (it.type.codingFirstRep.code == "identification_type") {
-                            systemId = it.value
-                            type = it.type.codingFirstRep.display
+        if (patient != null) {
+
+            name = patient.nameFirstRep.nameAsSingleString
+            if (patient.hasIdentifier()) {
+                patient.identifier.forEach {
+                    if (it.hasType()) {
+                        if (it.type.hasCoding()) {
+                            if (it.type.codingFirstRep.code == "identification_type") {
+                                systemId = it.value
+                                type = it.type.codingFirstRep.display
+                            }
                         }
                     }
                 }
             }
-        }
-        var patientPhone = ""
-        if (patient.hasTelecom()) {
-            if (patient.telecom.isNotEmpty()) {
-                if (patient.telecom.first().hasValue()) {
-                    patientPhone = patient.telecom.first().value
+
+            if (patient.hasTelecom()) {
+                if (patient.telecom.isNotEmpty()) {
+                    if (patient.telecom.first().hasValue()) {
+                        patientPhone = patient.telecom.first().value
+                    }
                 }
             }
-        }
-        val gender = if (patient.hasGenderElement()) patient.genderElement.valueAsString else ""
-        val dob =
-            if (patient.hasBirthDateElement()) {
-                val birthElement = patient.birthDateElement.valueAsString
-                val dobFormat = FormatterClass().convertDateFormat(birthElement)
-                if (dobFormat != null) {
-                    val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
-                    if (dobDate != null) {
-                        FormatterClass().convertDateToLocalDate(dobDate)
+            gender = if (patient.hasGenderElement()) patient.genderElement.valueAsString else ""
+            dob =
+                if (patient.hasBirthDateElement()) {
+                    val birthElement = patient.birthDateElement.valueAsString
+                    val dobFormat = FormatterClass().convertDateFormat(birthElement)
+                    if (dobFormat != null) {
+                        val dobDate = FormatterClass().convertStringToDate(dobFormat, "MMM d yyyy")
+                        if (dobDate != null) {
+                            FormatterClass().convertDateToLocalDate(dobDate)
+                        } else null
                     } else null
+
                 } else null
 
-            } else null
+        }
 
         val authoredOn = if (data.hasAuthoredOn()) data.authoredOn.toString() else ""
         return ServiceRequestPatient(
             logicalId = logicalId,
             status = status,
             patientId = patientId,
-            patientName = patient.nameFirstRep.nameAsSingleString,
+            patientName = name,
             patientNational = systemId,
             patientPhone = patientPhone,
             dob = dob.toString(),
-            gender = gender.toString(),
+            gender = gender,
             authoredOn = authoredOn
         )
     }
 
-    private suspend fun getPatientDetails(patientId: String): Patient {
-        return fhirEngine.get(ResourceType.Patient, patientId) as Patient
-
+    private suspend fun getPatientDetails(patientId: String): Patient? {
+        return try {
+            fhirEngine.get(ResourceType.Patient, patientId) as Patient
+        } catch (e: Exception) {
+            // Log the exception if needed
+            null
+        }
     }
+
 
     fun loadActiveServiceRequest() {
         viewModelScope.launch {
