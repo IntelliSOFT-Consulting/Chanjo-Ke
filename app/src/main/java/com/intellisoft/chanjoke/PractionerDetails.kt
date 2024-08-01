@@ -39,7 +39,7 @@ class PractionerDetails : Fragment() {
         binding.btnSignOut.setOnClickListener {
 
             formatterClass.saveSharedPref("isLoggedIn", "false", requireContext())
-            val intent = Intent(requireContext(),  Login::class.java)
+            val intent = Intent(requireContext(), Login::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
 
@@ -79,22 +79,26 @@ class PractionerDetails : Fragment() {
 
     private fun getUserDetails() {
 
-        val practitionerFullNames = formatterClass.getSharedPref("practitionerFullNames", requireContext())
-        val practitionerIdNumber = formatterClass.getSharedPref("practitionerIdNumber", requireContext())
+        val practitionerFullNames =
+            formatterClass.getSharedPref("practitionerFullNames", requireContext())
+        val practitionerIdNumber =
+            formatterClass.getSharedPref("practitionerIdNumber", requireContext())
         val practitionerRole = formatterClass.getSharedPref("practitionerRole", requireContext())
-        val fhirPractitionerId = formatterClass.getSharedPref("fhirPractitionerId", requireContext())
-        val practitionerId = formatterClass.getSharedPref("practitionerId", requireContext())
+        val fhirPractitionerId =
+            formatterClass.getSharedPref("fhirPractitionerId", requireContext())
+//        val practitionerId = formatterClass.getSharedPref("practitionerId", requireContext())
+        val practitionerId = formatterClass.getSharedPref("id", requireContext())
         val practitionerEmail = formatterClass.getSharedPref("practitionerEmail", requireContext())
-        val practitionerPhone = formatterClass.getSharedPref("practitionerPhone", requireContext())
-
+//        val practitionerPhone = formatterClass.getSharedPref("practitionerPhone", requireContext())
+        val practitionerPhone = formatterClass.getSharedPref("phone", requireContext())
         val countyName = formatterClass.getSharedPref("countyName", requireContext())
         val subCountyName = formatterClass.getSharedPref("subCountyName", requireContext())
         val wardName = formatterClass.getSharedPref("wardName", requireContext())
 
         val email = "Email: $practitionerEmail"
         val phone = "Phone Number: $practitionerPhone"
-        val pracId = "User ID: $practitionerIdNumber"
-
+        val pracId = "User ID: $practitionerId"
+        val facilityName = formatterClass.getSharedPref("facilityName", requireContext())
         binding.tvEmailAddress.text = email
         binding.tvPhoneNumber.text = phone
         binding.tvIdNumber.text = pracId
@@ -103,10 +107,15 @@ class PractionerDetails : Fragment() {
         val county = "County: $countyName"
         val subCounty = "Sub County: $subCountyName"
         val ward = "Ward: $wardName"
+        val facility = "Facility: $facilityName"
 
         binding.tvCounty.text = county
         binding.tvSubCounty.text = subCounty
         binding.tvWardName.text = ward
+
+        binding.apply {
+            tvFacility.text = facility
+        }
 
     }
 }

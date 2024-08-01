@@ -676,7 +676,7 @@ class PatientDetailsViewModel(
             .search<CarePlan> {
                 sort(CarePlan.DATE, Order.DESCENDING)
             }
-            .map { createCarePlan(it) }
+            .map { createCarePlan(it.resource) }
             .let { dbCarePlanList.addAll(it) }
 
         return dbCarePlanList
