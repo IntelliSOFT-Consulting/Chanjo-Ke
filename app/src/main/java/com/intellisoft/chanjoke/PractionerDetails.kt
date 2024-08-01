@@ -98,7 +98,7 @@ class PractionerDetails : Fragment() {
         val email = "Email: $practitionerEmail"
         val phone = "Phone Number: $practitionerPhone"
         val pracId = "User ID: $practitionerId"
-        val facilityName = formatterClass.getSharedPref("facilityName", requireContext())
+        val facilityName = formatterClass.getSharedPref("practitionerFacilityName", requireContext())
         binding.tvEmailAddress.text = email
         binding.tvPhoneNumber.text = phone
         binding.tvIdNumber.text = pracId

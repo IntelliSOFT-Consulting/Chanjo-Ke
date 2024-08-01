@@ -269,10 +269,10 @@ class RetrofitCallsAuthentication {
             "countyName ", user.countyName.toString(), context
         )
         formatter.saveSharedPref(
-            "facility", user.facility, context
+            "practitionerFacility", user.facility, context
         )
         formatter.saveSharedPref(
-            "facilityName", user.facilityName, context
+            "practitionerFacilityName", user.facilityName, context
         )
         formatter.saveSharedPref(
             "fhirPractitionerId", user.fhirPractitionerId, context
