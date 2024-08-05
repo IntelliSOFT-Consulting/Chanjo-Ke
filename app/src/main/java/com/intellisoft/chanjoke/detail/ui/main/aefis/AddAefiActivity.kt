@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.viewpager.widget.ViewPager
-import ca.uhn.fhir.parser.json.JsonLikeValue.ValueType
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.ActivityAddAefiBinding

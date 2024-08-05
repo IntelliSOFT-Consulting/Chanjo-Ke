@@ -13,6 +13,7 @@ import com.intellisoft.chanjoke.fhir.data.DbResetPasswordData
 import com.intellisoft.chanjoke.fhir.data.DbResponseError
 import com.intellisoft.chanjoke.fhir.data.DbSetPasswordReq
 import com.intellisoft.chanjoke.fhir.data.DbSignIn
+import com.intellisoft.chanjoke.fhir.data.DbUser
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.UrlData
 import com.intellisoft.chanjoke.shared.Login
@@ -23,11 +24,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import retrofit2.Response
+import timber.log.Timber
 
 class RetrofitCallsAuthentication {
 
 
-    fun loginUser(context: Context, dbSignIn: DbSignIn){
+    fun loginUser(context: Context, dbSignIn: DbSignIn) {
 
         CoroutineScope(Dispatchers.Main).launch {
 
@@ -38,6 +40,7 @@ class RetrofitCallsAuthentication {
         }
 
     }
+
     private suspend fun starLogin(context: Context, dbSignIn: DbSignIn) {
 
 
@@ -58,26 +61,36 @@ class RetrofitCallsAuthentication {
                 val baseUrl = context.getString(UrlData.BASE_URL.message)
                 val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
                 try {
-                    
+
 
                     val apiInterface = apiService.signInUser(dbSignIn)
-                    if (apiInterface.isSuccessful){
+                    if (apiInterface.isSuccessful) {
 
                         val statusCode = apiInterface.code()
                         val body = apiInterface.body()
 
-                        if (statusCode == 200 || statusCode == 201){
+                        if (statusCode == 200 || statusCode == 201) {
 
-                            if (body != null){
+                            if (body != null) {
 
                                 val access_token = body.access_token
                                 val expires_in = body.expires_in
                                 val refresh_expires_in = body.refresh_expires_in
                                 val refresh_token = body.refresh_token
 
+                                Timber.e("User Information ${Gson().toJson(body)}")
+
                                 formatter.saveSharedPref("access_token", access_token, context)
-                                formatter.saveSharedPref("expires_in", expires_in.toString(), context)
-                                formatter.saveSharedPref("refresh_expires_in", refresh_expires_in, context)
+                                formatter.saveSharedPref(
+                                    "expires_in",
+                                    expires_in.toString(),
+                                    context
+                                )
+                                formatter.saveSharedPref(
+                                    "refresh_expires_in",
+                                    refresh_expires_in,
+                                    context
+                                )
                                 formatter.saveSharedPref("refresh_token", refresh_token, context)
                                 formatter.saveSharedPref("isLoggedIn", "true", context)
 
@@ -92,13 +105,13 @@ class RetrofitCallsAuthentication {
                                     context.finish()
                                 }
 
-                            }else{
+                            } else {
                                 messageToast = "Error: Body is null"
                             }
-                        }else{
+                        } else {
                             messageToast = "Error: The request was not successful"
                         }
-                    }else{
+                    } else {
                         apiInterface.errorBody()?.let {
                             val errorBody = JSONObject(it.string())
                             messageToast = errorBody.getString("error")
@@ -106,11 +119,11 @@ class RetrofitCallsAuthentication {
                     }
 
 
-                }catch (e: Exception){
+                } catch (e: Exception) {
 
-                    Log.e("******","")
-                    Log.e("******",e.toString())
-                    Log.e("******","")
+                    Log.e("******", "")
+                    Log.e("******", e.toString())
+                    Log.e("******", "")
 
 
                     messageToast = "Cannot login user.."
@@ -118,7 +131,7 @@ class RetrofitCallsAuthentication {
 
 
             }.join()
-            CoroutineScope(Dispatchers.Main).launch{
+            CoroutineScope(Dispatchers.Main).launch {
 
                 progressDialog.dismiss()
                 Toast.makeText(context, messageToast, Toast.LENGTH_LONG).show()
@@ -129,7 +142,7 @@ class RetrofitCallsAuthentication {
 
     }
 
-    fun getUser(context: Context, dbSignIn: DbSignIn){
+    fun getUser(context: Context, dbSignIn: DbSignIn) {
 
         CoroutineScope(Dispatchers.Main).launch {
 
@@ -140,6 +153,7 @@ class RetrofitCallsAuthentication {
         }
 
     }
+
     private suspend fun getUserDetails(context: Context) {
 
 
@@ -151,57 +165,96 @@ class RetrofitCallsAuthentication {
             try {
 
                 val token = formatter.getSharedPref("access_token", context)
-                if (token != null){
+                if (token != null) {
                     val apiInterface = apiService.getUserInfo("Bearer $token")
-                    if (apiInterface.isSuccessful){
+                    if (apiInterface.isSuccessful) {
 
                         val statusCode = apiInterface.code()
                         val body = apiInterface.body()
 
-                        if (statusCode == 200 || statusCode == 201){
+                        if (statusCode == 200 || statusCode == 201) {
 
-                            if (body != null){
+                            if (body != null) {
+                                Timber.e("User Information ${Gson().toJson(body)}")
 
                                 val user = body.user
-                                if (user != null){
-                                    val fullNames = user.fullNames
-                                    val idNumber = user.idNumber
-                                    val practitionerRole = user.practitionerRole
-                                    val fhirPractitionerId = user.fhirPractitionerId
-                                    val email = user.email
-                                    val phone = user.phone
-                                    val id = user.id
-                                    val facility = user.facility
-                                    val facilityName = user.facilityName
+                                if (user != null) {
+                                    saveUserInformation(user, context)
+//                                    val countyName = user.countyName
+//                                    val fullNames = user.fullNames
+//                                    val idNumber = user.idNumber
+//                                    val practitionerRole = user.practitionerRole
+//                                    val fhirPractitionerId = user.fhirPractitionerId
+//                                    val email = user.email
+//                                    val phone = user.phone
+//                                    val id = user.id
+//                                    val facility = user.facility
+//                                    val facilityName = user.facilityName
+//
+//
+//                                    val subCountyName = user.subCountyName
+//                                    val wardName = user.wardName
 
-                                    val countyName = user.countyName
-                                    val subCountyName = user.subCountyName
-                                    val wardName = user.wardName
-
-                                    formatter.saveSharedPref("practitionerFullNames", fullNames, context)
-                                    formatter.saveSharedPref("practitionerIdNumber", idNumber, context)
-                                    formatter.saveSharedPref("practitionerRole", practitionerRole, context)
-                                    formatter.saveSharedPref("fhirPractitionerId", fhirPractitionerId, context)
-                                    formatter.saveSharedPref("practitionerId", id, context)
-                                    formatter.saveSharedPref("practitionerEmail", email, context)
-                                    formatter.saveSharedPref("practitionerFacility", facility, context)
-                                    formatter.saveSharedPref("practitionerFacilityName", facilityName, context)
-                                    formatter.saveSharedPref("practitionerPhone", phone ?: "", context)
-
-                                    formatter.saveSharedPref("countyName", countyName ?: "", context)
-                                    formatter.saveSharedPref("subCountyName", subCountyName ?: "", context)
-                                    formatter.saveSharedPref("wardName", wardName ?: "", context)
+//                                    formatter.saveSharedPref(
+//                                        "practitionerFullNames",
+//                                        fullNames,
+//                                        context
+//                                    )
+//                                    formatter.saveSharedPref(
+//                                        "practitionerIdNumber",
+//                                        idNumber,
+//                                        context
+//                                    )
+//                                    formatter.saveSharedPref(
+//                                        "practitionerRole",
+//                                        practitionerRole,
+//                                        context
+//                                    )
+//                                    formatter.saveSharedPref(
+//                                        "fhirPractitionerId",
+//                                        fhirPractitionerId,
+//                                        context
+//                                    )
+//                                    formatter.saveSharedPref("practitionerId", id, context)
+//                                    formatter.saveSharedPref("practitionerEmail", email, context)
+//                                    formatter.saveSharedPref(
+//                                        "practitionerFacility",
+//                                        facility,
+//                                        context
+//                                    )
+//                                    formatter.saveSharedPref(
+//                                        "practitionerFacilityName",
+//                                        facilityName,
+//                                        context
+//                                    )
+//                                    formatter.saveSharedPref(
+//                                        "practitionerPhone",
+//                                        phone ?: "",
+//                                        context
+//                                    )
+//
+//                                    formatter.saveSharedPref(
+//                                        "countyName",
+//                                        countyName ?: "",
+//                                        context
+//                                    )
+//                                    formatter.saveSharedPref(
+//                                        "subCountyName",
+//                                        subCountyName ?: "",
+//                                        context
+//                                    )
+//                                    formatter.saveSharedPref("wardName", wardName ?: "", context)
 
                                 }
                             }
                         }
                     }
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
 
-                Log.e("******","")
-                Log.e("******",e.toString())
-                Log.e("******","")
+                Log.e("******", "")
+                Log.e("******", e.toString())
+                Log.e("******", "")
             }
 
 
@@ -210,9 +263,45 @@ class RetrofitCallsAuthentication {
 
     }
 
-    fun getResetPassword(context: Context, dbResetPasswordData: DbResetPasswordData) = runBlocking{
+    private fun saveUserInformation(user: DbUser, context: Context) {
+        val formatter = FormatterClass()
+        formatter.saveSharedPref(
+            "countyName ", user.countyName.toString(), context
+        )
+        formatter.saveSharedPref(
+            "practitionerFacility", user.facility, context
+        )
+        formatter.saveSharedPref(
+            "practitionerFacilityName", user.facilityName, context
+        )
+        formatter.saveSharedPref(
+            "fhirPractitionerId", user.fhirPractitionerId, context
+        )
+        formatter.saveSharedPref(
+            "id", user.id, context
+        )
+        formatter.saveSharedPref(
+            "idNumber", user.idNumber, context
+        )
+        formatter.saveSharedPref(
+            "phone", user.phone.toString(), context
+        )
+        formatter.saveSharedPref(
+            "practitionerRole", user.practitionerRole, context
+        )
+        formatter.saveSharedPref(
+            "subCountyName", user.subCountyName.toString(), context
+        )
+        formatter.saveSharedPref(
+            "wardName", user.wardName.toString(), context
+        )
+
+    }
+
+    fun getResetPassword(context: Context, dbResetPasswordData: DbResetPasswordData) = runBlocking {
         resetPassword(context, dbResetPasswordData)
     }
+
     private suspend fun resetPassword(context: Context, dbResetPasswordData: DbResetPasswordData):
             Pair<Int, String> {
 
@@ -236,19 +325,19 @@ class RetrofitCallsAuthentication {
 
                 messageToast = if (statusCode == 200 || statusCode == 201) {
                     body?.response ?: "Cannot reset user password!"
-                }else{
+                } else {
                     "Cannot reset user password!!"
                 }
-            }else{
+            } else {
                 // Parse the error response
                 val errorResponse = parseError(apiInterface)
                 messageToast = errorResponse?.error ?: "Cannot reset user password! Try again"
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
 
-            Log.e("******","")
-            Log.e("******",e.toString())
-            Log.e("******","")
+            Log.e("******", "")
+            Log.e("******", e.toString())
+            Log.e("******", "")
 
             messageToast = "Cannot reset user password.."
         }
@@ -269,9 +358,10 @@ class RetrofitCallsAuthentication {
         }
     }
 
-    fun setPassword(context: Context, dbSetPasswordReq: DbSetPasswordReq) = runBlocking{
+    fun setPassword(context: Context, dbSetPasswordReq: DbSetPasswordReq) = runBlocking {
         setPasswordBac(context, dbSetPasswordReq)
     }
+
     private suspend fun setPasswordBac(context: Context, dbSetPasswordReq: DbSetPasswordReq):
             Pair<Int, String> {
 
@@ -285,33 +375,33 @@ class RetrofitCallsAuthentication {
 
 
             val apiInterface = apiService.setNewPassword(dbSetPasswordReq)
-            if (apiInterface.isSuccessful){
+            if (apiInterface.isSuccessful) {
 
                 val statusCode = apiInterface.code()
                 val body = apiInterface.body()
                 messageCode = statusCode
 
-                messageToast = if (statusCode == 200 || statusCode == 201){
-                    if (body != null){
+                messageToast = if (statusCode == 200 || statusCode == 201) {
+                    if (body != null) {
                         "Password Reset was successful.."
-                    }else{
+                    } else {
                         "Password Reset was not successful. Try again later"
                     }
-                }else{
+                } else {
                     "The request was not successful. Try again!"
                 }
-            }else{
+            } else {
                 // Parse the error response
                 val errorResponse = parseError(apiInterface)
                 messageToast = errorResponse?.error ?: "Cannot reset user password! Try again"
             }
 
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
 
-            Log.e("******","")
-            Log.e("******",e.toString())
-            Log.e("******","")
+            Log.e("******", "")
+            Log.e("******", e.toString())
+            Log.e("******", "")
 
             messageToast = "Cannot set new password.."
         }

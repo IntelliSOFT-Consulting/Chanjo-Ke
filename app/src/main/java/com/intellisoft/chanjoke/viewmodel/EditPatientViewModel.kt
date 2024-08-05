@@ -14,6 +14,7 @@ import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.datacapture.mapping.ResourceMapper
 import com.google.android.fhir.get
+import com.intellisoft.chanjoke.fhir.data.readFileFromAssets
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Questionnaire
@@ -33,13 +34,17 @@ class EditPatientViewModel(application: Application, private val state: SavedSta
 
     private suspend fun prepareEditPatient(): Pair<String, String> {
         val patient = fhirEngine.get<Patient>(patientId)
-//        val launchContexts = mapOf<String, Resource>("client" to patient)
-        val question = readFileFromAssets("new-patient-registration-paginated.json").trimIndent()
+        val launchContexts = mapOf<String, Resource>("client" to patient)
+        val question =
+            getApplication<Application>()
+                .readFileFromAssets("new-patient-registration-paginated.json")
+                .trimIndent()
         val parser = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
-        val questionnaire = parser.parseResource(Questionnaire::class.java, question) as Questionnaire
+        val questionnaire =
+            parser.parseResource(Questionnaire::class.java, question) as Questionnaire
 
         val questionnaireResponse: QuestionnaireResponse =
-            ResourceMapper.populate(questionnaire, patient)
+            ResourceMapper.populate(questionnaire, launchContexts)
         val questionnaireResponseJson = parser.encodeResourceToString(questionnaireResponse)
         return question to questionnaireResponseJson
     }
@@ -63,7 +68,8 @@ class EditPatientViewModel(application: Application, private val state: SavedSta
      */
     fun updatePatient(questionnaireResponse: QuestionnaireResponse) {
         viewModelScope.launch {
-            val entry = ResourceMapper.extract(questionnaireResource, questionnaireResponse).entryFirstRep
+            val entry =
+                ResourceMapper.extract(questionnaireResource, questionnaireResponse).entryFirstRep
             if (entry.resource !is Patient) return@launch
             val patient = entry.resource as Patient
             if (
@@ -88,7 +94,8 @@ class EditPatientViewModel(application: Application, private val state: SavedSta
         questionnaireJson?.let {
             return it
         }
-        questionnaireJson = readFileFromAssets(state[EditPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY]!!)
+        questionnaireJson =
+            readFileFromAssets(state[EditPatientFragment.QUESTIONNAIRE_FILE_PATH_KEY]!!)
         return questionnaireJson!!
     }
 

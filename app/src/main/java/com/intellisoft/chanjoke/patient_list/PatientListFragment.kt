@@ -193,33 +193,33 @@ class PatientListFragment : Fragment() {
             mainActivityViewModel.pollState.collect {
                 Timber.d("onViewCreated: pollState Got status $it")
                 when (it) {
-                    is SyncJobStatus.Started -> {
-                        Timber.i("Sync: ${it::class.java.simpleName}")
-//                        fadeInTopBanner(it)
-                    }
+//                    is SyncJobStatus.Started -> {
+//                        Timber.i("Sync: ${it::class.java.simpleName}")
+////                        fadeInTopBanner(it)
+//                    }
+//
+//                    is SyncJobStatus.InProgress -> {
+//                        Timber.i("Sync: ${it::class.java.simpleName} with data $it")
+////                        fadeInTopBanner(it)
+//                    }
 
-                    is SyncJobStatus.InProgress -> {
-                        Timber.i("Sync: ${it::class.java.simpleName} with data $it")
-//                        fadeInTopBanner(it)
-                    }
+//                    is SyncJobStatus.Finished -> {
+//                        Timber.i("Sync: ${it::class.java.simpleName} at ${it.timestamp}")
+//                        patientListViewModel.searchPatientsByName(
+//                            searchView.query.toString().trim()
+//                        )
+//                        mainActivityViewModel.updateLastSyncTimestamp()
+//
+//                    }
 
-                    is SyncJobStatus.Finished -> {
-                        Timber.i("Sync: ${it::class.java.simpleName} at ${it.timestamp}")
-                        patientListViewModel.searchPatientsByName(
-                            searchView.query.toString().trim()
-                        )
-                        mainActivityViewModel.updateLastSyncTimestamp()
-
-                    }
-
-                    is SyncJobStatus.Failed -> {
-                        Timber.i("Sync: ${it::class.java.simpleName} at ${it.timestamp}")
-                        patientListViewModel.searchPatientsByName(
-                            searchView.query.toString().trim()
-                        )
-                        mainActivityViewModel.updateLastSyncTimestamp()
-
-                    }
+//                    is SyncJobStatus.Failed -> {
+//                        Timber.i("Sync: ${it::class.java.simpleName} at ${it.timestamp}")
+//                        patientListViewModel.searchPatientsByName(
+//                            searchView.query.toString().trim()
+//                        )
+//                        mainActivityViewModel.updateLastSyncTimestamp()
+//
+//                    }
 
                     else -> {
                         Timber.i("Sync: Unknown state.")
