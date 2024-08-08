@@ -128,74 +128,74 @@ class PatientDetailsViewModel(
         var lastName = ""
         val kins = mutableListOf<CareGiver>()
         searchResult.first().let {
-            logicalId = it.resource.logicalId
-            name = if (it.resource.hasName()) {
+            logicalId = it.logicalId
+            name = if (it.hasName()) {
                 // display name in order as fname, then others
-                "${it.resource.name[0].givenAsSingleString} ${it.resource.name[0].family} "
+                "${it.name[0].givenAsSingleString} ${it.name[0].family} "
             } else ""
-            lastName = if (it.resource.hasName()) it.resource.nameFirstRep.family else ""
+            lastName = if (it.hasName()) it.nameFirstRep.family else ""
 
-            val givenNames = if (it.resource.hasName() && it.resource.nameFirstRep.hasGiven()) {
-                it.resource.nameFirstRep.given.map { givenName -> givenName.valueAsString }
+            val givenNames = if (it.hasName() && it.nameFirstRep.hasGiven()) {
+                it.nameFirstRep.given.map { givenName -> givenName.valueAsString }
             } else {
                 emptyList()
             }
             firstName = givenNames.getOrElse(0) { "" }
             middleName = givenNames.getOrElse(1) { "" }
             phone = ""
-            if (it.resource.hasTelecom()) {
-                if (it.resource.telecom.isNotEmpty()) {
-                    if (it.resource.telecom.first().hasValue()) {
-                        phone = it.resource.telecom.first().value
+            if (it.hasTelecom()) {
+                if (it.telecom.isNotEmpty()) {
+                    if (it.telecom.first().hasValue()) {
+                        phone = it.telecom.first().value
                     }
                 }
             }
 
-            if (it.resource.hasBirthDateElement()) {
-                if (it.resource.birthDateElement.hasValue()) {
+            if (it.hasBirthDateElement()) {
+                if (it.birthDateElement.hasValue()) {
                     val birthDateElement =
-                        formatterClass.convertChildDateFormat(it.resource.birthDateElement.valueAsString)
+                        formatterClass.convertChildDateFormat(it.birthDateElement.valueAsString)
                     if (birthDateElement != null) {
                         dob = birthDateElement
                     }
                 }
             }
 
-            if (it.resource.hasContact()) {
-                it.resource.contact.forEach {
+            if (it.hasContact()) {
+                it.contact.forEach {
                     val name = it.name.nameAsSingleString
                     val phone = it.telecomFirstRep.value
                     val type = it.relationshipFirstRep.text
                     kins.add(CareGiver(phone = phone, name = name, type = type, nationalID = ""))
                 }
 
-                if (it.resource.contactFirstRep.hasName()) contact_name =
-                    if (it.resource.hasContact()) {
-                        if (it.resource.contactFirstRep.hasName()) {
-                            it.resource.contactFirstRep.name.nameAsSingleString
+                if (it.contactFirstRep.hasName()) contact_name =
+                    if (it.hasContact()) {
+                        if (it.contactFirstRep.hasName()) {
+                            it.contactFirstRep.name.nameAsSingleString
                         } else ""
                     } else ""
-                if (it.resource.contactFirstRep.hasTelecom()) contact_phone =
-                    if (it.resource.hasContact()) {
-                        if (it.resource.contactFirstRep.hasTelecom()) {
-                            if (it.resource.contactFirstRep.telecomFirstRep.hasValue()) {
-                                it.resource.contactFirstRep.telecomFirstRep.value
+                if (it.contactFirstRep.hasTelecom()) contact_phone =
+                    if (it.hasContact()) {
+                        if (it.contactFirstRep.hasTelecom()) {
+                            if (it.contactFirstRep.telecomFirstRep.hasValue()) {
+                                it.contactFirstRep.telecomFirstRep.value
                             } else ""
                         } else ""
                     } else ""
-                if (it.resource.contactFirstRep.hasGenderElement()) contact_gender =
-                    if (it.resource.hasContact()) AppUtils().capitalizeFirstLetter(it.resource.contactFirstRep.genderElement.valueAsString) else ""
-                if (it.resource.contactFirstRep.hasRelationship()) {
-                    if (it.resource.contactFirstRep.relationshipFirstRep.hasCoding()) {
-                        contact_type = it.resource.contactFirstRep.relationshipFirstRep.text
+                if (it.contactFirstRep.hasGenderElement()) contact_gender =
+                    if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
+                if (it.contactFirstRep.hasRelationship()) {
+                    if (it.contactFirstRep.relationshipFirstRep.hasCoding()) {
+                        contact_type = it.contactFirstRep.relationshipFirstRep.text
                     }
                 }
             }
 
-            if (it.resource.hasGenderElement()) gender = it.resource.genderElement.valueAsString
+            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
 
-            if (it.resource.hasIdentifier()) {
-                it.resource.identifier.forEach { identifier ->
+            if (it.hasIdentifier()) {
+                it.identifier.forEach { identifier ->
 
                     try {
                         if (identifier.hasType()) {
@@ -220,15 +220,15 @@ class PatientDetailsViewModel(
                 }
             }
 
-            if (it.resource.hasAddress()) {
-                if (it.resource.addressFirstRep.hasCity()) county = it.resource.addressFirstRep.city
-                if (it.resource.addressFirstRep.hasDistrict()) subCounty =
-                    it.resource.addressFirstRep.district
-                if (it.resource.addressFirstRep.hasState()) ward = it.resource.addressFirstRep.state
-                if (it.resource.addressFirstRep.hasLine()) {
-                    if (it.resource.addressFirstRep.line.size >= 2) {
-                        trading = it.resource.addressFirstRep.line[0].value
-                        estate = it.resource.addressFirstRep.line[1].value
+            if (it.hasAddress()) {
+                if (it.addressFirstRep.hasCity()) county = it.addressFirstRep.city
+                if (it.addressFirstRep.hasDistrict()) subCounty =
+                    it.addressFirstRep.district
+                if (it.addressFirstRep.hasState()) ward = it.addressFirstRep.state
+                if (it.addressFirstRep.hasLine()) {
+                    if (it.addressFirstRep.line.size >= 2) {
+                        trading = it.addressFirstRep.line[0].value
+                        estate = it.addressFirstRep.line[1].value
                     }
                 }
             }
@@ -637,17 +637,17 @@ class PatientDetailsViewModel(
         }.firstOrNull()
         if (it != null) {
 
-            if (it.resource.hasBirthDateElement()) {
-                if (it.resource.birthDateElement.hasValue()) {
+            if (it.hasBirthDateElement()) {
+                if (it.birthDateElement.hasValue()) {
                     val birthDateElement =
-                        formatterClass.convertChildDateFormat(it.resource.birthDateElement.valueAsString)
+                        formatterClass.convertChildDateFormat(it.birthDateElement.valueAsString)
                     if (birthDateElement != null) {
                         dob = birthDateElement
                     }
                 }
             }
 
-            if (it.resource.hasGenderElement()) gender = it.resource.genderElement.valueAsString
+            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
 
             val temp = DbTempData(
                 name = patientName,
@@ -864,8 +864,8 @@ class PatientDetailsViewModel(
             val searchResult = fhirEngine.search<Location> {
                 filter(Location.RES_ID, { value = of(resId) })
             }
-            if (searchResult.isNotEmpty() && searchResult.first().resource.hasName()) {
-                return searchResult.first().resource.name
+            if (searchResult.isNotEmpty() && searchResult.first().hasName()) {
+                return searchResult.first().name
             }
 
         } catch (e: Exception) {
@@ -887,9 +887,9 @@ class PatientDetailsViewModel(
                 filter(Practitioner.RES_ID, { value = of(resId) })
             }
 
-            name = searchResult.first().resource.name[0].nameAsSingleString
-            if (searchResult.first().resource.hasExtension()) {
-                searchResult.first().resource.extension.forEach {
+            name = searchResult.first().name[0].nameAsSingleString
+            if (searchResult.first().hasExtension()) {
+                searchResult.first().extension.forEach {
                     if (it.hasUrl()) {
                         if (it.url.contains("http://example.org/fhir/StructureDefinition/role-group")) {
                             if (it.hasValue()) {
@@ -999,7 +999,7 @@ class PatientDetailsViewModel(
             }
         }
 
-//        val newList = contraindicationList.filter { it.resource.status == vaccineDetailsType }
+//        val newList = contraindicationList.filter { it.status == vaccineDetailsType }
 
         return ArrayList(contraindicationList)
     }
@@ -1163,7 +1163,7 @@ class PatientDetailsViewModel(
             .let { vaccineList.addAll(it) }
 
 //        val newVaccineList = vaccineList.filterNot {
-//            it.resource.status == "NOTDONE"
+//            it.status == "NOTDONE"
 //        }
 
         return ArrayList(vaccineList)

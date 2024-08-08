@@ -242,7 +242,7 @@ private fun Date.toTimeZoneString(): String {
 //        if (response is Bundle) {
 //
 ////            for (entry in response.entry) {
-////                val type = entry.resource.resourceType.toString()
+////                val type = entry.resourceType.toString()
 ////                if (type == "ServiceRequest") {
 ////                    urls.add(entry.fullUrl)
 ////                }
