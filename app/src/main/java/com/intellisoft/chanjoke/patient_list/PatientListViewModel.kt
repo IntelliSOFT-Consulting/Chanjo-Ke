@@ -206,7 +206,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
 
         fhirEngine.search<ServiceRequest> {
             sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
-        }.map { createServiceRequestItem(it.resource) }.let { q ->
+        }.map { createServiceRequestItem(it) }.let { q ->
             q.forEach { serviceRequest ->
                 if (serviceRequest.status == "ACTIVE") {
                     serviceRequests.add(serviceRequest)
