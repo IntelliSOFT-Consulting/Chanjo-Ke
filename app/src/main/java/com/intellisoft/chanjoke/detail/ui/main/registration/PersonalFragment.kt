@@ -370,32 +370,6 @@ class PersonalFragment : Fragment() {
                     firstname.setText(data.firstname)
                     middlename.setText(data.middlename)
                     lastname.setText(data.lastname)
-//                    val parts = data.firstname.split(" ")
-//                    when (parts.size) {
-//                        2 -> {
-//                            val (firstName, lastName) = parts
-//                            firstname.setText(firstName)
-//                            lastname.setText(lastName)
-//                        }
-//
-//                        3 -> {
-//                            val (firstName, middleName, lastName) = parts
-//                            firstname.setText(firstName)
-//                            lastname.setText(lastName)
-//                            middlename.setText(middleName)
-//                        }
-//
-//                        4 -> {
-//                            val (firstName, middleName, lastName) = parts
-//                            firstname.setText(firstName)
-//                            lastname.setText(lastName)
-//                            middlename.setText(middleName)
-//                        }
-//
-//                        else -> {
-//                            println("Invalid name format")
-//                        }
-//                    }
 
                     val gender = data.gender
                     if (gender.lowercase() == "male") {
@@ -639,15 +613,21 @@ class PersonalFragment : Fragment() {
             estimate = false
         }
 
-//        if (binding.telTelephone.isVisible) {
-//            if (tel.length != 10) {
-//                binding.apply {
-//                    telTelephone.error = "Enter Valid phone number"
-//                    telephone.requestFocus()
-//                    return
-//                }
-//            }
-//        }
+        // If above make this input compulsory
+        val isAbove = formatter.getSharedPref("isAbove", requireContext())
+        if (isAbove != null) {
+            if (isAbove == "true") {
+                if (tel.length != 10) {
+                    binding.apply {
+                        telTelephone.error = "Enter Valid phone number"
+                        telephone.requestFocus()
+                        return
+
+                    }
+                }
+            }
+        }
+
 
         val payload = CustomPatient(
             firstname = AppUtils().capitalizeFirstLetter(firstName),
