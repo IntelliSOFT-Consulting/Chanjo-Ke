@@ -1034,7 +1034,7 @@ class AdministerVaccineViewModel(
             immunizationRequest.supportingImmunization = immunizationReferenceList
         }
 
-        if (status == "Contraindicated" || status == "Due") {
+        if (status == "Rescheduled" || status == "Due") {
             //Administered vaccine
             val administeredProduct = FormatterClass().getSharedPref(
                 "administeredProduct",
@@ -1071,7 +1071,7 @@ class AdministerVaccineViewModel(
 
 
 
-                    //Contraindicated vaccine code
+                    //Rescheduled vaccine code
                     immunizationRequest.contraindicatedVaccineCode =
                         contraindicationCodeableConceptList
 
@@ -1205,7 +1205,7 @@ class AdministerVaccineViewModel(
                         val recommendation = createImmunizationRecommendationResource(
                             patientId,
                             nextDate,
-                            "Contraindicated",
+                            "Rescheduled",
                             statusReasonStr,
                             null
                         )

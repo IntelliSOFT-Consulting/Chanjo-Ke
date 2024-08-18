@@ -171,9 +171,9 @@ class ContraindicationsFragment : Fragment() {
                                 var toastMessage = ""
                                 var forecastReason = ""
                                 if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
-                                    toastMessage = "Contraindication has been saved successfully."
+                                    toastMessage = "Reschedule details has been saved successfully."
                                     if (TextUtils.isEmpty(description)) binding.etDescription.error =
-                                        "Please enter the contraindication(s)" else forecastReason =
+                                        "Please enter the Reschedule details(s)" else forecastReason =
                                         description
                                 }
                                 if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
@@ -278,14 +278,14 @@ class ContraindicationsFragment : Fragment() {
 
         var titleString = ""
         if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
-            binding.etDescription.setHint("Enter Contraindications")
+            binding.etDescription.setHint("Enter Reasons for Reschedule")
 
             binding.etDescription.visibility = View.VISIBLE
             binding.linearSpinner.visibility = View.GONE
 
-            binding.tvInstructions.setText("Vaccines to Contraindicate")
-            titleString = "Contraindications"
-            status = "Contraindicated"
+            binding.tvInstructions.setText("Vaccines to Reschedule")
+            titleString = "Reschedule"
+            status = "Rescheduled"
         }
         if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
             binding.etDescription.visibility = View.GONE

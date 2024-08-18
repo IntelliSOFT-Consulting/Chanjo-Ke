@@ -51,7 +51,7 @@ class VaccineDetailsAdapter(
             vaccineStatus = "Administered"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.green))
         }else if (status == StatusColors.AMBER.name){
-            vaccineStatus = "Contraindicated"
+            vaccineStatus = "Rescheduled"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
             if (daysTo != null){
                 val daysToInt = daysTo.toInt()

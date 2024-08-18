@@ -1593,7 +1593,7 @@ class FormatterClass {
             statusValue = dbAppointmentDetailsDue.status
         }
 
-        //2. Contraindicated Vaccine
+        //2. Reschedule Vaccine
         val dbAppointmentDetailsContra = administeredList.filter {
             it.vaccineName == vaccineName && it.status == Reasons.CONTRAINDICATE.name
         }.map { it }.firstOrNull()

@@ -516,7 +516,7 @@ class PatientDetailsViewModel(
                     doseNumber = recommendation[0].doseNumber.toString()
                 }
 
-                //Contraindicated vaccine code
+                //Rescheduled vaccine code
                 if (recommendation[0].hasContraindicatedVaccineCode()) {
                     vaccineCode = recommendation[0].contraindicatedVaccineCode[0].text
 
