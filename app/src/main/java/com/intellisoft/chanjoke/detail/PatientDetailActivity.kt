@@ -2,11 +2,13 @@ package com.intellisoft.chanjoke.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -69,7 +71,6 @@ class PatientDetailActivity : AppCompatActivity() {
         }
 
         patientYears = formatterClass.getSharedPref("patientYears", this)
-
 
         setupSpinner()
         val bundle =
@@ -316,6 +317,8 @@ class PatientDetailActivity : AppCompatActivity() {
             val gender = patientDetail.gender
             formatterClass.saveSharedPref("patientGender", gender, this@PatientDetailActivity)
 
+            getRecommendation()
+
             CoroutineScope(Dispatchers.Main).launch {
                 binding.apply {
                     tvName.text = patientDetail.name
@@ -339,6 +342,52 @@ class PatientDetailActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    private fun getRecommendation() {
+
+        val notAdministeredList = ArrayList(
+            listOf(
+                "371900001",
+                )
+        )
+        val clientObjectionList = patientDetailsViewModel.getRecommendationStatus(notAdministeredList)
+
+        var message = "This patient has not received certain vaccines. \nFind the details:\n"
+
+        clientObjectionList.forEach {
+            val statusValue = it.statusValue
+            val vaccineName = it.vaccineName
+
+            if (statusValue != null ){
+                if(statusValue.contains("Client objection") ||
+                    statusValue.contains("Religious Reasons")){
+                    val dialogMessage = "$vaccineName because of $statusValue \n"
+                    message += dialogMessage
+                }
+            }
+        }
+        message += "Please review the patient's vaccination status and proceed accordingly."
+
+        CoroutineScope(Dispatchers.Main).launch { showCancelDialog("Vaccine Administration Notice", message) }
+
+
+    }
+
+    private fun showCancelDialog(title: String, message: String) {
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        dialogBuilder.apply {
+            setTitle(title)
+            setMessage(message)
+            setCancelable(true) // Allows the dialog to be canceled by tapping outside of it
+            setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss() // Closes the dialog when the "Cancel" button is clicked
+            }
+        }
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
     }
 
 

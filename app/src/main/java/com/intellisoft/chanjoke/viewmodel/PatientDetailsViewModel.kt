@@ -330,6 +330,41 @@ class PatientDetailsViewModel(
         getRecommendationList(status)
     }
 
+    fun getRecommendationStatus(codeValueList: ArrayList<String>) = runBlocking {
+        getRecommendationStatusBac(codeValueList)
+    }
+
+    private suspend fun getRecommendationStatusBac(codeValueList: ArrayList<String>): ArrayList<DbVaccineDetailsData>{
+
+        val vaccineList = ArrayList<DbVaccineDetailsData>()
+
+        codeValueList.forEach {codeValue ->
+
+            fhirEngine
+                .search<Immunization>{
+                    filter(Immunization.STATUS_REASON, {
+                        value = of(Coding().apply {
+                            code = codeValue
+                        })
+                    })
+                    filter(Immunization.PATIENT, { value = "Patient/$patientId" })
+                }
+                .map { createVaccineItemDetails(it) }
+                .let {q->
+                    q.forEach {
+                        if (it.status == "NOTDONE") {
+                            vaccineList.add(it)
+                        }
+                    }
+//                    vaccineList.addAll(q)
+                }
+
+        }
+
+        return vaccineList
+    }
+
+
 
     private suspend fun getRecommendationList(statusValue: String?): ArrayList<DbRecommendationDetails> {
 
@@ -1063,6 +1098,7 @@ class PatientDetailsViewModel(
         var seriesDosesString = ""
         var series = ""
         var status = ""
+        var statusValue = ""
         var location = ""
         var practioner = ""
 
@@ -1091,6 +1127,9 @@ class PatientDetailsViewModel(
         if (immunization.hasStatus()) {
             status = immunization.statusElement.value.name
         }
+        if (immunization.hasStatusReason() && immunization.statusReason.hasCoding()){
+            statusValue = immunization.statusReason.codingFirstRep.display
+        }
 
         if (immunization.hasLocation() && immunization.location.hasReference()) {
             location = immunization.location.reference
@@ -1110,6 +1149,7 @@ class PatientDetailsViewModel(
             seriesDosesString,
             series,
             status,
+            statusValue,
             location,
             practioner,
             recorded

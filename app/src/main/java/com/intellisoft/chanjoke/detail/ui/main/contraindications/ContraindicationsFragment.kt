@@ -68,7 +68,8 @@ class ContraindicationsFragment : Fragment() {
         "Please Select",
         "Vaccine out of stock",
         "Cold chain break",
-        "Client objection",
+        "Client objection ",
+        "Religious Reasons ",
         "Caregiver refusal",
         "VVM change",
         "Client acquired the disease",
@@ -355,6 +356,9 @@ class ContraindicationsFragment : Fragment() {
                     // Get the selected item
                     val selectedItem = parentView.getItemAtPosition(position).toString()
                     if (selectedItem == resultList.last() || selectedItem.contains("Contraindication")) {
+                        if (selectedItem.contains("Contraindication"))
+                            binding.etOtherReasons.setHint("Reason for Contraindication")
+
                         binding.etOtherReasons.visibility = View.VISIBLE
                     } else {
                         binding.etOtherReasons.visibility = View.GONE
