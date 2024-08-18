@@ -67,12 +67,12 @@ class ContraindicationsFragment : Fragment() {
     val resultList = listOf<String>(
         "Please Select",
         "Vaccine out of stock",
-        "Contraindication",
         "Cold chain break",
         "Client objection",
         "Caregiver refusal",
         "VVM change",
         "Client acquired the disease",
+        "Contraindication ",
         "Other reasons",
     )
 
@@ -183,7 +183,7 @@ class ContraindicationsFragment : Fragment() {
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     } else {
-                                        if (resultList.last() == spinnerReasons) {
+                                        if (resultList.last() == spinnerReasons || spinnerReasons.contains("Contraindication")) {
                                             if (!TextUtils.isEmpty(otherReasons)) {
                                                 forecastReason = otherReasons
                                             } else {
@@ -354,7 +354,7 @@ class ContraindicationsFragment : Fragment() {
                 ) {
                     // Get the selected item
                     val selectedItem = parentView.getItemAtPosition(position).toString()
-                    if (selectedItem == resultList.last()) {
+                    if (selectedItem == resultList.last() || selectedItem.contains("Contraindication")) {
                         binding.etOtherReasons.visibility = View.VISIBLE
                     } else {
                         binding.etOtherReasons.visibility = View.GONE
