@@ -73,7 +73,7 @@ class ContraindicationsFragment : Fragment() {
         "Caregiver refusal",
         "VVM change",
         "Client acquired the disease",
-        "Other Reason"
+        "Other reasons",
     )
 
     override fun onCreateView(
