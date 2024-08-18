@@ -66,14 +66,14 @@ class ContraindicationsFragment : Fragment() {
 
     val resultList = listOf<String>(
         "Please Select",
-        "Product out of stock",
+        "Vaccine out of stock",
         "Contraindication",
         "Cold chain break",
         "Client objection",
         "Caregiver refusal",
-        "Expired product",
+        "VVM change",
         "Client acquired the disease",
-        "Immunization not carried out for other reasons",
+        "Other Reason"
     )
 
     override fun onCreateView(
