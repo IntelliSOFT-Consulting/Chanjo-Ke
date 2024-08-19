@@ -856,6 +856,7 @@ class AdministerVaccineViewModel(
                     if (administrationFlowTitle != null){
 
                         if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name ||
+                            administrationFlowTitle == NavigationDetails.RESCHEDULE.name ||
                             administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
 
                             val immunization = createImmunizationResource(
@@ -879,10 +880,10 @@ class AdministerVaccineViewModel(
                             immunization.statusReason = codeableConcept
 
                             //Reason Code
-                            val reasonCodeValue = if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name){
-                                Reasons.CONTRAINDICATE.name
-                            }else{
-                                Reasons.NOT_ADMINISTERED.name
+                            val reasonCodeValue = when (administrationFlowTitle) {
+                                NavigationDetails.CONTRAINDICATIONS.name -> { Reasons.CONTRAINDICATE.name }
+                                NavigationDetails.RESCHEDULE.name -> { Reasons.RESCHEDULE.name }
+                                else -> { Reasons.NOT_ADMINISTERED.name }
                             }
 
                             val reasonCodeValueList = ArrayList<CodeableConcept>()

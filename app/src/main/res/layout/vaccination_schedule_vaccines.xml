@@ -72,7 +72,6 @@
                 android:layout_height="25dp"/>
 
             <ImageButton
-                android:visibility="gone"
                 android:layout_gravity="center"
                 android:id="@+id/iconDisabled"
                 android:background="@drawable/ic_action_icon_disabled"

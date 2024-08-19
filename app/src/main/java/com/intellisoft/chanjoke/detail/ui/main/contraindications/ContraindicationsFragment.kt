@@ -170,7 +170,7 @@ class ContraindicationsFragment : Fragment() {
 
                                 var toastMessage = ""
                                 var forecastReason = ""
-                                if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
+                                if (administrationFlowTitle == NavigationDetails.RESCHEDULE.name) {
                                     toastMessage = "Reschedule details has been saved successfully."
                                     if (TextUtils.isEmpty(description)) binding.etDescription.error =
                                         "Please enter the Reschedule details(s)" else forecastReason =
@@ -186,9 +186,10 @@ class ContraindicationsFragment : Fragment() {
                                     } else {
                                         if (resultList.last() == spinnerReasons || spinnerReasons.contains("Contraindication")) {
                                             if (!TextUtils.isEmpty(otherReasons)) {
-                                                if(spinnerReasons.contains("Contraindication")){
-                                                    forecastReason = "Contraindicated: $otherReasons"
-                                                }else forecastReason = otherReasons
+                                                forecastReason = otherReasons
+                                                if(spinnerReasons.contains("Contraindication"))
+                                                    administrationFlowTitle = NavigationDetails.CONTRAINDICATIONS.name
+
                                             } else {
                                                 binding.etOtherReasons.error =
                                                     "Field cannot be empty.."
@@ -226,7 +227,7 @@ class ContraindicationsFragment : Fragment() {
                                     )
 
 
-                                    if (vaccineList.isNotEmpty() && administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
+                                    if (vaccineList.isNotEmpty() && administrationFlowTitle == NavigationDetails.RESCHEDULE.name) {
                                         Toast.makeText(
                                             requireContext(),
                                             toastMessage,
@@ -279,7 +280,7 @@ class ContraindicationsFragment : Fragment() {
         formatterClass.deleteSharedPref("administrationFlowTitle", requireContext())
 
         var titleString = ""
-        if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
+        if (administrationFlowTitle == NavigationDetails.RESCHEDULE.name) {
             binding.etDescription.setHint("Enter Reasons for Reschedule")
 
             binding.etDescription.visibility = View.VISIBLE

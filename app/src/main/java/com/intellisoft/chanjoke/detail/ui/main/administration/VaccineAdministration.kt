@@ -29,7 +29,7 @@ class VaccineAdministration : AppCompatActivity() {
 //            .commit()
 
         when(intent.getStringExtra("functionToCall")){
-            NavigationDetails.CONTRAINDICATIONS.name -> { contraindicationFunction(NavigationDetails.CONTRAINDICATIONS.name) }
+            NavigationDetails.RESCHEDULE.name -> { contraindicationFunction(NavigationDetails.RESCHEDULE.name) }
             NavigationDetails.ADMINISTER_VACCINE.name -> { administerFunction() }
             NavigationDetails.NOT_ADMINISTER_VACCINE.name -> { contraindicationFunction(NavigationDetails.NOT_ADMINISTER_VACCINE.name) }
         }

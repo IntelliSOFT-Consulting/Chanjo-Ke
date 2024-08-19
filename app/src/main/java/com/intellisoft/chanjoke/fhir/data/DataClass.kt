@@ -38,6 +38,7 @@ data class DbVaccineListData(
 )
 
 enum class Reasons {
+    RESCHEDULE,
     CONTRAINDICATE,
     NOT_ADMINISTERED,
     COMPLETED
@@ -205,6 +206,7 @@ data class DbPeriod(
 )
 
 enum class NavigationDetails {
+    RESCHEDULE,
     CONTRAINDICATIONS,
     APPOINTMENT,
     CAMPAIGN,
@@ -438,9 +440,10 @@ data class DbVaccineScheduleGroup(
 data class DbVaccineScheduleChild(
     val vaccineName: String,
     val date: String,
-    val status: String,
+    val statusColor: String,
     var isVaccinated: Boolean,
     var canBeVaccinated: Boolean?,
+    var status: String? = null
 )
 
 data class DbRecycler(

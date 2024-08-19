@@ -1595,27 +1595,19 @@ class FormatterClass {
             status = dbAppointmentDetailsDue.status
         }
 
-        //2. Reschedule Vaccine
-        val dbAppointmentDetailsContra = administeredList.filter {
-            it.vaccineName == vaccineName && it.status == Reasons.CONTRAINDICATE.name
-        }.map { it }.firstOrNull()
+        val result = administeredList.filter { it.vaccineName == vaccineName }
+            .let { filteredList ->
+                // Check for a contraindication first
+                val contraindication = filteredList.firstOrNull { it.status == Reasons.CONTRAINDICATE.name }
+                contraindication ?: filteredList.minByOrNull { it.dateRecorded }
+            }
 
-        //3. Not Administered Vaccine
-        val dbAppointmentDetailsNotDone = administeredList.filter {
-            it.vaccineName == vaccineName && it.status == Reasons.NOT_ADMINISTERED.name
-        }.map { it }.firstOrNull()
+        if (result != null){
 
-        //Check between the two the latest one
-        val latestDateToBeAdministered = listOfNotNull(dbAppointmentDetailsContra, dbAppointmentDetailsNotDone)
-            .maxByOrNull { it.dateRecorded }
-        if (latestDateToBeAdministered != null){
-
-            status = latestDateToBeAdministered.status
-            dateValue = latestDateToBeAdministered.dateAdministered
+            status = result.status
+            dateValue = result.dateAdministered
 
         }
-
-
         //4. Administered Vaccine
         val dbAppointmentDetails = administeredList.filter {
             it.vaccineName == vaccineName && it.status == Reasons.COMPLETED.name
@@ -1717,7 +1709,7 @@ class FormatterClass {
             }
         }
 
-        if (status == Reasons.CONTRAINDICATE.name || statusValue == Reasons.NOT_ADMINISTERED.name){
+        if (status == Reasons.RESCHEDULE.name || statusValue == Reasons.NOT_ADMINISTERED.name){
 
             val dateScheduleDate = dateScheduleFormat.parse(dateValue)
             if (dateScheduleDate != null){
@@ -1732,18 +1724,9 @@ class FormatterClass {
                 }
             }
 
-            //Contraindicate has been moved here as an option to be catered by this
-            if (status == Reasons.NOT_ADMINISTERED.name){
-
-                //Check for Contraindicated values
-
-
-
-                statusColor = StatusColors.NOT_DONE.name
-            }
 
             //This handles the Reschedule
-            if (status == Reasons.CONTRAINDICATE.name){
+            if (status == Reasons.RESCHEDULE.name){
                 statusColor = StatusColors.AMBER.name
             }
 
@@ -1753,12 +1736,17 @@ class FormatterClass {
             statusColor = StatusColors.GREEN.name
         }
 
+        if (status == Reasons.CONTRAINDICATE.name){
+            statusColor = StatusColors.NOT_DONE.name
+        }
+
         return DbVaccineScheduleChild(
             vaccineName,
             dateValue,
             statusColor,
             isVaccinatedValue,
-            canBeVaccinated
+            canBeVaccinated,
+            status
         )
     }
 
