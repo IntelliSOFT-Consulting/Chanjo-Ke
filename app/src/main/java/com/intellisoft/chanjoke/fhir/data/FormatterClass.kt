@@ -388,12 +388,20 @@ class FormatterClass {
     ): String {
         if (dob == null) return ""
 
+        // Convert the DOB to the required format
         val dobFormat = convertDateFormat(dob)
         if (dobFormat != null) {
             val dobDate = convertStringToDate(dobFormat, "MMM d yyyy")
             if (dobDate != null) {
                 val finalDate = convertDateToLocalDate(dobDate)
-                val period = Period.between(finalDate, LocalDate.now())
+                val today = LocalDate.now()
+
+                // Check if the DOB is in the future
+                if (finalDate.isAfter(today)) {
+                    return "Date of birth is in the future"
+                }
+
+                val period = Period.between(finalDate, today)
 
                 val years = period.years
                 val months = period.months
@@ -403,11 +411,10 @@ class FormatterClass {
                  * Convert to weeks
                  */
                 // Calculate the total number of days in the period
-                val totalDays = period.toTotalMonths() * 30 + period.days
+                val totalDays = period.toTotalMonths() * 30 + days
 
                 // Calculate the number of weeks
                 val totalWeeks = totalDays / 7
-
 
                 saveSharedPref("patientYears", years.toString(), context)
                 saveSharedPref("patientMonth", months.toString(), context)
@@ -445,7 +452,7 @@ class FormatterClass {
                     }
                 }
 
-                if (days > 0) {
+                if (days > 0 || (years == 0 && months == 0)) {
                     ageStringBuilder.append(
                         resources.getQuantityString(
                             R.plurals.ageDay,
@@ -461,6 +468,7 @@ class FormatterClass {
 
         return ""
     }
+
 
 
     fun getFormattedAgeYears(
