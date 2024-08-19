@@ -443,7 +443,8 @@ data class DbVaccineScheduleChild(
     val statusColor: String,
     var isVaccinated: Boolean,
     var canBeVaccinated: Boolean?,
-    var status: String? = null
+    var status: String? = null,
+    var statusValue: String? = null,
 )
 
 data class DbRecycler(

@@ -47,77 +47,39 @@ class VaccineDetailsAdapter(
         val date = currentItem.date
         val canBeVaccinated = currentItem.canBeVaccinated
         val daysTo = formatterClass.daysBetweenTodayAndGivenDate(date)
+        var statusValue = currentItem.statusValue
 
         var vaccineStatus = ""
-        if (statusColor == StatusColors.GREEN.name){
-            vaccineStatus = "Administered"
+        /**
+         * Handle different statues
+         * 1. COMPLETED
+         * 2. CONTRAINDICATE
+         * 3. NOT_ADMINISTERED
+         * 4. RESCHEDULED
+         */
+
+        if (statusValue.equals(Reasons.COMPLETED.name, true)){
+            statusValue = "Administered"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.green))
-        }
-        else if (statusColor == StatusColors.AMBER.name){
-            vaccineStatus = "Rescheduled"
+        }else if (statusValue.equals(Reasons.CONTRAINDICATE.name, true)){
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.contra))
+        }else if (statusValue.equals(Reasons.NOT_ADMINISTERED.name, true)){
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.colorAccent))
+        }else if (statusValue.equals(Reasons.RESCHEDULE.name, true)){
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
-            if (daysTo != null){
-                val daysToInt = daysTo.toInt()
-                if (daysToInt != 0){
-                    holder.checkBox.isEnabled = false
-                }
-            }
-        }
-        else if (statusColor == StatusColors.NORMAL.name){
-
-            // "All the others are upcoming"
-            vaccineStatus = "Upcoming"
-            //Check if the date is within 14 days
-            if (daysTo != null) {
-                val daysToInt = daysTo.toInt()
-                if (daysToInt < 14){
-                    vaccineStatus = "Due"
-                }
-            }
-
-        }
-        else if (statusColor == StatusColors.RED.name){
-            vaccineStatus = "Missed"
+        }else if (statusValue.equals("Missed", true)){
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
-
-            //For BCG and bOpv
-            if (vaccineName == "BCG" || vaccineName == "bOPV"){
-                //Check the date and change status
-
-                val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
-                if (basicVaccine != null){
-                    /**
-                     * BCG can be given till 255
-                     * bOPV will be till 2 weeks
-                     */
-                    if (daysTo != null){
-                        val daysToInt = daysTo.toInt()
-                        if (daysToInt < 15 && vaccineName == "bOPV"){
-                            vaccineStatus = "Due"
-                            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
-                        }
-                        if (daysToInt < 255 && vaccineName == "BCG"){
-                            //Due till 59 months
-                            vaccineStatus = "Due"
-                            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
-
-                        }
-                    }
-
-                }
-            }
+        }else if (statusValue.equals("Due", true)){
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
+        }else{
+            statusValue = "Upcoming"
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
         }
-        else if (statusColor == StatusColors.NOT_DONE.name){
 
-            if (status == Reasons.CONTRAINDICATE.name){
-                vaccineStatus = "Contraindicated"
-            }
-
-            //Add validation to check if in the Not administered we have a Contraindication.
-            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
-        }
-        else{
-            vaccineStatus = ""
+        statusValue = when(statusValue){
+            "Contraindicate", "Reschedule" -> statusValue +"d"
+            "Not_administered" -> "Not Administered"
+            else -> statusValue
         }
 
 
@@ -132,7 +94,7 @@ class VaccineDetailsAdapter(
         }
 
 
-        holder.tvScheduleStatus.text = vaccineStatus
+        holder.tvScheduleStatus.text = statusValue
         holder.tvVaccineName.text = vaccineName
         holder.tvVaccineDate.text = date
 
