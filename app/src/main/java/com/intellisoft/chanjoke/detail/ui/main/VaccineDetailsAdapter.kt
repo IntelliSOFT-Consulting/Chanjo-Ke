@@ -124,7 +124,7 @@ class VaccineDetailsAdapter(
         holder.iconDisabled.setOnClickListener {
 
             val message = if (status == Reasons.CONTRAINDICATE.name){
-                "The vaccine has been contraindicated."
+                "The vaccine cannot be administered, it has been contraindicated."
             }else{
                 "You are not eligible for this vaccine."
             }

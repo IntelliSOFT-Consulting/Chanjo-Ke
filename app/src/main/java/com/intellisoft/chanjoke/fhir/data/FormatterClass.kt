@@ -8,7 +8,6 @@ import android.content.res.Resources
 import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
-import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -29,7 +28,6 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import kotlin.math.abs
-import kotlin.math.log
 import kotlin.math.round
 import kotlin.random.Random
 
@@ -1548,6 +1546,66 @@ class FormatterClass {
 
     }
 
+    private fun findRelevantVaccineData(administeredList: List<DbVaccineData>, vaccineName: String): DbVaccineData? {
+        // Step 1: Check if any data has a status of COMPLETED
+        administeredList.firstOrNull {
+            it.status == Reasons.COMPLETED.name
+                    && it.vaccineName == vaccineName
+        }?.let { return it }
+
+        // Step 2: Check if any data has a status of CONTRAINDICATE
+        administeredList.firstOrNull {
+            it.status == Reasons.CONTRAINDICATE.name
+                    && it.vaccineName == vaccineName
+        }?.let { return it }
+
+        // Step 3: Filter for statuses RESCHEDULE or NOT_ADMINISTERED and find the one closest to today
+        return administeredList.filter {
+            (it.status == Reasons.RESCHEDULE.name
+                    || it.status == Reasons.NOT_ADMINISTERED.name)
+                    && it.vaccineName == vaccineName
+        }.minByOrNull { it.dateAdministered }
+    }
+
+    private fun isDate14DaysInFuture(dateAdministeredDbValue: LocalDate?): Boolean {
+
+        // Get today's date
+        val today = LocalDate.now()
+
+        // Check if the date is 14 days into the future
+        val daysBetween = ChronoUnit.DAYS.between(today, dateAdministeredDbValue)
+
+        return daysBetween in 1..14
+    }
+
+    private fun validateDates(earliestDate: String, latestDate: String, dateFormat: String = "MMM d yyyy"): String {
+        // Parse the string dates into LocalDate using the provided format
+        val formatter = DateTimeFormatter.ofPattern(dateFormat)
+        val parsedEarliestDate = LocalDate.parse(earliestDate, formatter)
+        val parsedLatestDate = LocalDate.parse(latestDate, formatter)
+
+        // Get today's date
+        val today = LocalDate.now()
+
+        // Step 1: Check if earliestDate is before today
+        if (parsedEarliestDate.isBefore(today)) {
+            return latestDate
+        }
+
+        // Step 2: Check if both earliestDate and latestDate are before today
+        if (parsedEarliestDate.isBefore(today) && parsedLatestDate.isBefore(today)) {
+            return latestDate
+        }
+
+        // Step 3: If both dates are in the future, return earliestDate
+        if (parsedEarliestDate.isAfter(today) && parsedLatestDate.isAfter(today)) {
+            return earliestDate
+        }
+
+        // Default case: return latestDate (if neither of the above conditions are met)
+        return latestDate
+    }
+
     fun getVaccineChildStatus(
         context: Context,
         flowType: String,
@@ -1557,28 +1615,29 @@ class FormatterClass {
         recommendationList: ArrayList<DbRecommendationDetails>
     ): DbVaccineScheduleChild {
 
-        var vaccineNameValue = vaccineName
         var dateValue = ""
         var status = ""
-        var statusValue = ""
+        var statusColor = ""
 
         var isVaccinatedValue = false
         var canBeVaccinated = false
-        var canBeVaccinatedValue = ""
-        var statusColor = ""
+
 
         var earliestDateStr = ""
         var latestDateStr = ""
-
-//        val upcomingRecommendationList = recommendationList.map { it.vaccineName }
-//        val administeredVaccineNamesList = administeredList.map { it.vaccineName }
 
         val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
         val patientDob = getSharedPref("patientDob", context).toString()
         val numberOfWeek = calculateWeeksFromDate(patientDob)
         val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
+        val today = LocalDate.now()
 
-        //1. Upcoming Recommendation
+        /**
+         * 1. Get the recommendation list
+         * - Get the dates
+         * - Compare between earliestDate and latestDate and return single date
+         * -
+         */
         val dbAppointmentDetailsDue = recommendationList.filter {
             it.vaccineName == vaccineName && it.status == "due"
         }.map { it }.firstOrNull()
@@ -1586,159 +1645,282 @@ class FormatterClass {
         if (dbAppointmentDetailsDue != null){
             val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
             val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
-            if (earliestDate!= null) {
-                earliestDateStr = earliestDate
-            }
-            if (latestDate!= null) {
-                latestDateStr = latestDate
-            }
             status = dbAppointmentDetailsDue.status
+
+            if (earliestDate != null && latestDate != null){
+
+                val earliestDateScheduleDate = dateScheduleFormat.parse(earliestDate)
+                val latestDateScheduleDate = dateScheduleFormat.parse(latestDate)
+
+                val earlyDate = earliestDateScheduleDate?.let { convertDateToLocalDate(it) }
+                val lateDate = latestDateScheduleDate?.let { convertDateToLocalDate(it) }
+
+                if (earlyDate != null && lateDate != null){
+
+                    val (statusData, date) = evaluateDateRange(earlyDate, today, lateDate)
+
+                    if (statusData == StatusValues.WITHIN_RANGE.name) {
+
+                        val dateValueStr = convertLocalDateToDate(earlyDate)
+                        dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+
+                        canBeVaccinated = true
+                        //It can be within range but but the color is red
+                        statusColor = if (earlyDate.isBefore(today)){
+                            StatusColors.RED.name
+                        }else{
+                            StatusColors.NORMAL.name
+                        }
+
+                    }else if (statusData == StatusValues.DUE.name) {
+                        canBeVaccinated = false
+                        statusColor = StatusColors.NORMAL.name
+
+                        val dateValueStr = convertLocalDateToDate(date)
+                        dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+
+                    }else if (statusData == StatusValues.MISSED.name) {
+                        canBeVaccinated = false
+                        statusColor = StatusColors.RED.name
+
+                        val dateValueStr = convertLocalDateToDate(date)
+                        dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+
+                        if (basicVaccine != null && numberOfWeek != null) {
+
+                            //Those vaccines that are late but can be vaccinated still
+                            val vaccineCode = basicVaccine.vaccineCode
+
+                            //Specific Validations
+                            when (vaccineCode) {
+                                "IMBCG-I" -> {
+                                    //BCG can be administered from 0 weeks to 255 weeks
+                                    if (numberOfWeek in 0..255) {
+                                        val latestDateValue = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+                                        if (latestDateValue != null) {
+                                            dateValue = latestDateValue
+                                        }
+                                        canBeVaccinated = true
+                                        statusColor = StatusColors.NORMAL.name
+                                    }
+                                }
+                                "IMPO-bOPV" -> {
+                                    //bOPV can be administered from 0 weeks to 2 weeks
+                                    if (numberOfWeek <= 2) {
+                                        val latestDateValue = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+                                        if (latestDateValue != null) {
+                                            dateValue = latestDateValue
+                                        }
+                                        canBeVaccinated = true
+                                        statusColor = StatusColors.NORMAL.name
+                                    }
+                                }
+                            }
+
+                        }
+
+
+                    }else{
+                        canBeVaccinated = false
+                        statusColor = StatusColors.NORMAL.name
+
+                        val dateValueStr = convertLocalDateToDate(date)
+                        dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+                    }
+                }
+            }
         }
 
-        val result = administeredList.filter { it.vaccineName == vaccineName }
-            .let { filteredList ->
-                // Check for a contraindication first
-                val contraindication = filteredList.firstOrNull { it.status == Reasons.CONTRAINDICATE.name }
-                contraindication ?: filteredList.minByOrNull { it.dateRecorded }
+        /**
+         * 2. Administered , Contraindicate and Reschedule filter
+         * - Completed vaccines will just update the isVaccinatedValue to true
+         * - Reschedule and Not administered can be administered if the dates are within a 14 day gap
+         */
+        val filteredVaccineData = findRelevantVaccineData(administeredList, vaccineName)
+        if (filteredVaccineData != null){
+
+            //Populate values
+            val statusDbValue = filteredVaccineData.status
+            val dateAdministeredDbValue = filteredVaccineData.dateAdministered
+
+            dateValue = dateAdministeredDbValue
+            status = statusDbValue
+
+            // change isVaccinatedValue to true
+            if (statusDbValue == Reasons.COMPLETED.name){
+                isVaccinatedValue = true
+                statusColor = StatusColors.GREEN.name
             }
 
-        if (result != null){
+            /**
+             * - Reschedule / Not administered
+             * - Check if the two have dateAdministeredDbValue, is within 14 days
+             */
+            if (statusDbValue == Reasons.RESCHEDULE.name ||
+                statusDbValue == Reasons.NOT_ADMINISTERED.name){
 
-            status = result.status
-            dateValue = result.dateAdministered
+                val dateScheduleDate = dateScheduleFormat.parse(dateAdministeredDbValue)
+                val vaccineDateLocal = dateScheduleDate?.let { convertDateToLocalDate(it) }
 
-        }
-        //4. Administered Vaccine
-        val dbAppointmentDetails = administeredList.filter {
-            it.vaccineName == vaccineName && it.status == Reasons.COMPLETED.name
-        }.map { it }.firstOrNull()
+                val isWithin14 = isDate14DaysInFuture(vaccineDateLocal)
+                val isToday = today.equals(vaccineDateLocal)
 
-        if (dbAppointmentDetails != null){
-            isVaccinatedValue = true
-            status = dbAppointmentDetails.status
-            dateValue = dbAppointmentDetails.dateAdministered
-        }
-
-        //Cater for recommendations
-        if (status == "due" && earliestDateStr != "" && latestDateStr != "") {
-
-            val earliestDateScheduleDate = dateScheduleFormat.parse(earliestDateStr)
-            val latestDateScheduleDate = dateScheduleFormat.parse(latestDateStr)
-
-            if (earliestDateScheduleDate != null && latestDateScheduleDate != null) {
-                val earlyDate = convertDateToLocalDate(earliestDateScheduleDate)
-                val lateDate = convertDateToLocalDate(latestDateScheduleDate)
-                val today = LocalDate.now()
-
-                val (status, date) = evaluateDateRange(earlyDate, today, lateDate)
-
-                if (status == StatusValues.WITHIN_RANGE.name) {
-
-                    val dateValueStr = convertLocalDateToDate(earlyDate)
-                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
-
+                if (isWithin14 || isToday){
+                    //This is within 14 days after today
+                    statusColor = StatusColors.AMBER.name
                     canBeVaccinated = true
-                    //It can be within range but but the color is red
-                    statusColor = if (earlyDate.isBefore(today)){
-                        StatusColors.RED.name
+                }else{
+
+                    // This is neither today or within the next 14 days
+                    statusColor = if (vaccineDateLocal != null){
+                        //Check if the date is before today
+                        if (vaccineDateLocal.isBefore(today)){
+                            StatusColors.RED.name
+                        }else{
+                            StatusColors.NORMAL.name
+                        }
                     }else{
                         StatusColors.NORMAL.name
                     }
 
-                }else if (status == StatusValues.DUE.name) {
-                    canBeVaccinated = false
-                    statusColor = StatusColors.NORMAL.name
-
-                    val dateValueStr = convertLocalDateToDate(date)
-                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
-
-                }else if (status == StatusValues.MISSED.name) {
-                    canBeVaccinated = false
-                    statusColor = StatusColors.RED.name
-
-                    val dateValueStr = convertLocalDateToDate(date)
-                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
-
-                    if (basicVaccine != null && numberOfWeek != null) {
-
-                        //Those vaccines that are late but can be vaccinated still
-                        val vaccineCode = basicVaccine.vaccineCode
-
-                        //Specific Validations
-                        when (vaccineCode) {
-                            "IMBCG-I" -> {
-                                //BCG can be administered from 0 weeks to 255 weeks
-                                if (numberOfWeek in 0..255) {
-                                    if (dbAppointmentDetailsDue != null){
-                                        val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
-                                        if (latestDate != null) {
-                                            dateValue = latestDate
-                                        }
-                                    }
-                                    canBeVaccinated = true
-                                    statusColor = StatusColors.NORMAL.name
-                                }
-                            }
-                            "IMPO-bOPV" -> {
-                                //bOPV can be administered from 0 weeks to 2 weeks
-                                if (numberOfWeek <= 2) {
-                                    if (dbAppointmentDetailsDue != null){
-                                        val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
-                                        if (latestDate != null) {
-                                            dateValue = latestDate
-                                        }
-                                    }
-                                    canBeVaccinated = true
-                                    statusColor = StatusColors.NORMAL.name
-                                }
-                            }
-                        }
-
-                    }
-
-
-                }else{
-                    canBeVaccinated = false
-                    statusColor = StatusColors.NORMAL.name
-
-                    val dateValueStr = convertLocalDateToDate(date)
-                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
-
-                }
-
-            }
-        }
-
-        if (status == Reasons.RESCHEDULE.name || statusValue == Reasons.NOT_ADMINISTERED.name){
-
-            val dateScheduleDate = dateScheduleFormat.parse(dateValue)
-            if (dateScheduleDate != null){
-                val today = LocalDate.now()
-                val dateSchedule = convertDateToLocalDate(dateScheduleDate)
-                val isBeforeDateSchedule = today.isBefore(dateSchedule)
-                val isToday = today.equals(dateSchedule)
-                val finalDayDate = isBeforeDateSchedule || isToday
-
-                if (finalDayDate){
-                    canBeVaccinated = true
                 }
             }
 
-
-            //This handles the Reschedule
-            if (status == Reasons.RESCHEDULE.name){
-                statusColor = StatusColors.AMBER.name
+            /**
+             * - Contraindicate
+             */
+            if(statusDbValue == Reasons.CONTRAINDICATE.name){
+                canBeVaccinated = false
+                statusColor = StatusColors.NOT_DONE.name
             }
 
         }
 
-        if (status == Reasons.COMPLETED.name) {
-            statusColor = StatusColors.GREEN.name
-        }
 
-        if (status == Reasons.CONTRAINDICATE.name){
-            statusColor = StatusColors.NOT_DONE.name
-        }
+//        //Cater for recommendations
+//        if (status == "due" && earliestDateStr != "" && latestDateStr != "") {
+//
+//            val earliestDateScheduleDate = dateScheduleFormat.parse(earliestDateStr)
+//            val latestDateScheduleDate = dateScheduleFormat.parse(latestDateStr)
+//
+//            if (earliestDateScheduleDate != null && latestDateScheduleDate != null) {
+//                val earlyDate = convertDateToLocalDate(earliestDateScheduleDate)
+//                val lateDate = convertDateToLocalDate(latestDateScheduleDate)
+//                val today = LocalDate.now()
+//
+//                val (status, date) = evaluateDateRange(earlyDate, today, lateDate)
+//
+//                if (status == StatusValues.WITHIN_RANGE.name) {
+//
+//                    val dateValueStr = convertLocalDateToDate(earlyDate)
+//                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+//
+//                    canBeVaccinated = true
+//                    //It can be within range but but the color is red
+//                    statusColor = if (earlyDate.isBefore(today)){
+//                        StatusColors.RED.name
+//                    }else{
+//                        StatusColors.NORMAL.name
+//                    }
+//
+//                }else if (status == StatusValues.DUE.name) {
+//                    canBeVaccinated = false
+//                    statusColor = StatusColors.NORMAL.name
+//
+//                    val dateValueStr = convertLocalDateToDate(date)
+//                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+//
+//                }else if (status == StatusValues.MISSED.name) {
+//                    canBeVaccinated = false
+//                    statusColor = StatusColors.RED.name
+//
+//                    val dateValueStr = convertLocalDateToDate(date)
+//                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+//
+//                    if (basicVaccine != null && numberOfWeek != null) {
+//
+//                        //Those vaccines that are late but can be vaccinated still
+//                        val vaccineCode = basicVaccine.vaccineCode
+//
+//                        //Specific Validations
+//                        when (vaccineCode) {
+//                            "IMBCG-I" -> {
+//                                //BCG can be administered from 0 weeks to 255 weeks
+//                                if (numberOfWeek in 0..255) {
+//                                    if (dbAppointmentDetailsDue != null){
+//                                        val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+//                                        if (latestDate != null) {
+//                                            dateValue = latestDate
+//                                        }
+//                                    }
+//                                    canBeVaccinated = true
+//                                    statusColor = StatusColors.NORMAL.name
+//                                }
+//                            }
+//                            "IMPO-bOPV" -> {
+//                                //bOPV can be administered from 0 weeks to 2 weeks
+//                                if (numberOfWeek <= 2) {
+//                                    if (dbAppointmentDetailsDue != null){
+//                                        val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+//                                        if (latestDate != null) {
+//                                            dateValue = latestDate
+//                                        }
+//                                    }
+//                                    canBeVaccinated = true
+//                                    statusColor = StatusColors.NORMAL.name
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//
+//
+//                }else{
+//                    canBeVaccinated = false
+//                    statusColor = StatusColors.NORMAL.name
+//
+//                    val dateValueStr = convertLocalDateToDate(date)
+//                    dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//        if (
+//            status == Reasons.RESCHEDULE.name ||
+//            statusValue == Reasons.NOT_ADMINISTERED.name ||
+//            status == Reasons.NOT_ADMINISTERED.name
+//            ){
+//
+//            val dateScheduleDate = dateScheduleFormat.parse(dateValue)
+//            if (dateScheduleDate != null){
+//                val today = LocalDate.now()
+//                val dateSchedule = convertDateToLocalDate(dateScheduleDate)
+//                val isBeforeDateSchedule = today.isBefore(dateSchedule)
+//                val isToday = today.equals(dateSchedule)
+//                val finalDayDate = isBeforeDateSchedule || isToday
+//
+//                if (finalDayDate){
+//                    canBeVaccinated = true
+//                }
+//            }
+//
+//            //This handles the Reschedule
+//            if (status == Reasons.RESCHEDULE.name){
+//                statusColor = StatusColors.AMBER.name
+//            }
+//
+//        }
+//
+//        if (status == Reasons.COMPLETED.name) {
+//            statusColor = StatusColors.GREEN.name
+//        }
+//
+//        if (status == Reasons.CONTRAINDICATE.name){
+//            statusColor = StatusColors.NOT_DONE.name
+//        }
 
         return DbVaccineScheduleChild(
             vaccineName,
