@@ -150,7 +150,7 @@ class LandingPage : Fragment() {
                 findNavController().navigate(R.id.reportsFragment)
             }
 
-            "Referrals" -> {
+            "Community Referrals" -> {
                 formatterClass.saveSharedPref(
                     "patientListAction",
                     NavigationDetails.REFERRALS.name, requireContext()

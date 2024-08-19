@@ -84,7 +84,7 @@ class ReferralDetailFragment : Fragment() {
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-            title = "Referrals"
+            title = "Community Referrals"
             setDisplayShowHomeEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }

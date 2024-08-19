@@ -162,9 +162,10 @@ class PatientDetailsViewModel(
 
             if (it.hasContact()) {
                 it.contact.forEach {
-                    val name = it.name.nameAsSingleString
-                    val phone = it.telecomFirstRep.value
-                    val type = it.relationshipFirstRep.text
+                    val name = if (it.hasName()) it.name.nameAsSingleString else ""
+                    val phone = if (it.hasTelecom() && it.telecomFirstRep.hasValue()) it.telecomFirstRep.value else ""
+                    val type = if (it.hasRelationship() && it.relationshipFirstRep.hasText()) it.relationshipFirstRep.text else ""
+
                     kins.add(CareGiver(phone = phone, name = name, type = type, nationalID = ""))
                 }
 

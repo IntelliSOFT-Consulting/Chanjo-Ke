@@ -103,6 +103,8 @@ class VaccineDetailsAdapter(
             }
         }else if (status == StatusColors.NOT_DONE.name){
             vaccineStatus = "Not Administered"
+            //Add validation to check if in the Not administered we have a Contraindication.
+
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.colorAccent))
         } else{
             vaccineStatus = ""

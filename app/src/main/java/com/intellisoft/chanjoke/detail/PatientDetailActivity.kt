@@ -35,6 +35,7 @@ import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.FhirSyncWorker
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.fhir.data.Reasons
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -199,7 +200,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
     private fun setupSpinner() {
 
-        val actionList = listOf("", "All Details", "Appointment", "Referrals")
+        val actionList = listOf("", "All Details", "Appointment", "Community Referrals")
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_item, actionList)
@@ -238,7 +239,7 @@ class PatientDetailActivity : AppCompatActivity() {
                             startActivity(intent)
                         }
 
-                        "Referrals" -> {
+                        "Community Referrals" -> {
 
                             // temporarily store details
                             val temp = DbTempData(
@@ -354,6 +355,7 @@ class PatientDetailActivity : AppCompatActivity() {
         val clientObjectionList = patientDetailsViewModel.getRecommendationStatus(notAdministeredList)
 
         var message = "This patient has not received certain vaccines. \nFind the details:\n"
+        var isDialog = false
 
         clientObjectionList.forEach {
             val statusValue = it.statusValue
@@ -364,13 +366,18 @@ class PatientDetailActivity : AppCompatActivity() {
                     statusValue.contains("Religious Reasons")){
                     val dialogMessage = "$vaccineName because of $statusValue \n"
                     message += dialogMessage
+                    isDialog = true
+                }
+                if (statusValue.contains("Contraindicate")){
+                    formatterClass.saveSharedPref("${Reasons.CONTRAINDICATE.name} VALUES",vaccineName, this)
                 }
             }
         }
         message += "Please review the patient's vaccination status and proceed accordingly."
 
-        CoroutineScope(Dispatchers.Main).launch { showCancelDialog("Vaccine Administration Notice", message) }
-
+        if (isDialog){
+            CoroutineScope(Dispatchers.Main).launch { showCancelDialog("Vaccine Administration Notice", message) }
+        }
 
     }
 

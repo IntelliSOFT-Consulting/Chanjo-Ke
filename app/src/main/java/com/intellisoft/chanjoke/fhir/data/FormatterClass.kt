@@ -264,6 +264,7 @@ class FormatterClass {
             "appointmentFlow",
             "patientGender",
             "workflowVaccinationType",
+            "${Reasons.CONTRAINDICATE.name} VALUES"
         )
         vaccinationListToClear.forEach {
             deleteSharedPref(it, context)
@@ -1558,6 +1559,7 @@ class FormatterClass {
 
         var vaccineNameValue = vaccineName
         var dateValue = ""
+        var status = ""
         var statusValue = ""
 
         var isVaccinatedValue = false
@@ -1590,7 +1592,7 @@ class FormatterClass {
             if (latestDate!= null) {
                 latestDateStr = latestDate
             }
-            statusValue = dbAppointmentDetailsDue.status
+            status = dbAppointmentDetailsDue.status
         }
 
         //2. Reschedule Vaccine
@@ -1608,7 +1610,7 @@ class FormatterClass {
             .maxByOrNull { it.dateRecorded }
         if (latestDateToBeAdministered != null){
 
-            statusValue = latestDateToBeAdministered.status
+            status = latestDateToBeAdministered.status
             dateValue = latestDateToBeAdministered.dateAdministered
 
         }
@@ -1621,12 +1623,12 @@ class FormatterClass {
 
         if (dbAppointmentDetails != null){
             isVaccinatedValue = true
-            statusValue = dbAppointmentDetails.status
+            status = dbAppointmentDetails.status
             dateValue = dbAppointmentDetails.dateAdministered
         }
 
         //Cater for recommendations
-        if (statusValue == "due" && earliestDateStr != "" && latestDateStr != "") {
+        if (status == "due" && earliestDateStr != "" && latestDateStr != "") {
 
             val earliestDateScheduleDate = dateScheduleFormat.parse(earliestDateStr)
             val latestDateScheduleDate = dateScheduleFormat.parse(latestDateStr)
@@ -1715,7 +1717,7 @@ class FormatterClass {
             }
         }
 
-        if (statusValue == Reasons.CONTRAINDICATE.name || statusValue == Reasons.NOT_ADMINISTERED.name){
+        if (status == Reasons.CONTRAINDICATE.name || statusValue == Reasons.NOT_ADMINISTERED.name){
 
             val dateScheduleDate = dateScheduleFormat.parse(dateValue)
             if (dateScheduleDate != null){
@@ -1730,16 +1732,24 @@ class FormatterClass {
                 }
             }
 
-            if (statusValue == Reasons.NOT_ADMINISTERED.name){
+            //Contraindicate has been moved here as an option to be catered by this
+            if (status == Reasons.NOT_ADMINISTERED.name){
+
+                //Check for Contraindicated values
+
+
+
                 statusColor = StatusColors.NOT_DONE.name
             }
-            if (statusValue == Reasons.CONTRAINDICATE.name){
+
+            //This handles the Reschedule
+            if (status == Reasons.CONTRAINDICATE.name){
                 statusColor = StatusColors.AMBER.name
             }
 
         }
 
-        if (statusValue == Reasons.COMPLETED.name) {
+        if (status == Reasons.COMPLETED.name) {
             statusColor = StatusColors.GREEN.name
         }
 

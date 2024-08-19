@@ -186,7 +186,9 @@ class ContraindicationsFragment : Fragment() {
                                     } else {
                                         if (resultList.last() == spinnerReasons || spinnerReasons.contains("Contraindication")) {
                                             if (!TextUtils.isEmpty(otherReasons)) {
-                                                forecastReason = otherReasons
+                                                if(spinnerReasons.contains("Contraindication")){
+                                                    forecastReason = "Contraindicated: $otherReasons"
+                                                }else forecastReason = otherReasons
                                             } else {
                                                 binding.etOtherReasons.error =
                                                     "Field cannot be empty.."
