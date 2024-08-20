@@ -126,7 +126,11 @@ class PatientDetailsViewModel(
         var middleName = ""
         var lastName = ""
         val kins = mutableListOf<CareGiver>()
-        searchResult.first().let { it ->
+        var isAlive: Boolean = true
+        searchResult.first().let {
+            isAlive = if (it.resource.hasDeceased()) {
+                !it.resource.deceasedBooleanType.value
+            } else true
             logicalId = it.resource.logicalId
             name = if (it.resource.hasName()) {
                 // display name in order as fname, then others
@@ -161,7 +165,7 @@ class PatientDetailsViewModel(
             }
 
             if (it.resource.hasContact()) {
-                it.resource.contact.forEach {k->
+                it.resource.contact.forEach { k ->
                     val name1 = k.name.nameAsSingleString
                     val phone1 = k.telecomFirstRep.value
                     val type1 = k.relationshipFirstRep.text
@@ -174,7 +178,7 @@ class PatientDetailsViewModel(
                                 nationalID = ""
                             )
                         )
-                    }catch (e:Exception){
+                    } catch (e: Exception) {
                         Timber.e("Crash Error ${e.message}")
                     }
                 }
@@ -277,7 +281,8 @@ class PatientDetailsViewModel(
             ward = ward,
             trading = trading,
             estate = estate,
-            kins = kins
+            kins = kins,
+            isAlive = isAlive
         )
     }
 
@@ -300,7 +305,8 @@ class PatientDetailsViewModel(
         val ward: String?,
         val trading: String?,
         val estate: String?,
-        val kins: List<CareGiver>?
+        val kins: List<CareGiver>?,
+        val isAlive: Boolean = true
 
     ) {
         override fun toString(): String = name
