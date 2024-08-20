@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentAdministrativeBinding
@@ -23,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.InputStreamReader
 
 
@@ -97,56 +99,46 @@ class AdministrativeFragment : Fragment() {
             displayInitialData()
         }
         try {
-            val gson = Gson()
-            val inputStream =
-                context?.assets?.open("county.json") // Path relative to assets directory
-            val reader = InputStreamReader(inputStream)
-            val counties = gson.fromJson(reader, Array<County>::class.java)
+            lifecycleScope.launch {
+                val counties = loadCountiesLazily(requireContext(), "county.json")
+                val wards = loadWardsLazily(requireContext(), "wards.json")
+                countyList.clear()
+                counties.forEach { county ->
+                    countyList.add(county.name)
 
-            val inputStreamWard =
-                context?.assets?.open("wards.json") // Path relative to assets directory
-            val readerWard = InputStreamReader(inputStreamWard)
-            val wards = gson.fromJson(readerWard, Array<SubCountyWard>::class.java)
+                }
+                val adapterType =
+                    ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_dropdown_item_1line,
+                        countyList
+                    )
+                binding.apply {
+                    county.apply {
+                        setAdapter(adapterType)
+                        addTextChangedListener(object : TextWatcher {
+                            override fun beforeTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                count: Int,
+                                after: Int
+                            ) {
+                            }
 
-            countyList.clear()
-            counties.forEach { county ->
-                countyList.add(county.name)
+                            override fun onTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                before: Int,
+                                count: Int
+                            ) {
 
-            }
+                            }
 
-            val adapterType =
-                ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_dropdown_item_1line,
-                    countyList
-                )
-
-            binding.apply {
-                county.apply {
-                    setAdapter(adapterType)
-                    addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
-
-                        }
-
-                        override fun afterTextChanged(s: Editable?) {
-                            val value = s.toString()
-                            if (value.isNotEmpty()) {
-                                binding.telCounty.error = null
-                                updatePrefs()
+                            override fun afterTextChanged(s: Editable?) {
+                                val value = s.toString()
+                                if (value.isNotEmpty()) {
+                                    binding.telCounty.error = null
+                                    updatePrefs()
                                 val county = counties.find { it.name == value }
                                 if (county != null) {
                                     subCountyList.clear()
@@ -165,36 +157,36 @@ class AdministrativeFragment : Fragment() {
                                     }
 
                                 }
+                                }
                             }
-                        }
-                    })
+                        })
 
-                }
-                subCounty.apply {
+                    }
+                    subCounty.apply {
 
-                    addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-                        }
+                        addTextChangedListener(object : TextWatcher {
+                            override fun beforeTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                count: Int,
+                                after: Int
+                            ) {
+                            }
 
-                        override fun onTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
+                            override fun onTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                before: Int,
+                                count: Int
+                            ) {
 
-                        }
+                            }
 
-                        override fun afterTextChanged(s: Editable?) {
-                            val value = s.toString()
-                            if (value.isNotEmpty()) {
-                                binding.telSubCounty.error = null
-                                updatePrefs()
+                            override fun afterTextChanged(s: Editable?) {
+                                val value = s.toString()
+                                if (value.isNotEmpty()) {
+                                    binding.telSubCounty.error = null
+                                    updatePrefs()
                                 val subCounty =
                                     wards.find { it.subCounty.lowercase() == value.lowercase() }
                                 if (subCounty != null) {
@@ -214,124 +206,158 @@ class AdministrativeFragment : Fragment() {
                                         setAdapter(subCountyAdapter)
                                     }
                                 }
+                                }
                             }
-                        }
-                    })
+                        })
 
-                }
-                ward.apply {
-
-                    addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
-
-                        }
-
-                        override fun afterTextChanged(s: Editable?) {
-                            val value = s.toString()
-                            if (value.isNotEmpty()) {
-                                binding.telWard.error = null
-                                updatePrefs()
-
-                            }
-                        }
-                    })
-
-                }
-                previousButton.apply {
-                    setOnClickListener {
-                        updatePrefs()
-                        mListener?.onPreviousPageRequested()
                     }
-                }
-                nextButton.apply {
-                    setOnClickListener {
-                        if (validData()) {
-                            val data = retrievedEnteredData()
-                            onNextButtonClickListener?.onNextButtonClicked(data)
-                            CoroutineScope(Dispatchers.Main).launch {
-                                delay(1000) // Delay for 1000 milliseconds (1 second)
-                                mListener?.onNextPageRequested()
+                    ward.apply {
+
+                        addTextChangedListener(object : TextWatcher {
+                            override fun beforeTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                count: Int,
+                                after: Int
+                            ) {
                             }
+
+                            override fun onTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                before: Int,
+                                count: Int
+                            ) {
+
+                            }
+
+                            override fun afterTextChanged(s: Editable?) {
+                                val value = s.toString()
+                                if (value.isNotEmpty()) {
+                                    binding.telWard.error = null
+                                    updatePrefs()
+
+                                }
+                            }
+                        })
+
+                    }
+                    previousButton.apply {
+                        setOnClickListener {
+                            updatePrefs()
+                            mListener?.onPreviousPageRequested()
                         }
                     }
-                }
-                estate.apply {
-                    addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
-
-                        }
-
-                        override fun afterTextChanged(s: Editable?) {
-                            val value = s.toString()
-                            if (value.isNotEmpty()) {
-                                binding.telEstate.error = null
-                                updatePrefs()
-
+                    nextButton.apply {
+                        setOnClickListener {
+                            if (validData()) {
+                                val data = retrievedEnteredData()
+                                onNextButtonClickListener?.onNextButtonClicked(data)
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    delay(1000) // Delay for 1000 milliseconds (1 second)
+                                    mListener?.onNextPageRequested()
+                                }
                             }
                         }
-                    })
+                    }
+                    estate.apply {
+                        addTextChangedListener(object : TextWatcher {
+                            override fun beforeTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                count: Int,
+                                after: Int
+                            ) {
+                            }
 
-                }
-                trading.apply {
-                    addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
-
-                        }
-
-                        override fun afterTextChanged(s: Editable?) {
-                            val value = s.toString()
-                            if (value.isNotEmpty()) {
-                                binding.telTrading.error = null
-                                updatePrefs()
+                            override fun onTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                before: Int,
+                                count: Int
+                            ) {
 
                             }
-                        }
-                    })
+
+                            override fun afterTextChanged(s: Editable?) {
+                                val value = s.toString()
+                                if (value.isNotEmpty()) {
+                                    binding.telEstate.error = null
+                                    updatePrefs()
+
+                                }
+                            }
+                        })
+
+                    }
+                    trading.apply {
+                        addTextChangedListener(object : TextWatcher {
+                            override fun beforeTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                count: Int,
+                                after: Int
+                            ) {
+                            }
+
+                            override fun onTextChanged(
+                                s: CharSequence?,
+                                start: Int,
+                                before: Int,
+                                count: Int
+                            ) {
+
+                            }
+
+                            override fun afterTextChanged(s: Editable?) {
+                                val value = s.toString()
+                                if (value.isNotEmpty()) {
+                                    binding.telTrading.error = null
+                                    updatePrefs()
+
+                                }
+                            }
+                        })
+
+                    }
 
                 }
-
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private suspend fun loadCountiesLazily(context: Context?, fileName: String): Array<County> {
+        return withContext(Dispatchers.IO) {
+            val gson = Gson()
+
+            // Load counties data
+            val inputStream = context?.assets?.open(fileName)
+            val counties: Array<County> = inputStream?.use { stream ->
+                val reader = InputStreamReader(stream)
+                val className = Array<County>::class.java
+                gson.fromJson(reader, className)
+            } ?: emptyArray()
+
+            // Return the loaded counties
+            counties
+        }
+    }
+    private suspend fun loadWardsLazily(context: Context?, fileName: String): Array<SubCountyWard> {
+        return withContext(Dispatchers.IO) {
+            val gson = Gson()
+
+            // Load counties data
+            val inputStream = context?.assets?.open(fileName)
+            val counties: Array<SubCountyWard> = inputStream?.use { stream ->
+                val reader = InputStreamReader(stream)
+                val className = Array<SubCountyWard>::class.java
+                gson.fromJson(reader, className)
+            } ?: emptyArray()
+
+            // Return the loaded counties
+            counties
         }
     }
 

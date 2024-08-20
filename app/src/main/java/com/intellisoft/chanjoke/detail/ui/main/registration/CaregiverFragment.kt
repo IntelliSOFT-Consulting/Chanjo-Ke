@@ -335,14 +335,14 @@ class CaregiverFragment : Fragment() {
             Toast.makeText(requireContext(), "Please enter name", Toast.LENGTH_SHORT).show()
             return false
         }
-//        if (kinPhone.isEmpty()) {
-//            Toast.makeText(requireContext(), "Please enter phone", Toast.LENGTH_SHORT).show()
-//            return false
-//        }
-//        if (kinPhone.length != 10) {
-//            Toast.makeText(requireContext(), "Please valid enter phone", Toast.LENGTH_SHORT).show()
-//            return false
-//        }
+        if (kinPhone.isEmpty()) {
+            Toast.makeText(requireContext(), "Please enter phone", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (kinPhone.length != 10) {
+            Toast.makeText(requireContext(), "Please valid enter phone", Toast.LENGTH_SHORT).show()
+            return false
+        }
 //        val payload = CareGiver(kinType, kinName, kinPhone)
 //        formatter.saveSharedPref("caregiver", Gson().toJson(payload), requireContext())
         return true
