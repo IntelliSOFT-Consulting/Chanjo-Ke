@@ -71,7 +71,10 @@ class VaccineDetailsAdapter(
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
         }else if (statusValue.equals("Due", true)){
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
-        }else{
+        }else if (statusValue.equals("", true)){
+            //Works best with the non-routine
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
+        } else{
             statusValue = "Upcoming"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
         }
