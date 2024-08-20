@@ -610,15 +610,15 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
                 val id = generateUuid()
 
-                val (Pair1, Pair2) = immunizationHandler.getVaccineDataList()
+                val (routineList, nonRoutineList) = immunizationHandler.getVaccineDataList()
                 val immunizationRecommendation = ImmunizationRecommendation()
 
                 immunizationRecommendation.id = id
                 immunizationRecommendation.patient = Reference("Patient/$patientId")
                 immunizationRecommendation.date = Date()
 
-                val recommendationList1 = createImmunizationRecommendation(selectedDate, Pair1, context)
-                val recommendationList2 = createImmunizationRecommendation(selectedDate, Pair2, context)
+                val recommendationList1 = createImmunizationRecommendation(selectedDate, routineList, context)
+                val recommendationList2 = createImmunizationRecommendation(selectedDate, nonRoutineList, context)
 
                 val recommendationList = recommendationList1 + recommendationList2
 
@@ -769,8 +769,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
                 recommendation.description = type.toLowerCase()
 
-                val routineKeyList = sharedPreferences.getString("routineList", null)
-                val expandableListTitle = routineKeyList!!.split(",").toList()
+                val nonRoutineList = sharedPreferences.getString("nonRoutineList", null)
+                val expandableListTitle = nonRoutineList!!.split(",").toList()
 
                 expandableListTitle.forEach { keyValue ->
 
@@ -782,18 +782,10 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                             recommendation.series = weekNo
                         }
                     }
-
                 }
-
-
-
                 recommendationList.add(recommendation)
-
             }
-
-
         }
-
         return recommendationList
     }
 
