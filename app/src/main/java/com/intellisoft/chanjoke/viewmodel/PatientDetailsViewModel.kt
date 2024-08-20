@@ -126,7 +126,7 @@ class PatientDetailsViewModel(
         var middleName = ""
         var lastName = ""
         val kins = mutableListOf<CareGiver>()
-        searchResult.first().let {
+        searchResult.first().let { it ->
             logicalId = it.resource.logicalId
             name = if (it.resource.hasName()) {
                 // display name in order as fname, then others
@@ -161,11 +161,22 @@ class PatientDetailsViewModel(
             }
 
             if (it.resource.hasContact()) {
-                it.resource.contact.forEach {
-                    val name = it.name.nameAsSingleString
-                    val phone = it.telecomFirstRep.value
-                    val type = it.relationshipFirstRep.text
-                    kins.add(CareGiver(phone = phone, name = name, type = type, nationalID = ""))
+                it.resource.contact.forEach {k->
+                    val name1 = k.name.nameAsSingleString
+                    val phone1 = k.telecomFirstRep.value
+                    val type1 = k.relationshipFirstRep.text
+                    try {
+                        kins.add(
+                            CareGiver(
+                                phone = phone1,
+                                name = name1,
+                                type = type1,
+                                nationalID = ""
+                            )
+                        )
+                    }catch (e:Exception){
+                        Timber.e("Crash Error ${e.message}")
+                    }
                 }
 
                 if (it.resource.contactFirstRep.hasName()) contact_name =
