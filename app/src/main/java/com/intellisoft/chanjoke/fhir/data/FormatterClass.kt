@@ -1721,13 +1721,17 @@ class FormatterClass {
                                 "IMBCG-I" -> {
                                     //BCG can be administered from 0 weeks to 255 weeks
                                     if (numberOfWeek in 0..255) {
+                                        canBeVaccinated = true
+                                        statusColor = StatusColors.NORMAL.name
+
                                         val latestDateValue = convertDateFormat(dbAppointmentDetailsDue.latestDate)
                                         if (latestDateValue != null) {
                                             dateValue = latestDateValue
                                         }
-                                        canBeVaccinated = true
-                                        statusColor = StatusColors.NORMAL.name
-                                        statusValue = "Due"
+
+                                        //By Muyundo OP-482
+                                        statusValue = if (numberOfWeek in 0..2)  "Due" else "Missed"
+
                                     }
                                 }
                                 "IMPO-bOPV" -> {
