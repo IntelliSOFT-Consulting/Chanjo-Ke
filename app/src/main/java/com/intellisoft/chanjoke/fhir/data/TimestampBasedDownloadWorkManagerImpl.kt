@@ -25,7 +25,7 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
             "Patient?_sort=_lastUpdated",
             "ImmunizationRecommendation",
             "CarePlan",
-            "Immunization",
+            "Immunization?_count=1000",
             "Practitioner?_count=100",
             "ServiceRequest",
             "RelatedPerson",
