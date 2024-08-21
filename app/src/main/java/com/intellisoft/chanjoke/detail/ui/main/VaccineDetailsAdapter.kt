@@ -75,7 +75,7 @@ class VaccineDetailsAdapter(
             //Works best with the non-routine
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
         } else{
-            statusValue = "xxxx"
+            statusValue = "Upcoming"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
         }
 

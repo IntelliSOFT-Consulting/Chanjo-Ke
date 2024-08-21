@@ -11,6 +11,7 @@ import android.view.WindowManager
 import android.widget.DatePicker
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
@@ -20,17 +21,26 @@ import com.intellisoft.chanjoke.detail.PatientDetailActivity
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.vaccine.stock_management.VaccineStockManagement
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class BlurBackgroundDialog(
     private val fragment: Fragment,
-    context: Context
+    context: Context,
+    private var patientDetailsViewModel: PatientDetailsViewModel? = null
 ) : Dialog(context) {
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.layout_blur_background)
+
+
         // Set window attributes to cover the entire screen
         window?.apply {
             attributes?.width = WindowManager.LayoutParams.MATCH_PARENT
@@ -112,7 +122,7 @@ class BlurBackgroundDialog(
         }
 
         appointmentDate.setOnClickListener {
-            showDatePickerDialog(context, appointmentDate, closeMaterialButton)
+            showDatePickerDialog(context, appointmentDate, tvAppointmentNo, closeMaterialButton)
         }
 
         closeMaterialButton.setOnClickListener {
@@ -160,6 +170,7 @@ class BlurBackgroundDialog(
     private fun showDatePickerDialog(
         context: Context,
         appointmentDate: TextView,
+        tvAppointmentNo: TextView,
         closeMaterialButton: MaterialButton
     ) {
 
@@ -180,6 +191,11 @@ class BlurBackgroundDialog(
                 val formattedDate = "$selectedDay-${selectedMonth + 1}-$selectedYear"
                 appointmentDate.text = formattedDate
 
+                Toast.makeText(context,
+                    "Please wait as we calculate the number of appointments",
+                    Toast.LENGTH_SHORT).show()
+
+                getDateAppointments(context, formattedDate, tvAppointmentNo)
 
             },
             year,
@@ -190,5 +206,26 @@ class BlurBackgroundDialog(
 
         // Show the DatePickerDialog
         datePickerDialog.show()
+    }
+
+    private fun getDateAppointments(
+        context: Context,
+        formattedDate: String,
+        tvAppointmentNo: TextView
+    ) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val recommendationList = patientDetailsViewModel?.getRecommendationDate(formattedDate) ?: emptyList()
+            val appointmentList = patientDetailsViewModel?.getAppointmentList() ?: emptyList()
+
+            val appointmentSize = appointmentList.size + recommendationList.size
+            CoroutineScope(Dispatchers.Main).launch {
+                tvAppointmentNo.text = "$appointmentSize"
+
+            }
+
+        }
+
+
     }
 }

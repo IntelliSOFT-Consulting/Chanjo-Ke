@@ -147,7 +147,8 @@ class ReferralDetailFragment : Fragment() {
                                 patientId,
                                 requireContext(),
                                 null,
-                                Immunization.ImmunizationStatus.COMPLETED)
+                                Immunization.ImmunizationStatus.COMPLETED,
+                                patientDetailsViewModel)
 
                             val serviceRequestId = tvServiceId.text.toString()
 

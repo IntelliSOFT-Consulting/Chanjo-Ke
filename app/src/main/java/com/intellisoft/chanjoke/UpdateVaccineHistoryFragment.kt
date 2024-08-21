@@ -135,7 +135,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
                     patientId,
                     requireContext(),
                     lastDoseDate,
-                    Immunization.ImmunizationStatus.COMPLETED)
+                    Immunization.ImmunizationStatus.COMPLETED,
+                    patientDetailsViewModel)
 
                 val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                 blurBackgroundDialog.show()

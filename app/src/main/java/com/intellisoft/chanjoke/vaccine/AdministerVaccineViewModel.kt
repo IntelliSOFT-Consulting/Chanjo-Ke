@@ -40,6 +40,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.Reasons
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
+import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -212,7 +213,8 @@ class AdministerVaccineViewModel(
         patientId: String,
         context: Context,
         dateValue: String? = null,
-        status: ImmunizationStatus
+        status: ImmunizationStatus,
+        patientDetailsViewModel: PatientDetailsViewModel?
     ) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -288,7 +290,7 @@ class AdministerVaccineViewModel(
                     formatterClass.saveSharedPref("immunizationDate",occurrenceDateTime.toString(),context)
                 }
 
-                createImmunizationRecommendation(context)
+                createImmunizationRecommendation(context, patientDetailsViewModel)
 
             }
 
@@ -297,7 +299,7 @@ class AdministerVaccineViewModel(
 
 
 
-    fun createImmunizationRecommendation(context: Context) {
+    fun createImmunizationRecommendation(context: Context, patientDetailsViewModel: PatientDetailsViewModel?) {
         CoroutineScope(Dispatchers.IO).launch {
             val formatterClass = FormatterClass()
             val workflowVaccinationType = formatterClass.getSharedPref("workflowVaccinationType", context)
@@ -308,12 +310,16 @@ class AdministerVaccineViewModel(
             }else{
                 "ROUTINE"
             }
-            createNextImmunization(type,context)
+            createNextImmunization(type,context,patientDetailsViewModel)
 
         }
     }
 
-    private suspend fun createNextImmunization(type:String, context: Context) {
+    private suspend fun createNextImmunization(
+        type:String,
+        context: Context,
+        patientDetailsViewModel: PatientDetailsViewModel?
+    ) {
 
         val formatterClass = FormatterClass()
 
@@ -344,13 +350,11 @@ class AdministerVaccineViewModel(
             val vaccineBasicVaccine =
                 ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
 
-            Log.e("*****","****")
             val nextBasicVaccine = vaccineBasicVaccine?.let {
                 immunizationHandler.getNextDoseDetails(
                     it
                 )
             }
-            Log.e("*****","****")
             val seriesVaccine =
                 vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
 
@@ -375,8 +379,6 @@ class AdministerVaccineViewModel(
                 }
             }.join()
 
-            Log.e("---->","<-----")
-
             //Generate the next immunisation recommendation
             if (nextBasicVaccine != null && date != null) {
 
@@ -398,6 +400,13 @@ class AdministerVaccineViewModel(
                 val immunizationNextDateFormat = formatterClass.convertDateToString(nextImmunizationDate.toString())
                 formatterClass.saveSharedPref("immunizationNextDate",
                     immunizationNextDateFormat,context)
+
+                val recommendationList = patientDetailsViewModel?.getRecommendationDate("") ?: emptyList()
+                val appointmentList = patientDetailsViewModel?.getAppointmentList() ?: emptyList()
+
+                val appointmentSize = appointmentList.size + recommendationList.size
+
+                formatterClass.saveSharedPref("appointmentSize",appointmentSize.toString(), context)
 
                 /**
                  * Get the immunization recommendation
@@ -818,7 +827,8 @@ class AdministerVaccineViewModel(
         status: String,
         immunizationId: String?,
         foreCastReason: String,
-        context: Context
+        context: Context,
+        patientDetailsViewModel: PatientDetailsViewModel?
     ) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -906,7 +916,7 @@ class AdministerVaccineViewModel(
 
                             saveResourceToDatabase(immunization, "Imm")
 
-                            createImmunizationRecommendation(context)
+                            createImmunizationRecommendation(context, patientDetailsViewModel)
 
                         }
 

@@ -223,7 +223,8 @@ class ContraindicationsFragment : Fragment() {
                                         status,
                                         null,
                                         forecastReason,
-                                        requireContext()
+                                        requireContext(),
+                                        patientDetailsViewModel
                                     )
 
 
