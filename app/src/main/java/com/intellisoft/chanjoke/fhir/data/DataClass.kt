@@ -41,7 +41,8 @@ enum class Reasons {
     RESCHEDULE,
     CONTRAINDICATE,
     NOT_ADMINISTERED,
-    COMPLETED
+    COMPLETED,
+    DUE
 }
 
 enum class StatusColors {
@@ -260,6 +261,7 @@ data class DbAppointmentDetails(
     val appointmentStatus: String
 )
 data class DbRecommendationData(
+    val vaccineCode: String,
     val dateValue: String?,
     val status: String?,
     val statusValue: String?,

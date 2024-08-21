@@ -414,8 +414,6 @@ class AdministerVaccineViewModel(
                     .map { getRecommendationData(it) }
                     .let { immunizationRecommendationList.addAll(it)}
 
-                println("immunizationRecommendationList $immunizationRecommendationList")
-
                 /**
                  * These will include immunization recommendations that have been created before
                  *
@@ -430,7 +428,6 @@ class AdministerVaccineViewModel(
                  */
 
                 val immunizationRecommendation = immunizationRecommendationList.firstOrNull()
-                println("immunizationRecommendation $immunizationRecommendation")
 
                 if (immunizationRecommendation != null) {
 
@@ -445,8 +442,6 @@ class AdministerVaccineViewModel(
                             recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
                             recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode){
                             if (recommendation.hasDateCriterion()) {
-
-                                println("immunizationRecommendation ${recommendation.vaccineCode}")
 
                                 val dateCriterion = getNewDateCriterion(localDate)
                                 recommendation.dateCriterion = dateCriterion
@@ -483,11 +478,6 @@ class AdministerVaccineViewModel(
 
         val earliestAdministerLocalDate = formatterClass.convertStringToDate(earliestAdministerDate, "yyyy-MM-dd")
         val latestAdministerLocalDate = formatterClass.convertStringToDate(latestAdministerDate, "yyyy-MM-dd")
-
-        Log.e("----->","<-----")
-        println("earliestAdministerLocalDate $earliestAdministerLocalDate")
-        println("latestAdministerLocalDate $latestAdministerLocalDate")
-        Log.e("----->","<-----")
 
         if (earliestAdministerLocalDate != null && latestAdministerLocalDate != null){
 
