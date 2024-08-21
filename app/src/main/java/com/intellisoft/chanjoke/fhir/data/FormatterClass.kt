@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
+import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.NonRoutineVaccine
 import com.intellisoft.chanjoke.vaccine.validations.PregnancyVaccine
@@ -1299,67 +1300,135 @@ class FormatterClass {
         }
     }
 
-    fun getVaccineChildNonRoutineStatus(
-        context: Context,
-        flowType: String,
-        weekNumber: String,
-        vaccineName: String,
+    fun handlePreviousVaccineStatus(
+        seriesVaccine: RoutineVaccine?,
+        doseNumber: String?,
         administeredList: List<DbVaccineData>,
-        recommendationList: ArrayList<DbRecommendationDetails>
-    ): DbVaccineScheduleChild {
+        immunizationHandler: ImmunizationHandler
+    ): Boolean {
 
-        var vaccineNameValue = vaccineName
-        var dateValue = ""
-        var status = ""
-        var statusValue = ""
+        if (seriesVaccine != null && doseNumber != null) {
+            // Get the previous vaccine in the series based on the dose number
+            val previousBasicVaccine = immunizationHandler.getPreviousBasicVaccineInSeries(seriesVaccine, doseNumber)
 
-        var isVaccinatedValue = false
-        var canBeVaccinated = false
-        var statusColor = ""
-
-        val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
-        val today = LocalDate.now()
-
-        val patientDob = getSharedPref("patientDob", context).toString()
-        val patientGender = getSharedPref("patientGender", context).toString()
-        val patientYearStr = getSharedPref("patientYears", context)
-        val patientYears = patientYearStr?.toIntOrNull()
-
-        val numberOfWeek = calculateWeeksFromDate(patientDob)
-
-        /**
-         * 1. **Get nonRoutine Vaccines** and the recommendation list
-         * 2. From the current basic vaccine, Get the previous dose
-         * 3. From the previous dose, check if there exists an administered and complete vaccine
-         * 4. If there exists an administered vaccine for the previous dose, display the current recommendation date. Otherwise return empty
-         * 5. Perform normal vaccination validations and logics:
-         * - If date is within 14 days, administer
-         * - The change in statues
-         */
-
-        recommendationList.forEach {
-            if (it.vaccineName == "1st Rabies Dose" || it.vaccineName == "2nd Rabies Dose" || it.vaccineName == "3rd Rabies Dose"){
-                Log.e("---->","<-----")
-                println("vaccineName ${it.vaccineName}")
-                println("earliestDate ${it.earliestDate}")
-                println("latestDate ${it.latestDate}")
-                Log.e("---->","<-----")
+            // Get the vaccineName to check its status in the administeredList
+            val previousVaccineName = previousBasicVaccine?.vaccineName
+            val previousAdministered = administeredList.firstOrNull {
+                it.vaccineName == previousVaccineName && it.status == Reasons.COMPLETED.name
             }
 
+            // If the previous vaccine series does not exist in the administered list, reset statusValue and dateValue
+            if (previousAdministered != null) {
+                return true
+            }
         }
 
+        return false
+    }
+
+    private fun getNonRoutineVaccinations(
+        targetDisease: String?,
+        numberOfWeek: Int?,
+        patientGender: String,
+        patientYears: Int?,
+        nhdd: String
+        ): Boolean{
+
+        var canBeVaccinated = false
+
         /**
-         * 1. Work on the recommendation list
+         *
+         * 4.) Validations
+         *
+         * i.) Yellow fever = 9 months and above. Single dose
+         *
+         * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
+         * iii.) Pfizer = 12 years and above. 2 dose 4 weeks apart
+         * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
+         * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
+         * vi.) J n J & H = 18 years and above till age 60 years. Single dose
+         *
+         * vii.) HPV = 10 years and above till age 14 years. 2 dose 6 months apart
+         *
+         * viii.) Rabies = From Birth and above. 5 doses
+         *
+         * ix.) Influenza = From 6 month and above. 2 doses but one could be a single dose
+         *
+         * x.) Tetanus = From 92 weeks (This is because the first dose is given after 18 months after DPT3 which is given after 14 weeks of birth)
+         *              5 doses given as follows:
+         *              1st dose after 18 months after DPT 4 ,
+         *              2nd dose is 1 month after 1st dose,
+         *              3rd dose is 6 months after 2nd dose,
+         *              4th dose is 1 year after 3rd dose,
+         *              5th dose is 1 year after 4th dose.
          */
-        //Get the vaccine details from the recommendationList
-        val dbAppointmentDetailsDue = recommendationList.filter {
-            it.vaccineName == vaccineName && it.status == "due"
-        }.map { it }.firstOrNull()
+
+        //Influenza
+        if (targetDisease == "Influenza"){
+            if (numberOfWeek != null && numberOfWeek > 27){
+                canBeVaccinated = true
+            }
+        }
+        //Yellow Fever
+        if (targetDisease == "Yellow Fever") {
+            if (numberOfWeek != null && numberOfWeek > 39){
+                canBeVaccinated = true
+            }
+        }
+        //HPV
+        if (targetDisease == "HPV") {
+            if (patientGender == "female" && patientYears != null && patientYears in 10..14) {
+                canBeVaccinated = true
+            }
+        }
+        //Covid 19
+        if (targetDisease == "Covid 19" && patientYears != null){
+            if (patientYears >= 12 && nhdd == "16929" ){
+                // Pfizer
+                canBeVaccinated = true
+            }
+            if (patientYears >= 18){
+                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931"){
+                    //Astrazeneca, JnJ, Moderna
+                    canBeVaccinated = true
+                }
+                if(nhdd == "16489" && patientYears in 18..60 ){
+                    //Sinopharm
+                    canBeVaccinated = true
+                }
+            }
+        }
+        //Rabies
+        if (targetDisease == "Rabies Post Exposure" && patientYears != null){
+            if (patientYears >= 0){
+                canBeVaccinated = true
+            }
+        }
+        //Tetanus
+        if(targetDisease == "Tetanus" && patientYears != null){
+            if (numberOfWeek != null && numberOfWeek > 91){
+                canBeVaccinated = true
+            }
+        }
+        return canBeVaccinated
+    }
+
+    private fun getRecommendationList(
+        dbAppointmentDetailsDue:  DbRecommendationDetails?,
+        today: LocalDate,
+        dateScheduleFormat: SimpleDateFormat): DbRecommendationData?{
+
+        var dateValue:String? = null
+        var status :String? = null
+        var statusValue :String? = null
+        var canBeVaccinated = false
+        var statusColor :String? = null
 
         if (dbAppointmentDetailsDue != null){
 
             val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
             val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
+
             status = dbAppointmentDetailsDue.status
             statusValue = "Upcoming"
 
@@ -1374,7 +1443,6 @@ class FormatterClass {
                 if (earlyDate != null && lateDate != null){
 
                     val (statusData, date) = evaluateDateRange(earlyDate, today, lateDate)
-
                     when (statusData) {
                         StatusValues.WITHIN_RANGE.name -> {
 
@@ -1420,8 +1488,52 @@ class FormatterClass {
                 }
             }
 
-        }
+            return DbRecommendationData(
+                dateValue, status, statusValue, canBeVaccinated, statusColor
+            )
 
+        }
+        return null
+
+    }
+
+    fun getVaccineChildNonRoutineStatus(
+        context: Context,
+        flowType: String,
+        weekNumber: String,
+        vaccineName: String,
+        administeredList: List<DbVaccineData>,
+        recommendationList: ArrayList<DbRecommendationDetails>
+    ): DbVaccineScheduleChild {
+
+        var vaccineNameValue = vaccineName
+        var dateValue = ""
+        var status = ""
+        var statusValue = ""
+
+        var isVaccinatedValue = false
+        var canBeVaccinated = false
+        var statusColor = ""
+
+        val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+        val today = LocalDate.now()
+
+        val patientDob = getSharedPref("patientDob", context).toString()
+        val patientGender = getSharedPref("patientGender", context).toString()
+        val patientYearStr = getSharedPref("patientYears", context)
+        val patientYears = patientYearStr?.toIntOrNull()
+
+        val numberOfWeek = calculateWeeksFromDate(patientDob)
+
+        /**
+         * 1. **Get nonRoutine Vaccines** and the recommendation list
+         * 2. From the current basic vaccine, Get the previous dose
+         * 3. From the previous dose, check if there exists an administered and complete vaccine
+         * 4. If there exists an administered vaccine for the previous dose, display the current recommendation date. Otherwise return empty
+         * 5. Perform normal vaccination validations and logics:
+         * - If date is within 14 days, administer
+         * - The change in statues
+         */
         val immunizationHandler = ImmunizationHandler()
         val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
         val seriesVaccine = basicVaccine?.let { immunizationHandler.getSeriesByBasicVaccine(it) }
@@ -1432,168 +1544,45 @@ class FormatterClass {
         val doseNumber = basicVaccine?.doseNumber
 
         /**
+         * 1. Non Routine Validations
+         */
+        canBeVaccinated = getNonRoutineVaccinations(targetDisease, numberOfWeek, patientGender, patientYears, nhdd)
+
+        /**
          * 2. Work on the Previous Vaccine
          * - So that we don't have crazy future dates
          * - We will only display the current's vaccine recommendation if the previous series dose had been administered
          */
-        //Get the previous vaccine
-        if (seriesVaccine != null && doseNumber != null){
-            val previousBasicVaccine = immunizationHandler.getPreviousBasicVaccineInSeries(seriesVaccine, doseNumber)
-            //Get the vaccineName to check its status in the administeredList
-            val previousVaccineName = previousBasicVaccine?.vaccineName
-            val previousAdministered = administeredList.firstOrNull{
-                it.vaccineName == previousVaccineName && it.status == Reasons.COMPLETED.name
-            }
-
-            //The previous vaccine series exists in the administered list, the current vaccine date can be used
-            if (previousAdministered == null){
-                statusValue = ""
-                dateValue = ""
-            }
-        }
+        //Get the previous vaccine. If true it means there's a previous dose number
+        val isPreviousVaccinated = handlePreviousVaccineStatus(seriesVaccine, doseNumber, administeredList, immunizationHandler)
 
         /**
-         * 3. Administered , Contraindicate and Reschedule filter
-         * - Completed vaccines will just update the isVaccinatedValue to true
-         * - Reschedule and Not administered can be administered if the dates are within a 14 day gap
+         * 3. Work on the recommendation list
+         * - This will work for the current vaccine
+         * - This is supposed to bring up the date for the next vaccination schedule i.e. date and status
+         * - From the above, if there's a previously vaccinated series, we can show the current vaccine's recommendation otherwise don't
+         *
          */
-        val filteredVaccineData = findRelevantVaccineData(administeredList, vaccineName)
-        if (filteredVaccineData != null){
+        //Get the vaccine details from the recommendationList
+        val dbAppointmentDetailsDue = recommendationList.filter {
+            it.vaccineName == vaccineName && it.status == "due"
+        }.map { it }.firstOrNull()
 
-            //Populate values
-            val statusDbValue = filteredVaccineData.status
-            val dateAdministeredDbValue = filteredVaccineData.dateAdministered
+        if (isPreviousVaccinated){
+            val recommendationInformation = getRecommendationList(dbAppointmentDetailsDue, today, dateScheduleFormat)
+            if (recommendationInformation != null){
 
-            dateValue = dateAdministeredDbValue
-            status = statusDbValue
-            statusValue = statusDbValue.lowercase().replaceFirstChar { it.uppercase() }
+                dateValue = recommendationInformation.dateValue ?: ""
+                status = recommendationInformation.status ?: ""
+                statusValue = recommendationInformation.statusValue ?: ""
+                canBeVaccinated = recommendationInformation.canBeVaccinated
+                statusColor = recommendationInformation.statusColor ?: ""
 
-
-            // change isVaccinatedValue to true
-            if (statusDbValue == Reasons.COMPLETED.name){
-                isVaccinatedValue = true
-                statusColor = StatusColors.GREEN.name
-            }
-
-            /**
-             * - Reschedule / Not administered -> These can still be administered.
-             * - Check if the two have dateAdministeredDbValue, is within 14 days
-             */
-            if (statusDbValue == Reasons.RESCHEDULE.name ||
-                statusDbValue == Reasons.NOT_ADMINISTERED.name){
-
-                val dateScheduleDate = dateScheduleFormat.parse(dateAdministeredDbValue)
-                val vaccineDateLocal = dateScheduleDate?.let { convertDateToLocalDate(it) }
-
-                val isWithin14 = isDate14DaysInFuture(vaccineDateLocal)
-                val isToday = today.equals(vaccineDateLocal)
-
-                if (isWithin14 || isToday){
-                    //This is within 14 days after today
-                    statusColor = StatusColors.AMBER.name
-                    canBeVaccinated = true
-                }else{
-
-                    // This is neither today or within the next 14 days
-                    statusColor = if (vaccineDateLocal != null){
-                        //Check if the date is before today
-                        if (vaccineDateLocal.isBefore(today)){
-                            statusValue = "Missed"
-                            StatusColors.RED.name
-                        }else{
-                            StatusColors.NORMAL.name
-                        }
-                    }else{
-                        StatusColors.NORMAL.name
-                    }
-
-                }
-            }
-
-            /**
-             * - Contraindicate. The workflow currently is that the contraindication happens in the
-             * Not administered workflow.
-             */
-            if(statusDbValue == Reasons.CONTRAINDICATE.name){
-                canBeVaccinated = false
-                statusColor = StatusColors.NOT_DONE.name
-            }
-
-        }
-
-        /**
-         *
-         * 4.) Validations
-         *
-         * i.) Yellow fever = 9 months and above. Single dose
-         *
-         * ii.) Astrazeneca = 18 years and above. 2 dose 12 weeks apart
-         * iii.) Pfizer = 12 years and above. 2 dose 4 weeks apart
-         * iv.) Moderna = 18 years and above. 2 dose 4 weeks apart
-         * v.) Sinopharm = 18 years and above till age 60 years. 2 dose 4 weeks apart
-         * vi.) J n J & H = 18 years and above till age 60 years. Single dose
-         *
-         * vii.) HPV = 10 years and above till age 14 years. 2 dose 6 months apart
-         *
-         * viii.) Rabies = From Birth and above. 5 doses
-         *
-         * ix.) Influenza = From 6 month and above. 2 doses but one could be a single dose
-         *
-         * x.) Tetanus = From 92 weeks (This is because the first dose is given after 18 months after DPT3 which is given after 14 weeks of birth)
-         *              5 doses given as follows:
-         *              1st dose after 18 months after DPT 4 ,
-         *              2nd dose is 1 month after 1st dose,
-         *              3rd dose is 6 months after 2nd dose,
-         *              4th dose is 1 year after 3rd dose,
-         *              5th dose is 1 year after 4th dose.
-         */
-        //Influenza
-        if (targetDisease == "Influenza"){
-            if (numberOfWeek != null && numberOfWeek > 27 && !isVaccinatedValue){
-                canBeVaccinated = true
             }
         }
-        //Yellow Fever
-        if (targetDisease == "Yellow Fever") {
-            if (numberOfWeek != null && numberOfWeek > 39 && !isVaccinatedValue){
-                canBeVaccinated = true
-            }
-        }
-        //HPV
-        if (targetDisease == "HPV") {
-            if (patientGender == "female" && patientYears != null && patientYears in 10..14 && !isVaccinatedValue) {
-                canBeVaccinated = true
-            }
-        }
-        //Covid 19
-        if (targetDisease == "Covid 19" && patientYears != null){
-            if (patientYears >= 12 && nhdd == "16929" && !isVaccinatedValue){
-                // Pfizer
-                canBeVaccinated = true
-            }
-            if (patientYears >= 18 && !isVaccinatedValue){
-                if (nhdd == "16927" || nhdd == "0" || nhdd == "16931"){
-                    //Astrazeneca, JnJ, Moderna
-                    canBeVaccinated = true
-                }
-                if(nhdd == "16489" && patientYears in 18..60 ){
-                    //Sinopharm
-                    canBeVaccinated = true
-                }
-            }
-        }
-        //Rabies
-        if (targetDisease == "Rabies Post Exposure" && patientYears != null && !isVaccinatedValue){
-            if (patientYears >= 0){
-                canBeVaccinated = true
-            }
-        }
-        //Tetanus
-        if(targetDisease == "Tetanus" && patientYears != null && !isVaccinatedValue){
-            if (numberOfWeek != null && numberOfWeek > 91 && !isVaccinatedValue){
-                canBeVaccinated = true
-            }
-        }
+
+
+
 
         return DbVaccineScheduleChild(
             vaccineName,

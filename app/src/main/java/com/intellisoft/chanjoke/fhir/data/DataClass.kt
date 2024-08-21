@@ -259,6 +259,13 @@ data class DbAppointmentDetails(
     val vaccineName: String,
     val appointmentStatus: String
 )
+data class DbRecommendationData(
+    val dateValue: String?,
+    val status: String?,
+    val statusValue: String?,
+    val canBeVaccinated: Boolean,
+    val statusColor: String?,
+)
 
 data class DbRecommendationDetails(
     val vaccineCode: String,
