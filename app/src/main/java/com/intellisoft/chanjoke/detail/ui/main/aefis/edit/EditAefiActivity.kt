@@ -120,8 +120,10 @@ class EditAefiActivity : AppCompatActivity(), OnButtonClickListener {
                         patientId.toString(),
                         encounterId.toString()
                     )
+
+                val isDead: Boolean = refinedData.outcome == "Died"
                 allObservations.forEach {
-                     when (it.code.codingFirstRep.code) {
+                    when (it.code.codingFirstRep.code) {
                         "833-23" -> {
                             updateDateObservation(
                                 it,
@@ -218,6 +220,12 @@ class EditAefiActivity : AppCompatActivity(), OnButtonClickListener {
                     }
                 }
                 CoroutineScope(Dispatchers.IO).launch {
+                    if (isDead) {
+                        viewModel.updatePatientStatusBasedOnAefi(
+                            context = this@EditAefiActivity,
+                            patientId.toString()
+                        )
+                    }
                     // Simulate some background work
                     delay(2000) // Simulating a task that takes 2 seconds
                     // Dismiss progress dialog after 2 seconds
