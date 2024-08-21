@@ -97,9 +97,23 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
             if (selectedVaccineList.isNotEmpty()){
 
+                val isIdentical = hasIdenticalBrands(selectedVaccineList)
                 val shouldBeIn = listHasSimilarNames(selectedVaccineList)
 
-                if (!shouldBeIn){
+                if (!isIdentical){
+                    Toast.makeText(requireContext(),
+                        "Different Covid vaccines brands cannot be administered together.",
+                        Toast.LENGTH_SHORT).show()
+
+
+                }
+                if (shouldBeIn){
+                    Toast.makeText(requireContext(),
+                        "You cannot have the same vaccine type.",
+                        Toast.LENGTH_SHORT).show()
+                }
+
+                if (!shouldBeIn && isIdentical){
                     formatterClass.saveSharedPref(
                         "selectedVaccineName",
                         selectedVaccineList.joinToString(","),
@@ -117,8 +131,11 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
                     fragmentManager?.let { it1 ->
                         bottomSheet.show(it1,
                             "ModalBottomSheet") }
+
                 }else{
-                    Toast.makeText(requireContext(), "You cannot have the same vaccine type.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        "The vaccines could not be administered.",
+                        Toast.LENGTH_SHORT).show()
                 }
 
             }else
@@ -402,6 +419,24 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
 
     }
 
+    //Function to filter out covid vaccines that are not in the same brand
+    private fun hasIdenticalBrands(vaccineList: List<String>): Boolean {
+
+        val weekNoList = sharedPreferences.getStringSet("Covid 19", null)
+        val covidBrands = weekNoList?.toList() ?: emptyList()
+
+        // Filter out the COVID brands from the vaccineList
+        val covidVaccinesInList = vaccineList.filter { it in covidBrands }
+
+        // Check if there's more than one distinct COVID brand
+        val distinctBrands = covidVaccinesInList.map { vaccine ->
+            vaccine.split(" ").first() // Get the brand name (first word before the dose information)
+        }.distinct()
+
+        // Return false if there are mixed brands, otherwise true
+        return distinctBrands.size <= 1
+    }
+
     // Function to compute the Levenshtein distance between two strings
     private fun levenshteinDistance(str1: String, str2: String): Int {
         val dp = Array(str1.length + 1) { IntArray(str2.length + 1) }
@@ -426,7 +461,9 @@ class NonRoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedL
     }
 
     // Function to check if the list has similar names
-    fun listHasSimilarNames(list: List<String>, threshold: Int = 3): Boolean {
+    private fun listHasSimilarNames(list: List<String>, threshold: Int = 3): Boolean {
+
+
         for (i in list.indices) {
             for (j in i + 1 until list.size) {
                 if (levenshteinDistance(list[i], list[j]) <= threshold) {

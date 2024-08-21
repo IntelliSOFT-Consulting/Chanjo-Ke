@@ -416,7 +416,7 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
                 6306,
                 listOf(
                     BasicVaccine(influenza+"1", "Influenza 1st Dose", "Intramuscular Injection", 26, arrayListOf(), "0.5ml","1"),
-                    BasicVaccine(influenza+"2", "Influenza 2nd Dose", "Intramuscular Injection", 26, arrayListOf(4.0), "0.5ml","2"),
+                    BasicVaccine(influenza+"2", "Influenza 2nd Dose", "Intramuscular Injection", 26, arrayListOf(17.0), "0.5ml","2"),
 
                     BasicVaccine(influenza+"IIV", "Influenza Single Dose", "Intramuscular Injection", 26, arrayListOf(), "0.5ml","0"),
                 )
