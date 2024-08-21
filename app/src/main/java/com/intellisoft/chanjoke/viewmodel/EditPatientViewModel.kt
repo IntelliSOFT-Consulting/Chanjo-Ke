@@ -44,7 +44,7 @@ class EditPatientViewModel(application: Application, private val state: SavedSta
             parser.parseResource(Questionnaire::class.java, question) as Questionnaire
 
         val questionnaireResponse: QuestionnaireResponse =
-            ResourceMapper.populate(questionnaire)
+            ResourceMapper.populate(questionnaire, launchContexts)
         val questionnaireResponseJson = parser.encodeResourceToString(questionnaireResponse)
         return question to questionnaireResponseJson
     }

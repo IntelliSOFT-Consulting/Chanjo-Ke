@@ -29,6 +29,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
+import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -105,6 +106,15 @@ class AefisFragment : Fragment() {
 
         binding.btnAdd.apply {
             setOnClickListener {
+                if (!activePatient()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Patient is deceased",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    return@setOnClickListener
+                }
 
                 if (hasReceivedImmunizationAtGivenAge()) {
                     val patientId = FormatterClass().getSharedPref("patientId", context)
@@ -134,6 +144,17 @@ class AefisFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun activePatient(): Boolean {
+        try {
+            val patient = patientDetailsViewModel.getPatientInfo()
+
+            return patient.isAlive
+        } catch (e: Exception) {
+            return false
+        }
+
     }
 
 

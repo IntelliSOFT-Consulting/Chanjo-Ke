@@ -115,6 +115,8 @@ class AddAefiActivity : AppCompatActivity(), OnButtonClickListener {
                     val encounterReference = Reference("Encounter/$encounterId")
                     val observations = mutableListOf<Observation>()
 
+                    val isDead: Boolean = refinedData.outcome == "Died"
+                    Timber.e("Patient Status ****** $isDead")
                     // Add each observation to the list
                     observations.add(
                         createFHIRObservation(
@@ -191,7 +193,7 @@ class AddAefiActivity : AppCompatActivity(), OnButtonClickListener {
                         this@AddAefiActivity,
                         patientId.toString(),
                         encounterId,
-                        observations
+                        observations,isDead
                     )
                 }
             }

@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.AdverseEvent
 import org.hl7.fhir.r4.model.AllergyIntolerance
+import org.hl7.fhir.r4.model.BooleanType
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
@@ -28,10 +29,17 @@ import org.hl7.fhir.r4.model.DateTimeType
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Narrative
 import org.hl7.fhir.r4.model.Observation
+import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
+import org.hl7.fhir.r4.model.ResourceType
+import timber.log.Timber
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 /** ViewModel for screener questionnaire screen {@link ScreenerEncounterFragment}. */
 class ScreenerViewModel(application: Application, private val state: SavedStateHandle) :
@@ -149,13 +157,26 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
 
     }
 
+    fun updatePatientStatusBasedOnAefi(context: Context, patientId: String) {
+        viewModelScope.launch {
+            updatePatientStatus(context, patientId)
+        }
+    }
+
     fun addAeFi(
         context: Context,
         patientId: String,
         encounterId: String,
-        observations: MutableList<Observation>
+        observations: MutableList<Observation>,
+        isDead: Boolean
     ) {
         viewModelScope.launch {
+
+            //Check if Outcome resulted to dead
+
+            if (isDead) {
+                updatePatientStatus(context, patientId)
+            }
             val age = FormatterClass().getSharedPref(
                 "current_age", getApplication<Application>().applicationContext
             )
@@ -182,6 +203,39 @@ class ScreenerViewModel(application: Application, private val state: SavedStateH
             isResourcesSaved.value = true
         }
 
+    }
+
+    private suspend fun updatePatientStatus(context: Context, patientId: String) {
+        try {
+            val deceasedBooleanType = BooleanType()
+            deceasedBooleanType.value = true
+            val patient = fhirEngine.get(ResourceType.Patient, patientId) as Patient
+            val newPatient = patient.copy()
+            newPatient.deceased = deceasedBooleanType
+//            newPatient.birthDate = manipulateServerBirthDate(patient.birthDate)
+            newPatient.id = patientId
+            fhirEngine.update(newPatient)
+            Timber.e("Patient Status ****** Updated")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Timber.e("Patient Status ****** ${e.message}")
+        }
+    }
+
+    private fun manipulateServerBirthDate(birthDate: Date?): Date? {
+        Timber.e("Patient Status ****** Original $birthDate")
+        try {
+
+            // Convert the Date to LocalDate
+            val localDate = birthDate?.toInstant()
+                ?.atZone(ZoneId.systemDefault())
+                ?.toLocalDate()
+            // Convert LocalDate back to Date (with time set to the start of the day)
+            return Date.from(localDate?.atStartOfDay(ZoneId.systemDefault())?.toInstant())
+        } catch (e: Exception) {
+            Timber.e("Patient Status ****** Conversion ${e.message}")
+            return birthDate
+        }
     }
 
     private suspend fun createAdverseEvent(

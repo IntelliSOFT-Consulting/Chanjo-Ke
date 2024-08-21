@@ -126,76 +126,90 @@ class PatientDetailsViewModel(
         var middleName = ""
         var lastName = ""
         val kins = mutableListOf<CareGiver>()
+        var isAlive: Boolean = true
         searchResult.first().let {
-            logicalId = it.logicalId
-            name = if (it.hasName()) {
+            isAlive = if (it.resource.hasDeceased()) {
+                !it.resource.deceasedBooleanType.value
+            } else true
+            logicalId = it.resource.logicalId
+            name = if (it.resource.hasName()) {
                 // display name in order as fname, then others
-                "${it.name[0].givenAsSingleString} ${it.name[0].family} "
+                "${it.resource.name[0].givenAsSingleString} ${it.resource.name[0].family} "
             } else ""
-            lastName = if (it.hasName()) it.nameFirstRep.family else ""
+            lastName = if (it.resource.hasName()) it.resource.nameFirstRep.family else ""
 
-            val givenNames = if (it.hasName() && it.nameFirstRep.hasGiven()) {
-                it.nameFirstRep.given.map { givenName -> givenName.valueAsString }
+            val givenNames = if (it.resource.hasName() && it.resource.nameFirstRep.hasGiven()) {
+                it.resource.nameFirstRep.given.map { givenName -> givenName.valueAsString }
             } else {
                 emptyList()
             }
             firstName = givenNames.getOrElse(0) { "" }
             middleName = givenNames.getOrElse(1) { "" }
             phone = ""
-            if (it.hasTelecom()) {
-                if (it.telecom.isNotEmpty()) {
-                    if (it.telecom.first().hasValue()) {
-                        phone = it.telecom.first().value
+            if (it.resource.hasTelecom()) {
+                if (it.resource.telecom.isNotEmpty()) {
+                    if (it.resource.telecom.first().hasValue()) {
+                        phone = it.resource.telecom.first().value
                     }
                 }
             }
 
-            if (it.hasBirthDateElement()) {
-                if (it.birthDateElement.hasValue()) {
+            if (it.resource.hasBirthDateElement()) {
+                if (it.resource.birthDateElement.hasValue()) {
                     val birthDateElement =
-                        formatterClass.convertChildDateFormat(it.birthDateElement.valueAsString)
+                        formatterClass.convertChildDateFormat(it.resource.birthDateElement.valueAsString)
                     if (birthDateElement != null) {
                         dob = birthDateElement
                     }
                 }
             }
 
-            if (it.hasContact()) {
-                it.contact.forEach {
-                    val name = if (it.hasName()) it.name.nameAsSingleString else ""
-                    val phone = if (it.hasTelecom() && it.telecomFirstRep.hasValue()) it.telecomFirstRep.value else ""
-                    val type = if (it.hasRelationship() && it.relationshipFirstRep.hasText()) it.relationshipFirstRep.text else ""
-
-                    kins.add(CareGiver(phone = phone, name = name, type = type, nationalID = ""))
+            if (it.resource.hasContact()) {
+                it.resource.contact.forEach { k ->
+                    val name1 = k.name.nameAsSingleString
+                    val phone1 = k.telecomFirstRep.value
+                    val type1 = k.relationshipFirstRep.text
+                    try {
+                        kins.add(
+                            CareGiver(
+                                phone = phone1,
+                                name = name1,
+                                type = type1,
+                                nationalID = ""
+                            )
+                        )
+                    } catch (e: Exception) {
+                        Timber.e("Crash Error ${e.message}")
+                    }
                 }
 
-                if (it.contactFirstRep.hasName()) contact_name =
-                    if (it.hasContact()) {
-                        if (it.contactFirstRep.hasName()) {
-                            it.contactFirstRep.name.nameAsSingleString
+                if (it.resource.contactFirstRep.hasName()) contact_name =
+                    if (it.resource.hasContact()) {
+                        if (it.resource.contactFirstRep.hasName()) {
+                            it.resource.contactFirstRep.name.nameAsSingleString
                         } else ""
                     } else ""
-                if (it.contactFirstRep.hasTelecom()) contact_phone =
-                    if (it.hasContact()) {
-                        if (it.contactFirstRep.hasTelecom()) {
-                            if (it.contactFirstRep.telecomFirstRep.hasValue()) {
-                                it.contactFirstRep.telecomFirstRep.value
+                if (it.resource.contactFirstRep.hasTelecom()) contact_phone =
+                    if (it.resource.hasContact()) {
+                        if (it.resource.contactFirstRep.hasTelecom()) {
+                            if (it.resource.contactFirstRep.telecomFirstRep.hasValue()) {
+                                it.resource.contactFirstRep.telecomFirstRep.value
                             } else ""
                         } else ""
                     } else ""
-                if (it.contactFirstRep.hasGenderElement()) contact_gender =
-                    if (it.hasContact()) AppUtils().capitalizeFirstLetter(it.contactFirstRep.genderElement.valueAsString) else ""
-                if (it.contactFirstRep.hasRelationship()) {
-                    if (it.contactFirstRep.relationshipFirstRep.hasCoding()) {
-                        contact_type = it.contactFirstRep.relationshipFirstRep.text
+                if (it.resource.contactFirstRep.hasGenderElement()) contact_gender =
+                    if (it.resource.hasContact()) AppUtils().capitalizeFirstLetter(it.resource.contactFirstRep.genderElement.valueAsString) else ""
+                if (it.resource.contactFirstRep.hasRelationship()) {
+                    if (it.resource.contactFirstRep.relationshipFirstRep.hasCoding()) {
+                        contact_type = it.resource.contactFirstRep.relationshipFirstRep.text
                     }
                 }
             }
 
-            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
+            if (it.resource.hasGenderElement()) gender = it.resource.genderElement.valueAsString
 
-            if (it.hasIdentifier()) {
-                it.identifier.forEach { identifier ->
+            if (it.resource.hasIdentifier()) {
+                it.resource.identifier.forEach { identifier ->
 
                     try {
                         if (identifier.hasType()) {
@@ -220,15 +234,15 @@ class PatientDetailsViewModel(
                 }
             }
 
-            if (it.hasAddress()) {
-                if (it.addressFirstRep.hasCity()) county = it.addressFirstRep.city
-                if (it.addressFirstRep.hasDistrict()) subCounty =
-                    it.addressFirstRep.district
-                if (it.addressFirstRep.hasState()) ward = it.addressFirstRep.state
-                if (it.addressFirstRep.hasLine()) {
-                    if (it.addressFirstRep.line.size >= 2) {
-                        trading = it.addressFirstRep.line[0].value
-                        estate = it.addressFirstRep.line[1].value
+            if (it.resource.hasAddress()) {
+                if (it.resource.addressFirstRep.hasCity()) county = it.resource.addressFirstRep.city
+                if (it.resource.addressFirstRep.hasDistrict()) subCounty =
+                    it.resource.addressFirstRep.district
+                if (it.resource.addressFirstRep.hasState()) ward = it.resource.addressFirstRep.state
+                if (it.resource.addressFirstRep.hasLine()) {
+                    if (it.resource.addressFirstRep.line.size >= 2) {
+                        trading = it.resource.addressFirstRep.line[0].value
+                        estate = it.resource.addressFirstRep.line[1].value
                     }
                 }
             }
@@ -267,7 +281,8 @@ class PatientDetailsViewModel(
             ward = ward,
             trading = trading,
             estate = estate,
-            kins = kins
+            kins = kins,
+            isAlive = isAlive
         )
     }
 
@@ -290,7 +305,8 @@ class PatientDetailsViewModel(
         val ward: String?,
         val trading: String?,
         val estate: String?,
-        val kins: List<CareGiver>?
+        val kins: List<CareGiver>?,
+        val isAlive: Boolean = true
 
     ) {
         override fun toString(): String = name
@@ -350,7 +366,7 @@ class PatientDetailsViewModel(
                     })
                     filter(Immunization.PATIENT, { value = "Patient/$patientId" })
                 }
-                .map { createVaccineItemDetails(it) }
+                .map { createVaccineItemDetails(it.resource) }
                 .let {q->
                     q.forEach {
                         if (it.status == "NOTDONE") {
@@ -376,7 +392,7 @@ class PatientDetailsViewModel(
                 filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
                 sort(Encounter.DATE, Order.DESCENDING)
             }
-            .map { getRecommendationData(it) }
+            .map { getRecommendationData(it.resource) }
             .let { immunizationRecommendationList.addAll(it) }
 
         immunizationRecommendationList.forEach { immunizationRecommendation ->
@@ -582,7 +598,7 @@ class PatientDetailsViewModel(
 
         val searchResult = fhirEngine.search<Appointment> {
             filter(Appointment.RES_ID, { value = of(id) })
-        }.map { createAppointment(it) }
+        }.map { createAppointment(it.resource) }
 
         return ArrayList(searchResult)
     }
@@ -601,7 +617,7 @@ class PatientDetailsViewModel(
                 filter(Appointment.SUPPORTING_INFO, { value = "Patient/$patientId" })
                 sort(Appointment.DATE, Order.DESCENDING)
             }
-            .map { createAppointment(it) }
+            .map { createAppointment(it.resource) }
             .let { appointmentList.addAll(it) }
 
         return appointmentList
@@ -672,17 +688,17 @@ class PatientDetailsViewModel(
         }.firstOrNull()
         if (it != null) {
 
-            if (it.hasBirthDateElement()) {
-                if (it.birthDateElement.hasValue()) {
+            if (it.resource.hasBirthDateElement()) {
+                if (it.resource.birthDateElement.hasValue()) {
                     val birthDateElement =
-                        formatterClass.convertChildDateFormat(it.birthDateElement.valueAsString)
+                        formatterClass.convertChildDateFormat(it.resource.birthDateElement.valueAsString)
                     if (birthDateElement != null) {
                         dob = birthDateElement
                     }
                 }
             }
 
-            if (it.hasGenderElement()) gender = it.genderElement.valueAsString
+            if (it.resource.hasGenderElement()) gender = it.resource.genderElement.valueAsString
 
             val temp = DbTempData(
                 name = patientName,
@@ -703,7 +719,8 @@ class PatientDetailsViewModel(
     fun getCampaignList() = runBlocking {
         getCampaignListBack()
     }
-    private suspend fun getCampaignListBack():ArrayList<DbCarePlan>{
+
+    private suspend fun getCampaignListBack(): ArrayList<DbCarePlan> {
 
         val dbCarePlanList = ArrayList<DbCarePlan>()
 
@@ -711,13 +728,13 @@ class PatientDetailsViewModel(
             .search<CarePlan> {
                 sort(CarePlan.DATE, Order.DESCENDING)
             }
-            .map { createCarePlan(it) }
+            .map { createCarePlan(it.resource) }
             .let { dbCarePlanList.addAll(it) }
 
         return dbCarePlanList
     }
 
-    private fun createCarePlan(it: CarePlan):DbCarePlan {
+    private fun createCarePlan(it: CarePlan): DbCarePlan {
 
         val formatterClass = FormatterClass()
 
@@ -726,17 +743,18 @@ class PatientDetailsViewModel(
         val intent = if (it.hasIntent()) it.intent.display else ""
         val title = if (it.hasTitle()) it.title else ""
         val description = if (it.hasDescription()) it.description else ""
-        val createdOn = if(it.hasCreated()) formatterClass.convertMillisToDateTime(it.created.time.toString()) else ""
-        val startPeriod = if(it.hasPeriod()){
+        val createdOn =
+            if (it.hasCreated()) formatterClass.convertMillisToDateTime(it.created.time.toString()) else ""
+        val startPeriod = if (it.hasPeriod()) {
             if (it.period.hasStart()) {
                 formatterClass.convertMillisToDateTime(it.period.start.time.toString())
             } else ""
-        }else ""
-        val endPeriod = if(it.hasPeriod()){
+        } else ""
+        val endPeriod = if (it.hasPeriod()) {
             if (it.period.hasEnd()) {
                 formatterClass.convertMillisToDateTime(it.period.end.time.toString())
             } else ""
-        }else ""
+        } else ""
 
         var county = ""
         var subCounty = ""
@@ -744,22 +762,22 @@ class PatientDetailsViewModel(
         var facility = ""
 
         val categoryDetails = if (it.hasCategory()) it.categoryFirstRep else null
-        if (categoryDetails != null && categoryDetails.hasCoding()){
+        if (categoryDetails != null && categoryDetails.hasCoding()) {
             val countyDetails = categoryDetails.codingFirstRep
-            if (countyDetails.hasCode() && countyDetails.hasDisplay()){
+            if (countyDetails.hasCode() && countyDetails.hasDisplay()) {
                 val code = countyDetails.code
                 val display = countyDetails.display
 
-                if (code == "county"){
+                if (code == "county") {
                     county = display
                 }
-                if (code == "subCounty"){
+                if (code == "subCounty") {
                     subCounty = display
                 }
-                if (code == "ward"){
+                if (code == "ward") {
                     ward = display
                 }
-                if (code == "facility"){
+                if (code == "facility") {
                     facility = display
                 }
             }
@@ -788,7 +806,7 @@ class PatientDetailsViewModel(
                 filter(AllergyIntolerance.PATIENT, { value = "Patient/$patientId" })
                 sort(AllergyIntolerance.DATE, Order.DESCENDING)
             }
-            .map { createAllergyIntoleranceItem(it) }
+            .map { createAllergyIntoleranceItem(it.resource) }
             .let { vaccineList.addAll(it) }
 
 
@@ -801,11 +819,11 @@ class PatientDetailsViewModel(
 
         val searchResult = fhirEngine.search<ServiceRequest> {
             filter(ServiceRequest.RES_ID, { value = of(serviceRequestId) })
-        }.map { createServiceRequestItem(it) }
+        }.map { createServiceRequestItem(it.resource) }
 
 //        fhirEngine.search<ServiceRequest> {
 //            sort(ServiceRequest.OCCURRENCE, Order.DESCENDING)
-//        }.map { createServiceRequestItem(it) }.let { serviceRequests ->
+//        }.map { createServiceRequestItem(it.resource) }.let { serviceRequests ->
 //            serviceRequests.forEach { serviceRequest ->
 //                if (serviceRequest.patientReference == "Patient/$patientId" && serviceRequest.status == "ACTIVE") {
 //                    vaccineList.add(serviceRequest)
@@ -826,7 +844,7 @@ class PatientDetailsViewModel(
                 filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
                 sort(AdverseEvent.DATE, Order.DESCENDING)
             }
-            .map { createAdverseEventItem(it) }
+            .map { createAdverseEventItem(it.resource) }
             .let { vaccineList.addAll(it) }
 
 
@@ -848,7 +866,7 @@ class PatientDetailsViewModel(
                     filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
                     sort(AdverseEvent.DATE, Order.DESCENDING)
                 }
-                .map { createAdverseEventItemDetails(it) }
+                .map { createAdverseEventItemDetails(it.resource) }
 
             // Find the adverse event that matches the encounterId
             adverseEvents.find { it.encounterId == encounterId }
@@ -899,8 +917,8 @@ class PatientDetailsViewModel(
             val searchResult = fhirEngine.search<Location> {
                 filter(Location.RES_ID, { value = of(resId) })
             }
-            if (searchResult.isNotEmpty() && searchResult.first().hasName()) {
-                return searchResult.first().name
+            if (searchResult.isNotEmpty() && searchResult.first().resource.hasName()) {
+                return searchResult.first().resource.name
             }
 
         } catch (e: Exception) {
@@ -922,9 +940,9 @@ class PatientDetailsViewModel(
                 filter(Practitioner.RES_ID, { value = of(resId) })
             }
 
-            name = searchResult.first().name[0].nameAsSingleString
-            if (searchResult.first().hasExtension()) {
-                searchResult.first().extension.forEach {
+            name = searchResult.first().resource.name[0].nameAsSingleString
+            if (searchResult.first().resource.hasExtension()) {
+                searchResult.first().resource.extension.forEach {
                     if (it.hasUrl()) {
                         if (it.url.contains("http://example.org/fhir/StructureDefinition/role-group")) {
                             if (it.hasValue()) {
@@ -968,7 +986,7 @@ class PatientDetailsViewModel(
                     })
                 sort(Immunization.DATE, Order.DESCENDING)
             }
-            .map { createVaccineItemDetails(it) }
+            .map { createVaccineItemDetails(it.resource) }
             .let { vaccineList.addAll(it) }
 
         return vaccineList
@@ -982,7 +1000,7 @@ class PatientDetailsViewModel(
                 filter(Immunization.PATIENT, { value = "Patient/$patientId" })
                 sort(Immunization.DATE, Order.DESCENDING)
             }
-            .map { createVaccineItemDetails(it) }
+            .map { createVaccineItemDetails(it.resource) }
             .let { q ->
                 q.forEach {
                     if (it.status == "COMPLETED") {
@@ -1009,7 +1027,7 @@ class PatientDetailsViewModel(
                 filter(Immunization.PATIENT, { value = "Patient/$patientId" })
                 sort(Immunization.DATE, Order.DESCENDING)
             }
-            .map { createVaccineDetails(it) }
+            .map { createVaccineDetails(it.resource) }
             .let { vaccineList.addAll(it) }
 
         vaccineList.forEach {
@@ -1034,7 +1052,7 @@ class PatientDetailsViewModel(
             }
         }
 
-//        val newList = contraindicationList.filter { it.status == vaccineDetailsType }
+//        val newList = contraindicationList.filter { it.resource.status == vaccineDetailsType }
 
         return ArrayList(contraindicationList)
     }
@@ -1199,11 +1217,11 @@ class PatientDetailsViewModel(
                 filter(Immunization.PATIENT, { value = "Patient/$patientId" })
                 sort(Immunization.DATE, Order.DESCENDING)
             }
-            .map { createVaccineItem(it) }
+            .map { createVaccineItem(it.resource) }
             .let { vaccineList.addAll(it) }
 
 //        val newVaccineList = vaccineList.filterNot {
-//            it.status == "NOTDONE"
+//            it.resource.status == "NOTDONE"
 //        }
 
         return ArrayList(vaccineList)
@@ -1407,7 +1425,7 @@ class PatientDetailsViewModel(
                     })
                 sort(Observation.DATE, Order.ASCENDING)
             }
-            .map { createObservationItem(it, getApplication<Application>().resources) }
+            .map { createObservationItem(it.resource, getApplication<Application>().resources) }
             .firstOrNull()?.let {
                 data = it.value
             }
@@ -1430,7 +1448,7 @@ class PatientDetailsViewModel(
             }
             .map {
                 createEncounterAefiItem(
-                    it,
+                    it.resource,
                     getApplication<Application>().resources
                 )
             }
@@ -1483,7 +1501,7 @@ class PatientDetailsViewModel(
                     })
                 sort(Observation.DATE, Order.ASCENDING)
             }
-            .map { createObservationItem(it, getApplication<Application>().resources) }
+            .map { createObservationItem(it.resource, getApplication<Application>().resources) }
             .firstOrNull()?.let {
                 date = it.effective
                 dataValue = it.value
@@ -1511,7 +1529,7 @@ class PatientDetailsViewModel(
             }
 //            .map { createObservationItem(it, getApplication<Application>().resources) }
             .let {
-                obs.addAll(it)
+                obs.addAll(it.map { it.resource })
             }
         return obs
 
@@ -1609,7 +1627,7 @@ class PatientDetailsViewModel(
                 filter(AllergyIntolerance.PATIENT, { value = "Patient/$patientId" })
                 sort(AllergyIntolerance.DATE, Order.DESCENDING)
             }
-            .map { createAllergyIntoleranceItem(it) }
+            .map { createAllergyIntoleranceItem(it.resource) }
             .forEach { q ->
                 if (q.status.contains(weekNo)) {
                     counter++
@@ -1626,7 +1644,7 @@ class PatientDetailsViewModel(
                 filter(AdverseEvent.SUBJECT, { value = "Patient/$patientId" })
                 sort(AdverseEvent.DATE, Order.DESCENDING)
             }
-            .map { createAdverseEventItem(it) }
+            .map { createAdverseEventItem(it.resource) }
             .forEach { q ->
                 if (q.status.contains(weekNo)) {
                     counter++

@@ -55,7 +55,7 @@ android {
 
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.activity:activity:1.9.1")
+    implementation("androidx.activity:activity-ktx:1.9.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("androidx.activity:activity-ktx:1.9.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
@@ -63,7 +63,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("androidx.fragment:fragment-ktx:1.8.2")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20")
@@ -78,8 +78,8 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
     implementation("net.openid:appauth:0.11.1")
     implementation("com.auth0.android:jwtdecode:2.0.1")
-    implementation("com.google.android.fhir:engine:0.1.0-beta03")
-    implementation("com.google.android.fhir:data-capture:1.0.0")
+    implementation("com.google.android.fhir:engine:1.0.0")
+    implementation("com.google.android.fhir:data-capture:1.1.0")
 
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
