@@ -19,6 +19,7 @@ package com.intellisoft.chanjoke.add_patient
 import android.app.Application
 import android.content.Context
 import android.provider.Settings.Global.getString
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -529,10 +530,14 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 FormatterClass().deleteSharedPref("isUpdate", context)
             } else {
 
+                Log.e("*****","******")
+
                 patient.id = patientId
                 fhirEngine.create(patient)
 
                 try {
+
+                    println("1")
                     val birthDateElement = FormatterClass().formatCurrentDateTime(patient.birthDate)
 
                     FormatterClass().getFormattedAge(
@@ -540,12 +545,14 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                         context.resources,
                         context
                     )
-
+                    println("2")
                     createImmunizationRecommendationResource(context)
 
                 } catch (e: Exception) {
                     println(e)
                 }
+
+                Log.e("*****","******")
 
             }
 
@@ -589,6 +596,11 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             getApplication<Application>().applicationContext
         )
 
+        println("3")
+        println("patientYears $patientYears")
+        println("patientId $patientId")
+        println("patientWeeks $patientWeeks")
+        println("patientDob $patientDob")
 
         if (patientYears != null && patientId != null && patientWeeks != null && patientDob != null) {
             val patientYearsInt = patientYears.toIntOrNull()
@@ -602,31 +614,32 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 null
             }
 
+            val id = generateUuid()
 
-            if (patientYearsInt != null &&
-                patientYearsInt < 6 &&
-                patientWeeksInt != null &&
-                selectedDate != null) {
+            val (routineList, nonRoutineList) = immunizationHandler.getVaccineDataList()
+            val immunizationRecommendation = ImmunizationRecommendation()
 
-                val id = generateUuid()
+            immunizationRecommendation.id = id
+            immunizationRecommendation.patient = Reference("Patient/$patientId")
+            immunizationRecommendation.date = Date()
 
-                val (routineList, nonRoutineList) = immunizationHandler.getVaccineDataList()
-                val immunizationRecommendation = ImmunizationRecommendation()
+            if (patientYearsInt != null && patientWeeksInt != null && selectedDate != null){
 
-                immunizationRecommendation.id = id
-                immunizationRecommendation.patient = Reference("Patient/$patientId")
-                immunizationRecommendation.date = Date()
+//                if (patientYearsInt < 6 ){
+//                    val recommendationList1 = createImmunizationRecommendation(selectedDate, routineList, context)
+//                }else{
+//                    val recommendationList2 = createImmunizationRecommendation(selectedDate, nonRoutineList, context)
+//                }
 
                 val recommendationList1 = createImmunizationRecommendation(selectedDate, routineList, context)
                 val recommendationList2 = createImmunizationRecommendation(selectedDate, nonRoutineList, context)
 
                 val recommendationList = recommendationList1 + recommendationList2
-
                 immunizationRecommendation.recommendation = recommendationList
-
                 fhirEngine.create(immunizationRecommendation)
 
             }
+
         }
 
     }

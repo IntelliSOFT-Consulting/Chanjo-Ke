@@ -344,12 +344,13 @@ class AdministerVaccineViewModel(
             val vaccineBasicVaccine =
                 ImmunizationHandler().getVaccineDetailsByBasicVaccineName(administeredProduct)
 
+            Log.e("*****","****")
             val nextBasicVaccine = vaccineBasicVaccine?.let {
                 immunizationHandler.getNextDoseDetails(
                     it
                 )
             }
-
+            Log.e("*****","****")
             val seriesVaccine =
                 vaccineBasicVaccine?.let { immunizationHandler.getRoutineSeriesByBasicVaccine(it) }
 
@@ -374,6 +375,8 @@ class AdministerVaccineViewModel(
                 }
             }.join()
 
+            Log.e("---->","<-----")
+
             //Generate the next immunisation recommendation
             if (nextBasicVaccine != null && date != null) {
 
@@ -396,7 +399,6 @@ class AdministerVaccineViewModel(
                 formatterClass.saveSharedPref("immunizationNextDate",
                     immunizationNextDateFormat,context)
 
-
                 /**
                  * Get the immunization recommendation
                  */
@@ -412,6 +414,8 @@ class AdministerVaccineViewModel(
                     .map { getRecommendationData(it) }
                     .let { immunizationRecommendationList.addAll(it)}
 
+                println("immunizationRecommendationList $immunizationRecommendationList")
+
                 /**
                  * These will include immunization recommendations that have been created before
                  *
@@ -426,6 +430,8 @@ class AdministerVaccineViewModel(
                  */
 
                 val immunizationRecommendation = immunizationRecommendationList.firstOrNull()
+                println("immunizationRecommendation $immunizationRecommendation")
+
                 if (immunizationRecommendation != null) {
 
                     val recommendationList = immunizationRecommendation.recommendation
@@ -439,6 +445,8 @@ class AdministerVaccineViewModel(
                             recommendation.vaccineCodeFirstRep.codingFirstRep.hasDisplay() &&
                             recommendation.vaccineCodeFirstRep.codingFirstRep.display == vaccineCode){
                             if (recommendation.hasDateCriterion()) {
+
+                                println("immunizationRecommendation ${recommendation.vaccineCode}")
 
                                 val dateCriterion = getNewDateCriterion(localDate)
                                 recommendation.dateCriterion = dateCriterion
@@ -457,6 +465,7 @@ class AdministerVaccineViewModel(
 
             }
 
+            Log.e("---->","<-----")
         }
 
     }

@@ -539,14 +539,21 @@ class FormatterClass {
     }
 
 
-    fun getNextDate(date: Date, weeksToAdd: Double): Date {
+    fun getNextDate(date: Date, doubleWeeks: Double): Date {
 
         // Create a Calendar instance and set it to the current date
         val calendar = Calendar.getInstance()
         calendar.time = date
 
-        // Add the calculated milliseconds to the current date
-        calendar.add(Calendar.WEEK_OF_YEAR, weeksToAdd.toInt())
+        if (doubleWeeks < 1){
+            //Convert to days and add in days
+            val daysDouble = doubleWeeks * 7
+            calendar.add(Calendar.DAY_OF_YEAR, daysDouble.toInt())
+        }else{
+            //Add in weeks
+            // Add the calculated milliseconds to the current date
+            calendar.add(Calendar.WEEK_OF_YEAR, doubleWeeks.toInt())
+        }
 
         // Get the new date after adding weeks
         return calendar.time
@@ -1329,6 +1336,17 @@ class FormatterClass {
          * - If date is within 14 days, administer
          * - The change in statues
          */
+
+        recommendationList.forEach {
+            if (it.vaccineName == "1st Rabies Dose" || it.vaccineName == "2nd Rabies Dose" || it.vaccineName == "3rd Rabies Dose"){
+                Log.e("---->","<-----")
+                println("vaccineName ${it.vaccineName}")
+                println("earliestDate ${it.earliestDate}")
+                println("latestDate ${it.latestDate}")
+                Log.e("---->","<-----")
+            }
+
+        }
 
         /**
          * 1. Work on the recommendation list

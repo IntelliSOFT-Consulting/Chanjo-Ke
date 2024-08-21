@@ -1,6 +1,7 @@
 package com.intellisoft.chanjoke.vaccine.validations
 
 import android.content.Context
+import android.util.Log
 import com.intellisoft.chanjoke.fhir.data.DbRoutineVaccineData
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 
@@ -395,9 +396,9 @@ fun createVaccines(): Triple<List<RoutineVaccine>,List<NonRoutineVaccine>,List<P
                 listOf(
                     BasicVaccine(rabiesMain+"RABIES-"+"1", "1st Rabies Dose", "Intramuscular Injection", 0, arrayListOf(), "0.5ml","1"),
                     BasicVaccine(rabiesMain+"RABIES-"+"2", "2nd Rabies Dose", "Intramuscular Injection", 0, arrayListOf(0.43), "0.5ml","2"),
-                    BasicVaccine(rabiesMain+"RABIES-"+"3", "3rd Rabies Dose", "Intramuscular Injection", 0, arrayListOf(1.0), "0.5ml","3"),
-                    BasicVaccine(rabiesMain+"RABIES-"+"4", "4th Rabies Dose", "Intramuscular Injection", 0, arrayListOf(2.0), "0.5ml","4"),
-                    BasicVaccine(rabiesMain+"RABIES-"+"5", "5th Rabies Dose", "Intramuscular Injection", 0, arrayListOf(4.0), "0.5ml","5"),
+                    BasicVaccine(rabiesMain+"RABIES-"+"3", "3rd Rabies Dose", "Intramuscular Injection", 0, arrayListOf(0.57), "0.5ml","3"),
+                    BasicVaccine(rabiesMain+"RABIES-"+"4", "4th Rabies Dose", "Intramuscular Injection", 0, arrayListOf(1.0), "0.5ml","4"),
+                    BasicVaccine(rabiesMain+"RABIES-"+"5", "5th Rabies Dose", "Intramuscular Injection", 0, arrayListOf(2.0), "0.5ml","5"),
                 )
             )
         )
@@ -740,6 +741,7 @@ class ImmunizationHandler() {
 
     // Function to get details of the next dose for a given BasicVaccine
     fun getNextDoseDetails(basicVaccine: BasicVaccine): BasicVaccine? {
+
         val (routineList, nonRoutineList, pregnancyList) = vaccines
 
         // Helper function to find the next dose details in a list of vaccines
@@ -755,7 +757,11 @@ class ImmunizationHandler() {
         }
 
         // Check if the basic vaccine belongs to a routine vaccine
-        val routineVaccineContainingDose = routineList.firstOrNull { it.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode } }
+        val routineVaccineContainingDose = routineList.firstOrNull {
+            it.vaccineList.any {
+                it.vaccineCode == basicVaccine.vaccineCode
+            }
+        }
 
         if (routineVaccineContainingDose != null) {
             // If the routine vaccine is found, find the next dose in its vaccine list
@@ -763,11 +769,21 @@ class ImmunizationHandler() {
         }
 
         // Check if the basic vaccine belongs to a non-routine vaccine
-        val nonRoutineVaccineContainingDose = nonRoutineList.firstOrNull { it.vaccineList.any { it.vaccineCode == basicVaccine.vaccineCode } }
+        val nonRoutineVaccineContainingDose = nonRoutineList.flatMap { it.vaccineList }.firstOrNull{ routine ->
+            routine.vaccineList.any {
+                it.vaccineCode == basicVaccine.vaccineCode
+            }
+        }
+
+//        val nonRoutineVaccineContainingDose = nonRoutineList.firstOrNull {
+//            it.vaccineList.any { routine ->
+//                routine.vaccineCode == basicVaccine.vaccineCode
+//            }
+//        }
 
         if (nonRoutineVaccineContainingDose != null) {
             // If the non-routine vaccine is found, find the next dose in its vaccine list
-            return findNextDoseInList(nonRoutineVaccineContainingDose.vaccineList.flatMap { it.vaccineList })
+            return findNextDoseInList(nonRoutineVaccineContainingDose.vaccineList)
         }
 
         // Check if the basic vaccine belongs to a pregnancy vaccine
