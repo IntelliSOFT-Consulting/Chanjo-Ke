@@ -1509,6 +1509,8 @@ class FormatterClass {
         val patientDob = getSharedPref("patientDob", context).toString()
         val patientGender = getSharedPref("patientGender", context).toString()
         val patientYearStr = getSharedPref("patientYears", context)
+        val patientAlive = getSharedPref("patientAlive", context).toString()
+
         val patientYears = patientYearStr?.toIntOrNull()
 
         val numberOfWeek = calculateWeeksFromDate(patientDob)
@@ -1642,6 +1644,9 @@ class FormatterClass {
 
         }
 
+        if (patientAlive == "NO"){
+            canBeVaccinated = false
+        }
 
         return DbVaccineScheduleChild(
             vaccineName,
@@ -1816,6 +1821,8 @@ class FormatterClass {
 
         val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
         val patientDob = getSharedPref("patientDob", context).toString()
+        val patientAlive = getSharedPref("patientAlive", context).toString()
+
         val numberOfWeek = calculateWeeksFromDate(patientDob)
         val basicVaccine = ImmunizationHandler().getVaccineDetailsByBasicVaccineName(vaccineName)
         val today = LocalDate.now()
@@ -1997,6 +2004,11 @@ class FormatterClass {
             }
 
         }
+
+        if (patientAlive == "NO"){
+            canBeVaccinated = false
+        }
+
 
         return DbVaccineScheduleChild(
             vaccineName,

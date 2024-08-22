@@ -316,13 +316,21 @@ class PatientDetailActivity : AppCompatActivity() {
 
             val patientDetail = patientDetailsViewModel.getPatientInfo()
             val gender = patientDetail.gender
+            val isAlive = if (patientDetail.isAlive) "YES" else "NO"
             formatterClass.saveSharedPref("patientGender", gender, this@PatientDetailActivity)
+            formatterClass.saveSharedPref("patientAlive", isAlive, this@PatientDetailActivity)
+
 
             getRecommendation()
 
             CoroutineScope(Dispatchers.Main).launch {
                 binding.apply {
-                    tvName.text = patientDetail.name
+                    val formattedName = if(patientDetail.isAlive){
+                        patientDetail.name
+                    }else{
+                        "${patientDetail.name} (Deceased)"
+                    }
+                    tvName.text = formattedName
                     tvGender.text = AppUtils().capitalizeFirstLetter(patientDetail.gender)
                     tvSystemId.text = patientDetail.systemId
 
