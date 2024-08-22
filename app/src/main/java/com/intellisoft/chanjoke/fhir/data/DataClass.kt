@@ -45,6 +45,7 @@ enum class Reasons {
     DUE
 }
 
+
 enum class StatusColors {
     GREEN, //All administered
     AMBER, //Some administered
@@ -67,6 +68,14 @@ data class AdverseEventItem(
     val practitionerId: PractitionerDetails,
     val locationId: String,
     val locDisplay: String
+)
+
+data class DbVaccineHistory(
+    val vaccineName: String?,
+    val targetDisease: String,
+    val doseNumber: String?,
+    val location: String,
+    val lastDoseDate: String,
 )
 
 data class PractitionerDetails(
