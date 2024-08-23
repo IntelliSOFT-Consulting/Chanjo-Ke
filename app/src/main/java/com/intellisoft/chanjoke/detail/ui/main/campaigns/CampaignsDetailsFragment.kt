@@ -28,6 +28,7 @@ import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.BottomSheetDialog
+import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -54,12 +55,13 @@ class CampaignsDetailsFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSel
     private val formatterClass = FormatterClass()
     private var patientYears:String? = null
     private var patientDob:String? = null
+    private var campaignName:String? = null
     private var patientGender:String? = null
     private var selectedVaccineList = ArrayList<String>()
     private var dbRecyclerList = HashSet<DbRecycler>()
     private lateinit var binding: FragmentCampaignsDetailsBinding
-    private lateinit var sharedPreferences: SharedPreferences
-
+    private lateinit var sharedPreferences1: SharedPreferences
+    private var immunizationHandler = ImmunizationHandler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -76,8 +78,8 @@ class CampaignsDetailsFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSel
         binding = FragmentCampaignsDetailsBinding.inflate(inflater, container, false)
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
-        sharedPreferences = requireContext()
-            .getSharedPreferences(getString(R.string.vaccineList),
+        sharedPreferences1 = requireContext()
+            .getSharedPreferences(getString(R.string.campaigns),
                 Context.MODE_PRIVATE
             )
 
@@ -91,6 +93,8 @@ class CampaignsDetailsFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSel
 
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
         patientDob = formatterClass.getSharedPref("patientDob", requireContext())
+        patientDob = formatterClass.getSharedPref("patientDob", requireContext())
+        campaignName = sharedPreferences1.getString("campaignName", null)
 
 
         binding.tvAdministerVaccine.setOnClickListener {
@@ -118,88 +122,38 @@ class CampaignsDetailsFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSel
 
         }
 
-        getRoutine()
+        getCampaign()
 
         return binding.root
     }
 
-    private fun getRoutine() {
+    private fun getCampaign() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val routineKeyList = sharedPreferences.getString("routineList", null)
-            val expandableListTitle = routineKeyList!!.split(",").toList()
-
-//            Get the administered list
-            val recommendationList = patientDetailsViewModel.recommendationList(null)
-
             val administeredList = patientDetailsViewModel.getVaccineList()
+            val dbVaccineScheduleGroupList = formatterClass.getCampaignList(campaignName, administeredList)
+
             val dbVaccineScheduleChildList = ArrayList<DbVaccineScheduleChild>()
-
-            val dbVaccineScheduleGroupList = ArrayList<DbVaccineScheduleGroup>()
-            expandableListTitle.forEach { keyValue->
-
-                val weekNo = formatterClass.getVaccineScheduleValue(keyValue)
-                val weekNoList = sharedPreferences.getStringSet(weekNo, null)
-                val vaccineList = weekNoList?.toList()
-                vaccineList?.forEach { vaccineName ->
-                    val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
-                        requireContext(),
-                        "ROUTINE",
-                        keyValue,
-                        vaccineName,
-                        administeredList,
-                        recommendationList)
-                    dbVaccineScheduleChildList.add(dbVaccineScheduleChild)
-
-                }
-
-                //Get the group color Code
-                val statusColor = formatterClass.getVaccineGroupDetails(vaccineList, administeredList, recommendationList)
-
-                val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
-                    weekNo,
-                    statusColor,
-                    "",
-                    dbVaccineScheduleChildList
-                )
-                dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
-
-            }
 
             val newExpandableListDetail = HashMap<DbVaccineScheduleGroup, List<DbVaccineScheduleChild>>()
 
             for (group in dbVaccineScheduleGroupList) {
                 newExpandableListDetail[group] = group.dbVaccineScheduleChildList
+                group.dbVaccineScheduleChildList.forEach {
+                    dbVaccineScheduleChildList.add(it)
+                }
+
             }
 
             val newExpandableListTitle = ArrayList(newExpandableListDetail.keys)
-            val sortedExpandableListTitle = newExpandableListTitle.sortedBy {
-                when{
-                    it.vaccineSchedule.startsWith("At Birth") -> 1
-                    it.vaccineSchedule.endsWith("6 weeks") -> 2
-                    it.vaccineSchedule.endsWith("10 weeks") -> 3
-                    it.vaccineSchedule.endsWith("14 weeks") -> 4
-                    it.vaccineSchedule.endsWith("6 months") -> 5
-                    it.vaccineSchedule.endsWith("7 months") -> 6
-                    it.vaccineSchedule.endsWith("9 months") -> 7
-                    it.vaccineSchedule.endsWith("12 months") -> 8
-                    it.vaccineSchedule.endsWith("18 months") -> 9
-                    it.vaccineSchedule.endsWith("24 months") -> 10
-                    it.vaccineSchedule.endsWith("10 years") -> 11
-                    it.vaccineSchedule.endsWith("14 years") -> 12
-                    else -> 13
-                }
-            }
-
-
 
             CoroutineScope(Dispatchers.Main).launch {
 
                 val inflater = LayoutInflater.from(requireContext())
 
 
-                for (group in sortedExpandableListTitle){
+                for (group in newExpandableListTitle){
 
                     val groupLayout = inflater.inflate(R.layout.vaccination_schedule, null) as RelativeLayout
                     val tvScheduleTime = groupLayout.findViewById<TextView>(R.id.tvScheduleTime)
@@ -287,41 +241,17 @@ class CampaignsDetailsFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSel
         recyclerView: RecyclerView,
         dbVaccineScheduleChildList: ArrayList<DbVaccineScheduleChild>
     ) {
-
-        val vaccineList = ArrayList<DbVaccineScheduleChild>()
-
-        val weekNoList = mutableSetOf<String>()
-
-        val scheduleSet = sharedPreferences.getStringSet(vaccineSchedule, null)
-        scheduleSet?.let { weekNoList.addAll(it) }
-
-        if (weekNoList != null){
-            val savedVaccineList = weekNoList.toList()
-            for (dbVaccineScheduleChild in dbVaccineScheduleChildList) {
-                if (savedVaccineList.contains(dbVaccineScheduleChild.vaccineName)){
-                    vaccineList.add(dbVaccineScheduleChild)
-                }
-            }
-
-            val uniqueVaccineList = vaccineList.distinctBy { it.vaccineName }.toCollection(ArrayList())
-
-            // If you want to reassign it back to the original list variable
-            vaccineList.clear()
-            vaccineList.addAll(uniqueVaccineList)
-
-        }
-
         val patientGender = formatterClass.getSharedPref("patientGender", requireContext())
 
         //Remove HPV if it's a male
         if (patientGender != null && patientGender == "male"){
-            vaccineList.removeIf { it.vaccineName.contains("HPV") }
+            dbVaccineScheduleChildList.removeIf { it.vaccineName.contains("HPV") }
         }
 
 
         val adapter = VaccineDetailsAdapter(
             patientDetailsViewModel,
-            vaccineList,
+            dbVaccineScheduleChildList,
             this@CampaignsDetailsFragment,
             requireContext())
 
@@ -386,7 +316,7 @@ class CampaignsDetailsFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSel
             selectedVaccineList.remove(vaccineName)
         }
 
-        updateList()
+//        updateList()
 
     }
 }

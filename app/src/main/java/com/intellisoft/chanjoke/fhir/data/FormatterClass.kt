@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
@@ -2114,6 +2113,99 @@ class FormatterClass {
             }
         }
         return canBeVaccinated
+    }
+
+    private fun getDiseaseFromCampaign(campaignName: String, targetDiseases: List<String>): String? {
+        return targetDiseases.firstOrNull { campaignName.contains(it, ignoreCase = true) }
+    }
+
+    fun getCampaignList(campaignName: String?, administeredList: ArrayList<DbVaccineData>)
+    :ArrayList<DbVaccineScheduleGroup>{
+
+        val dbVaccineScheduleGroupList = ArrayList<DbVaccineScheduleGroup>()
+
+        val formatterClass = FormatterClass()
+        val immunizationHandler = ImmunizationHandler()
+
+        val targetDiseaseList = immunizationHandler.getTargetDiseases("ROUTINE")
+        val targetDisease =
+            campaignName?.let {
+                formatterClass.getDiseaseFromCampaign(it, targetDiseaseList)
+            }
+
+        val vaccineDetails =
+            targetDisease?.let {
+                immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(it)
+            }
+
+        if (vaccineDetails != null){
+
+            var groupStatusColor = StatusColors.NORMAL.name
+
+            val childrenVaccineList = ArrayList<DbVaccineScheduleChild>()
+
+            if (vaccineDetails is RoutineVaccine){
+
+                val routineVaccineList = vaccineDetails.vaccineList
+
+                routineVaccineList.forEach {basicVaccine ->
+                    val vaccineName = basicVaccine.vaccineName
+                    var date = ""
+                    var statusColor = ""
+                    var isVaccinated = false
+                    var canBeVaccinated = true
+                    var status = Reasons.DUE.name
+
+                    val newAdministeredDetails = administeredList.firstOrNull {
+                        it.status == Reasons.COMPLETED.name &&
+                                it.vaccineName == vaccineName
+                    }
+                    if(newAdministeredDetails != null){
+                        date = newAdministeredDetails.dateAdministered
+                        statusColor = StatusColors.GREEN.name
+                        isVaccinated = true
+                        status = Reasons.COMPLETED.name
+                    }
+
+                    val dbVaccineScheduleChild = DbVaccineScheduleChild(
+                        vaccineName, date, statusColor, isVaccinated, canBeVaccinated, status, status
+                    )
+                    childrenVaccineList.add(dbVaccineScheduleChild)
+
+                }
+
+                groupStatusColor = checkVaccinationStatus(routineVaccineList, administeredList)
+            }
+
+            val dbVaccineScheduleGroup = DbVaccineScheduleGroup(
+                targetDisease,
+                groupStatusColor,
+                    "",
+                childrenVaccineList
+            )
+            dbVaccineScheduleGroupList.add(dbVaccineScheduleGroup)
+
+        }
+
+
+        return dbVaccineScheduleGroupList
+
+    }
+    private fun checkVaccinationStatus(
+        routineVaccineList: List<BasicVaccine>,
+        administeredList: List<DbVaccineData>
+    ): String {
+        // Set to keep track of vaccine names from routineVaccineList that are found in administeredList
+        val administeredVaccineNames = administeredList.map { it.vaccineName }.toSet()
+
+        // Count the matches
+        val matchedVaccines = routineVaccineList.count { it.vaccineName in administeredVaccineNames }
+
+        return when {
+            matchedVaccines == routineVaccineList.size -> StatusColors.GREEN.name // All vaccines are administered
+            matchedVaccines > 0 -> StatusColors.AMBER.name // Some vaccines are administered
+            else -> StatusColors.NORMAL.name // None of the vaccines are administered
+        }
     }
 
 

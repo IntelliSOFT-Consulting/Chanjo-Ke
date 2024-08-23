@@ -36,7 +36,10 @@ data class DbVaccineListData(
     val keyTitle: String,
     val statusColor: String,
 )
-
+data class DbCampaignsData(
+    val targetDisease: String,
+    val vaccineList: ArrayList<String>
+)
 enum class Reasons {
     RESCHEDULE,
     CONTRAINDICATE,
