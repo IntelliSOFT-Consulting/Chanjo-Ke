@@ -2,6 +2,7 @@ package com.intellisoft.chanjoke.shared
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -166,21 +167,36 @@ class LandingPage : Fragment() {
                 findNavController().navigate(R.id.patient_list)
             }
 
-            "Campaigns" -> {
-                formatterClass.saveSharedPref(
-                    "patientListAction",
-                    NavigationDetails.CAMPAIGN.name, requireContext()
-                )
-                findNavController().navigate(R.id.campaignFragment)
-            }
+//            "Campaigns" -> {
+//                formatterClass.saveSharedPref(
+//                    "patientListAction",
+//                    NavigationDetails.CAMPAIGN.name, requireContext()
+//                )
+//                findNavController().navigate(R.id.campaignFragment)
+//            }
         }
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val menuListItems = layoutViewModel.getLayoutList()
+
+        //Check if the Campaigns was selected. If so, display it only. Otherwise don't
+        val selectedFacility = formatterClass.getSharedPref("selectedFacility", requireContext())
+        val formattedList = if (selectedFacility == "Campaigns"){
+            //Remove all but Campaigns
+            menuListItems.filter { it == LayoutListViewModel.Layout.CAMPAIGNS }
+        }else{
+            //Remove Campaigns
+            menuListItems.filter { it != LayoutListViewModel.Layout.CAMPAIGNS }
+        }
+
+
+
         val adapter =
-            LayoutsRecyclerViewAdapter(::onItemClick).apply { submitList(layoutViewModel.getLayoutList()) }
+            LayoutsRecyclerViewAdapter(::onItemClick).apply { submitList(formattedList) }
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.sdcLayoutsRecyclerView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(context, 2)
