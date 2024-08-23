@@ -168,7 +168,7 @@
 
     <fragment
         android:id="@+id/campaignFragment"
-        android:name="com.intellisoft.chanjoke.CampaignFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.campaigns.CampaignFragmentList"
         android:label="fragment_campaign"
         tools:layout="@layout/fragment_campaign" >
 
@@ -179,6 +179,16 @@
         <action
             android:id="@+id/action_campaignFragment_to_patient_list"
             app:destination="@id/patient_list" />
+    </fragment>
+    <fragment
+        android:id="@+id/campaignsDetailsFragment"
+        android:name="com.intellisoft.chanjoke.detail.ui.main.campaigns.CampaignsDetailsFragment"
+        android:label="fragment_campaigns_details"
+        tools:layout="@layout/fragment_campaigns_details" >
+        <action
+            android:id="@+id/action_campaignsDetailsFragment_pop"
+            app:popUpTo="@id/campaignsDetailsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 

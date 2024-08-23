@@ -1,22 +1,23 @@
-package com.intellisoft.chanjoke
+package com.intellisoft.chanjoke.detail.ui.main.campaigns
 
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
+import com.intellisoft.chanjoke.MainActivity
+import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentCampaignBinding
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbCarePlan
@@ -28,10 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-class CampaignFragment : Fragment() {
+class CampaignFragmentList : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -44,10 +42,7 @@ class CampaignFragment : Fragment() {
     private var campaignList = ArrayList<DbCarePlan>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -64,8 +59,13 @@ class CampaignFragment : Fragment() {
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
 
-        patientDetailsViewModel = ViewModelProvider(this,
-            PatientDetailsViewModelFactory(requireContext().applicationContext as Application,fhirEngine, patientId)
+        patientDetailsViewModel = ViewModelProvider(
+            this,
+            PatientDetailsViewModelFactory(
+                requireContext().applicationContext as Application,
+                fhirEngine,
+                patientId
+            )
         )[PatientDetailsViewModel::class.java]
 
         getCampaignList()
@@ -144,7 +144,8 @@ class CampaignFragment : Fragment() {
 
     private fun populateList(campaignDataList: ArrayList<DbCarePlan>) {
         CoroutineScope(Dispatchers.Main).launch {
-            val vaccineAdapter = CampaignAdapter(this@CampaignFragment, campaignDataList,requireContext())
+            val vaccineAdapter =
+                CampaignAdapter(this@CampaignFragmentList, campaignDataList, requireContext())
             binding.recyclerView.adapter = vaccineAdapter
         }
     }
@@ -156,23 +157,5 @@ class CampaignFragment : Fragment() {
         }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CampaignFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CampaignFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 }

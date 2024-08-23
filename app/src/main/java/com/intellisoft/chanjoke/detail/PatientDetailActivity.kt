@@ -28,6 +28,7 @@ import com.google.android.fhir.sync.Sync
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
+import com.intellisoft.chanjoke.detail.ui.main.campaigns.CampaignsDetailsFragment
 import com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment
 import com.intellisoft.chanjoke.detail.ui.main.registration.CompleteDetailsActivity
 import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
@@ -93,22 +94,37 @@ class PatientDetailActivity : AppCompatActivity() {
                 .get(PatientDetailsViewModel::class.java)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        //Check if this is a Campaigns
+        val selectedFacility = formatterClass.getSharedPref("selectedFacility", this)
+
+
         val routineFragment = RoutineFragment()
         routineFragment.arguments = bundle
 
         val nonRoutineFragment = NonRoutineFragment()
         nonRoutineFragment.arguments = bundle
 
-        val appointment = AppointmentsFragment()
-        appointment.arguments = bundle
+//        val appointment = AppointmentsFragment()
+//        appointment.arguments = bundle
 
-        //Perform a check if user is more than 5 years old
-        if (isBelowFive()) {
-            adapterSection.addFragment(routineFragment, getString(R.string.tab_text_1))
+        val campaignsFragment = CampaignsDetailsFragment()
+        campaignsFragment.arguments = bundle
+
+        //Perform campaigns related job
+        if (selectedFacility == "Campaigns"){
+            adapterSection.addFragment(campaignsFragment, getString(R.string.campaigns))
+
+        }else{
+            //Perform a check if user is more than 5 years old
+            if (isBelowFive()) {
+                adapterSection.addFragment(routineFragment, getString(R.string.tab_text_1))
+            }
+
+            adapterSection.addFragment(nonRoutineFragment, getString(R.string.tab_text_2))
+//        adapter.addFragment(appointment, getString(R.string.tab_text_4))
         }
 
-        adapterSection.addFragment(nonRoutineFragment, getString(R.string.tab_text_2))
-//        adapter.addFragment(appointment, getString(R.string.tab_text_4))
+
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {

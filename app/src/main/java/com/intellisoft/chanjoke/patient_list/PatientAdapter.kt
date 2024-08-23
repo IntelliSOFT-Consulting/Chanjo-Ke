@@ -46,27 +46,30 @@ class PatientAdapter(
 
         override fun onClick(p0: View) {
 
+
+            val formatterClass = FormatterClass()
             val pos = adapterPosition
             val id = dbPatientList[pos].resourceId
             val dob = dbPatientList[pos].dob
 
-            FormatterClass().saveSharedPref("patientId", id, context)
+            formatterClass.saveSharedPref("patientId", id, context)
+
             val selectedVaccinationVenue =
-                FormatterClass().getSharedPref("selectedVaccinationVenue", context)
+                formatterClass.getSharedPref("selectedVaccinationVenue", context)
             val isSelectedVaccinationVenue =
-                FormatterClass().getSharedPref("isSelectedVaccinationVenue", context)
+                formatterClass.getSharedPref("isSelectedVaccinationVenue", context)
             val readyToUpdate =
-                FormatterClass().getSharedPref("ready_to_update", context)
+                formatterClass.getSharedPref("ready_to_update", context)
 
             val birthDateElement = FormatterClass().convertLocalDateToDate(dob)
 
 
-            FormatterClass().getFormattedAge(
+            formatterClass.getFormattedAge(
                 birthDateElement,
                 context.resources,
                 context)
 
-            FormatterClass().saveSharedPref("patientDob", birthDateElement, context)
+            formatterClass.saveSharedPref("patientDob", birthDateElement, context)
 
             if (readyToUpdate != null) {
                 createDialog()

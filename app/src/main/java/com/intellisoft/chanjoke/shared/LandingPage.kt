@@ -167,13 +167,13 @@ class LandingPage : Fragment() {
                 findNavController().navigate(R.id.patient_list)
             }
 
-//            "Campaigns" -> {
-//                formatterClass.saveSharedPref(
-//                    "patientListAction",
-//                    NavigationDetails.CAMPAIGN.name, requireContext()
-//                )
-//                findNavController().navigate(R.id.campaignFragment)
-//            }
+            "Campaigns" -> {
+                formatterClass.saveSharedPref(
+                    "patientListAction",
+                    NavigationDetails.CAMPAIGN.name, requireContext()
+                )
+                findNavController().navigate(R.id.campaignFragment)
+            }
         }
 
     }
