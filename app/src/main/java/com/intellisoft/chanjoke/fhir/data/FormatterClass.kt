@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.util.Log
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.utils.AppUtils
 import com.intellisoft.chanjoke.vaccine.validations.BasicVaccine
@@ -1036,7 +1037,7 @@ class FormatterClass {
         return weekNo
     }
 
-    fun processAdministeredList(administeredList: List<DbVaccineData>): ArrayList<DbVaccineData> {
+    private fun processAdministeredList(administeredList: List<DbVaccineData>): ArrayList<DbVaccineData> {
         val groupedByVaccine = administeredList.groupBy { it.vaccineName }
         val resultList = ArrayList<DbVaccineData>()
 
@@ -1079,6 +1080,29 @@ class FormatterClass {
         return dateTime.format(formatter)
     }
 
+    fun getVaccineStatus(administeredList: List<DbVaccineData>, vaccines: List<String>): String {
+        var allCompleted = true
+        var anyCompleted = false
+
+        for (vaccine in vaccines) {
+            val isCompleted = administeredList.any {
+                it.vaccineName == vaccine && it.status == "COMPLETED"
+            }
+
+            if (isCompleted) {
+                anyCompleted = true
+            } else {
+                allCompleted = false
+            }
+        }
+
+        return when {
+            allCompleted -> StatusColors.GREEN.name
+            anyCompleted -> StatusColors.AMBER.name
+            else -> StatusColors.NORMAL.name
+        }
+    }
+
     fun getVaccineGroupDetails(
         vaccines: List<String>?,
         administeredList: List<DbVaccineData>,
@@ -1089,87 +1113,68 @@ class FormatterClass {
 
         var statusColor = ""
         if (vaccines != null) {
-            if (vaccines.all { administeredVaccineNames.contains(it) }) {
-                //Check if there's a contraindicated or not administered
 
-                val processAdministeredList = processAdministeredList(administeredList)
+            /**
+             * 1. Get the vaccine list and the administered list and check if the administered list
+             contains the vaccines.
+             * 2. If the status color is GREEN and AMBER, return as is.
+             * 3. If the status is NORMAL, check from the recommendationList if the status is missed
+             */
 
-                val allCompleted = processAdministeredList.all { it.status == Reasons.COMPLETED.name }
-                statusColor = if (allCompleted){
-                    StatusColors.GREEN.name
-                }else{
-                    StatusColors.AMBER.name
-                }
-
-            } else if (vaccines.any { administeredVaccineNames.contains(it) }) {
-                // Checks if there's any that has been vaccinated
-                statusColor = StatusColors.AMBER.name
-            } else {
-                statusColor = StatusColors.NORMAL.name
-
+            statusColor = getVaccineStatus(administeredList, vaccines)
+            if (statusColor == StatusColors.NORMAL.name){
                 /**
                  * Everything under here does not have any vaccines. Check for missed vaccines
                  * The vaccines list have the vaccine list for the routine vaccines per schedule
-                   e.g. At Birth, 6 weeks, 10 weeks, 14 weeks, 26 weeks etc
+                e.g. At Birth, 6 weeks, 10 weeks, 14 weeks, 26 weeks etc
                  * Get the vaccine details and use the vaccine code to check in the recommendationList
-                   i.e. earliestDate
+                i.e. earliestDate
                  *
                  */
-                val statusColorList = ArrayList<String>()
 
+                val vaccineCodeList = ArrayList<String>()
                 vaccines.forEach { vaccineName ->
 
-                    val vaccineDetails = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+                    val vaccineDetails = immunizationHandler
+                        .getVaccineDetailsByBasicVaccineName(vaccineName)
 
                     if (vaccineDetails != null){
-
-                        val vaccineNameBasic = vaccineDetails.vaccineName
-                        val dbAppointmentDetailsDue = recommendationList.filter {
-                            it.vaccineName == vaccineNameBasic && it.status == "due"
-                        }.map { it }.firstOrNull()
-
-                        if (dbAppointmentDetailsDue != null) {
-
-                            val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
-
-                            val latestDate = convertDateFormat(dbAppointmentDetailsDue.latestDate)
-                            val vaccineCode = dbAppointmentDetailsDue.vaccineCode
-
-                            val dateSchedule = if (vaccineCode == "IMPO-bOPV" || vaccineCode == "IMBCG-I") {
-                                latestDate
-                            }else{
-                                earliestDate
-                            }
-
-                            if (dateSchedule!= null) {
-                                val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
-                                val dateScheduleDate = dateScheduleFormat.parse(dateSchedule)
-                                val todayDate = Calendar.getInstance().time
-
-                                if (dateScheduleDate != null) {
-                                    val pairDate = convertToPureDates(dateScheduleDate, todayDate)
-                                    val dateOnlyScheduleDate = pairDate.first
-                                    val dateOnlyTodayDate = pairDate.second
-
-                                    if (dateOnlyScheduleDate.before(dateOnlyTodayDate)){
-                                        statusColorList.add(StatusColors.RED.name)
-                                        statusColor = StatusColors.RED.name
-                                    }
-//                                    if (dateOnlyScheduleDate == dateOnlyTodayDate){
-//                                        statusColorList.add(StatusColors.GREY.name)
-//                                        statusColor = StatusColors.GREY.name
-//                                    }
-
-                                }
-                            }
-                        }
+                        val vaccineCode = vaccineDetails.vaccineCode
+                        vaccineCodeList.add(vaccineCode)
                     }
+
                 }
+                statusColor = checkVaccineStatus(recommendationList, vaccineCodeList)
 
             }
+
         }
 
         return statusColor
+    }
+
+    private fun checkVaccineStatus(recommendationList: List<DbRecommendationDetails>, vaccineCodes: List<String>): String {
+        val today = Date()
+        val dateFormat = SimpleDateFormat("MMM d yyyy")
+        var redCount = 0
+
+        for (vaccineCode in vaccineCodes) {
+            val recommendation = recommendationList.firstOrNull { it.vaccineName == vaccineCode }
+
+            if (recommendation != null) {
+                val earliestDate = dateFormat.parse(recommendation.earliestDate.toString())
+                val latestDate = dateFormat.parse(recommendation.latestDate.toString())
+
+                if (earliestDate != null && latestDate != null) {
+                    if (earliestDate.before(today) && latestDate.before(today)) {
+                        redCount++
+                    }
+                }
+            }
+        }
+
+        // If the number of "Reds" is half or more of the number of vaccineCodes, return "Red", otherwise "Black"
+        return if (redCount >= vaccineCodes.size / 2.0) "Red" else "Black"
     }
 
     private fun convertToPureDates(dateScheduleDate: Date, todayDate: Date):Pair<Date, Date>{

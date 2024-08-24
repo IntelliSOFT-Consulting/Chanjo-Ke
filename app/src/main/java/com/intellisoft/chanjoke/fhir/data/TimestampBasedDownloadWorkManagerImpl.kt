@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.fhir.data
 
+import android.util.Log
 import com.google.android.fhir.sync.DownloadWorkManager
 import com.google.android.fhir.sync.SyncDataParams
 import com.google.android.fhir.sync.download.DownloadRequest
@@ -152,7 +153,6 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
     if (downloadUrl.contains("&page_token")) {
         downloadUrl = url
     }
-
     return downloadUrl
 }
 
