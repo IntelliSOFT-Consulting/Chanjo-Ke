@@ -1080,7 +1080,7 @@ class FormatterClass {
         return dateTime.format(formatter)
     }
 
-    fun getVaccineStatus(administeredList: List<DbVaccineData>, vaccines: List<String>): String {
+    private fun getVaccineStatus(administeredList: List<DbVaccineData>, vaccines: List<String>): String {
         var allCompleted = true
         var anyCompleted = false
 
@@ -1131,7 +1131,6 @@ class FormatterClass {
                 i.e. earliestDate
                  *
                  */
-
                 val vaccineCodeList = ArrayList<String>()
                 vaccines.forEach { vaccineName ->
 
@@ -1146,6 +1145,7 @@ class FormatterClass {
                 }
                 statusColor = checkVaccineStatus(recommendationList, vaccineCodeList)
 
+
             }
 
         }
@@ -1153,28 +1153,37 @@ class FormatterClass {
         return statusColor
     }
 
-    private fun checkVaccineStatus(recommendationList: List<DbRecommendationDetails>, vaccineCodes: List<String>): String {
+    private fun checkVaccineStatus(
+        recommendationList: List<DbRecommendationDetails>,
+        vaccineCodes: List<String>): String {
         val today = Date()
         val dateFormat = SimpleDateFormat("MMM d yyyy")
         var redCount = 0
 
         for (vaccineCode in vaccineCodes) {
-            val recommendation = recommendationList.firstOrNull { it.vaccineName == vaccineCode }
+            val recommendation = recommendationList.firstOrNull { it.vaccineCode == vaccineCode }
 
             if (recommendation != null) {
-                val earliestDate = dateFormat.parse(recommendation.earliestDate.toString())
-                val latestDate = dateFormat.parse(recommendation.latestDate.toString())
 
-                if (earliestDate != null && latestDate != null) {
-                    if (earliestDate.before(today) && latestDate.before(today)) {
-                        redCount++
+                val earliestDateFormat = convertViewFormats(recommendation.earliestDate)
+                val latestDateFormat = convertViewFormats(recommendation.latestDate)
+
+                if (earliestDateFormat != null && latestDateFormat != null) {
+
+                    val earliestDate = dateFormat.parse(earliestDateFormat)
+                    val latestDate = dateFormat.parse(latestDateFormat)
+
+                    if (earliestDate != null && latestDate != null){
+                        if (earliestDate.before(today) && latestDate.before(today)) {
+                            redCount++
+                        }
                     }
                 }
             }
         }
 
         // If the number of "Reds" is half or more of the number of vaccineCodes, return "Red", otherwise "Black"
-        return if (redCount >= vaccineCodes.size / 2.0) "Red" else "Black"
+        return if (redCount >= vaccineCodes.size / 2.0) StatusColors.RED.name else StatusColors.NORMAL.name
     }
 
     private fun convertToPureDates(dateScheduleDate: Date, todayDate: Date):Pair<Date, Date>{
