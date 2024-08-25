@@ -2041,6 +2041,8 @@ class FormatterClass {
         today: LocalDate,
         lateDate: LocalDate
     ): Pair<String, LocalDate?> {
+
+
         return when {
             // Both dates are before today
             earlyDate.isBefore(today) && lateDate.isBefore(today) -> StatusValues.MISSED.name to lateDate
