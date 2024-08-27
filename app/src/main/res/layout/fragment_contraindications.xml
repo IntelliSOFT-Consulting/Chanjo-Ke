@@ -70,7 +70,7 @@
                         <TextView
                             android:id="@+id/tvInstructions"
                             android:layout_marginTop="10dp"
-                            android:text="Vaccines to Contraindicate"
+                            android:text="Vaccines to Reschedule"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
@@ -145,7 +145,7 @@
                         android:layout_marginTop="20dp"
                         android:id="@+id/etDescription"
                         android:background="@drawable/edittext_border"
-                        android:hint="Enter Contraindications *"
+                        android:hint="Enter Reasons for Reschedule *"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 

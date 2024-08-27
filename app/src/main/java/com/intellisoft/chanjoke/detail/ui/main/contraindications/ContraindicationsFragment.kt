@@ -34,6 +34,7 @@ import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import java.util.Calendar
+import java.util.Date
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -66,14 +67,15 @@ class ContraindicationsFragment : Fragment() {
 
     val resultList = listOf<String>(
         "Please Select",
-        "Product out of stock",
-        "Contraindication",
+        "Vaccine out of stock",
         "Cold chain break",
-        "Client objection",
+        "Client objection ",
+        "Religious Reasons ",
         "Caregiver refusal",
-        "Expired product",
+        "VVM change",
         "Client acquired the disease",
-        "Immunization not carried out for other reasons",
+        "Contraindication ",
+        "Other reasons",
     )
 
     override fun onCreateView(
@@ -158,91 +160,89 @@ class ContraindicationsFragment : Fragment() {
                     val datePicker = binding.tvDatePicker.text.toString()
                     val description = binding.etDescription.text.toString()
                     val otherReasons = binding.etOtherReasons.text.toString()
+                    var dobDate = Date()
 
-                    if (!TextUtils.isEmpty(datePicker) && datePicker != "Next Vaccination Date *") {
-
+                    if (!TextUtils.isEmpty(datePicker) && datePicker != "Next Vaccination Date *"){
                         val dobFormat = formatterClass.convertDateFormat(datePicker)
                         if (dobFormat != null) {
-                            val dobDate =
-                                formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")
-                            if (dobDate != null) {
+                            dobDate = formatterClass.convertStringToDate(dobFormat, "MMM d yyyy")!!
+                        }
+                    }
 
-                                var toastMessage = ""
-                                var forecastReason = ""
-                                if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
-                                    toastMessage = "Contraindication has been saved successfully."
-                                    if (TextUtils.isEmpty(description)) binding.etDescription.error =
-                                        "Please enter the contraindication(s)" else forecastReason =
-                                        description
+                    var toastMessage = ""
+                    var forecastReason = ""
+                    if (administrationFlowTitle == NavigationDetails.RESCHEDULE.name) {
+                        toastMessage = "Reschedule details has been saved successfully."
+                        if (TextUtils.isEmpty(description)) binding.etDescription.error =
+                            "Please enter the Reschedule details(s)" else forecastReason =
+                            description
+                    }
+                    if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
+                        if (spinnerReasons == "") {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please select a reason",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            if (resultList.last() == spinnerReasons || spinnerReasons.contains("Contraindication")) {
+                                if (!TextUtils.isEmpty(otherReasons)) {
+                                    forecastReason = otherReasons
+                                    if(spinnerReasons.contains("Contraindication"))
+                                        administrationFlowTitle = NavigationDetails.CONTRAINDICATIONS.name
+
+                                } else {
+                                    binding.etOtherReasons.error =
+                                        "Field cannot be empty.."
                                 }
-                                if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
-                                    if (spinnerReasons == "") {
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Please select a reason",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    } else {
-                                        if (resultList.last() == spinnerReasons) {
-                                            if (!TextUtils.isEmpty(otherReasons)) {
-                                                forecastReason = otherReasons
-                                            } else {
-                                                binding.etOtherReasons.error =
-                                                    "Field cannot be empty.."
-                                            }
-                                        } else{
-                                            if(spinnerReasons != resultList.first()){
-                                                forecastReason = spinnerReasons
-                                            }else{
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "Please select a reason",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        }
-                                    }
-                                }
-                                if (forecastReason == "") {
+                            } else{
+                                if(spinnerReasons != resultList.first()){
+                                    forecastReason = spinnerReasons
+                                }else{
                                     Toast.makeText(
                                         requireContext(),
-                                        "Please select a reason!",
+                                        "Please select a reason",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                } else {
-
-                                    administerVaccineViewModel.createManualContraindication(
-                                        administrationFlowTitle,
-                                        selectedItemList.toList(),
-                                        patientId,
-                                        dobDate,
-                                        status,
-                                        null,
-                                        forecastReason,
-                                        requireContext()
-                                    )
-
-
-                                    if (vaccineList.isNotEmpty() && administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
-                                        Toast.makeText(
-                                            requireContext(),
-                                            toastMessage,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        findNavController().navigate(R.id.administerNewFragment)
-                                    } else {
-                                        val blurBackgroundDialog =
-                                            BlurBackgroundDialog(this, requireContext())
-                                        blurBackgroundDialog.show()
-                                    }
                                 }
-
-
                             }
-
                         }
-                    } else Toast.makeText(requireContext(), "Select a date", Toast.LENGTH_SHORT)
-                        .show()
+                    }
+                    if (forecastReason == "") {
+                        Toast.makeText(
+                            requireContext(),
+                            "Please select a reason!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+
+                        administerVaccineViewModel.createManualContraindication(
+                            administrationFlowTitle,
+                            selectedItemList.toList(),
+                            patientId,
+                            dobDate,
+                            status,
+                            null,
+                            forecastReason,
+                            requireContext(),
+                            patientDetailsViewModel
+                        )
+
+
+                        if (vaccineList.isNotEmpty() && administrationFlowTitle == NavigationDetails.RESCHEDULE.name) {
+                            Toast.makeText(
+                                requireContext(),
+                                toastMessage,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            findNavController().navigate(R.id.administerNewFragment)
+                        } else {
+                            val blurBackgroundDialog =
+                                BlurBackgroundDialog(this, requireContext())
+                            blurBackgroundDialog.show()
+                        }
+                    }
+
                 }
 
 
@@ -276,15 +276,15 @@ class ContraindicationsFragment : Fragment() {
         formatterClass.deleteSharedPref("administrationFlowTitle", requireContext())
 
         var titleString = ""
-        if (administrationFlowTitle == NavigationDetails.CONTRAINDICATIONS.name) {
-            binding.etDescription.setHint("Enter Contraindications")
+        if (administrationFlowTitle == NavigationDetails.RESCHEDULE.name) {
+            binding.etDescription.setHint("Enter Reasons for Reschedule")
 
             binding.etDescription.visibility = View.VISIBLE
             binding.linearSpinner.visibility = View.GONE
 
-            binding.tvInstructions.setText("Vaccines to Contraindicate")
-            titleString = "Contraindications"
-            status = "Contraindicated"
+            binding.tvInstructions.setText("Vaccines to Reschedule")
+            titleString = "Reschedule"
+            status = "Rescheduled"
         }
         if (administrationFlowTitle == NavigationDetails.NOT_ADMINISTER_VACCINE.name) {
             binding.etDescription.visibility = View.GONE
@@ -354,7 +354,14 @@ class ContraindicationsFragment : Fragment() {
                 ) {
                     // Get the selected item
                     val selectedItem = parentView.getItemAtPosition(position).toString()
-                    if (selectedItem == resultList.last()) {
+                    if (selectedItem == resultList.last() || selectedItem.contains("Contraindication")) {
+                        if (selectedItem.contains("Contraindication")){
+                            binding.etOtherReasons.setHint("Reason for Contraindication")
+                            binding.tvDatePicker.visibility = View.GONE
+                        }else{
+                            binding.tvDatePicker.visibility = View.VISIBLE
+                        }
+
                         binding.etOtherReasons.visibility = View.VISIBLE
                     } else {
                         binding.etOtherReasons.visibility = View.GONE

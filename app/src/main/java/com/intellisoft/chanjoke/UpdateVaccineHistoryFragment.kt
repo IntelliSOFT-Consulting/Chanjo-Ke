@@ -17,14 +17,20 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.databinding.FragmentUpdateVaccineHistoryBinding
+import com.intellisoft.chanjoke.detail.ui.main.adapters.UpdateVaccineHistoryAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
+import com.intellisoft.chanjoke.fhir.data.DbCarePlan
 import com.intellisoft.chanjoke.fhir.data.DbRecommendationDetails
 import com.intellisoft.chanjoke.fhir.data.DbVaccineData
+import com.intellisoft.chanjoke.fhir.data.DbVaccineHistory
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import com.intellisoft.chanjoke.vaccine.AdministerVaccineViewModel
+import com.intellisoft.chanjoke.vaccine.campaign.CampaignAdapter
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.vaccine.validations.RoutineVaccine
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -58,6 +64,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
     private var administeredVaccineList = ArrayList<String>()
     private val today = LocalDate.now()
     private val formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy")
+    private lateinit var layoutManager: RecyclerView.LayoutManager
+    private val vaccineHistory = ArrayList<DbVaccineHistory>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -113,35 +121,41 @@ class UpdateVaccineHistoryFragment : Fragment() {
         administeredList = patientDetailsViewModel.getVaccineList()
         administeredVaccineList = administeredList.map { it.vaccineName } as ArrayList<String>
 
-        binding.nextSubmit.setOnClickListener {
+        layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.setHasFixedSize(true)
+
+        binding.btnAdd.setOnClickListener {
             val lastDoseDate = binding.tvDatePicker.text.trim().toString()
 
             if (
                 vaccineType != "" &&
                 lastDose != "" &&
                 vaccinePlace != "" &&
-                lastDoseDate != "Date of last dose *"){
+                lastDoseDate != "Date of last dose *") {
 
+                val vaccineDetail = immunizationHandler
+                    .getVaccineDetailsByBasicVaccineName(lastDose)
+                val doseNumber = vaccineDetail?.doseNumber
+                val vaccineName = vaccineDetail?.vaccineName
 
-                /**
-                 * Create an immunization resource,
-                 */
-                val resultList = ArrayList<String>()
-                resultList.add(lastDose)
-
-                administerVaccineViewModel.createManualImmunizationResource(
-                    resultList,
-                    formatterClass.generateUuid(),
-                    patientId,
-                    requireContext(),
-                    lastDoseDate,
-                    Immunization.ImmunizationStatus.COMPLETED)
-
-                val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
-                blurBackgroundDialog.show()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val dbVaccineHistory = DbVaccineHistory(
+                        vaccineName,
+                        vaccineType,
+                        doseNumber,
+                        vaccinePlace,
+                        lastDoseDate
+                    )
+                    vaccineHistory.add(dbVaccineHistory)
+                    populateList(vaccineHistory)
+                }
 
             }else{
-
                 if (vaccineType == "") {
                     binding.vaccineSpinner.requestFocus()
                     Toast.makeText(requireContext(), "Select the type of vaccine", Toast.LENGTH_SHORT).show()
@@ -162,17 +176,47 @@ class UpdateVaccineHistoryFragment : Fragment() {
                     Toast.makeText(requireContext(), "Select the Date of last Dose", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-
             }
 
+        }
 
+        binding.nextSubmit.setOnClickListener {
 
+            if (vaccineHistory.isNotEmpty()){
+
+                val resultList = ArrayList<String>()
+
+                vaccineHistory.forEach {
+                    val vaccineName = it.vaccineName
+                    val date = it.lastDoseDate
+
+                    if (vaccineName != null) {
+                        resultList.add(vaccineName)
+
+                        administerVaccineViewModel.createManualImmunizationResource(
+                            resultList,
+                            formatterClass.generateUuid(),
+                            patientId,
+                            requireContext(),
+                            date,
+                            Immunization.ImmunizationStatus.COMPLETED,
+                            patientDetailsViewModel)
+
+                        val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
+                        blurBackgroundDialog.show()
+                    }
+                }
+
+            }else{
+                Toast.makeText(requireContext(),
+                    "Select vaccines to update.",
+                    Toast.LENGTH_SHORT).show()
+
+            }
         }
 
         patientWeeks = formatterClass.getSharedPref("patientWeeks", requireContext())
         patientYears = formatterClass.getSharedPref("patientYears", requireContext())
-
-
 
         binding.tvDatePicker.setOnClickListener { showDatePickerDialog() }
 
@@ -185,6 +229,15 @@ class UpdateVaccineHistoryFragment : Fragment() {
 
         }
 
+    }
+
+    private fun populateList(dbVaccineHistoryList: ArrayList<DbVaccineHistory>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val vaccineAdapter = UpdateVaccineHistoryAdapter(
+                dbVaccineHistoryList,
+                requireContext())
+            binding.recyclerView.adapter = vaccineAdapter
+        }
     }
 
     private fun createVaccineType(){

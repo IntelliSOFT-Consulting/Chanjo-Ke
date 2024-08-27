@@ -36,12 +36,18 @@ data class DbVaccineListData(
     val keyTitle: String,
     val statusColor: String,
 )
-
+data class DbCampaignsData(
+    val targetDisease: String,
+    val vaccineList: ArrayList<String>
+)
 enum class Reasons {
+    RESCHEDULE,
     CONTRAINDICATE,
     NOT_ADMINISTERED,
-    COMPLETED
+    COMPLETED,
+    DUE
 }
+
 
 enum class StatusColors {
     GREEN, //All administered
@@ -67,6 +73,14 @@ data class AdverseEventItem(
     val locDisplay: String
 )
 
+data class DbVaccineHistory(
+    val vaccineName: String?,
+    val targetDisease: String,
+    val doseNumber: String?,
+    val location: String,
+    val lastDoseDate: String,
+)
+
 data class PractitionerDetails(
     val name: String,
     val role: String,
@@ -88,6 +102,7 @@ data class DbVaccineDetailsData(
     val seriesDosesString: String,
     val series: String,
     val status: String,
+    val statusValue: String? = null,
     val facility: String? = null,
     val practioner: String? = null,
     val recorded: String? = null,
@@ -204,6 +219,7 @@ data class DbPeriod(
 )
 
 enum class NavigationDetails {
+    RESCHEDULE,
     CONTRAINDICATIONS,
     APPOINTMENT,
     CAMPAIGN,
@@ -255,6 +271,14 @@ data class DbAppointmentDetails(
     val targetDisease: String,
     val vaccineName: String,
     val appointmentStatus: String
+)
+data class DbRecommendationData(
+    val vaccineCode: String,
+    val dateValue: String?,
+    val status: String?,
+    val statusValue: String?,
+    val canBeVaccinated: Boolean,
+    val statusColor: String?,
 )
 
 data class DbRecommendationDetails(
@@ -437,9 +461,11 @@ data class DbVaccineScheduleGroup(
 data class DbVaccineScheduleChild(
     val vaccineName: String,
     val date: String,
-    val status: String,
+    val statusColor: String,
     var isVaccinated: Boolean,
     var canBeVaccinated: Boolean?,
+    var status: String? = null,
+    var statusValue: String? = null,
 )
 
 data class DbRecycler(

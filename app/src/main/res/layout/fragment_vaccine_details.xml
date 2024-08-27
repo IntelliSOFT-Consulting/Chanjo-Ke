@@ -42,7 +42,7 @@
                     android:id="@+id/btn_contraindication"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contraindications"
+                    android:text="Reschedule"
                     android:textColor="@color/white" />
 
                 <Button

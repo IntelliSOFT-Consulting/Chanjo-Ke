@@ -2,11 +2,13 @@ package com.intellisoft.chanjoke.vaccine.campaign
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -45,7 +47,20 @@ class CampaignAdapter(
                 val formatterClass = FormatterClass()
                 val patientId = FormatterClass().getSharedPref("patientId", context)
 
-                NavHostFragment.findNavController(fragment).navigate(R.id.campaignFragment)
+                val sharedPreferences: SharedPreferences =
+                    context.getSharedPreferences(context.getString(R.string.campaigns),
+                        AppCompatActivity.MODE_PRIVATE
+                    )
+                val editor = sharedPreferences.edit()
+
+                val campaignName = entryList[pos].title
+
+                editor.putString("campaignName",campaignName)
+                editor.apply()
+
+
+                //Update this to navigate to site first
+                NavHostFragment.findNavController(fragment).navigate(R.id.action_campaignFragment_to_patient_list)
 
 
             }
@@ -54,8 +69,17 @@ class CampaignAdapter(
 
         override fun onClick(p0: View) {
 
-            val pos = adapterPosition
-            findNavController(p0).navigate(R.id.action_campaignFragment_to_patient_list)
+//            val sharedPreferences: SharedPreferences =
+//                context.getSharedPreferences(context.getString(R.string.campaigns),
+//                    AppCompatActivity.MODE_PRIVATE
+//                )
+//            val editor = sharedPreferences.edit()
+//
+//            editor.putString("routineList",expandableListTitleRoutine.joinToString(","))
+//            editor.apply()
+//
+//            val pos = adapterPosition
+//            findNavController(p0).navigate(R.id.action_campaignFragment_to_patient_list)
         }
 
 
