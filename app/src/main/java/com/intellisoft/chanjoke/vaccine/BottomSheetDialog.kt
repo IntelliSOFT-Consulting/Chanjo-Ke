@@ -30,7 +30,7 @@ class BottomSheetDialog : BottomSheetDialogFragment() {
 
         btnContraindications.setOnClickListener {
             val intent = Intent(context, VaccineAdministration::class.java)
-            intent.putExtra("functionToCall", NavigationDetails.CONTRAINDICATIONS.name)
+            intent.putExtra("functionToCall", NavigationDetails.RESCHEDULE.name)
             context?.startActivity(intent)
             dismiss()
         }

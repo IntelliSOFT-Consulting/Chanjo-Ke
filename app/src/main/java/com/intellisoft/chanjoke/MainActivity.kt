@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            NavigationDetails.CONTRAINDICATIONS.name -> {
+            NavigationDetails.RESCHEDULE.name -> {
                 contraindicationFunction("", R.id.contraindicationsFragment)
             }
 

@@ -17,6 +17,7 @@ import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.fhir.data.Reasons
 import com.intellisoft.chanjoke.fhir.data.StatusColors
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
@@ -41,84 +42,64 @@ class VaccineDetailsAdapter(
 //        holder.checkBox.isChecked = currentItem.isVaccinated
         val vaccineName = currentItem.vaccineName
         val isVaccinated = currentItem.isVaccinated
+        val statusColor = currentItem.statusColor
         val status = currentItem.status
         val date = currentItem.date
         val canBeVaccinated = currentItem.canBeVaccinated
         val daysTo = formatterClass.daysBetweenTodayAndGivenDate(date)
+        var statusValue = currentItem.statusValue
 
         var vaccineStatus = ""
-        if (status == StatusColors.GREEN.name){
-            vaccineStatus = "Administered"
+        /**
+         * Handle different statues
+         * 1. COMPLETED
+         * 2. CONTRAINDICATE
+         * 3. NOT_ADMINISTERED
+         * 4. RESCHEDULED
+         */
+
+        if (statusValue.equals(Reasons.COMPLETED.name, true)){
+            statusValue = "Administered"
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.green))
-        }else if (status == StatusColors.AMBER.name){
-            vaccineStatus = "Contraindicated"
-            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
-            if (daysTo != null){
-                val daysToInt = daysTo.toInt()
-                if (daysToInt != 0){
-                    holder.checkBox.isEnabled = false
-                }
-            }
-        }else if (status == StatusColors.NORMAL.name){
-
-            // "All the others are upcoming"
-            vaccineStatus = "Upcoming"
-            //Check if the date is within 14 days
-            if (daysTo != null) {
-                val daysToInt = daysTo.toInt()
-                if (daysToInt < 14){
-                    vaccineStatus = "Due"
-                }
-            }
-
-        }else if (status == StatusColors.RED.name){
-            vaccineStatus = "Missed"
-            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
-
-            //For BCG and bOpv
-            if (vaccineName == "BCG" || vaccineName == "bOPV"){
-                //Check the date and change status
-
-                val basicVaccine = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
-                if (basicVaccine != null){
-                    /**
-                     * BCG can be given till 255
-                     * bOPV will be till 2 weeks
-                     */
-                    if (daysTo != null){
-                        val daysToInt = daysTo.toInt()
-                        if (daysToInt < 15 && vaccineName == "bOPV"){
-                            vaccineStatus = "Due"
-                            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
-                        }
-                        if (daysToInt < 255 && vaccineName == "BCG"){
-                            //Due till 59 months
-                            vaccineStatus = "Due"
-                            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
-
-                        }
-                    }
-
-                }
-            }
-        }else if (status == StatusColors.NOT_DONE.name){
-            vaccineStatus = "Not Administered"
+        }else if (statusValue.equals(Reasons.CONTRAINDICATE.name, true)){
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.contra))
+        }else if (statusValue.equals(Reasons.NOT_ADMINISTERED.name, true)){
             holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.colorAccent))
+        }else if (statusValue.equals(Reasons.RESCHEDULE.name, true)){
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.amber))
+        }else if (statusValue.equals("Missed", true)){
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.red))
+        }else if (statusValue.equals(Reasons.DUE.name, true)){
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
+        }else if (statusValue.equals("", true)){
+            //Works best with the non-routine
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
         } else{
-            vaccineStatus = ""
+            statusValue = "Upcoming"
+            holder.tvScheduleStatus.setTextColor(context.resources.getColor(R.color.black))
+        }
+
+        statusValue = when(statusValue){
+            "Contraindicate", "Reschedule" -> statusValue +"d"
+            "Not_administered" -> "Not Administered"
+            else -> statusValue
         }
 
 
         holder.iconDisabled.setOnClickListener {
-            Toast.makeText(context, "You are not eligible for this vaccine.", Toast.LENGTH_SHORT).show()
+
+            val message = if (status == Reasons.CONTRAINDICATE.name){
+                "The vaccine cannot be administered, it has been contraindicated."
+            }else{
+                "You are not eligible for this vaccine."
+            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
 
 
-        holder.tvScheduleStatus.text = vaccineStatus
+        holder.tvScheduleStatus.text = statusValue
         holder.tvVaccineName.text = vaccineName
         holder.tvVaccineDate.text = date
-
-        holder.checkBox.isEnabled = canBeVaccinated ?: false
 
         /**
          * 1. Check if its administered and show administered icon
@@ -127,10 +108,19 @@ class VaccineDetailsAdapter(
          * 2. Check if it can be vaccinated and show vaccinate icon
          */
 
+        holder.checkBox.isEnabled = canBeVaccinated ?: false
+
         if (canBeVaccinated == true){
             holder.checkBox.visibility = View.VISIBLE
 
             holder.iconDisabled.visibility = View.GONE
+            holder.imgBtnView.visibility = View.GONE
+            holder.checked.visibility = View.GONE
+        }else{
+
+            holder.iconDisabled.visibility = View.VISIBLE
+
+            holder.checkBox.visibility = View.GONE
             holder.imgBtnView.visibility = View.GONE
             holder.checked.visibility = View.GONE
         }

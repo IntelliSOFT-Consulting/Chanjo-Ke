@@ -26,7 +26,7 @@ class Login : AppCompatActivity() {
     private var retrofitCallsAuthentication = RetrofitCallsAuthentication()
     private var formatterClass = FormatterClass()
     private lateinit var spinnerLocation:Spinner
-    val resultList = listOf("Location *","Facility", "Outreach")
+    val resultList = listOf("Location *","Facility", "Outreach","Campaigns")
     private var selectedItem = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -2,11 +2,13 @@ package com.intellisoft.chanjoke.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +28,7 @@ import com.google.android.fhir.sync.Sync
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.intellisoft.chanjoke.detail.ui.main.appointments.AppointmentsFragment
+import com.intellisoft.chanjoke.detail.ui.main.campaigns.CampaignsDetailsFragment
 import com.intellisoft.chanjoke.detail.ui.main.non_routine.NonRoutineFragment
 import com.intellisoft.chanjoke.detail.ui.main.registration.CompleteDetailsActivity
 import com.intellisoft.chanjoke.detail.ui.main.routine.RoutineFragment
@@ -33,6 +36,7 @@ import com.intellisoft.chanjoke.fhir.data.DbTempData
 import com.intellisoft.chanjoke.fhir.data.FhirSyncWorker
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.fhir.data.Reasons
 import com.intellisoft.chanjoke.vaccine.validations.ImmunizationHandler
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -70,7 +74,6 @@ class PatientDetailActivity : AppCompatActivity() {
 
         patientYears = formatterClass.getSharedPref("patientYears", this)
 
-
         setupSpinner()
         val bundle =
             bundleOf("patient_id" to patientId)
@@ -91,22 +94,37 @@ class PatientDetailActivity : AppCompatActivity() {
                 .get(PatientDetailsViewModel::class.java)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        //Check if this is a Campaigns
+        val selectedFacility = formatterClass.getSharedPref("selectedFacility", this)
+
+
         val routineFragment = RoutineFragment()
         routineFragment.arguments = bundle
 
         val nonRoutineFragment = NonRoutineFragment()
         nonRoutineFragment.arguments = bundle
 
-        val appointment = AppointmentsFragment()
-        appointment.arguments = bundle
+//        val appointment = AppointmentsFragment()
+//        appointment.arguments = bundle
 
-        //Perform a check if user is more than 5 years old
-        if (isBelowFive()) {
-            adapterSection.addFragment(routineFragment, getString(R.string.tab_text_1))
+        val campaignsFragment = CampaignsDetailsFragment()
+        campaignsFragment.arguments = bundle
+
+        //Perform campaigns related job
+        if (selectedFacility == "Campaigns"){
+            adapterSection.addFragment(campaignsFragment, getString(R.string.campaigns))
+
+        }else{
+            //Perform a check if user is more than 5 years old
+            if (isBelowFive()) {
+                adapterSection.addFragment(routineFragment, getString(R.string.tab_text_1))
+            }
+
+            adapterSection.addFragment(nonRoutineFragment, getString(R.string.tab_text_2))
+//        adapter.addFragment(appointment, getString(R.string.tab_text_4))
         }
 
-        adapterSection.addFragment(nonRoutineFragment, getString(R.string.tab_text_2))
-//        adapter.addFragment(appointment, getString(R.string.tab_text_4))
+
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -198,7 +216,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
     private fun setupSpinner() {
 
-        val actionList = listOf("", "All Details", "Appointment", "Referrals")
+        val actionList = listOf("", "All Details", "Appointment", "Community Referrals")
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_item, actionList)
@@ -237,7 +255,7 @@ class PatientDetailActivity : AppCompatActivity() {
                             startActivity(intent)
                         }
 
-                        "Referrals" -> {
+                        "Community Referrals" -> {
 
                             // temporarily store details
                             val temp = DbTempData(
@@ -314,11 +332,21 @@ class PatientDetailActivity : AppCompatActivity() {
 
             val patientDetail = patientDetailsViewModel.getPatientInfo()
             val gender = patientDetail.gender
+            val isAlive = if (patientDetail.isAlive) "YES" else "NO"
             formatterClass.saveSharedPref("patientGender", gender, this@PatientDetailActivity)
+            formatterClass.saveSharedPref("patientAlive", isAlive, this@PatientDetailActivity)
+
+
+            getRecommendation()
 
             CoroutineScope(Dispatchers.Main).launch {
                 binding.apply {
-                    tvName.text = patientDetail.name
+                    val formattedName = if(patientDetail.isAlive){
+                        patientDetail.name
+                    }else{
+                        "${patientDetail.name} (Deceased)"
+                    }
+                    tvName.text = formattedName
                     tvGender.text = AppUtils().capitalizeFirstLetter(patientDetail.gender)
                     tvSystemId.text = patientDetail.systemId
 
@@ -339,6 +367,58 @@ class PatientDetailActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    private fun getRecommendation() {
+
+        val notAdministeredList = ArrayList(
+            listOf(
+                "371900001",
+                )
+        )
+        val clientObjectionList = patientDetailsViewModel.getRecommendationStatus(notAdministeredList)
+
+        var message = "This patient has not received certain vaccines. \nFind the details:\n"
+        var isDialog = false
+
+        clientObjectionList.forEach {
+            val statusValue = it.statusValue
+            val vaccineName = it.vaccineName
+
+            if (statusValue != null ){
+                if(statusValue.contains("Client objection") ||
+                    statusValue.contains("Religious Reasons")){
+                    val dialogMessage = "$vaccineName because of $statusValue \n"
+                    message += dialogMessage
+                    isDialog = true
+                }
+                if (statusValue.contains("Contraindicate")){
+                    formatterClass.saveSharedPref("${Reasons.CONTRAINDICATE.name} VALUES",vaccineName, this)
+                }
+            }
+        }
+        message += "Please review the patient's vaccination status and proceed accordingly."
+
+        if (isDialog){
+            CoroutineScope(Dispatchers.Main).launch { showCancelDialog("Vaccine Administration Notice", message) }
+        }
+
+    }
+
+    private fun showCancelDialog(title: String, message: String) {
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        dialogBuilder.apply {
+            setTitle(title)
+            setMessage(message)
+            setCancelable(true) // Allows the dialog to be canceled by tapping outside of it
+            setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss() // Closes the dialog when the "Cancel" button is clicked
+            }
+        }
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
     }
 
 

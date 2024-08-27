@@ -61,28 +61,6 @@ class Splash : AppCompatActivity() {
 
         Sync.oneTimeSync<FhirSyncWorker>(this)
 
-//        val fhirEngine = FhirApplication.fhirEngine(this)
-//        val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
-//
-//        fhirEngine
-//            .search<ImmunizationRecommendation> {
-//                filter(ImmunizationRecommendation.PATIENT, { value = "583b93e6-77e7-4b8c-bebc-3c343726e3fa" })
-//                sort(Encounter.DATE, Order.DESCENDING)
-//            }
-//            .map { getRecommendationData(it) }
-//            .let { immunizationRecommendationList.addAll(it) }
-//
-//        immunizationRecommendationList.forEach {
-//
-//            Log.e("******","*******")
-//            println("it.id ${it.id}")
-//            it.recommendation.forEach {recom->
-//                println("recom.vaccineCode ${recom.vaccineCode}")
-//            }
-//            Log.e("******","*******")
-//
-//        }
-
     }
     private fun getRecommendationData(it: ImmunizationRecommendation): ImmunizationRecommendation {
         return it

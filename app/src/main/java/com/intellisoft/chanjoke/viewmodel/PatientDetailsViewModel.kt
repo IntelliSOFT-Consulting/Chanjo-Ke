@@ -347,6 +347,41 @@ class PatientDetailsViewModel(
         getRecommendationList(status)
     }
 
+    fun getRecommendationStatus(codeValueList: ArrayList<String>) = runBlocking {
+        getRecommendationStatusBac(codeValueList)
+    }
+
+    private suspend fun getRecommendationStatusBac(codeValueList: ArrayList<String>): ArrayList<DbVaccineDetailsData>{
+
+        val vaccineList = ArrayList<DbVaccineDetailsData>()
+
+        codeValueList.forEach {codeValue ->
+
+            fhirEngine
+                .search<Immunization>{
+                    filter(Immunization.STATUS_REASON, {
+                        value = of(Coding().apply {
+                            code = codeValue
+                        })
+                    })
+                    filter(Immunization.PATIENT, { value = "Patient/$patientId" })
+                }
+                .map { createVaccineItemDetails(it.resource) }
+                .let {q->
+                    q.forEach {
+                        if (it.status == "NOTDONE") {
+                            vaccineList.add(it)
+                        }
+                    }
+//                    vaccineList.addAll(q)
+                }
+
+        }
+
+        return vaccineList
+    }
+
+
 
     private suspend fun getRecommendationList(statusValue: String?): ArrayList<DbRecommendationDetails> {
 
@@ -498,7 +533,7 @@ class PatientDetailsViewModel(
                     doseNumber = recommendation[0].doseNumber.toString()
                 }
 
-                //Contraindicated vaccine code
+                //Rescheduled vaccine code
                 if (recommendation[0].hasContraindicatedVaccineCode()) {
                     vaccineCode = recommendation[0].contraindicatedVaccineCode[0].text
 
@@ -568,6 +603,152 @@ class PatientDetailsViewModel(
         return ArrayList(searchResult)
     }
 
+    fun getRecommendationDate(providedDate: String) = runBlocking {
+        getRecommendationDateBac(providedDate)
+    }
+
+    private suspend fun getRecommendationDateBac(providedDate: String): ArrayList<DbRecommendationDetails> {
+
+        val recommendationDateList = ArrayList<DbRecommendationDetails>()
+
+        val formatterClass = FormatterClass()
+        val dateScheduleFormat = SimpleDateFormat("MMM d yyyy", Locale.getDefault())
+
+        val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
+        val dbRecommendationDetailsList = ArrayList<DbRecommendationDetails>()
+
+        fhirEngine
+            .search<ImmunizationRecommendation> {
+                sort(Encounter.DATE, Order.DESCENDING)
+            }
+            .map { getRecommendationData(it.resource) }
+            .let { immunizationRecommendationList.addAll(it) }
+
+        Log.e("--->","<----")
+        println("immunizationRecommendationList $immunizationRecommendationList")
+
+        immunizationRecommendationList.forEach { immunizationRecommendation ->
+
+            val recommendationList = immunizationRecommendation.recommendation
+            recommendationList.forEach { recommendation ->
+
+                var vaccineCode = ""
+                var vaccineName = ""
+                var targetDisease = ""
+                var earliestDate = ""
+                var latestDate = ""
+                var description = ""
+                var series = ""
+                var doseNumber = ""
+                var status = ""
+                var nhdd = ""
+
+                if (recommendation.hasVaccineCode()) {
+                    if (recommendation.vaccineCode[0].hasCoding()) {
+                        nhdd = recommendation.vaccineCode[0].codingFirstRep.code
+                        vaccineCode = recommendation.vaccineCode[0].codingFirstRep.display
+                    }
+                    if (recommendation.vaccineCode[0].hasText()) {
+                        vaccineName = recommendation.vaccineCode[0].text
+                    }
+                }
+                if (recommendation.hasTargetDisease()) {
+                    if (recommendation.targetDisease.hasText()) {
+                        targetDisease = recommendation.targetDisease.text
+                    }
+                }
+                if (recommendation.hasDateCriterion()) {
+                    val dateCriterionList = recommendation.dateCriterion
+                    dateCriterionList.forEach { dateCriterion ->
+
+                        if (dateCriterion.hasCode()) {
+                            if (dateCriterion.code.codingFirstRep.display == "Earliest-date-to-administer") {
+                                earliestDate = dateCriterion.value.toString()
+                                println("earliestDate $earliestDate")
+                            }
+                            if (dateCriterion.code.codingFirstRep.display == "Latest-date-to-administer") {
+                                latestDate = dateCriterion.value.toString()
+                            }
+                        }
+                    }
+                }
+                if (recommendation.hasDescription()) {
+
+                    if (recommendation.hasDescription()) {
+                        description = recommendation.description
+                    }
+                    if (recommendation.hasSeries()) {
+                        series = recommendation.series
+                    }
+                    if (recommendation.hasDoseNumberPositiveIntType()) {
+                        doseNumber = recommendation.doseNumberPositiveIntType.value.toString()
+                    }
+                    if (recommendation.hasForecastStatus()) {
+                        if (recommendation.forecastStatus.hasCoding()) {
+                            if (recommendation.forecastStatus.codingFirstRep.hasDisplay()) {
+                                status = recommendation.forecastStatus.codingFirstRep.display
+                            }
+                        }
+                    }
+
+
+                    val dbRecommendationDetails = DbRecommendationDetails(
+                        vaccineCode = vaccineCode,
+                        vaccineName = vaccineName,
+                        targetDisease = targetDisease,
+                        earliestDate = earliestDate,
+                        latestDate = latestDate,
+                        description = description,
+                        series = series,
+                        doseNumber = doseNumber,
+                        status = status,
+                        nhdd = nhdd,
+                    )
+                    dbRecommendationDetailsList.add(dbRecommendationDetails)
+                }
+            }
+        }
+
+        dbRecommendationDetailsList.forEach {
+
+            val earliestDate = formatterClass.convertDateFormat(it.earliestDate)
+            val providedDateStr = formatterClass.convertDateFormat(providedDate)
+
+            println("earliestDate $earliestDate")
+            println("providedDate $providedDate")
+            println("providedDateStr $providedDateStr")
+
+            if (earliestDate != null && providedDateStr != null){
+
+                val earliestDateScheduleDate = dateScheduleFormat.parse(earliestDate)
+                val providedScheduleDate = dateScheduleFormat.parse(providedDateStr)
+
+                println("earliestDateScheduleDate $earliestDateScheduleDate")
+                println("providedScheduleDate $providedScheduleDate")
+
+                if (earliestDateScheduleDate != null && providedScheduleDate != null){
+                    val isDateSame = earliestDateScheduleDate.equals(providedScheduleDate)
+
+                    println("isDateSame $isDateSame")
+                    if (isDateSame){
+                        recommendationDateList.add(it)
+                    }
+
+                }
+
+
+
+            }
+
+        }
+        println("recommendationDateList $recommendationDateList")
+
+        Log.e("--->","<----")
+
+        return recommendationDateList
+
+    }
+
 
     fun getAppointmentList() = runBlocking {
         getAppointmentDetails()
@@ -613,8 +794,6 @@ class PatientDetailsViewModel(
             status.toString()
         )
         recommendationSavedList.add(dbAppointmentDetails)
-
-
 
         return DbAppointmentData(
             id,
@@ -1082,6 +1261,7 @@ class PatientDetailsViewModel(
         var seriesDosesString = ""
         var series = ""
         var status = ""
+        var statusValue = ""
         var location = ""
         var practioner = ""
 
@@ -1110,6 +1290,9 @@ class PatientDetailsViewModel(
         if (immunization.hasStatus()) {
             status = immunization.statusElement.value.name
         }
+        if (immunization.hasStatusReason() && immunization.statusReason.hasCoding()){
+            statusValue = immunization.statusReason.codingFirstRep.display
+        }
 
         if (immunization.hasLocation() && immunization.location.hasReference()) {
             location = immunization.location.reference
@@ -1129,6 +1312,7 @@ class PatientDetailsViewModel(
             seriesDosesString,
             series,
             status,
+            statusValue,
             location,
             practioner,
             recorded
