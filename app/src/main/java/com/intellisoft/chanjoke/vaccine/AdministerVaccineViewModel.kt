@@ -895,6 +895,8 @@ class AdministerVaccineViewModel(
                                 else -> { Reasons.NOT_ADMINISTERED.name }
                             }
 
+
+
                             val reasonCodeValueList = ArrayList<CodeableConcept>()
 
                             val reasonCode = CodeableConcept()
