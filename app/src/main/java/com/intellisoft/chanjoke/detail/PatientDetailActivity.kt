@@ -399,9 +399,9 @@ class PatientDetailActivity : AppCompatActivity() {
         }
         message += "Please review the patient's vaccination status and proceed accordingly."
 
-        if (isDialog){
-            CoroutineScope(Dispatchers.Main).launch { showCancelDialog("Vaccine Administration Notice", message) }
-        }
+//        if (isDialog){
+//            CoroutineScope(Dispatchers.Main).launch { showCancelDialog("Vaccine Administration Notice", message) }
+//        }
 
     }
 

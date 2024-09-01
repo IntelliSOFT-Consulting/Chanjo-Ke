@@ -10,6 +10,16 @@ enum class UrlData(var message: Int) {
     BASE_URL(R.string.base_url),
 }
 
+data class ReusableListItem(
+    val name: String,
+    val status: Status
+)
+
+enum class Status {
+    NOT_ADMINISTERED, ADMINISTERED, RESCHEDULED
+}
+
+
 data class DbRoutineVaccineData(
     val type: String,
     val vaccineList: List<RoutineVaccine>
