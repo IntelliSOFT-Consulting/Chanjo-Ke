@@ -398,6 +398,7 @@ class AdministrativeFragment : Fragment() {
         val countyString = binding.county.text.toString()
         val subCountyString = binding.subCounty.text.toString()
         val wardString = binding.ward.text.toString()
+        val chuString = binding.communityUnit.text.toString()
         val tradingString = binding.trading.text.toString()
         val estateString = binding.estate.text.toString()
         try {
@@ -407,6 +408,7 @@ class AdministrativeFragment : Fragment() {
                 ward = wardMap[wardString].toString(),
                 trading = tradingString,
                 estate = estateString,
+                chu = chuString,
                 countyName = binding.county.text.toString(),
                 subCountyName = binding.subCounty.text.toString(),
                 wardName = binding.ward.text.toString()
@@ -426,6 +428,7 @@ class AdministrativeFragment : Fragment() {
             val tradingString = binding.trading.text.toString()
             val estateString = binding.estate.text.toString()
 
+            val chuString = binding.communityUnit.text.toString()
             countyString = countyMap[countyString].toString()
             subCountyString = subCountyMap[subCountyString].toString()
             wardString = wardMap[wardString].toString()
@@ -438,7 +441,8 @@ class AdministrativeFragment : Fragment() {
                 estate = AppUtils().capitalizeFirstLetter(estateString),
                 countyName = binding.county.text.toString(),
                 subCountyName = binding.subCounty.text.toString(),
-                wardName = binding.ward.text.toString()
+                wardName = binding.ward.text.toString(),
+                chu = chuString
             )
             formatter.saveSharedPref("administrative", Gson().toJson(payload), requireContext())
             liveData.updatePatientDetails(Gson().toJson(payload))
@@ -473,7 +477,7 @@ class AdministrativeFragment : Fragment() {
         var wardString = binding.ward.text.toString()
         val tradingString = binding.trading.text.toString()
         val estateString = binding.estate.text.toString()
-
+        val chuString = binding.communityUnit.text.toString()
         if (countyString.isEmpty()) {
             binding.telCounty.error = "Enter county"
             binding.county.requestFocus()
@@ -511,6 +515,7 @@ class AdministrativeFragment : Fragment() {
             ward = wardString,
             trading = tradingString,
             estate = estateString,
+            chu = chuString,
             countyName = binding.county.text.toString(),
             subCountyName = binding.subCounty.text.toString(),
             wardName = binding.ward.text.toString()

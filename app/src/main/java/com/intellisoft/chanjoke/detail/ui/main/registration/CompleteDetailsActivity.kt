@@ -260,7 +260,8 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 estate = data.estate.toString(),
                 countyName = data.county.toString(),
                 subCountyName = data.subCounty.toString(),
-                wardName = data.ward.toString()
+                wardName = data.ward.toString(),
+                chu=data.chu.toString()
             )
             saveTempData("administrative", Gson().toJson(administrative))
             CoroutineScope(Dispatchers.Main).launch {

@@ -549,6 +549,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             patient.addressFirstRep.addLine(payload.administrative.county)
             patient.addressFirstRep.addLine(payload.administrative.subCounty)
             patient.addressFirstRep.addLine(payload.administrative.ward)
+            patient.addressFirstRep.addLine(payload.administrative.chu)
             patient.addressFirstRep.addLine(payload.administrative.trading)
             patient.addressFirstRep.addLine(payload.administrative.estate)
             patient.telecom = contacts

@@ -407,6 +407,7 @@ data class Administrative(
     val county: String,
     val subCounty: String,
     val ward: String,
+    val chu: String,
     val trading: String,
     val estate: String,
     val countyName: String,

@@ -127,6 +127,7 @@ class PatientDetailsViewModel(
         var lastName = ""
         val kins = mutableListOf<CareGiver>()
         var isAlive: Boolean = true
+        var chuName = ""
         searchResult.first().let {
             isAlive = if (it.resource.hasDeceased()) {
                 !it.resource.deceasedBooleanType.value
@@ -242,9 +243,14 @@ class PatientDetailsViewModel(
                     it.resource.addressFirstRep.district
                 if (it.resource.addressFirstRep.hasState()) ward = it.resource.addressFirstRep.state
                 if (it.resource.addressFirstRep.hasLine()) {
-                    if (it.resource.addressFirstRep.line.size >= 2) {
-                        trading = it.resource.addressFirstRep.line[0].value
-                        estate = it.resource.addressFirstRep.line[1].value
+                    try {
+                        if (it.resource.addressFirstRep.line.size >= 5) {
+                            chuName = it.resource.addressFirstRep.line[3].value
+                            trading = it.resource.addressFirstRep.line[4].value
+                            estate = it.resource.addressFirstRep.line[5].value
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
             }
@@ -284,7 +290,8 @@ class PatientDetailsViewModel(
             trading = trading,
             estate = estate,
             kins = kins,
-            isAlive = isAlive
+            isAlive = isAlive,
+            chu = chuName
         )
     }
 
@@ -305,6 +312,7 @@ class PatientDetailsViewModel(
         val county: String?,
         val subCounty: String?,
         val ward: String?,
+        val chu: String?,
         val trading: String?,
         val estate: String?,
         val kins: List<CareGiver>?,
