@@ -175,7 +175,9 @@ class PatientDetailsViewModel(
                                 phone = phone1,
                                 name = name1,
                                 type = type1,
-                                nationalID = ""
+                                nationalID = "",
+                                careGiverIdType = "",
+                                careGiverIdNumber = ""
                             )
                         )
                     } catch (e: Exception) {
@@ -351,14 +353,14 @@ class PatientDetailsViewModel(
         getRecommendationStatusBac(codeValueList)
     }
 
-    private suspend fun getRecommendationStatusBac(codeValueList: ArrayList<String>): ArrayList<DbVaccineDetailsData>{
+    private suspend fun getRecommendationStatusBac(codeValueList: ArrayList<String>): ArrayList<DbVaccineDetailsData> {
 
         val vaccineList = ArrayList<DbVaccineDetailsData>()
 
-        codeValueList.forEach {codeValue ->
+        codeValueList.forEach { codeValue ->
 
             fhirEngine
-                .search<Immunization>{
+                .search<Immunization> {
                     filter(Immunization.STATUS_REASON, {
                         value = of(Coding().apply {
                             code = codeValue
@@ -367,7 +369,7 @@ class PatientDetailsViewModel(
                     filter(Immunization.PATIENT, { value = "Patient/$patientId" })
                 }
                 .map { createVaccineItemDetails(it.resource) }
-                .let {q->
+                .let { q ->
                     q.forEach {
                         if (it.status == "NOTDONE") {
                             vaccineList.add(it)
@@ -380,7 +382,6 @@ class PatientDetailsViewModel(
 
         return vaccineList
     }
-
 
 
     private suspend fun getRecommendationList(statusValue: String?): ArrayList<DbRecommendationDetails> {
@@ -626,7 +627,7 @@ class PatientDetailsViewModel(
             .map { getRecommendationData(it.resource) }
             .let { immunizationRecommendationList.addAll(it) }
 
-        Log.e("--->","<----")
+        Log.e("--->", "<----")
         println("immunizationRecommendationList $immunizationRecommendationList")
 
         immunizationRecommendationList.forEach { immunizationRecommendation ->
@@ -720,7 +721,7 @@ class PatientDetailsViewModel(
             println("providedDate $providedDate")
             println("providedDateStr $providedDateStr")
 
-            if (earliestDate != null && providedDateStr != null){
+            if (earliestDate != null && providedDateStr != null) {
 
                 val earliestDateScheduleDate = dateScheduleFormat.parse(earliestDate)
                 val providedScheduleDate = dateScheduleFormat.parse(providedDateStr)
@@ -728,16 +729,15 @@ class PatientDetailsViewModel(
                 println("earliestDateScheduleDate $earliestDateScheduleDate")
                 println("providedScheduleDate $providedScheduleDate")
 
-                if (earliestDateScheduleDate != null && providedScheduleDate != null){
+                if (earliestDateScheduleDate != null && providedScheduleDate != null) {
                     val isDateSame = earliestDateScheduleDate.equals(providedScheduleDate)
 
                     println("isDateSame $isDateSame")
-                    if (isDateSame){
+                    if (isDateSame) {
                         recommendationDateList.add(it)
                     }
 
                 }
-
 
 
             }
@@ -745,7 +745,7 @@ class PatientDetailsViewModel(
         }
         println("recommendationDateList $recommendationDateList")
 
-        Log.e("--->","<----")
+        Log.e("--->", "<----")
 
         return recommendationDateList
 
@@ -1292,7 +1292,7 @@ class PatientDetailsViewModel(
         if (immunization.hasStatus()) {
             status = immunization.statusElement.value.name
         }
-        if (immunization.hasStatusReason() && immunization.statusReason.hasCoding()){
+        if (immunization.hasStatusReason() && immunization.statusReason.hasCoding()) {
             statusValue = immunization.statusReason.codingFirstRep.display
         }
 

@@ -491,6 +491,7 @@ class PersonalFragment : Fragment() {
     private fun validateData() {
         var gender = ""
         var dateType = ""
+        var vaccinationCategory = ""
         val firstName = binding.firstname.text.toString()
         val lastName = binding.lastname.text.toString()
         val middleName = binding.middlename.text.toString()
@@ -529,7 +530,11 @@ class PersonalFragment : Fragment() {
         }
 
         val checkedRadioButtonIdInput = binding.radioGroupChild.checkedRadioButtonId
-        if (checkedRadioButtonIdInput == -1) {
+        if (checkedRadioButtonIdInput != -1) {
+            val selectedRadioButton =
+                binding.root.findViewById<RadioButton>(checkedRadioButtonIdInput)
+            vaccinationCategory = selectedRadioButton.text.toString()
+        } else {
             // No RadioButton is selected, handle it as needed
             Toast.makeText(
                 requireContext(),
@@ -640,8 +645,8 @@ class PersonalFragment : Fragment() {
             identificationNumber = identificationNumberString,
             telephone = tel,
             estimate = estimate,
-
-            )
+            vaccinationCategory = vaccinationCategory
+        )
 
         formatter.saveSharedPref("personal", Gson().toJson(payload), requireContext())
 

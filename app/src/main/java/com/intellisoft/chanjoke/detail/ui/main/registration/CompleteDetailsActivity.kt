@@ -245,7 +245,8 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 identification = data.type.toString(),
                 identificationNumber = data.systemId.toString(),
                 telephone = data.phone,
-                estimate = false
+                estimate = false,
+                vaccinationCategory=""
             )
             saveTempData("personal", Gson().toJson(payload))
 

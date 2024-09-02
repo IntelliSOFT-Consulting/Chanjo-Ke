@@ -382,9 +382,11 @@
   },
   {
     "name": "Kisii",
+    "id": 42,
     "sub_counties": [
       {
-        "name": "Bonchari"
+        "name": "Bonchari",
+        "id": "678"
       },
       {
         "name": "South Mugirango"
