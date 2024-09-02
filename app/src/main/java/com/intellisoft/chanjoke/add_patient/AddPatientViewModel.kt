@@ -656,14 +656,14 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             Context.MODE_PRIVATE
         )
 
-        val routineVaccineList = pair.vaccineList
+        val vaccineValueList = pair.vaccineList
         val type = pair.type
 
         val formatterClass = FormatterClass()
         val recommendationList =
             ArrayList<ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent>()
 
-        routineVaccineList.forEach { routineVaccine: RoutineVaccine ->
+        vaccineValueList.forEach { routineVaccine: RoutineVaccine ->
 
             val diseaseCode = routineVaccine.diseaseCode
             val targetDiseaseValue = routineVaccine.targetDisease
@@ -782,8 +782,13 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
                 recommendation.description = type.toLowerCase()
 
-                val nonRoutineList = sharedPreferences.getString("nonRoutineList", null)
-                val expandableListTitle = nonRoutineList!!.split(",").toList()
+                val extractedList = when (pair.type) {
+                    "ROUTINE" -> { sharedPreferences.getString("routineList", null) }
+                    "NON-ROUTINE" -> { sharedPreferences.getString("nonRoutineList", null) }
+                    else -> { null }
+                }
+
+                val expandableListTitle = extractedList!!.split(",").toList()
 
                 expandableListTitle.forEach { keyValue ->
 

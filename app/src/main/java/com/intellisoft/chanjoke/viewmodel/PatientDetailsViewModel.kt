@@ -387,6 +387,7 @@ class PatientDetailsViewModel(
 
         val dbRecommendationDetailsList = ArrayList<DbRecommendationDetails>()
         val immunizationRecommendationList = ArrayList<ImmunizationRecommendation>()
+
         fhirEngine
             .search<ImmunizationRecommendation> {
                 filter(ImmunizationRecommendation.PATIENT, { value = "Patient/$patientId" })
@@ -427,6 +428,7 @@ class PatientDetailsViewModel(
                 }
                 if (recommendation.hasDateCriterion()) {
                     val dateCriterionList = recommendation.dateCriterion
+
                     dateCriterionList.forEach { dateCriterion ->
 
                         if (dateCriterion.hasCode()) {

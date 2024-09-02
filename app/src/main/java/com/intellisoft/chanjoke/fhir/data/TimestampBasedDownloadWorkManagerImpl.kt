@@ -17,22 +17,26 @@ import org.hl7.fhir.r4.model.OperationOutcome
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ResourceType
+import java.net.URL
+import java.net.URLDecoder
+import java.net.URLEncoder
 
 class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore) :
     DownloadWorkManager {
     private val resourceTypeList = ResourceType.values().map { it.name }
+
     private val urls = LinkedList(
         listOf(
             "Patient?_sort=_lastUpdated",
-            "ImmunizationRecommendation",
+            "ImmunizationRecommendation?_count=1000",
             "CarePlan",
             "Immunization?_count=1000",
             "Practitioner?_count=100",
             "ServiceRequest",
             "RelatedPerson",
             "AdverseEvent",
-
-        )
+//           702f096c-b8cb-4c85-897c-4e0aff760e73
+            )
     )
 
     override suspend fun getNextRequest(): DownloadRequest? {
@@ -46,19 +50,12 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
         return DownloadRequest.of(url)
     }
 
-
-
     override suspend fun getSummaryRequestUrls(): Map<ResourceType, String> {
-        return urls.associate { url ->
-            val resourceType = ResourceType.fromCode(url.substringBefore("?"))
-            if (resourceType == ResourceType.Patient) {
-                resourceType to url.plus("&${SyncDataParams.SUMMARY_KEY}=${SyncDataParams.SUMMARY_COUNT_VALUE}")
-            } else {
-                resourceType to url
-            }
+        return urls.associate {
+            ResourceType.fromCode(it.substringBefore("?")) to
+                    it.plus("&${SyncDataParams.SUMMARY_KEY}=${SyncDataParams.SUMMARY_COUNT_VALUE}")
         }
     }
-
 
     override suspend fun processResponse(response: Resource): Collection<Resource> {
         // As per FHIR documentation :
@@ -84,8 +81,7 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
         // If the resource returned is a Bundle, check to see if there is a "next" relation referenced
         // in the Bundle.link component, if so, append the URL referenced to list of URLs to download.
         if (response is Bundle) {
-            val nextUrl =
-                response.link.firstOrNull { component -> component.relation == "next" }?.url
+            val nextUrl = response.link.firstOrNull { component -> component.relation == "next" }?.url
             if (nextUrl != null) {
                 urls.add(nextUrl)
             }
@@ -138,56 +134,13 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
     if (!downloadUrl.contains("\$everything")) {
         downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
     }
-    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("Immunization")) {
-        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
-    }
-    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ImmunizationRecommendation")) {
-        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
-    }
-//    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ServiceRequest")) {
-//        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
-//    }
-    downloadUrl = correctFhirUrl(downloadUrl)
 
     // Do not modify any URL set by a server that specifies the token of the page to return.
     if (downloadUrl.contains("&page_token")) {
         downloadUrl = url
     }
+
     return downloadUrl
-}
-
-fun correctFhirUrl(url: String): String {
-    // Check if the URL contains "ImmunizationRecommendation"
-    if (!url.contains("ImmunizationRecommendation")) {
-        return url // If not, return the original URL
-    }
-
-    // Split the URL to get the base and query parts
-    val urlParts = url.split("?")
-    val baseUrl = urlParts[0]
-
-    // Remove redundant query parameters and fix the timestamp
-    val queryParams = urlParts.drop(1)
-        .flatMap { it.split("&") }
-        .mapNotNull {
-            val paramParts = it.split("=")
-            if (paramParts.size == 2 && paramParts[0] == "_lastUpdated") {
-                // Correct the _lastUpdated parameter by removing any extra "?" character
-                val timestamp = paramParts[1].removeSuffix("?")
-                "${paramParts[0]}=${timestamp}"
-            } else {
-                it
-            }
-        }
-        .distinct()
-        .joinToString("&")
-
-    // Reconstruct the corrected URL
-    return if (queryParams.isNotEmpty()) {
-        "$baseUrl?$queryParams"
-    } else {
-        baseUrl
-    }
 }
 
 private fun Date.toTimeZoneString(): String {
