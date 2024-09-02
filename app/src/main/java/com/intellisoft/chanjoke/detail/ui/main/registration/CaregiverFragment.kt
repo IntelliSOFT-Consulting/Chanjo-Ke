@@ -107,24 +107,42 @@ class CaregiverFragment : Fragment() {
             if (isAbove == "true") {
                 binding.apply {
                     tvTitleName.text = "Next of Kin Details"
-                    telNational.hint="Next of Kin ID *"
+                    telNational.hint = "Next of Kin ID *"
                 }
             }
         }
         val suggestions = arrayOf(
             "Father",
             "Mother",
-            "Guardian",
+            "Grandmother",
+            "Grandfather",
+            "Sibling",
+            "Aunt",
+            "Uncle",
+            "Guardian"
         )
         // Create ArrayAdapter with the array of strings
         val adapterType =
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, suggestions)
+        val ids = arrayOf(
+            "National ID",
+            "Passport",
+            "NEMIS",
+            "Aliend ID"
+        )
 
+
+        val adapterIdType =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, ids)
         binding.apply {
 
             identificationType.apply {
                 setAdapter(adapterType)
             }
+            idType.apply {
+                setAdapter(adapterIdType)
+            }
+
             previousButton.apply {
                 setOnClickListener {
                     mListener?.onPreviousPageRequested()
@@ -150,11 +168,18 @@ class CaregiverFragment : Fragment() {
                         val kinName = binding.name.text.toString()
                         val kinPhone = binding.phone.text.toString()
                         val nationalID = binding.nationalId.text.toString()
+
+                        val careGiverIdType = binding.idType.text.toString()
+                        val careGiverIdNumber = binding.nationalId.text.toString()
+
+
                         val careGiver = CareGiver(
                             phone = kinPhone,
                             name = kinName,
                             type = kinType,
-                            nationalID = nationalID
+                            nationalID = nationalID,
+                            careGiverIdType = careGiverIdType,
+                            careGiverIdNumber = careGiverIdNumber
                         )
                         val existingCareGiverIndex = careGivers.indexOfFirst { it.type == kinType }
                         if (existingCareGiverIndex != -1) {
@@ -238,11 +263,15 @@ class CaregiverFragment : Fragment() {
             val kinName = binding.name.text.toString()
             val kinPhone = binding.phone.text.toString()
             val nationalID = binding.nationalId.text.toString()
+            val careGiverIdType = binding.idType.text.toString()
+            val careGiverIdNumber = binding.nationalId.text.toString()
             val careGiver = CareGiver(
                 phone = kinPhone,
                 name = AppUtils().capitalizeFirstLetter(kinName),
                 type = kinType,
-                nationalID = nationalID
+                nationalID = nationalID,
+                careGiverIdType = careGiverIdType,
+                careGiverIdNumber = careGiverIdNumber
             )
             //only add if there is no caregiver type, else update that index
             val existingCareGiverIndex = careGivers.indexOfFirst { it.type == kinType }
@@ -306,7 +335,7 @@ class CaregiverFragment : Fragment() {
             if (isAbove == "true") {
                 binding.apply {
                     tvTitleName.text = "Next of Kin Details"
-                    telNational.hint="Next of Kin ID * "
+                    telNational.hint = "Next of Kin ID * "
                 }
             }
         }

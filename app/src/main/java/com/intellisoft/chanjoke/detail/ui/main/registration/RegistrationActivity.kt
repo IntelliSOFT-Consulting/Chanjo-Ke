@@ -4,15 +4,11 @@ import android.app.ProgressDialog
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -26,7 +22,6 @@ import com.intellisoft.chanjoke.fhir.data.CustomPatient
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.PatientIdentification
 import com.intellisoft.chanjoke.utils.ActivityBlurBackground
-import com.intellisoft.chanjoke.utils.BlurBackgroundDialog
 import timber.log.Timber
 
 class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,

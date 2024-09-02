@@ -36,10 +36,12 @@ data class DbVaccineListData(
     val keyTitle: String,
     val statusColor: String,
 )
+
 data class DbCampaignsData(
     val targetDisease: String,
     val vaccineList: ArrayList<String>
 )
+
 enum class Reasons {
     RESCHEDULE,
     CONTRAINDICATE,
@@ -57,7 +59,6 @@ enum class StatusColors {
     GREY, //Future
     NOT_DONE, //Not Done
 }
-
 
 
 enum class StatusValues {
@@ -141,9 +142,9 @@ data class ServiceRequestPatient(
     val patientName: String,
     val patientNational: String,
     val patientPhone: String,
-    val dob:String,
-    val gender:String,
-    val authoredOn:String
+    val dob: String,
+    val gender: String,
+    val authoredOn: String
 )
 
 data class DbServiceRequest(
@@ -202,20 +203,22 @@ data class DbCarePlan(
     val intent: String,
     val title: String,
     val description: String,
-    val createdOn:String,
+    val createdOn: String,
     val period: DbPeriod,
     val countyDetails: DbCountyDetails
 
 )
+
 data class DbCountyDetails(
     val county: String,
     val subCounty: String,
-    val ward:String,
+    val ward: String,
     val facility: String
 )
+
 data class DbPeriod(
-    val start:String,
-    val end:String
+    val start: String,
+    val end: String
 )
 
 enum class NavigationDetails {
@@ -272,6 +275,7 @@ data class DbAppointmentDetails(
     val vaccineName: String,
     val appointmentStatus: String
 )
+
 data class DbRecommendationData(
     val vaccineCode: String,
     val dateValue: String?,
@@ -374,6 +378,7 @@ data class CustomPatient(
     val dateOfBirth: String,
     val age: String,
     val estimate: Boolean,
+    val vaccinationCategory: String,
     val identification: String,
     val identificationNumber: String,
     val telephone: String
@@ -383,7 +388,9 @@ data class CareGiver(
     val type: String,
     val name: String,
     val phone: String,
-    val nationalID: String
+    val nationalID: String,
+    val careGiverIdType: String,
+    val careGiverIdNumber: String
 )
 
 data class Administrative(

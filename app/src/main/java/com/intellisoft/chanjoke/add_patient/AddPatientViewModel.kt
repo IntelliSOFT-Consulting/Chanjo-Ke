@@ -18,7 +18,6 @@ package com.intellisoft.chanjoke.add_patient
 
 import android.app.Application
 import android.content.Context
-import android.provider.Settings.Global.getString
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -52,6 +51,7 @@ import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.ContactPoint
 import org.hl7.fhir.r4.model.Enumerations
+import org.hl7.fhir.r4.model.Extension
 import org.hl7.fhir.r4.model.HumanName
 import org.hl7.fhir.r4.model.Identifier
 import org.hl7.fhir.r4.model.ImmunizationRecommendation
@@ -120,7 +120,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val patient = entry.resource as Patient
             val cc = FhirContext.forR4()
             val questionnaire = cc.newJsonParser().encodeResourceToString(questionnaireResponse)
-            Timber.e("Data **** $questionnaire")
+
             patient.addressFirstRep.city = generatePatientAddress(questionnaire, "PR-address-city")
             patient.addressFirstRep.district = generateSubCounty(questionnaire, true)
             patient.addressFirstRep.state = generateSubCounty(questionnaire, false)
@@ -488,6 +488,34 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 code.text = it.type
                 code.addCoding(coding)
 
+               /* if (it.clientRelation.isNotEmpty()) {
+                    val relationship_to_client = Extension()
+                    val vaccinationCat = StringType()
+                    vaccinationCat.value = it.clientRelation
+                    relationship_to_client.url = "relationship_to_client"
+                    relationship_to_client.setValue(vaccinationCat)
+                    relative.addExtension(relationship_to_client)
+                }*/
+
+
+                if (it.careGiverIdType.isNotEmpty()) {
+                    val caregiver_id_type = Extension()
+                    val vaccinationCat0 = StringType()
+                    vaccinationCat0.value = it.careGiverIdType
+                    caregiver_id_type.url = "caregiver_id_type"
+                    caregiver_id_type.setValue(vaccinationCat0)
+                    relative.addExtension(caregiver_id_type)
+                }
+
+                if (it.careGiverIdNumber.isNotEmpty()) {
+                    val caregiver_id_number = Extension()
+                    val vaccinationCat1 = StringType()
+                    vaccinationCat1.value = it.careGiverIdNumber
+                    caregiver_id_number.url = "caregiver_id_number"
+                    caregiver_id_number.setValue(vaccinationCat1)
+                    relative.addExtension(caregiver_id_number)
+                }
+
                 relative.name = rName
                 relative.telecom = contacts1
                 relative.id
@@ -498,6 +526,14 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             val contact = ContactPoint()
             contact.system = ContactPoint.ContactPointSystem.PHONE
             contact.value = payload.personal.telephone
+
+            val vaccination_category = Extension()
+
+            val vaccinationCat = StringType()
+            vaccinationCat.value = payload.personal.vaccinationCategory
+
+            vaccination_category.url = "vaccination_category"
+            vaccination_category.setValue(vaccinationCat)
 
             contacts.add(contact)
             val patient = Patient()
@@ -513,6 +549,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             patient.addressFirstRep.addLine(payload.administrative.trading)
             patient.addressFirstRep.addLine(payload.administrative.estate)
             patient.telecom = contacts
+            patient.addExtension(vaccination_category)
             patient.contact = relatives
 
             if (practitioner != null) {
@@ -530,7 +567,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 FormatterClass().deleteSharedPref("isUpdate", context)
             } else {
 
-                Log.e("*****","******")
+                Log.e("*****", "******")
 
                 patient.id = patientId
                 fhirEngine.create(patient)
@@ -552,7 +589,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                     println(e)
                 }
 
-                Log.e("*****","******")
+                Log.e("*****", "******")
 
             }
 
@@ -623,7 +660,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
             immunizationRecommendation.patient = Reference("Patient/$patientId")
             immunizationRecommendation.date = Date()
 
-            if (patientYearsInt != null && patientWeeksInt != null && selectedDate != null){
+            if (patientYearsInt != null && patientWeeksInt != null && selectedDate != null) {
 
 //                if (patientYearsInt < 6 ){
 //                    val recommendationList1 = createImmunizationRecommendation(selectedDate, routineList, context)
@@ -631,8 +668,10 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 //                    val recommendationList2 = createImmunizationRecommendation(selectedDate, nonRoutineList, context)
 //                }
 
-                val recommendationList1 = createImmunizationRecommendation(selectedDate, routineList, context)
-                val recommendationList2 = createImmunizationRecommendation(selectedDate, nonRoutineList, context)
+                val recommendationList1 =
+                    createImmunizationRecommendation(selectedDate, routineList, context)
+                val recommendationList2 =
+                    createImmunizationRecommendation(selectedDate, nonRoutineList, context)
 
                 val recommendationList = recommendationList1 + recommendationList2
                 immunizationRecommendation.recommendation = recommendationList
@@ -652,7 +691,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
         val immunizationHandler = ImmunizationHandler()
 
-        val sharedPreferences = context.getSharedPreferences(context.getString(R.string.vaccineList),
+        val sharedPreferences = context.getSharedPreferences(
+            context.getString(R.string.vaccineList),
             Context.MODE_PRIVATE
         )
 
@@ -791,7 +831,7 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                     val weekNoList = sharedPreferences.getStringSet(weekNo, null)
                     val vaccineNoList = weekNoList?.toList()
                     if (vaccineNoList != null) {
-                        if (vaccineNoList.contains(vaccineName)){
+                        if (vaccineNoList.contains(vaccineName)) {
                             recommendation.series = weekNo
                         }
                     }

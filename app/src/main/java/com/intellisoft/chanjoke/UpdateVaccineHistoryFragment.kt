@@ -50,8 +50,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
     private lateinit var patientId: String
     private lateinit var fhirEngine: FhirEngine
     private val formatterClass = FormatterClass()
-    private var patientYears:String? = null
-    private var patientWeeks:String? = null
+    private var patientYears: String? = null
+    private var patientWeeks: String? = null
     private lateinit var sharedPreferences: SharedPreferences
     private val immunizationHandler = ImmunizationHandler()
 
@@ -101,14 +101,16 @@ class UpdateVaccineHistoryFragment : Fragment() {
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         sharedPreferences = requireContext()
-            .getSharedPreferences(getString(R.string.vaccineList),
+            .getSharedPreferences(
+                getString(R.string.vaccineList),
                 Context.MODE_PRIVATE
             )
 
         patientId = formatterClass.getSharedPref("patientId", requireContext()).toString()
 
 
-        patientDetailsViewModel = ViewModelProvider(this,
+        patientDetailsViewModel = ViewModelProvider(
+            this,
             PatientDetailsViewModelFactory(
                 requireContext().applicationContext as Application,
                 fhirEngine,
@@ -136,7 +138,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 vaccineType != "" &&
                 lastDose != "" &&
                 vaccinePlace != "" &&
-                lastDoseDate != "Date of last dose *") {
+                lastDoseDate != "Date of last dose *"
+            ) {
 
                 val vaccineDetail = immunizationHandler
                     .getVaccineDetailsByBasicVaccineName(lastDose)
@@ -155,25 +158,41 @@ class UpdateVaccineHistoryFragment : Fragment() {
                     populateList(vaccineHistory)
                 }
 
-            }else{
+            } else {
                 if (vaccineType == "") {
                     binding.vaccineSpinner.requestFocus()
-                    Toast.makeText(requireContext(), "Select the type of vaccine", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Select the type of vaccine",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
                 if (lastDose == "") {
                     binding.lastDose.requestFocus()
-                    Toast.makeText(requireContext(), "Select the type of last vaccine dose", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Select the type of last vaccine dose",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
                 if (vaccinePlace == "") {
                     binding.vaccinationPlace.requestFocus()
-                    Toast.makeText(requireContext(), "Select the place of vaccination", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Select the place of vaccination",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
                 if (lastDoseDate == "Date of last dose *") {
                     binding.tvDatePicker.requestFocus()
-                    Toast.makeText(requireContext(), "Select the Date of last Dose", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Select the Date of last Dose",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
             }
@@ -182,7 +201,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
 
         binding.nextSubmit.setOnClickListener {
 
-            if (vaccineHistory.isNotEmpty()){
+            if (vaccineHistory.isNotEmpty()) {
 
                 val resultList = ArrayList<String>()
 
@@ -200,17 +219,20 @@ class UpdateVaccineHistoryFragment : Fragment() {
                             requireContext(),
                             date,
                             Immunization.ImmunizationStatus.COMPLETED,
-                            patientDetailsViewModel)
+                            patientDetailsViewModel
+                        )
 
                         val blurBackgroundDialog = BlurBackgroundDialog(this, requireContext())
                         blurBackgroundDialog.show()
                     }
                 }
 
-            }else{
-                Toast.makeText(requireContext(),
+            } else {
+                Toast.makeText(
+                    requireContext(),
                     "Select vaccines to update.",
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT
+                ).show()
 
             }
         }
@@ -235,16 +257,17 @@ class UpdateVaccineHistoryFragment : Fragment() {
         CoroutineScope(Dispatchers.Main).launch {
             val vaccineAdapter = UpdateVaccineHistoryAdapter(
                 dbVaccineHistoryList,
-                requireContext())
+                requireContext()
+            )
             binding.recyclerView.adapter = vaccineAdapter
         }
     }
 
-    private fun createVaccineType(){
+    private fun createVaccineType() {
 
         //Check if years < 6 years
         val patientWeeksInt = patientWeeks?.toIntOrNull()
-        if (patientWeeksInt != null && patientWeeksInt < 260){
+        if (patientWeeksInt != null && patientWeeksInt < 260) {
 
             /**
              * 1.) Get the target disease
@@ -263,12 +286,11 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 val weekNoList = sharedPreferences.getStringSet(weekNo, null)
                 weekNoList?.toList()?.forEach { vaccineToCheck ->
                     val exists = administeredList.any { it.vaccineName == vaccineToCheck }
-                    if (!exists){
+                    if (!exists) {
                         newVaccineNameList.add(vaccineToCheck)
                     }
                 }
             }
-
 
 
             val newVaccineList = ArrayList<String>()
@@ -277,15 +299,16 @@ class UpdateVaccineHistoryFragment : Fragment() {
 
             routineTargetDiseases.forEach { routineVaccine ->
 
-                val vaccineList =  routineVaccine.vaccineList
+                val vaccineList = routineVaccine.vaccineList
 
-                val newBasicVaccineList = vaccineList.filter { basicVaccine -> newVaccineNameList.contains(basicVaccine.vaccineName) }
+                val newBasicVaccineList =
+                    vaccineList.filter { basicVaccine -> newVaccineNameList.contains(basicVaccine.vaccineName) }
 
                 routineVaccine.vaccineList = newBasicVaccineList
 
                 if (newBasicVaccineList.isNotEmpty())
                     routineVaccineList.add(routineVaccine)
-                if (newBasicVaccineList.isNotEmpty()){
+                if (newBasicVaccineList.isNotEmpty()) {
                     newVaccineList.add(routineVaccine.targetDisease)
                 }
 
@@ -295,48 +318,59 @@ class UpdateVaccineHistoryFragment : Fragment() {
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
-                newVaccineList)
+                newVaccineList
+            )
 
             // Specify the layout to use when the list of choices appears
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             // Apply the adapter to the spinner
             binding.vaccineSpinner.adapter = adapter
 
-            binding.vaccineSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                    // Handle the selection
-                    val selectedItem = parent.getItemAtPosition(position) as String
-                    vaccineType = selectedItem
-                    createLastDose(selectedItem)
-                    // Perform your actions based on the selected item
-                }
+            binding.vaccineSpinner.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        // Handle the selection
+                        val selectedItem = parent.getItemAtPosition(position) as String
+                        vaccineType = selectedItem
+                        createLastDose(selectedItem)
+                        // Perform your actions based on the selected item
+                    }
 
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Handle the case when nothing is selected
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                        // Handle the case when nothing is selected
+                    }
                 }
-            }
 
         }
 
     }
-    private fun createLastDose(targetDisease: String){
+
+    private fun createLastDose(targetDisease: String) {
 
         /**
          * Get the dose number from the vaccine name
          */
         val vaccineList = ArrayList<String>()
-        val routineBasicVaccine = immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
-        if (routineBasicVaccine is RoutineVaccine){
+        val routineBasicVaccine =
+            immunizationHandler.getRoutineVaccineDetailsBySeriesTargetName(targetDisease)
+        if (routineBasicVaccine is RoutineVaccine) {
 
             //Get the missed vaccine list
             val routineVaccineList = routineBasicVaccine.vaccineList
 
-            routineVaccineList.forEach {basicVaccine ->
+            routineVaccineList.forEach { basicVaccine ->
                 val vaccineName = basicVaccine.vaccineName
                 if (!administeredVaccineList.contains(vaccineName)) {
-                    val recommendedVaccine = recommendationList.find { it.vaccineName == vaccineName }
+                    val recommendedVaccine =
+                        recommendationList.find { it.vaccineName == vaccineName }
                     if (recommendedVaccine != null) {
-                        val recommendedDate = LocalDate.parse(recommendedVaccine.latestDate, formatter)
+                        val recommendedDate =
+                            LocalDate.parse(recommendedVaccine.latestDate, formatter)
                         if (recommendedDate.isBefore(today)) {
                             vaccineList.add(recommendedVaccine.vaccineName)
                         }
@@ -351,15 +385,24 @@ class UpdateVaccineHistoryFragment : Fragment() {
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            vaccineList)
+            vaccineList
+        )
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // Apply the adapter to the spinner
         binding.lastDose.adapter = adapter
 
+        /** Temp assignment**/
+//        lastDose = "Polio"
+
         binding.lastDose.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 // Handle the selection
                 val selectedItem = parent.getItemAtPosition(position) as String
                 lastDose = selectedItem
@@ -371,7 +414,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
             }
         }
     }
-    private fun createVaccinationPlace(){
+
+    private fun createVaccinationPlace() {
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter.createFromResource(
@@ -384,18 +428,24 @@ class UpdateVaccineHistoryFragment : Fragment() {
         // Apply the adapter to the spinner
         binding.vaccinationPlace.adapter = adapter
 
-        binding.vaccinationPlace.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                // Handle the selection
-                val selectedItem = parent.getItemAtPosition(position) as String
-                vaccinePlace = selectedItem
-                // Perform your actions based on the selected item
-            }
+        binding.vaccinationPlace.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    // Handle the selection
+                    val selectedItem = parent.getItemAtPosition(position) as String
+                    vaccinePlace = selectedItem
+                    // Perform your actions based on the selected item
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Handle the case when nothing is selected
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Handle the case when nothing is selected
+                }
             }
-        }
 
 
     }
@@ -421,7 +471,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
             month,
             day
         )
-        datePickerDialog.datePicker.maxDate = System.currentTimeMillis() // Set the limit for the last date
+        datePickerDialog.datePicker.maxDate =
+            System.currentTimeMillis() // Set the limit for the last date
 
         // Show the DatePickerDialog
         datePickerDialog.show()
