@@ -408,7 +408,10 @@ data class Administrative(
     val subCounty: String,
     val ward: String,
     val trading: String,
-    val estate: String
+    val estate: String,
+    val countyName: String,
+    val subCountyName: String,
+    val wardName: String,
 )
 
 data class CompletePatient(
@@ -420,6 +423,13 @@ data class CompletePatient(
 data class County(
     val name: String,
     val sub_counties: List<SubCounty>
+)
+
+data class FhirLocation(
+    val id: String,
+    val name: String,
+    val type: String,
+    val parent: String
 )
 
 data class SubCounty(

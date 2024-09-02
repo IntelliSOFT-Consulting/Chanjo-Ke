@@ -211,7 +211,7 @@ class CompleteDetailsActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_item_edit -> {
                 // Handle search action
-               handleClientEdit()
+                handleClientEdit()
 
                 true
             }
@@ -246,7 +246,7 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 identificationNumber = data.systemId.toString(),
                 telephone = data.phone,
                 estimate = false,
-                vaccinationCategory=""
+                vaccinationCategory = ""
             )
             saveTempData("personal", Gson().toJson(payload))
 
@@ -257,7 +257,10 @@ class CompleteDetailsActivity : AppCompatActivity() {
                 subCounty = data.subCounty.toString(),
                 ward = data.ward.toString(),
                 trading = data.trading.toString(),
-                estate = data.estate.toString()
+                estate = data.estate.toString(),
+                countyName = data.county.toString(),
+                subCountyName = data.subCounty.toString(),
+                wardName = data.ward.toString()
             )
             saveTempData("administrative", Gson().toJson(administrative))
             CoroutineScope(Dispatchers.Main).launch {
