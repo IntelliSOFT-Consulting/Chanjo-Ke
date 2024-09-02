@@ -1849,7 +1849,7 @@ class FormatterClass {
          * -
          */
         val dbAppointmentDetailsDue = recommendationList.filter {
-            it.vaccineName == vaccineName && it.status == "due"
+            it.vaccineName == vaccineName && (it.status == "due" || it.status == "Due")
         }.map { it }.firstOrNull()
 
         if (dbAppointmentDetailsDue != null){
@@ -1948,6 +1948,8 @@ class FormatterClass {
                         dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
                     }
                 }
+
+                Log.e("---->","<-----")
             }
         }
 

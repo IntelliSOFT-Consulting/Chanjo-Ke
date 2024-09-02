@@ -24,14 +24,15 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
     private val urls = LinkedList(
         listOf(
             "Patient?_sort=_lastUpdated",
-            "ImmunizationRecommendation?_count=1000",
+            "ImmunizationRecommendation",
             "CarePlan",
             "Immunization?_count=1000",
             "Practitioner?_count=100",
             "ServiceRequest",
             "RelatedPerson",
-            "AdverseEvent"
-            )
+            "AdverseEvent",
+
+        )
     )
 
     override suspend fun getNextRequest(): DownloadRequest? {
@@ -44,6 +45,7 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
         }
         return DownloadRequest.of(url)
     }
+
 
 
     override suspend fun getSummaryRequestUrls(): Map<ResourceType, String> {
@@ -122,7 +124,6 @@ class TimestampBasedDownloadWorkManagerImpl(private val dataStore: DemoDataStore
  * attached using the `_since` parameter. Otherwise, the last updated timestamp will be attached
  * using the `_lastUpdated` parameter.
  */
-
 private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String {
     var downloadUrl = url
 
@@ -135,35 +136,13 @@ private fun affixLastUpdatedTimestamp(url: String, lastUpdated: String): String 
     // Affix lastUpdate to non-$everything queries as per:
     // https://hl7.org/fhir/operation-patient-everything.html
     if (!downloadUrl.contains("\$everything")) {
-        downloadUrl = "$downloadUrl?_lastUpdated=gt$lastUpdated"
-    }
-
-    // Do not modify any URL set by a server that specifies the token of the page to return.
-    if (downloadUrl.contains("&page_token")) {
-        downloadUrl = url
-    }
-
-    return downloadUrl
-}
-private fun affixLastUpdatedTimestampAlt(url: String, lastUpdated: String): String {
-    var downloadUrl = url
-
-    // Affix lastUpdate to a $everything query using _since as per:
-    // https://hl7.org/fhir/operation-patient-everything.html
-    if (downloadUrl.contains("\$everything")) {
-        downloadUrl = "$downloadUrl?_since=$lastUpdated"
-    }
-
-    // Affix lastUpdate to non-$everything queries as per:
-    // https://hl7.org/fhir/operation-patient-everything.html
-    if (!downloadUrl.contains("\$everything")) {
-        downloadUrl = "$downloadUrl?_lastUpdated=gt$lastUpdated"
+        downloadUrl = "$downloadUrl&_lastUpdated=gt$lastUpdated"
     }
     if (!downloadUrl.contains("\$everything") && downloadUrl.contains("Immunization")) {
-        downloadUrl = "$downloadUrl?_lastUpdated=gt$lastUpdated"
+        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
     }
     if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ImmunizationRecommendation")) {
-        downloadUrl = "$downloadUrl?_lastUpdated=gt$lastUpdated"
+        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"
     }
 //    if (!downloadUrl.contains("\$everything") && downloadUrl.contains("ServiceRequest")) {
 //        downloadUrl = "$downloadUrl?&_lastUpdated=gt$lastUpdated"

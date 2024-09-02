@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +13,18 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.fhir.FhirEngine
 import com.intellisoft.chanjoke.MainActivity
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.databinding.FragmentRoutineBinding
+import com.intellisoft.chanjoke.detail.ui.main.ReusableViewModel
+import com.intellisoft.chanjoke.detail.ui.main.ReusableViewModelFactory
 import com.intellisoft.chanjoke.detail.ui.main.VaccineDetailsAdapter
+import com.intellisoft.chanjoke.detail.ui.main.adapters.ReusableAdapter
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.DbRecycler
 import com.intellisoft.chanjoke.fhir.data.DbVaccineScheduleChild
@@ -64,6 +68,9 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     private lateinit var sharedPreferences:SharedPreferences
     private val dewormingScheduleList = listOf("2 years", "3 years", "4 years", "5 years")
 
+    private lateinit var viewModel: ReusableViewModel
+    private lateinit var adapter: ReusableAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -78,6 +85,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentRoutineBinding.inflate(inflater, container, false)
+
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
@@ -131,8 +139,35 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
 
         }
 
+        checkVaccinationStatus(binding)
+
+
         return binding.root
 
+    }
+
+    private fun checkVaccinationStatus(binding: FragmentRoutineBinding) {
+        viewModel =
+            ViewModelProvider(
+                this,
+                ReusableViewModelFactory(patientDetailsViewModel)
+            )
+                .get(ReusableViewModel::class.java)
+
+
+        adapter = ReusableAdapter(mutableListOf(), viewModel)
+
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+
+        viewModel.items.observe(viewLifecycleOwner, Observer {
+            adapter.updateList(it)
+            if (it.isEmpty()){
+                binding.recyclerView.visibility = View.GONE
+            }
+        })
+
+        viewModel.fetchItems("Routine", requireContext()) // Fetch Routine Items
     }
 
     private fun combineSchedulesIntoDeworming(schedulesList: ArrayList<DbVaccineScheduleGroup>): List<DbVaccineScheduleGroup> {
