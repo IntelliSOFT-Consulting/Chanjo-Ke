@@ -128,7 +128,7 @@ class CaregiverFragment : Fragment() {
             "National ID",
             "Passport",
             "NEMIS",
-            "Aliend ID"
+            "Alien ID"
         )
 
 
@@ -194,7 +194,10 @@ class CaregiverFragment : Fragment() {
                             identificationType.text = null
                             name.text = null
                             phone.text = null
+                            idType.text = null
+                            nationalId.text = null
                             nextButton.isEnabled = true
+
                         }
                     }
                 }
