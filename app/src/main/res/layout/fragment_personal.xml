@@ -118,13 +118,13 @@
                 android:id="@+id/radioButtonYesChild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Routine" />
+                android:text="@string/under_5_years" />
 
             <RadioButton
                 android:id="@+id/radioButtonNoChild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Non Routine" />
+                android:text="@string/over_5_years" />
         </RadioGroup>
         <LinearLayout
             android:id="@+id/ln_age_input"
@@ -308,7 +308,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10dp"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Identification Type *"
+            android:hint="@string/document_identification_type"
             app:boxBackgroundMode="outline">
 
             <AutoCompleteTextView
@@ -326,7 +326,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10dp"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Identification Number *"
+            android:hint="@string/document_identification_number"
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText
