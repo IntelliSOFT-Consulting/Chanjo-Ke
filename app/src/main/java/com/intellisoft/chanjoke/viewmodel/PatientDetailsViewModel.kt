@@ -397,6 +397,7 @@ class PatientDetailsViewModel(
             .map { getRecommendationData(it.resource) }
             .let { immunizationRecommendationList.addAll(it) }
 
+
         immunizationRecommendationList.forEach { immunizationRecommendation ->
 
             val recommendationList = immunizationRecommendation.recommendation
@@ -460,6 +461,8 @@ class PatientDetailsViewModel(
                             }
                         }
                     }
+
+
 
 
                     val dbRecommendationDetails = DbRecommendationDetails(

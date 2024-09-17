@@ -1848,9 +1848,59 @@ class FormatterClass {
          * - Compare between earliestDate and latestDate and return single date
          * -
          */
+        Log.e("*****","******")
+        println("***recommendationList $recommendationList")
+
+//        var dbAppointmentDetailsDue: DbRecommendationDetails? = null
+//
+            for(vaccineList in recommendationList) {
+                val dBvaccineName = vaccineList.vaccineName
+                val dBvaccineCode = vaccineList.vaccineCode
+                val dBstatus = vaccineList.status
+
+                if (dBvaccineName.equals("OPV I", ignoreCase = true)){
+                    Log.e("&&&&&","&&&&&&")
+                    println("***VaccineName1 $vaccineName")
+                    println("***VaccineName2 $dBvaccineName")
+                    println("***VaccineCode $dBvaccineCode")
+                    println("***dBstatus $dBstatus")
+                    Log.e("&&&&&","&&&&&&")
+                }
+
+            }
+//
+//                if (dBvaccineCode == "IMPO-OPV-I"){
+//                    println("dBvaccineName $dBvaccineName")
+//                    println("dBvaccineCode $dBvaccineCode")
+//                    println("dBstatus $dBstatus")
+//                    println("vaccineName $vaccineName")
+//                }
+//
+//
+//
+//                if (vaccineName.equals(dBvaccineName, ignoreCase = true)
+//                    && dBstatus.equals("Due", ignoreCase = true)){
+//                    dbAppointmentDetailsDue = vaccineList
+//                    break
+//                }
+//            }
+
+
+
         val dbAppointmentDetailsDue = recommendationList.filter {
-            it.vaccineName == vaccineName && (it.status == "due" || it.status == "Due")
+            it.vaccineName == vaccineName && it.status.equals("Due", ignoreCase = true)
         }.map { it }.firstOrNull()
+
+        if (vaccineName.equals("OPV I", ignoreCase = true)){
+
+        }
+
+        println("dBaccineName ${dbAppointmentDetailsDue?.vaccineName}")
+        println("vaccineCode ${dbAppointmentDetailsDue?.vaccineCode}")
+        println("earliestDate ${dbAppointmentDetailsDue?.earliestDate}")
+        println("latestDate ${dbAppointmentDetailsDue?.latestDate}")
+        println("status ${dbAppointmentDetailsDue?.status}")
+        Log.e("*****","******")
 
         if (dbAppointmentDetailsDue != null){
             val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
@@ -1948,8 +1998,6 @@ class FormatterClass {
                         dateValue = convertViewFormats(dateValueStr) ?: dateValueStr
                     }
                 }
-
-                Log.e("---->","<-----")
             }
         }
 
