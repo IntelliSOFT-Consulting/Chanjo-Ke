@@ -524,7 +524,7 @@ class PersonalFragment : Fragment() {
 
         } else {
             // No RadioButton is selected, handle it as needed
-            Toast.makeText(requireContext(), "Please select a gender", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), "Please select a sex", Toast.LENGTH_SHORT)
                 .show()
             return
         }
