@@ -387,7 +387,7 @@ class PatientDetailActivity : AppCompatActivity() {
 
             if (statusValue != null ){
                 if(statusValue.contains("Client objection") ||
-                    statusValue.contains("Religious Reasons")){
+                    statusValue.contains("Religion/Culture")){
                     val dialogMessage = "$vaccineName because of $statusValue \n"
                     message += dialogMessage
                     isDialog = true

@@ -21,8 +21,8 @@
     <string name="description_status">Status</string>
 
     <string name="title_activity_patient_detail">PatientDetailActivity</string>
-    <string name="tab_text_1">Routine</string>
-    <string name="tab_text_2">Non Routine</string>
+    <string name="tab_text_1">Under 5 years</string>
+    <string name="tab_text_2">Above 5 years</string>
     <string name="tab_text_4">Appointments</string>
     <string name="tab_text_5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
 

@@ -222,6 +222,7 @@ class RoutineFragment : Fragment(), VaccineDetailsAdapter.OnCheckBoxSelectedList
                 val weekNoList = sharedPreferences.getStringSet(weekNo, null)
                 val vaccineList = weekNoList?.toList()
                 vaccineList?.forEach { vaccineName ->
+
                     val dbVaccineScheduleChild =  formatterClass.getVaccineChildStatus(
                         requireContext(),
                         "ROUTINE",
