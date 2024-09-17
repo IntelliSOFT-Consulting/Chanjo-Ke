@@ -156,8 +156,11 @@ class CaregiverFragment : Fragment() {
                             Gson().toJson(careGivers),
                             requireContext()
                         )
-                        mListener?.onNextPageRequested()
+                    } else {
+                        formatter.deleteSharedPref("caregiver", requireContext())
                     }
+                    mListener?.onNextPageRequested()
+
                 }
             }
 
