@@ -169,6 +169,7 @@ class PreviewFragment : Fragment() {
                 tvCounty.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.countyName)
                 tvSubCounty.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.subCountyName)
                 tvWard.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.wardName)
+                tvChu.text=AppUtils().capitalizeFirstLetter(refinedAdministrative.chu)
                 tvTrading.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.trading)
                 tvVillage.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.estate)
             }
