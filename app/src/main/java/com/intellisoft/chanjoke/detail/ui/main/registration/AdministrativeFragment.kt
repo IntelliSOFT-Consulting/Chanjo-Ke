@@ -17,6 +17,7 @@ import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentAdministrativeBinding
 import com.intellisoft.chanjoke.fhir.data.Administrative
 import com.intellisoft.chanjoke.fhir.data.County
+import com.intellisoft.chanjoke.fhir.data.FhirLocation
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.SubCountyWard
 import com.intellisoft.chanjoke.utils.AppUtils
@@ -25,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.io.InputStreamReader
 
 
@@ -91,6 +93,11 @@ class AdministrativeFragment : Fragment() {
     private var subCountyList = ArrayList<String>()
     private var wardList = ArrayList<String>()
     private lateinit var liveData: AdminLiveData
+
+    val countyMap = mutableMapOf<String, String>()
+    val subCountyMap = mutableMapOf<String, String>()
+    val wardMap = mutableMapOf<String, String>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val isUpdate = FormatterClass().getSharedPref("isUpdate", requireContext())
@@ -100,13 +107,23 @@ class AdministrativeFragment : Fragment() {
         }
         try {
             lifecycleScope.launch {
-                val counties = loadCountiesLazily(requireContext(), "county.json")
+                val locations = loadCountiesLazily(requireContext(), "locations.json")
                 val wards = loadWardsLazily(requireContext(), "wards.json")
                 countyList.clear()
-                counties.forEach { county ->
-                    countyList.add(county.name)
 
+                locations.forEach {
+                    if (it.type == "County") {
+                        countyMap[it.name] = it.id
+                        countyList.add(it.name)
+                    }
+                    if (it.type == "Sub-County") {
+                        subCountyMap[it.name] = it.id
+                    }
+                    if (it.type == "Ward") {
+                        wardMap[it.name] = it.id
+                    }
                 }
+                countyList.sort()
                 val adapterType =
                     ArrayAdapter(
                         requireContext(),
@@ -139,24 +156,29 @@ class AdministrativeFragment : Fragment() {
                                 if (value.isNotEmpty()) {
                                     binding.telCounty.error = null
                                     updatePrefs()
-                                val county = counties.find { it.name == value }
-                                if (county != null) {
-                                    subCountyList.clear()
-                                    binding.subCounty.setText("", false)
-                                    county.sub_counties.forEach {
-                                        subCountyList.add(it.name)
-                                    }
-                                    val subCountyAdapter =
-                                        ArrayAdapter(
-                                            requireContext(),
-                                            android.R.layout.simple_dropdown_item_1line,
-                                            subCountyList
-                                        )
-                                    binding.subCounty.apply {
-                                        setAdapter(subCountyAdapter)
-                                    }
 
-                                }
+                                    val selectedCounty = countyMap[value]
+                                    Timber.e("Selected County ****** $selectedCounty")
+                                    if (selectedCounty != null) {
+                                        subCountyList.clear()
+                                        binding.subCounty.setText("", false)
+                                        val subCounties =
+                                            locations.filter { it.parent == selectedCounty }
+                                        subCounties.forEach {
+                                            subCountyList.add(it.name)
+                                        }
+                                        subCountyList.sort()
+                                        val subCountyAdapter =
+                                            ArrayAdapter(
+                                                requireContext(),
+                                                android.R.layout.simple_dropdown_item_1line,
+                                                subCountyList
+                                            )
+                                        binding.subCounty.apply {
+                                            setAdapter(subCountyAdapter)
+                                        }
+
+                                    }
                                 }
                             }
                         })
@@ -187,25 +209,29 @@ class AdministrativeFragment : Fragment() {
                                 if (value.isNotEmpty()) {
                                     binding.telSubCounty.error = null
                                     updatePrefs()
-                                val subCounty =
-                                    wards.find { it.subCounty.lowercase() == value.lowercase() }
-                                if (subCounty != null) {
-                                    wardList.clear()
-                                    binding.ward.setText("", false)
-                                    subCounty.wards.forEach {
-                                        wardList.add(it.name)
 
+                                    val selectedSubCounty = subCountyMap[value]
+                                    Timber.e("Selected Sub County ****** $selectedSubCounty")
+                                    if (selectedSubCounty != null) {
+                                        wardList.clear()
+                                        binding.ward.setText("", false)
+                                        val subCounties =
+                                            locations.filter { it.parent == selectedSubCounty }
+                                        subCounties.forEach {
+                                            wardList.add(it.name)
+
+                                        }
+                                        wardList.sort()
+                                        val subCountyAdapter =
+                                            ArrayAdapter(
+                                                requireContext(),
+                                                android.R.layout.simple_dropdown_item_1line,
+                                                wardList
+                                            )
+                                        binding.ward.apply {
+                                            setAdapter(subCountyAdapter)
+                                        }
                                     }
-                                    val subCountyAdapter =
-                                        ArrayAdapter(
-                                            requireContext(),
-                                            android.R.layout.simple_dropdown_item_1line,
-                                            wardList
-                                        )
-                                    binding.ward.apply {
-                                        setAdapter(subCountyAdapter)
-                                    }
-                                }
                                 }
                             }
                         })
@@ -236,6 +262,9 @@ class AdministrativeFragment : Fragment() {
                                 if (value.isNotEmpty()) {
                                     binding.telWard.error = null
                                     updatePrefs()
+
+                                    val selectedWard = wardMap[value]
+                                    Timber.e("Selected Ward ****** $selectedWard")
 
                                 }
                             }
@@ -328,15 +357,18 @@ class AdministrativeFragment : Fragment() {
         }
     }
 
-    private suspend fun loadCountiesLazily(context: Context?, fileName: String): Array<County> {
+    private suspend fun loadCountiesLazily(
+        context: Context?,
+        fileName: String
+    ): Array<FhirLocation> {
         return withContext(Dispatchers.IO) {
             val gson = Gson()
 
             // Load counties data
             val inputStream = context?.assets?.open(fileName)
-            val counties: Array<County> = inputStream?.use { stream ->
+            val counties: Array<FhirLocation> = inputStream?.use { stream ->
                 val reader = InputStreamReader(stream)
-                val className = Array<County>::class.java
+                val className = Array<FhirLocation>::class.java
                 gson.fromJson(reader, className)
             } ?: emptyArray()
 
@@ -344,6 +376,7 @@ class AdministrativeFragment : Fragment() {
             counties
         }
     }
+
     private suspend fun loadWardsLazily(context: Context?, fileName: String): Array<SubCountyWard> {
         return withContext(Dispatchers.IO) {
             val gson = Gson()
@@ -365,33 +398,51 @@ class AdministrativeFragment : Fragment() {
         val countyString = binding.county.text.toString()
         val subCountyString = binding.subCounty.text.toString()
         val wardString = binding.ward.text.toString()
+        val chuString = binding.communityUnit.text.toString()
         val tradingString = binding.trading.text.toString()
         val estateString = binding.estate.text.toString()
+        try {
+            val payload = Administrative(
+                county = countyMap[countyString].toString(),
+                subCounty = subCountyMap[subCountyString].toString(),
+                ward = wardMap[wardString].toString(),
+                trading = tradingString,
+                estate = estateString,
+                chu = chuString,
+                countyName = binding.county.text.toString(),
+                subCountyName = binding.subCounty.text.toString(),
+                wardName = binding.ward.text.toString()
+            )
+            return Gson().toJson(payload)
+        } catch (e: Exception) {
+            return ""
+        }
 
-        val payload = Administrative(
-            county = countyString,
-            subCounty = subCountyString,
-            ward = wardString,
-            trading = tradingString,
-            estate = estateString
-        )
-        return Gson().toJson(payload)
     }
 
     private fun updatePrefs() {
         try {
-            val countyString = binding.county.text.toString()
-            val subCountyString = binding.subCounty.text.toString()
-            val wardString = binding.ward.text.toString()
+            var countyString = binding.county.text.toString()
+            var subCountyString = binding.subCounty.text.toString()
+            var wardString = binding.ward.text.toString()
             val tradingString = binding.trading.text.toString()
             val estateString = binding.estate.text.toString()
+
+            val chuString = binding.communityUnit.text.toString()
+            countyString = countyMap[countyString].toString()
+            subCountyString = subCountyMap[subCountyString].toString()
+            wardString = wardMap[wardString].toString()
 
             val payload = Administrative(
                 county = AppUtils().capitalizeFirstLetter(countyString),
                 subCounty = AppUtils().capitalizeFirstLetter(subCountyString),
                 ward = AppUtils().capitalizeFirstLetter(wardString),
                 trading = AppUtils().capitalizeFirstLetter(tradingString),
-                estate = AppUtils().capitalizeFirstLetter(estateString)
+                estate = AppUtils().capitalizeFirstLetter(estateString),
+                countyName = binding.county.text.toString(),
+                subCountyName = binding.subCounty.text.toString(),
+                wardName = binding.ward.text.toString(),
+                chu = chuString
             )
             formatter.saveSharedPref("administrative", Gson().toJson(payload), requireContext())
             liveData.updatePatientDetails(Gson().toJson(payload))
@@ -421,12 +472,12 @@ class AdministrativeFragment : Fragment() {
 
     private fun validData(): Boolean {
 
-        val countyString = binding.county.text.toString()
-        val subCountyString = binding.subCounty.text.toString()
-        val wardString = binding.ward.text.toString()
+        var countyString = binding.county.text.toString()
+        var subCountyString = binding.subCounty.text.toString()
+        var wardString = binding.ward.text.toString()
         val tradingString = binding.trading.text.toString()
         val estateString = binding.estate.text.toString()
-
+        val chuString = binding.communityUnit.text.toString()
         if (countyString.isEmpty()) {
             binding.telCounty.error = "Enter county"
             binding.county.requestFocus()
@@ -452,12 +503,22 @@ class AdministrativeFragment : Fragment() {
 //            binding.estate.requestFocus()
 //            return false
 //        }
+
+
+        countyString = countyMap[countyString].toString()
+        subCountyString = subCountyMap[subCountyString].toString()
+        wardString = wardMap[wardString].toString()
+
         val payload = Administrative(
             county = countyString,
             subCounty = subCountyString,
             ward = wardString,
             trading = tradingString,
-            estate = estateString
+            estate = estateString,
+            chu = chuString,
+            countyName = binding.county.text.toString(),
+            subCountyName = binding.subCounty.text.toString(),
+            wardName = binding.ward.text.toString()
         )
         formatter.saveSharedPref("administrative", Gson().toJson(payload), requireContext())
         liveData.updatePatientDetails(Gson().toJson(payload))

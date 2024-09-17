@@ -166,9 +166,9 @@ class PreviewFragment : Fragment() {
                 val refinedAdministrative =
                     Gson().fromJson(administrative, Administrative::class.java)
 
-                tvCounty.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.county)
-                tvSubCounty.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.subCounty)
-                tvWard.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.ward)
+                tvCounty.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.countyName)
+                tvSubCounty.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.subCountyName)
+                tvWard.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.wardName)
                 tvTrading.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.trading)
                 tvVillage.text = AppUtils().capitalizeFirstLetter(refinedAdministrative.estate)
             }

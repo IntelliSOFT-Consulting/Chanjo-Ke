@@ -105,6 +105,10 @@
     <string name="next_vaccine_appointment">Next Vaccine Appointment</string>
     <string name="start">Start</string>
     <string name="search_campaign">Search Campaign</string>
+    <string name="over_5_years">Above 5 years</string>
+    <string name="under_5_years">Under 5 years</string>
+    <string name="document_identification_type">Document Identification Type *</string>
+    <string name="document_identification_number">Document Identification Number *</string>
 
 
 </resources>

@@ -30,6 +30,8 @@ class CareGiverAdapter(
         val tvType: TextView = itemView.findViewById(R.id.tv_type)
         val tvName: TextView = itemView.findViewById(R.id.tv_name)
         val tvPhone: TextView = itemView.findViewById(R.id.tv_phone)
+        val tvIdType: TextView = itemView.findViewById(R.id.tv_id_type)
+        val tvIdNumber: TextView = itemView.findViewById(R.id.tv_id_number)
         val imvCancel: ImageView = itemView.findViewById(R.id.imv_cancel)
 
         init {
@@ -58,11 +60,15 @@ class CareGiverAdapter(
         val tvType = entryList[position].type
         val tvPhone = entryList[position].phone
         val tvName = entryList[position].name
+        val careGiverIdType = entryList[position].careGiverIdType
+        val careGiverIdNumber = entryList[position].careGiverIdNumber
         val data = entryList[position]
 
         holder.tvType.text = tvType
         holder.tvName.text = tvName
         holder.tvPhone.text = tvPhone
+        holder.tvIdType.text = careGiverIdType
+        holder.tvIdNumber.text = careGiverIdNumber
         holder.imvCancel.apply {
             setOnClickListener {
                 val layoutInflater = LayoutInflater.from(context)

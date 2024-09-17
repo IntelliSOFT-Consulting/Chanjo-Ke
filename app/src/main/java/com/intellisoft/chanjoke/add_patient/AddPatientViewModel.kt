@@ -488,14 +488,14 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 code.text = it.type
                 code.addCoding(coding)
 
-               /* if (it.clientRelation.isNotEmpty()) {
-                    val relationship_to_client = Extension()
-                    val vaccinationCat = StringType()
-                    vaccinationCat.value = it.clientRelation
-                    relationship_to_client.url = "relationship_to_client"
-                    relationship_to_client.setValue(vaccinationCat)
-                    relative.addExtension(relationship_to_client)
-                }*/
+                /* if (it.clientRelation.isNotEmpty()) {
+                     val relationship_to_client = Extension()
+                     val vaccinationCat = StringType()
+                     vaccinationCat.value = it.clientRelation
+                     relationship_to_client.url = "relationship_to_client"
+                     relationship_to_client.setValue(vaccinationCat)
+                     relative.addExtension(relationship_to_client)
+                 }*/
 
 
                 if (it.careGiverIdType.isNotEmpty()) {
@@ -543,9 +543,13 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 if (payload.personal.gender == "Male") Enumerations.AdministrativeGender.MALE else Enumerations.AdministrativeGender.FEMALE
             patient.birthDate =
                 FormatterClass().convertStringToDate(payload.personal.dateOfBirth, "yyyy-MM-dd")
-            patient.addressFirstRep.city = payload.administrative.county
-            patient.addressFirstRep.district = payload.administrative.subCounty
-            patient.addressFirstRep.state = payload.administrative.ward
+            patient.addressFirstRep.city = payload.administrative.countyName
+            patient.addressFirstRep.district = payload.administrative.subCountyName
+            patient.addressFirstRep.state = payload.administrative.wardName
+            patient.addressFirstRep.addLine(payload.administrative.county)
+            patient.addressFirstRep.addLine(payload.administrative.subCounty)
+            patient.addressFirstRep.addLine(payload.administrative.ward)
+            patient.addressFirstRep.addLine(payload.administrative.chu)
             patient.addressFirstRep.addLine(payload.administrative.trading)
             patient.addressFirstRep.addLine(payload.administrative.estate)
             patient.telecom = contacts
@@ -823,9 +827,17 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 recommendation.description = type.toLowerCase()
 
                 val extractedList = when (pair.type) {
-                    "ROUTINE" -> { sharedPreferences.getString("routineList", null) }
-                    "NON-ROUTINE" -> { sharedPreferences.getString("nonRoutineList", null) }
-                    else -> { null }
+                    "ROUTINE" -> {
+                        sharedPreferences.getString("routineList", null)
+                    }
+
+                    "NON-ROUTINE" -> {
+                        sharedPreferences.getString("nonRoutineList", null)
+                    }
+
+                    else -> {
+                        null
+                    }
                 }
 
                 val expandableListTitle = extractedList!!.split(",").toList()
