@@ -134,7 +134,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:paddingBottom="80dp"
+            android:paddingBottom="0dp"
             android:scrollbars="vertical"
             app:layoutManager="LinearLayoutManager"
             tools:listitem="@layout/care_givers" />
