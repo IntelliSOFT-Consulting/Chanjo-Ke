@@ -186,7 +186,7 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         return newList.toMutableList()
     }
 
-    fun isCloseMatch(original: String, search: String): Boolean {
+    private fun isCloseMatch(original: String, search: String): Boolean {
         return original.toLowerCase().contains(search.toLowerCase())
     }
 

@@ -65,18 +65,27 @@ class ContraindicationsFragment : Fragment() {
     private var status: String = ""
     private var spinnerReasons = ""
 
-    val resultList = listOf<String>(
-        "Please Select",
-        "Vaccine out of stock",
-        "Cold chain break",
-        "Client objection ",
-        "Religious Reasons ",
-        "Caregiver refusal",
-        "VVM change",
-        "Client acquired the disease",
-        "Contraindication ",
-        "Other reasons",
-    )
+//    val resultList = listOf<String>(
+//        "Please Select",
+//        "Vaccine out of stock",
+//        "Cold chain break",
+//        "Client objection ",
+//        "Religious Reasons ",
+//        "Caregiver refusal",
+//        "VVM change",
+//        "Client acquired the disease",
+//        "Contraindication ",
+//        "Other reasons",
+//    )
+val resultList = listOf<String>(
+    "Please Select",
+    "Reaction",
+    "Religion/Culture ",
+    "Stock out",
+    "Client objection ",
+    "Contraindication ",
+    "Other reasons",
+)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
