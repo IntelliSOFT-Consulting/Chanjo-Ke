@@ -169,9 +169,15 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             // Check if the identification matches or is close
             if (patient.identification.contains(searchString) || isCloseMatch(
                     patient.identification,
-                    searchString
-                )
-            ) {
+                    searchString)) {
+                matchingPatients.add(patient)
+            }
+
+            val systemGeneratedId = patient.systemGeneratedId ?: ""
+            // Check if the identification matches or is close
+            if (systemGeneratedId != "" && systemGeneratedId.contains(searchString) || isCloseMatch(
+                    systemGeneratedId,
+                    searchString)) {
                 matchingPatients.add(patient)
             }
         }
@@ -320,8 +326,10 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         val contact_phone: String?,
         val contact_gender: String?,
         val document: String,
-        val number: String
-    ) {
+        val number: String,
+        val systemGeneratedId:String? = null,
+
+        ) {
         override fun toString(): String = name
     }
 
@@ -451,6 +459,8 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
     var document = ""
     var number = ""
 
+    var systemGeneratedId:String? = null
+
     if (hasIdentifier()) {
         identifier.forEach { identifier ->
 
@@ -466,16 +476,15 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+
             val codeableConceptType = identifier.type
             if (codeableConceptType.hasText() && codeableConceptType.text.contains(
-                    Identifiers.SYSTEM_GENERATED.name
-                )
-            ) {
-
-
+                    Identifiers.SYSTEM_GENERATED.name) && identifier.hasValue()) {
+                systemGeneratedId = identifier.valueElement.valueAsString
             }
         }
     }
+
 
     return PatientListViewModel.PatientItem(
         id = position.toString(),
@@ -494,8 +503,10 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
         contact_phone = contact_phone,
         contact_gender = contact_type,
         document = document,
-        number = number
-    )
+        number = number,
+        systemGeneratedId = systemGeneratedId,
+
+        )
 }
 
 internal fun Location.toLocationItem(position: Int): PatientListViewModel.LocationItem {
