@@ -154,7 +154,22 @@ class UpdateVaccineHistoryFragment : Fragment() {
                         vaccinePlace,
                         lastDoseDate
                     )
-                    vaccineHistory.add(dbVaccineHistory)
+                    // Check if the entry already exists in the list based on relevant fields
+                    val exists = vaccineHistory.any {
+                        it.vaccineName == dbVaccineHistory.vaccineName
+                    }
+
+                    // Add only if it doesn't exist
+                    if (!exists) {
+                        vaccineHistory.add(dbVaccineHistory)
+                    }else{
+                        CoroutineScope(Dispatchers.Main).launch {
+                            Toast.makeText(requireContext(),
+                                "$vaccineName already exists in the list.", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+
                     populateList(vaccineHistory)
                 }
 
