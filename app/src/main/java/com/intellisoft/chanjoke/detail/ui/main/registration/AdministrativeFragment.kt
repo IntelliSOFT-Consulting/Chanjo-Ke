@@ -498,11 +498,11 @@ class AdministrativeFragment : Fragment() {
 //            binding.trading.requestFocus()
 //            return false
 //        }
-//        if (estateString.isEmpty()) {
-//            binding.telEstate.error = "Enter estate"
-//            binding.estate.requestFocus()
-//            return false
-//        }
+        if (estateString.isEmpty()) {
+            binding.telEstate.error = "Enter Estate/Village"
+            binding.estate.requestFocus()
+            return false
+        }
 
 
         countyString = countyMap[countyString].toString()

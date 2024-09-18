@@ -123,19 +123,21 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
             val caregiver = formatter.getSharedPref("caregiver", this)
             val administrative = formatter.getSharedPref("administrative", this)
 
-            if (personal != null && caregiver != null && administrative != null) {
+            if (personal != null && administrative != null) {
 
                 val refinedPersonal = Gson().fromJson(personal, CustomPatient::class.java)
 //                val refinedCaregiver = Gson().fromJson(caregiver, CareGiver::class.java)
                 val refinedAdministrative =
                     Gson().fromJson(administrative, Administrative::class.java)
-
-                val type = object : TypeToken<List<CareGiver>>() {}.type
-                val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
                 val caregivers = ArrayList<CareGiver>()
-                caregivers.clear()
-                caregivers.addAll(caregiverList)
-                var completePatient = CompletePatient(
+                if (caregiver != null) {
+                    val type = object : TypeToken<List<CareGiver>>() {}.type
+                    val caregiverList: List<CareGiver> = Gson().fromJson(caregiver, type)
+
+                    caregivers.clear()
+                    caregivers.addAll(caregiverList)
+                }
+                val completePatient = CompletePatient(
                     personal = refinedPersonal,
                     caregivers = caregivers,
                     administrative = refinedAdministrative
@@ -159,6 +161,8 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
                         )
                     ) {
 
+                        Timber.e("Registering a Caregiver $caregivers")
+
                         progressDialog.show()
                         viewModel.saveCustomPatient(
                             this,
@@ -166,6 +170,10 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
                             fhirPractitionerId,
                             isClientUpdate
                         )
+
+
+
+
                     } else {
                         Toast.makeText(
                             this,
