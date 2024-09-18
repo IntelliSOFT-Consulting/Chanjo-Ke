@@ -400,7 +400,16 @@ data class CareGiver(
     val phone: String,
     val nationalID: String,
     val careGiverIdType: String,
-    val careGiverIdNumber: String
+    val careGiverIdNumber: String,
+    var kins: List<CareGiverNextOfKin> = emptyList()
+
+)
+
+data class CareGiverNextOfKin(
+    val caregiver: String,
+    val name: String,
+    val phone: String,
+    val type: String,
 )
 
 data class Administrative(

@@ -150,7 +150,7 @@ class PreviewFragment : Fragment() {
                         tvCname.text = AppUtils().capitalizeFirstLetter(caregiver.name)
                         tvCtype.text = caregiver.type
                         tvCphone.text = caregiver.phone
-                        tvCnational.text = caregiver.phone
+                        tvCnational.text = caregiver.nationalID
 
                         // Add the itemView (LinearLayout) to lnCaregiver (LinearLayout)
                         lnCaregiver.addView(itemView)

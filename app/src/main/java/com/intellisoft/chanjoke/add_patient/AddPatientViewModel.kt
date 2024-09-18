@@ -50,6 +50,7 @@ import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.ContactPoint
+import org.hl7.fhir.r4.model.DateTimeType
 import org.hl7.fhir.r4.model.Enumerations
 import org.hl7.fhir.r4.model.Extension
 import org.hl7.fhir.r4.model.HumanName
@@ -520,6 +521,45 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
                 relative.telecom = contacts1
                 relative.id
                 relative.addRelationship(code)
+                if (it.kins.isNotEmpty()) {
+                    it.kins.forEach { k ->
+
+                        val kinName = Extension()
+                        kinName.url = "name"
+                        val valueName = StringType()
+                        valueName.value = k.name
+                        kinName.setValue(valueName)
+
+                        val kinPhone = Extension()
+                        kinPhone.url = "phone"
+                        val valuePhone = StringType()
+                        valuePhone.value = k.phone
+                        kinPhone.setValue(valuePhone)
+
+                        val kinType = Extension()
+                        kinType.url = "relationship"
+                        val valueType = StringType()
+                        valueType.value = k.type
+                        kinType.setValue(valueType)
+
+
+                        val kinCreated = Extension()
+
+                        kinCreated.url = "created"
+                        val valueCreated = DateTimeType()
+                        valueCreated.value = Date()
+                        kinCreated.setValue(valueCreated)
+
+                        val kinExtension = Extension()
+                        kinExtension.url = "next-of-kin"
+                        kinExtension.addExtension(kinName)
+                        kinExtension.addExtension(kinPhone)
+                        kinExtension.addExtension(kinType)
+                        kinExtension.addExtension(kinCreated)
+
+                        relative.addExtension(kinExtension)
+                    }
+                }
                 relatives.add(relative)
             }
 

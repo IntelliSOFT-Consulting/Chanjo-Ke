@@ -1,5 +1,6 @@
 package com.intellisoft.chanjoke.detail.ui.main.registration
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -9,19 +10,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.intellisoft.chanjoke.R
 import com.intellisoft.chanjoke.add_patient.AddPatientViewModel
 import com.intellisoft.chanjoke.databinding.FragmentCaregiverBinding
 import com.intellisoft.chanjoke.fhir.data.CareGiver
+import com.intellisoft.chanjoke.fhir.data.CareGiverNextOfKin
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.utils.AppUtils
-import timber.log.Timber
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,6 +55,30 @@ class CaregiverFragment : Fragment() {
     private var mListener: OnButtonClickListener? = null
     private lateinit var binding: FragmentCaregiverBinding
 
+    val suggestions = arrayOf(
+        "Father",
+        "Mother",
+        "Grandmother",
+        "Grandfather",
+        "Sibling",
+        "Aunt",
+        "Uncle",
+        "Guardian"
+    )
+    val ids = arrayOf(
+        "National ID",
+        "Passport",
+        "NEMIS",
+        "Alien ID",
+        "None"
+    )
+
+
+    val updatedSuggestions = suggestions.toMutableList().apply {
+        add("CHP")
+        add("Village Elder")
+    }.toTypedArray()
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         // Ensure that the parent activity implements the interface
@@ -74,6 +102,7 @@ class CaregiverFragment : Fragment() {
     }
 
     private val careGivers = ArrayList<CareGiver>()
+    private val careGiverNextOfKins = ArrayList<CareGiverNextOfKin>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -111,25 +140,10 @@ class CaregiverFragment : Fragment() {
                 }
             }
         }
-        val suggestions = arrayOf(
-            "Father",
-            "Mother",
-            "Grandmother",
-            "Grandfather",
-            "Sibling",
-            "Aunt",
-            "Uncle",
-            "Guardian"
-        )
+
         // Create ArrayAdapter with the array of strings
         val adapterType =
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, suggestions)
-        val ids = arrayOf(
-            "National ID",
-            "Passport",
-            "NEMIS",
-            "Alien ID"
-        )
 
 
         val adapterIdType =
@@ -141,6 +155,15 @@ class CaregiverFragment : Fragment() {
             }
             idType.apply {
                 setAdapter(adapterIdType)
+                setOnItemClickListener { parent, view, position, id ->
+                    // Get the selected item
+                    val selectedItem = parent.getItemAtPosition(position).toString()
+                    if (selectedItem == "None") {
+                        telNational.visibility = View.GONE
+                    } else {
+                        telNational.visibility = View.VISIBLE
+                    }
+                }
             }
 
             previousButton.apply {
@@ -297,7 +320,152 @@ class CaregiverFragment : Fragment() {
             binding.apply {
                 nextButton.isEnabled = true
             }
+
+            // get latest record and pop up
+
+            if (careGiverIdType == "None") {
+                val latestItem = careGivers.lastOrNull() // Safely get the last item
+                if (latestItem != null) {
+                    displayNextOfKinScreenConfirmation(latestItem)
+                }
+
+            }
         }
+    }
+
+    private fun displayNextOfKinScreenConfirmation(careGiver: CareGiver) {
+
+    }
+    private fun displayNextOfKinScreen(careGiver: CareGiver) {
+        // Inflate the custom layout
+        val adapterType =
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                updatedSuggestions
+            )
+
+        val dialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_fullscreen, null)
+
+        // Create the dialog
+        val dialog = AlertDialog.Builder(requireContext(), R.style.FullScreenDialog)
+            .setView(dialogView)
+            .create()
+
+        val edtName = dialogView.findViewById<TextInputEditText>(R.id.name)
+        val edtPhone = dialogView.findViewById<TextInputEditText>(R.id.phone)
+        val edtType = dialogView.findViewById<AutoCompleteTextView>(R.id.identification_type)
+        val recyclerView = dialogView.findViewById<RecyclerView>(R.id.recyclerView)
+
+
+        careGiverNextOfKins.clear()
+        val adapter1 = CareGiverKinAdapter(
+            ArrayList(),
+            requireContext(),
+        )
+        recyclerView.apply {
+
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = adapter1
+
+        }
+        edtType.apply {
+            setOnItemClickListener { parent, view, position, id ->
+                // Get the selected item
+
+                val name = edtName.text.toString()
+                val phone = edtPhone.text.toString()
+                val kinType = edtType.text.toString()
+
+                val selectedItem = parent.getItemAtPosition(position).toString()
+                if (selectedItem.isNotEmpty()) {
+                    val kin = CareGiverNextOfKin(
+                        caregiver = careGiver.type,
+                        name = name,
+                        phone = phone,
+                        type = kinType
+                    )
+
+                    //only add if there is no caregiver type, else update that index
+                    val existingCareGiverIndex =
+                        careGiverNextOfKins.indexOfFirst { it.type == kinType }
+                    if (existingCareGiverIndex != -1) {
+                        // Update existing caregiver
+                        careGiverNextOfKins[existingCareGiverIndex] = kin
+                    } else {
+                        // Add new caregiver
+                        if (!careGiverNextOfKins.contains(kin)) {
+                            careGiverNextOfKins.add(kin)
+                            adapter1.addItem(kin)
+                        }
+                    }
+
+                    // clear fields
+                    edtType.text = null
+                    edtName.text = null
+                    edtPhone.text = null
+
+                }
+            }
+        }
+
+        // Add functionality to the close button
+        dialogView.findViewById<Button>(R.id.buttonClose).setOnClickListener {
+            val name = edtName.text.toString()
+            val phone = edtPhone.text.toString()
+            val kinType = edtType.text.toString()
+
+            if (name.isEmpty()) {
+                edtName.requestFocus()
+                Toast.makeText(requireContext(), "Please enter name", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (phone.isEmpty()) {
+                edtPhone.requestFocus()
+                Toast.makeText(requireContext(), "Please enter phone", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (kinType.isEmpty()) {
+                edtType.requestFocus()
+                Toast.makeText(requireContext(), "Please select type", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val kin = CareGiverNextOfKin(
+                caregiver = careGiver.type,
+                name = name,
+                phone = phone,
+                type = kinType
+            )
+            //only add if there is no caregiver type, else update that index
+            val existingCareGiverIndex =
+                careGiverNextOfKins.indexOfFirst { it.type == kinType }
+            if (existingCareGiverIndex != -1) {
+                // Update existing caregiver
+                careGiverNextOfKins[existingCareGiverIndex] = kin
+            } else {
+                // Add new caregiver
+                if (!careGiverNextOfKins.contains(kin)) {
+                    careGiverNextOfKins.add(kin)
+                }
+            }
+            careGiver.kins = careGiverNextOfKins
+
+            edtType.text = null
+            edtName.text = null
+            edtPhone.text = null
+
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<AutoCompleteTextView>(R.id.identification_type).apply {
+            setAdapter(adapterType)
+        }
+
+        // Show the dialog
+        dialog.show()
+
     }
 
     private fun displayInitialData() {

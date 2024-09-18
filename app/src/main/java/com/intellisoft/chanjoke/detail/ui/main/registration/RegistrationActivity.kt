@@ -161,6 +161,8 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
                         )
                     ) {
 
+                        Timber.e("Registering a Caregiver $caregivers")
+
                         progressDialog.show()
                         viewModel.saveCustomPatient(
                             this,
@@ -168,6 +170,10 @@ class RegistrationActivity : AppCompatActivity(), OnButtonClickListener,
                             fhirPractitionerId,
                             isClientUpdate
                         )
+
+
+
+
                     } else {
                         Toast.makeText(
                             this,
