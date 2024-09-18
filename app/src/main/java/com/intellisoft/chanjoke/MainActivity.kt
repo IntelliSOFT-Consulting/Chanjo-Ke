@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
@@ -82,7 +83,12 @@ class MainActivity : AppCompatActivity() {
         //        load initial landing page
         navController.navigate(R.id.landing_page)
 
-        when (intent.getStringExtra("functionToCall")) {
+        val functionToCall = intent.getStringExtra("functionToCall")
+        Log.e("---->","<----")
+        println("functionToCall $functionToCall")
+        Log.e("---->","<----")
+
+        when (functionToCall) {
             "registerFunction" -> {
                 registerFunction()
             }
