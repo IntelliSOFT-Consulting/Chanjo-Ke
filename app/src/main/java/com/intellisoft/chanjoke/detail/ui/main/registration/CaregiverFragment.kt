@@ -320,22 +320,27 @@ class CaregiverFragment : Fragment() {
             binding.apply {
                 nextButton.isEnabled = true
             }
-
             // get latest record and pop up
-
             if (careGiverIdType == "None") {
                 val latestItem = careGivers.lastOrNull() // Safely get the last item
                 if (latestItem != null) {
                     displayNextOfKinScreenConfirmation(latestItem)
                 }
-
             }
         }
     }
 
     private fun displayNextOfKinScreenConfirmation(careGiver: CareGiver) {
-
+        BottomDialog(
+            requireContext(),
+            "If no Caregiver ID is provided, please enter the next of kin details.\nClick 'Add' to proceed with adding the information",
+            onAdd = {
+                displayNextOfKinScreen(careGiver)
+            },
+            onCancel = {}
+        ).show()
     }
+
     private fun displayNextOfKinScreen(careGiver: CareGiver) {
         // Inflate the custom layout
         val adapterType =
