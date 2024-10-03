@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -320,22 +321,28 @@ class CaregiverFragment : Fragment() {
             binding.apply {
                 nextButton.isEnabled = true
             }
-
             // get latest record and pop up
-
             if (careGiverIdType == "None") {
                 val latestItem = careGivers.lastOrNull() // Safely get the last item
                 if (latestItem != null) {
                     displayNextOfKinScreenConfirmation(latestItem)
                 }
-
             }
         }
     }
 
     private fun displayNextOfKinScreenConfirmation(careGiver: CareGiver) {
+        BottomDialog(
+            requireContext(),
+            "If no Caregiver ID is provided, please enter the next of kin details.\nClick 'Add' to proceed with adding the information",
+            onAdd = {
+                displayNextOfKinScreen(careGiver)
 
+            },
+            onCancel = {}
+        ).show()
     }
+
     private fun displayNextOfKinScreen(careGiver: CareGiver) {
         // Inflate the custom layout
         val adapterType =
@@ -357,8 +364,16 @@ class CaregiverFragment : Fragment() {
         val edtPhone = dialogView.findViewById<TextInputEditText>(R.id.phone)
         val edtType = dialogView.findViewById<AutoCompleteTextView>(R.id.identification_type)
         val recyclerView = dialogView.findViewById<RecyclerView>(R.id.recyclerView)
+        val btnBack = dialogView.findViewById<MaterialButton>(R.id.btn_back)
+        val btnNext = dialogView.findViewById<MaterialButton>(R.id.btn_next)
 
 
+        btnBack.setOnClickListener{
+            dialog.dismiss()
+        }
+        btnNext.setOnClickListener{
+            dialog.dismiss()
+        }
         careGiverNextOfKins.clear()
         val adapter1 = CareGiverKinAdapter(
             ArrayList(),
