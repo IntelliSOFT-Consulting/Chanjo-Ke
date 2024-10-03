@@ -109,6 +109,7 @@
     <string name="under_5_years">Under 5 years</string>
     <string name="document_identification_type">Document Identification Type *</string>
     <string name="document_identification_number">Document Identification Number *</string>
+    <string name="next_of_kin">Next of Kin</string>
 
 
 </resources>
