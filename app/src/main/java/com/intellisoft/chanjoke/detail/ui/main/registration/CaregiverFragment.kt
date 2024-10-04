@@ -161,6 +161,7 @@ class CaregiverFragment : Fragment() {
                     val selectedItem = parent.getItemAtPosition(position).toString()
                     if (selectedItem == "None") {
                         telNational.visibility = View.GONE
+                        updateCareGiver()
                     } else {
                         telNational.visibility = View.VISIBLE
                     }
