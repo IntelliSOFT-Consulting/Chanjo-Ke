@@ -34,6 +34,8 @@ import kotlin.random.Random
 
 class FormatterClass {
 
+    private val immunizationHandler = ImmunizationHandler()
+
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
     private val dateInverseFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     private val dateInverseFormatSeconds: SimpleDateFormat =
@@ -2006,7 +2008,6 @@ class FormatterClass {
          */
         val filteredVaccineData = findRelevantVaccineData(administeredList, vaccineName)
 
-
         if (filteredVaccineData != null){
 
             //Populate values
@@ -2068,6 +2069,20 @@ class FormatterClass {
                 statusColor = StatusColors.NOT_DONE.name
             }
 
+        }else{
+            //Check if the vaccine should have been administered already. If so open it
+
+            val basicVaccineNow = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+            if (basicVaccineNow != null){
+                val administrativeWeeksSinceDOB = basicVaccineNow.administrativeWeeksSinceDOB
+                val isBeforeToday = isBeforeToday(patientDob, administrativeWeeksSinceDOB)
+                if (isBeforeToday){
+                    canBeVaccinated = true
+                    statusColor = StatusColors.NORMAL.name
+                    statusValue = "Due"
+                }
+            }
+
         }
 
         if (patientAlive == "NO"){
@@ -2084,6 +2099,20 @@ class FormatterClass {
             status,
             statusValue
         )
+    }
+
+    private fun isBeforeToday(dob: String, administrativeWeeksSinceDOB: Int): Boolean {
+        // Define the date format
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // Parse the dob string into a LocalDate
+        val dateOfBirth = LocalDate.parse(dob, dateFormatter)
+
+        // Calculate the date after adding the weeks
+        val calculatedDate = dateOfBirth.plusWeeks(administrativeWeeksSinceDOB.toLong())
+
+        // Compare the calculated date with today's date
+        return calculatedDate.isBefore(LocalDate.now())
     }
 
     private fun evaluateDateRange(
