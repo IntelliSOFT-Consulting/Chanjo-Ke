@@ -1318,13 +1318,6 @@ class PatientDetailsViewModel(
         }
         val recorded = if (immunization.hasRecorded()) immunization.recorded.toString() else ""
 
-        Log.e("--->","<-----")
-        println("logicalId: $logicalId")
-        println("vaccineName: $vaccineName")
-        println("status: $status")
-        println("statusValue: $statusValue")
-        Log.e("--->","<-----")
-
 
         return DbVaccineDetailsData(
             logicalId,
