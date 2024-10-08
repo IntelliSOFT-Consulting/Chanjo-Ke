@@ -34,13 +34,14 @@ class ReusableViewModel(
         // Call the method from PatientDetailsViewModel
         val clientObjectionList = patientDetailsViewModel.getRecommendationStatus(notAdministeredList)
         val reusableListItemList = ArrayList<ReusableListItem>()
+
         clientObjectionList.forEach {
             val statusValue = it.statusValue
             val vaccineName = it.vaccineName
 
             if (statusValue != null ){
-                if(statusValue.contains("Client objection") ||
-                    statusValue.contains("Religious Reasons")){
+                if(statusValue.contains("Client objection ") ||
+                    statusValue.contains("Religion/Culture ")){
 
                     /**
                      * Logic for Routine / Non-routine is required
@@ -48,7 +49,15 @@ class ReusableViewModel(
 
                     val message = "$vaccineName was not administered due to $statusValue"
                     val reusableListItem = ReusableListItem(message, Status.NOT_ADMINISTERED)
-                    reusableListItemList.add(reusableListItem)
+
+                    val exists = reusableListItemList.any {
+                        reusable -> reusable.name == message &&
+                            reusable.status == Status.NOT_ADMINISTERED
+                    }
+                    // If it doesn't exist, add the item to the list
+                    if (!exists) {
+                        reusableListItemList.add(reusableListItem)
+                    }
 
                 }
                 if (statusValue.contains("Contraindicate")){
@@ -58,6 +67,9 @@ class ReusableViewModel(
             }
 
         }
+
+
+
 
         _items.value = reusableListItemList
 
