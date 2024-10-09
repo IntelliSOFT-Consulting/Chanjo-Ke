@@ -478,6 +478,15 @@ class PatientDetailActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+            R.id.menu_update_vaccine -> {
+
+                val intent =
+                    Intent(this@PatientDetailActivity, MainActivity::class.java)
+                intent.putExtra("functionToCall", NavigationDetails.UPDATE_VACCINE_DETAILS.name)
+                intent.putExtra("patientId", patientId)
+                startActivity(intent)
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }

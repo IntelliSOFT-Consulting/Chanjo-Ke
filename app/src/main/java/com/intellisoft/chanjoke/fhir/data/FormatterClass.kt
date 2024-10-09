@@ -34,6 +34,8 @@ import kotlin.random.Random
 
 class FormatterClass {
 
+    private val immunizationHandler = ImmunizationHandler()
+
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
     private val dateInverseFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     private val dateInverseFormatSeconds: SimpleDateFormat =
@@ -1763,17 +1765,66 @@ class FormatterClass {
         // If there are any RESCHEDULE records, prioritize them
         if (rescheduleList.isNotEmpty()) {
             // Find the one closest to today based on dateAdministered, if dates are the same, use dateRecorded
-            return rescheduleList.minWithOrNull(compareBy({ it.dateAdministered }, { it.dateRecorded }))
+            return rescheduleList.minWithOrNull(
+                compareBy({ it.dateAdministered }, { it.dateRecorded })
+            )
         }
 
         // If no RESCHEDULE records, check NOT_ADMINISTERED records
-        if (notAdministeredList.isNotEmpty()) {
-            // Find the one closest to today based on dateAdministered, if dates are the same, use dateRecorded
-            return notAdministeredList.minWithOrNull(compareBy({ it.dateAdministered }, { it.dateRecorded }))
-        }
+//        if (notAdministeredList.isNotEmpty()) {
+//            // Find the one closest to today based on dateAdministered, if dates are the same, use dateRecorded
+//            return notAdministeredList.minWithOrNull(
+//                compareBy(
+//                    { it.dateAdministered }, { it.dateRecorded }
+//                )
+//            )
+//        }
+        val findClosestRecord = findClosestRecord(notAdministeredList)
+        if (findClosestRecord!= null) { return findClosestRecord }
+
 
         // If neither RESCHEDULE nor NOT_ADMINISTERED are present, return null
         return null
+    }
+
+    private fun findClosestRecord(notAdministeredList: List<DbVaccineData>): DbVaccineData? {
+        if (notAdministeredList.isNotEmpty()) {
+            val today = LocalDate.now()
+
+            // Filter for future records within 14 days
+            val futureRecords = notAdministeredList.filter { record ->
+                val dateAdministered = parseDate(record.dateAdministered)
+                dateAdministered != null && dateAdministered.isAfter(today) &&
+                        ChronoUnit.DAYS.between(today, dateAdministered) <= 14
+            }
+
+            // If there are future records, return the closest one based on dateAdministered
+            if (futureRecords.isNotEmpty()) {
+                return futureRecords.minWithOrNull(compareBy { parseDate(it.dateAdministered) })
+            }
+
+            // If no future records, check past records within 14 days
+            val pastRecords = notAdministeredList.filter { record ->
+                val dateAdministered = parseDate(record.dateAdministered)
+                dateAdministered != null && dateAdministered.isBefore(today) &&
+                        ChronoUnit.DAYS.between(dateAdministered, today) <= 14
+            }
+
+            // Return the closest past record based on dateAdministered
+            return pastRecords.minWithOrNull(compareBy { parseDate(it.dateAdministered) })
+        }
+
+        return null // Return null if there are no records
+    }
+
+    // Function to parse date from String to LocalDate
+    private fun parseDate(dateString: String): LocalDate? {
+        return try {
+            LocalDate.parse(dateString,
+                DateTimeFormatter.ofPattern("MMM d yyyy")) // Adjust format as needed
+        } catch (e: Exception) {
+            null // Return null if parsing fails
+        }
     }
 
 
@@ -1830,7 +1881,6 @@ class FormatterClass {
         var statusValue = ""
         var statusColor = ""
 
-
         var isVaccinatedValue = false
         var canBeVaccinated = false
 
@@ -1848,59 +1898,9 @@ class FormatterClass {
          * - Compare between earliestDate and latestDate and return single date
          * -
          */
-        Log.e("*****","******")
-        println("***recommendationList $recommendationList")
-
-//        var dbAppointmentDetailsDue: DbRecommendationDetails? = null
-//
-            for(vaccineList in recommendationList) {
-                val dBvaccineName = vaccineList.vaccineName
-                val dBvaccineCode = vaccineList.vaccineCode
-                val dBstatus = vaccineList.status
-
-                if (dBvaccineName.equals("OPV I", ignoreCase = true)){
-                    Log.e("&&&&&","&&&&&&")
-                    println("***VaccineName1 $vaccineName")
-                    println("***VaccineName2 $dBvaccineName")
-                    println("***VaccineCode $dBvaccineCode")
-                    println("***dBstatus $dBstatus")
-                    Log.e("&&&&&","&&&&&&")
-                }
-
-            }
-//
-//                if (dBvaccineCode == "IMPO-OPV-I"){
-//                    println("dBvaccineName $dBvaccineName")
-//                    println("dBvaccineCode $dBvaccineCode")
-//                    println("dBstatus $dBstatus")
-//                    println("vaccineName $vaccineName")
-//                }
-//
-//
-//
-//                if (vaccineName.equals(dBvaccineName, ignoreCase = true)
-//                    && dBstatus.equals("Due", ignoreCase = true)){
-//                    dbAppointmentDetailsDue = vaccineList
-//                    break
-//                }
-//            }
-
-
-
         val dbAppointmentDetailsDue = recommendationList.filter {
             it.vaccineName == vaccineName && it.status.equals("Due", ignoreCase = true)
         }.map { it }.firstOrNull()
-
-        if (vaccineName.equals("OPV I", ignoreCase = true)){
-
-        }
-
-        println("dBaccineName ${dbAppointmentDetailsDue?.vaccineName}")
-        println("vaccineCode ${dbAppointmentDetailsDue?.vaccineCode}")
-        println("earliestDate ${dbAppointmentDetailsDue?.earliestDate}")
-        println("latestDate ${dbAppointmentDetailsDue?.latestDate}")
-        println("status ${dbAppointmentDetailsDue?.status}")
-        Log.e("*****","******")
 
         if (dbAppointmentDetailsDue != null){
             val earliestDate = convertDateFormat(dbAppointmentDetailsDue.earliestDate)
@@ -2007,6 +2007,7 @@ class FormatterClass {
          * - Reschedule and Not administered can be administered if the dates are within a 14 day gap
          */
         val filteredVaccineData = findRelevantVaccineData(administeredList, vaccineName)
+
         if (filteredVaccineData != null){
 
             //Populate values
@@ -2068,6 +2069,20 @@ class FormatterClass {
                 statusColor = StatusColors.NOT_DONE.name
             }
 
+        }else{
+            //Check if the vaccine should have been administered already. If so open it
+
+            val basicVaccineNow = immunizationHandler.getVaccineDetailsByBasicVaccineName(vaccineName)
+            if (basicVaccineNow != null){
+                val administrativeWeeksSinceDOB = basicVaccineNow.administrativeWeeksSinceDOB
+                val isBeforeToday = isBeforeToday(patientDob, administrativeWeeksSinceDOB)
+                if (isBeforeToday){
+                    canBeVaccinated = true
+                    statusColor = StatusColors.NORMAL.name
+                    statusValue = "Due"
+                }
+            }
+
         }
 
         if (patientAlive == "NO"){
@@ -2084,6 +2099,20 @@ class FormatterClass {
             status,
             statusValue
         )
+    }
+
+    private fun isBeforeToday(dob: String, administrativeWeeksSinceDOB: Int): Boolean {
+        // Define the date format
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // Parse the dob string into a LocalDate
+        val dateOfBirth = LocalDate.parse(dob, dateFormatter)
+
+        // Calculate the date after adding the weeks
+        val calculatedDate = dateOfBirth.plusWeeks(administrativeWeeksSinceDOB.toLong())
+
+        // Compare the calculated date with today's date
+        return calculatedDate.isBefore(LocalDate.now())
     }
 
     private fun evaluateDateRange(
