@@ -2077,9 +2077,17 @@ class FormatterClass {
                 val administrativeWeeksSinceDOB = basicVaccineNow.administrativeWeeksSinceDOB
                 val isBeforeToday = isBeforeToday(patientDob, administrativeWeeksSinceDOB)
                 if (isBeforeToday){
-                    canBeVaccinated = true
-                    statusColor = StatusColors.NORMAL.name
-                    statusValue = "Due"
+
+                    val vaccineCode = basicVaccine?.vaccineCode
+                    if (vaccineCode == "IMPO-bOPV" && numberOfWeek != null && numberOfWeek > 2){
+                        canBeVaccinated = false
+                        statusColor = StatusColors.RED.name
+                        statusValue = "Missed"
+                    }else{
+                        canBeVaccinated = true
+                        statusColor = StatusColors.NORMAL.name
+                        statusValue = "Due"
+                    }
                 }
             }
 
