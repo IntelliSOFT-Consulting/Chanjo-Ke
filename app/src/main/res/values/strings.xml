@@ -4,7 +4,7 @@
     <string name="vaccineList">vaccineList</string>
     <string name="campaigns">Campaigns</string>
     <string name="referralData">ReferralData</string>
-    <string name="base_url">https://chanjoke.intellisoftkenya.com/auth/</string>
+    <string name="base_url">https://openchanjotest.intellisoftkenya.com/auth/</string>
     <string name="add_patient">Register Client</string>
     <string name="fab_content_desc">Register Client</string>
     <string name="administer_vaccine_count">Administer Vaccine </string>
