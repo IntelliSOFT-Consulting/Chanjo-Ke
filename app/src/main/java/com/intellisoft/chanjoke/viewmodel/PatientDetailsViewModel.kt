@@ -1318,6 +1318,7 @@ class PatientDetailsViewModel(
         }
         val recorded = if (immunization.hasRecorded()) immunization.recorded.toString() else ""
 
+
         return DbVaccineDetailsData(
             logicalId,
             vaccineName,

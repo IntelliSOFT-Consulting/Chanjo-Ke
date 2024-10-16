@@ -17,8 +17,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["appAuthRedirectScheme"] = applicationId!!
         buildFeatures.buildConfig = true
-        versionCode = 43
-        versionName = "1.0"
+        versionCode = 50
+        versionName = "Internal"
     }
     buildTypes {
         release {

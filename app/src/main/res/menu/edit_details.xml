@@ -20,5 +20,11 @@
         android:title="@string/referrals"
         android:visible="true"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_update_vaccine"
+        android:orderInCategory="100"
+        android:title="@string/update_vaccine_history"
+        android:visible="true"
+        app:showAsAction="never" />
 
 </menu>
