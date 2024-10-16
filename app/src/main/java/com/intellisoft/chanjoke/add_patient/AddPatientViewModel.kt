@@ -919,8 +919,8 @@ class AddPatientViewModel(application: Application, private val state: SavedStat
 
                     documents.add(
                         PatientIdentification(
-                            document = q.document,
-                            number = q.number
+                            document = "${q.document}",
+                            number = "${q.number}"
                         )
                     )
                 }

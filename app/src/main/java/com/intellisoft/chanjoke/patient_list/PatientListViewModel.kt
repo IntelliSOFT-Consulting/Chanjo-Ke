@@ -106,30 +106,33 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
 
     private suspend fun getSearchResults(nameQuery: String = ""): List<PatientItem> {
         var patients: MutableList<PatientItem> = mutableListOf()
-        fhirEngine
-            .search<Patient> {
+        try {
+            fhirEngine
+                .search<Patient> {
 
-                if (nameQuery.isNotEmpty()) {
-                    filter(
-                        Patient.NAME,
-                        {
-                            modifier = StringFilterModifier.CONTAINS
-                            value = nameQuery
-                        },
-                    )
+                    if (nameQuery.isNotEmpty()) {
+                        filter(
+                            Patient.NAME,
+                            {
+                                modifier = StringFilterModifier.CONTAINS
+                                value = nameQuery
+                            },
+                        )
+                    }
+                    count = 100
+                    from = 0
                 }
-                count = 100
-                from = 0
-            }
-            .mapIndexed { index, fhirPatient -> fhirPatient.resource.toPatientItem(index + 1) }
-            .let {
-                val sortedPatientItems = it.sortedByDescending { q ->
-                    q.lastUpdated // Assuming lastUpdated is a property of PatientItem
+                .mapIndexed { index, fhirPatient -> fhirPatient.resource.toPatientItem(index + 1) }
+                .let {
+                    val sortedPatientItems = it.sortedByDescending { q ->
+                        q.lastUpdated // Assuming lastUpdated is a property of PatientItem
+                    }
+
+                    patients.addAll(sortedPatientItems)
                 }
-
-                patients.addAll(sortedPatientItems)
-            }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         /**
          * TODO: Check on the best way to filter by the id or phone number
          */
@@ -169,7 +172,9 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             // Check if the identification matches or is close
             if (patient.identification.contains(searchString) || isCloseMatch(
                     patient.identification,
-                    searchString)) {
+                    searchString
+                )
+            ) {
                 matchingPatients.add(patient)
             }
 
@@ -177,7 +182,9 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
             // Check if the identification matches or is close
             if (systemGeneratedId != "" && systemGeneratedId.contains(searchString) || isCloseMatch(
                     systemGeneratedId,
-                    searchString)) {
+                    searchString
+                )
+            ) {
                 matchingPatients.add(patient)
             }
         }
@@ -325,9 +332,9 @@ class PatientListViewModel(application: Application, private val fhirEngine: Fhi
         val contact_name: String?,
         val contact_phone: String?,
         val contact_gender: String?,
-        val document: String,
-        val number: String,
-        val systemGeneratedId:String? = null,
+        val document: String? = null,
+        val number: String? = null,
+        val systemGeneratedId: String? = null,
 
         ) {
         override fun toString(): String = name
@@ -459,7 +466,7 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
     var document = ""
     var number = ""
 
-    var systemGeneratedId:String? = null
+    var systemGeneratedId: String? = null
 
     if (hasIdentifier()) {
         identifier.forEach { identifier ->
@@ -479,7 +486,9 @@ internal fun Patient.toPatientItem(position: Int): PatientListViewModel.PatientI
 
             val codeableConceptType = identifier.type
             if (codeableConceptType.hasText() && codeableConceptType.text.contains(
-                    Identifiers.SYSTEM_GENERATED.name) && identifier.hasValue()) {
+                    Identifiers.SYSTEM_GENERATED.name
+                ) && identifier.hasValue()
+            ) {
                 systemGeneratedId = identifier.valueElement.valueAsString
             }
         }

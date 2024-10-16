@@ -67,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="ID Type *"
+            android:hint="Document Identification Type *"
             app:boxBackgroundMode="outline">
 
             <AutoCompleteTextView
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10dp"
-            android:hint="Caregiver ID *"
+            android:hint="Document Identification Number *"
             app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText

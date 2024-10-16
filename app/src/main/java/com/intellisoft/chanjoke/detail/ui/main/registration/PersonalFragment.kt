@@ -594,23 +594,23 @@ class PersonalFragment : Fragment() {
             dateOfBirthString = dateOfBirth
 
         }
-        if (identificationType.isEmpty()) {
-            binding.apply {
-                Toast.makeText(
-                    requireContext(),
-                    "Please select identification type",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return
-            }
-        }
-        if (identificationNumberString.isEmpty()) {
-            binding.apply {
-                identificationNumber.requestFocus()
-                telIdentificationNumber.error = "Please enter value"
-                return
-            }
-        }
+//        if (identificationType.isEmpty()) {
+//            binding.apply {
+//                Toast.makeText(
+//                    requireContext(),
+//                    "Please select identification type",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//                return
+//            }
+//        }
+//        if (identificationNumberString.isEmpty()) {
+//            binding.apply {
+//                identificationNumber.requestFocus()
+//                telIdentificationNumber.error = "Please enter value"
+//                return
+//            }
+//        }
 
         var estimate = true
 
