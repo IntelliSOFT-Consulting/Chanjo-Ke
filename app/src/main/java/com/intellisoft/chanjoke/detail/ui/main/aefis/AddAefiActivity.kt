@@ -81,7 +81,7 @@ class AddAefiActivity : AppCompatActivity(), OnButtonClickListener {
     private fun setupViewPager(viewPager: ViewPager) {
         pagerAdapter = ViewPagerAdapter(supportFragmentManager)
         pagerAdapter.addFragment(TypeFragment(), "Fragment 1")
-        pagerAdapter.addFragment(ActionFragment(), "Fragment 2")
+//        pagerAdapter.addFragment(ActionFragment(), "Fragment 2")
         pagerAdapter.addFragment(ReviewFragment(), "Fragment 3")
         viewPager.adapter = pagerAdapter
     }
@@ -146,48 +146,48 @@ class AddAefiActivity : AppCompatActivity(), OnButtonClickListener {
                             encounterReference, "Past Medical History", "string"
                         )
                     )
-                    observations.add(
-                        createFHIRObservation(
-                            refinedData.specimen,
-                            "886-1",
-                            encounterReference, "Specimen Collected", "string"
-                        )
-                    )
-                    observations.add(
-                        createFHIRObservation(
-                            refinedData.severity,
-                            "880-11",
-                            encounterReference, "Reaction Severity", "code"
-                        )
-                    )
-                    observations.add(
-                        createFHIRObservation(
-                            refinedData.action,
-                            "888-1",
-                            encounterReference, "Action Taken", "string"
-                        )
-                    )
-                    observations.add(
-                        createFHIRObservation(
-                            refinedData.outcome,
-                            "808-11",
-                            encounterReference, "Reaction Outcome", "code"
-                        )
-                    )
-                    observations.add(
-                        createFHIRObservation(
-                            refinedData.reporter,
-                            "133-22",
-                            encounterReference, "Person Reporting", "string"
-                        )
-                    )
-                    observations.add(
-                        createFHIRObservation(
-                            refinedData.phone,
-                            "122-22",
-                            encounterReference, "Reporter Phone", "string"
-                        )
-                    )
+//                    observations.add(
+//                        createFHIRObservation(
+//                            refinedData.specimen,
+//                            "886-1",
+//                            encounterReference, "Specimen Collected", "string"
+//                        )
+//                    )
+//                    observations.add(
+//                        createFHIRObservation(
+//                            refinedData.severity,
+//                            "880-11",
+//                            encounterReference, "Reaction Severity", "code"
+//                        )
+//                    )
+//                    observations.add(
+//                        createFHIRObservation(
+//                            refinedData.action,
+//                            "888-1",
+//                            encounterReference, "Action Taken", "string"
+//                        )
+//                    )
+//                    observations.add(
+//                        createFHIRObservation(
+//                            refinedData.outcome,
+//                            "808-11",
+//                            encounterReference, "Reaction Outcome", "code"
+//                        )
+//                    )
+//                    observations.add(
+//                        createFHIRObservation(
+//                            refinedData.reporter,
+//                            "133-22",
+//                            encounterReference, "Person Reporting", "string"
+//                        )
+//                    )
+//                    observations.add(
+//                        createFHIRObservation(
+//                            refinedData.phone,
+//                            "122-22",
+//                            encounterReference, "Reporter Phone", "string"
+//                        )
+//                    )
 
                     viewModel.addAeFi(
                         this@AddAefiActivity,
