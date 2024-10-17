@@ -54,7 +54,6 @@ class AddAefiActivity : AppCompatActivity(), OnButtonClickListener {
                 setDisplayShowHomeEnabled(true)
                 setDisplayHomeAsUpEnabled(true)
                 title = ""
-
             }
             setupViewPager(binding.viewpager)
             binding.tabs.setupWithViewPager(binding.viewpager)
