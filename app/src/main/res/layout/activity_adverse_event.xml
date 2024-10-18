@@ -59,6 +59,7 @@
                 <!-- Type of AEFI -->
                 <TextView
                     android:layout_width="0dp"
+                    android:textStyle="bold"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/type_of_aefi" />
@@ -204,6 +205,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="5dp"
                 android:weightSum="4">
 
@@ -229,6 +231,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
 
@@ -236,6 +239,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="5dp"
                 android:weightSum="4">
 
@@ -261,12 +265,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:padding="5dp"
                 android:weightSum="4">
@@ -293,6 +299,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
 
@@ -301,6 +308,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="5dp"
+                android:visibility="gone"
                 android:weightSum="4">
 
                 <!-- AEFI Outcome -->
@@ -325,6 +333,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
 
@@ -333,6 +342,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="5dp"
                 android:weightSum="4">
 
@@ -359,12 +369,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_margin="3dp"
+                android:visibility="gone"
                 android:background="@color/bac_trans2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="5dp"
                 android:weightSum="4">
 
@@ -390,6 +402,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
 
@@ -398,6 +411,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="5dp"
+                android:visibility="gone"
                 android:weightSum="4">
 
                 <!-- Healthcare Worker -->
