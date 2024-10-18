@@ -80,7 +80,7 @@ class EditAefiActivity : AppCompatActivity(), OnButtonClickListener {
     private fun setupViewPager(viewPager: ViewPager) {
         pagerAdapter = ViewPagerAdapter(supportFragmentManager)
         pagerAdapter.addFragment(TypeFragment(), "Fragment 1")
-        pagerAdapter.addFragment(ActionFragment(), "Fragment 2")
+//        pagerAdapter.addFragment(ActionFragment(), "Fragment 2")
         pagerAdapter.addFragment(ReviewFragment(), "Fragment 3")
         viewPager.adapter = pagerAdapter
     }

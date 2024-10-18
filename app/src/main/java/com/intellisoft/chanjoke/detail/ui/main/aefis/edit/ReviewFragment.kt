@@ -97,20 +97,20 @@ class ReviewFragment : Fragment() {
                 }
             }
 
-            val childData = formatter.getSharedPref("child_aefi", requireContext())
-            if (childData != null) {
-                val refinedChild = Gson().fromJson(childData, Child::class.java)
-                binding.apply {
-                    reactionSeverityTextView.text = refinedChild.severity
-                    actionTakenTextView.text = refinedChild.action
-                    aefiOutcomeTextView.text = refinedChild.outcome
-                    nameOfPersonTextView.text = refinedChild.reporter
-                    contactTextView.text = refinedChild.phone
-                    specimenTextView.text = refinedChild.specimen
-
-                }
-            }
-            if (parentData != null && childData != null) {
+//            val childData = formatter.getSharedPref("child_aefi", requireContext())
+//            if (childData != null) {
+//                val refinedChild = Gson().fromJson(childData, Child::class.java)
+//                binding.apply {
+//                    reactionSeverityTextView.text = refinedChild.severity
+//                    actionTakenTextView.text = refinedChild.action
+//                    aefiOutcomeTextView.text = refinedChild.outcome
+//                    nameOfPersonTextView.text = refinedChild.reporter
+//                    contactTextView.text = refinedChild.phone
+//                    specimenTextView.text = refinedChild.specimen
+//
+//                }
+//            }
+            if (parentData != null) {
                 val data = AEFIData(
                     specimen = binding.specimenTextView.text.toString(),
                     type = binding.typeOfAEFITextView.text.toString(),

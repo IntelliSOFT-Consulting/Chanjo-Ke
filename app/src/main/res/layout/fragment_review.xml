@@ -182,6 +182,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="5dp"
+                android:visibility="gone"
                 android:weightSum="4">
 
                 <!-- Reaction Severity -->
@@ -206,14 +207,18 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+
                 android:layout_margin="3dp"
-                android:background="@color/bac_trans2" />
+                android:background="@color/bac_trans2"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="5dp"
+
+                android:visibility="gone"
                 android:weightSum="4">
 
                 <!-- Reaction Severity -->
@@ -239,6 +244,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_margin="3dp"
+
+                android:visibility="gone"
                 android:background="@color/bac_trans2" />
 
             <LinearLayout
@@ -246,6 +253,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="5dp"
+                android:visibility="gone"
                 android:weightSum="4">
 
                 <!-- Action Taken -->
@@ -271,12 +279,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_margin="3dp"
+
+                android:visibility="gone"
                 android:background="@color/bac_trans2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="5dp"
                 android:weightSum="4">
 
@@ -302,6 +313,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
 
@@ -310,6 +322,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="5dp"
                 android:weightSum="4">
 
@@ -335,6 +348,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_margin="3dp"
                 android:background="@color/bac_trans2" />
 
@@ -342,6 +356,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="5dp"
                 android:weightSum="4">
 
