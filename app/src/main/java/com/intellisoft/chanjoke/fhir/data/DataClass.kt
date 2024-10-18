@@ -463,12 +463,12 @@ data class AEFIData(
     val brief: String,
     val onset: String,
     val history: String,
-    val specimen: String,
-    val severity: String,
-    val action: String,
-    val outcome: String,
-    val reporter: String,
-    val phone: String
+    val specimen: String = "",
+    val severity: String = "",
+    val action: String = "",
+    val outcome: String = "",
+    val reporter: String = "",
+    val phone: String = "",
 )
 
 data class Parent(
