@@ -133,6 +133,7 @@ class UpdateVaccineHistoryFragment : Fragment() {
 
         binding.btnAdd.setOnClickListener {
             val lastDoseDate = binding.tvDatePicker.text.trim().toString()
+            val batchNumber = binding.etBatchNumber.text
 
             if (
                 vaccineType != "" &&
@@ -146,13 +147,20 @@ class UpdateVaccineHistoryFragment : Fragment() {
                 val doseNumber = vaccineDetail?.doseNumber
                 val vaccineName = vaccineDetail?.vaccineName
 
+                val batchNumbers = if (!batchNumber.isNullOrBlank()) {
+                    batchNumber.toString()
+                } else {
+                    ""
+                }
+
                 CoroutineScope(Dispatchers.IO).launch {
                     val dbVaccineHistory = DbVaccineHistory(
                         vaccineName,
                         vaccineType,
                         doseNumber,
                         vaccinePlace,
-                        lastDoseDate
+                        lastDoseDate,
+                        batchNumbers
                     )
                     // Check if the entry already exists in the list based on relevant fields
                     val exists = vaccineHistory.any {
@@ -201,6 +209,8 @@ class UpdateVaccineHistoryFragment : Fragment() {
                     ).show()
                     return@setOnClickListener
                 }
+
+
                 if (lastDoseDate == "Date of last dose *") {
                     binding.tvDatePicker.requestFocus()
                     Toast.makeText(

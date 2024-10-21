@@ -1,10 +1,12 @@
 package com.intellisoft.chanjoke
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +22,7 @@ import com.intellisoft.chanjoke.detail.ui.main.registration.RegistrationActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.shared.Login
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -49,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         fhirEngine = FhirApplication.fhirEngine(this)
+
+        getUserDetails()
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -84,9 +89,6 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.landing_page)
 
         val functionToCall = intent.getStringExtra("functionToCall")
-        Log.e("---->","<----")
-        println("functionToCall $functionToCall")
-        Log.e("---->","<----")
 
         when (functionToCall) {
             "registerFunction" -> {
@@ -226,6 +228,26 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
 
+    }
+
+    private fun getUserDetails() {
+
+        val practitionerRole = formatter.getSharedPref("practitionerRole", this)
+        if (practitionerRole != "NURSE"){
+            //Create a toast to explain you are not a nurse
+            Toast.makeText(
+                this,
+                "You are not a nurse. Please log in as a nurse to access this feature.",
+                Toast.LENGTH_LONG
+            ).show()
+
+//            val intent = Intent(this, Login::class.java)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//            startActivity(intent)
+//            finish()
+        }
+
+        Log.e("******", "practitionerRole: $practitionerRole")
     }
 
 

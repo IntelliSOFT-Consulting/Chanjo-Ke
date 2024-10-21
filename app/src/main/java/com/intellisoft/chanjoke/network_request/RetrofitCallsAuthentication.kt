@@ -96,14 +96,14 @@ class RetrofitCallsAuthentication {
 
                                 getUserDetails(context)
 
-                                messageToast = "Login successful.."
-
                                 val intent = Intent(context, MainActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 context.startActivity(intent)
                                 if (context is Activity) {
                                     context.finish()
                                 }
+
+                                messageToast = "Login successful.."
 
                             } else {
                                 messageToast = "Error: Body is null"
