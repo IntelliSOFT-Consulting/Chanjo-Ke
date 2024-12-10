@@ -53,8 +53,6 @@ class MainActivity : AppCompatActivity() {
 
         fhirEngine = FhirApplication.fhirEngine(this)
 
-        getUserDetails()
-
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -230,25 +228,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun getUserDetails() {
 
-        val practitionerRole = formatter.getSharedPref("practitionerRole", this)
-        if (practitionerRole != "NURSE"){
-            //Create a toast to explain you are not a nurse
-            Toast.makeText(
-                this,
-                "You are not a nurse. Please log in as a nurse to access this feature.",
-                Toast.LENGTH_LONG
-            ).show()
-
-//            val intent = Intent(this, Login::class.java)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//            startActivity(intent)
-//            finish()
-        }
-
-        Log.e("******", "practitionerRole: $practitionerRole")
-    }
 
 
     private fun administerVaccine(patientId: String, administerVaccine: Int) {
