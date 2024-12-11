@@ -1,10 +1,12 @@
 package com.intellisoft.chanjoke
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +22,7 @@ import com.intellisoft.chanjoke.detail.ui.main.registration.RegistrationActivity
 import com.intellisoft.chanjoke.fhir.FhirApplication
 import com.intellisoft.chanjoke.fhir.data.FormatterClass
 import com.intellisoft.chanjoke.fhir.data.NavigationDetails
+import com.intellisoft.chanjoke.shared.Login
 import com.intellisoft.chanjoke.viewmodel.MainActivityViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModel
 import com.intellisoft.chanjoke.viewmodel.PatientDetailsViewModelFactory
@@ -84,9 +87,6 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.landing_page)
 
         val functionToCall = intent.getStringExtra("functionToCall")
-        Log.e("---->","<----")
-        println("functionToCall $functionToCall")
-        Log.e("---->","<----")
 
         when (functionToCall) {
             "registerFunction" -> {
@@ -227,6 +227,8 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
 
 
     private fun administerVaccine(patientId: String, administerVaccine: Int) {

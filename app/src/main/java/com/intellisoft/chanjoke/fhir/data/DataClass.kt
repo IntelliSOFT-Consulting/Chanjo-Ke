@@ -90,6 +90,7 @@ data class DbVaccineHistory(
     val doseNumber: String?,
     val location: String,
     val lastDoseDate: String,
+    val batchNumber: String? = null,
 )
 
 data class PractitionerDetails(

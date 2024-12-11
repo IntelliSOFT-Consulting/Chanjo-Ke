@@ -96,15 +96,6 @@ class RetrofitCallsAuthentication {
 
                                 getUserDetails(context)
 
-                                messageToast = "Login successful.."
-
-                                val intent = Intent(context, MainActivity::class.java)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                context.startActivity(intent)
-                                if (context is Activity) {
-                                    context.finish()
-                                }
-
                             } else {
                                 messageToast = "Error: Body is null"
                             }
@@ -134,7 +125,8 @@ class RetrofitCallsAuthentication {
             CoroutineScope(Dispatchers.Main).launch {
 
                 progressDialog.dismiss()
-                Toast.makeText(context, messageToast, Toast.LENGTH_LONG).show()
+                if (messageToast != "")
+                    Toast.makeText(context, messageToast, Toast.LENGTH_LONG).show()
 
             }
 
@@ -157,107 +149,62 @@ class RetrofitCallsAuthentication {
     private suspend fun getUserDetails(context: Context) {
 
 
-        CoroutineScope(Dispatchers.IO).launch {
+        val formatter = FormatterClass()
+        val baseUrl = context.getString(UrlData.BASE_URL.message)
+        val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
+        try {
 
-            val formatter = FormatterClass()
-            val baseUrl = context.getString(UrlData.BASE_URL.message)
-            val apiService = RetrofitBuilder.getRetrofit(baseUrl).create(Interface::class.java)
-            try {
+            val token = formatter.getSharedPref("access_token", context)
+            if (token != null) {
+                val apiInterface = apiService.getUserInfo("Bearer $token")
+                if (apiInterface.isSuccessful) {
 
-                val token = formatter.getSharedPref("access_token", context)
-                if (token != null) {
-                    val apiInterface = apiService.getUserInfo("Bearer $token")
-                    if (apiInterface.isSuccessful) {
+                    val statusCode = apiInterface.code()
+                    val body = apiInterface.body()
 
-                        val statusCode = apiInterface.code()
-                        val body = apiInterface.body()
+                    if (statusCode == 200 || statusCode == 201) {
 
-                        if (statusCode == 200 || statusCode == 201) {
+                        if (body != null) {
+                            Timber.e("User Information ${Gson().toJson(body)}")
 
-                            if (body != null) {
-                                Timber.e("User Information ${Gson().toJson(body)}")
+                            val user = body.user
+                            if (user != null) {
 
-                                val user = body.user
-                                if (user != null) {
-                                    saveUserInformation(user, context)
-//                                    val countyName = user.countyName
-//                                    val fullNames = user.fullNames
-//                                    val idNumber = user.idNumber
-//                                    val practitionerRole = user.practitionerRole
-//                                    val fhirPractitionerId = user.fhirPractitionerId
-//                                    val email = user.email
-//                                    val phone = user.phone
-//                                    val id = user.id
-//                                    val facility = user.facility
-//                                    val facilityName = user.facilityName
-//
-//
-//                                    val subCountyName = user.subCountyName
-//                                    val wardName = user.wardName
+                                CoroutineScope(Dispatchers.Main).launch {
 
-//                                    formatter.saveSharedPref(
-//                                        "practitionerFullNames",
-//                                        fullNames,
-//                                        context
-//                                    )
-//                                    formatter.saveSharedPref(
-//                                        "practitionerIdNumber",
-//                                        idNumber,
-//                                        context
-//                                    )
-//                                    formatter.saveSharedPref(
-//                                        "practitionerRole",
-//                                        practitionerRole,
-//                                        context
-//                                    )
-//                                    formatter.saveSharedPref(
-//                                        "fhirPractitionerId",
-//                                        fhirPractitionerId,
-//                                        context
-//                                    )
-//                                    formatter.saveSharedPref("practitionerId", id, context)
-//                                    formatter.saveSharedPref("practitionerEmail", email, context)
-//                                    formatter.saveSharedPref(
-//                                        "practitionerFacility",
-//                                        facility,
-//                                        context
-//                                    )
-//                                    formatter.saveSharedPref(
-//                                        "practitionerFacilityName",
-//                                        facilityName,
-//                                        context
-//                                    )
-//                                    formatter.saveSharedPref(
-//                                        "practitionerPhone",
-//                                        phone ?: "",
-//                                        context
-//                                    )
-//
-//                                    formatter.saveSharedPref(
-//                                        "countyName",
-//                                        countyName ?: "",
-//                                        context
-//                                    )
-//                                    formatter.saveSharedPref(
-//                                        "subCountyName",
-//                                        subCountyName ?: "",
-//                                        context
-//                                    )
-//                                    formatter.saveSharedPref("wardName", wardName ?: "", context)
+                                    val practitionerRole = user.practitionerRole
+                                    if (practitionerRole == "NURSE") {
+
+                                        val intent = Intent(context, MainActivity::class.java)
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                        context.startActivity(intent)
+                                        if (context is Activity) {
+                                            context.finish()
+                                        }
+
+                                        Toast.makeText(context, "Login successful..", Toast.LENGTH_LONG).show()
+                                        saveUserInformation(user, context)
+
+                                    }else {
+                                        Toast.makeText(
+                                            context,
+                                            "You are not a nurse. Please log in as a nurse to access the application.",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
 
                                 }
+
                             }
                         }
                     }
                 }
-            } catch (e: Exception) {
-
-                Log.e("******", "")
-                Log.e("******", e.toString())
-                Log.e("******", "")
             }
+        } catch (e: Exception) {
 
-
+            Log.e("******", "")
+            Log.e("******", e.toString())
+            Log.e("******", "")
         }
 
 
